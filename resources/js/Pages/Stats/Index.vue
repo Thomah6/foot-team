@@ -1,378 +1,136 @@
 <script setup>
+import { Link } from '@inertiajs/vue3'
 import AdminsideBar from '@/Components/AdminsideBar.vue';
-import FormStats from '@/Components/FormStats.vue';
+
+const props = defineProps({
+    pendingCount: Number,
+    validatedCount: Number,
+    lastStats: Array
+})
 </script>
 
 <template>
-    <Link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&amp;display=swap" rel="stylesheet"></Link>  
-<Link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"></Link>
+    <div class="flex">
+         <div>
+               <AdminsideBar />
+         </div>
+    
+    <div class="relative min-h-screen w-full bg-background-light text-zinc-800 font-display">
+        <div class="px-4 sm:px-8 md:px-16 lg:px-24 xl:px-40 py-5 flex justify-center">
+            <div class="max-w-[960px] w-full">
 
-    <div class="relative flex min-h-screen w-full">
-        <!-- SideNavBar -->
-        <!-- <aside
-            class="flex h-screen flex-col bg-white dark:bg-[#111a22] w-64 border-r border-gray-200 dark:border-gray-800 sticky top-0"
-        >
-            <div class="flex flex-col justify-between flex-1 p-4">
-                <div class="flex flex-col gap-4">
-                    <div class="flex items-center gap-3 p-2">
-                        <div
-                            class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10"
-                            data-alt="Admin avatar"
-                            style="
-                                background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDXAP7Ip9l7ZDNGAAUWPAr3IoWx-arxHHugwWRgJF3v8OWmwGZUkegTjmVtieeCueHlh7wTL20akT7LFgq3eoVH9VezFeXLMxdF-YmDZ4XXVP1VO4TI-SWsJXDBxjGuf4iVk5wkUIjc6v0O7aNMQzL9wtKBi3gGmTOiRNymQfRSiH17UoWmjNU8SauYUMu1IWlVMKSS0vosdrK2aRTB-7PKsKSumU_pN7TACd1W-xDLDrIESLeVgtxBK0CR-FGSTThTIEUWv_tYAJJs');
-                            "
-                        ></div>
-                        <div class="flex flex-col">
-                            <h1
-                                class="text-gray-900 dark:text-white text-base font-medium leading-normal"
-                            >
-                                Admin
-                            </h1>
-                            <p
-                                class="text-gray-500 dark:text-[#92adc9] text-sm font-normal leading-normal"
-                            >
-                                admin@example.com
+                <!-- Title -->
+                <div class="flex justify-between p-4">
+                    <p class="text-4xl font-black tracking-tight">Stats & Performances – Administration</p>
+                </div>
+
+                <!-- Summary -->
+                <h3 class="text-lg font-bold px-4 pb-2 pt-4">Résumé</h3>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 p-4">
+
+                    <!-- Pending stats -->
+                    <div class="bg-white p-4 rounded-xl border flex flex-col gap-3">
+                        <div class="flex justify-between items-center">
+                            <p class="text-base text-zinc-600">Stats en attente</p>
+                            <div class="relative">
+                                <i class="fa-solid fa-hourglass-half text-red-500 text-2xl"></i>
+                                <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold h-4 w-4 flex items-center justify-center rounded-full">
+                                    {{ props.pendingCount }}
+                                </span>
+                            </div>
+                        </div>
+                        <p class="text-3xl font-bold">{{ props.pendingCount }}</p>
+                        <Link href="/admin/stats/pending"
+                              class="w-full text-center py-2 px-4 rounded-lg bg-primary/20 text-primary font-semibold hover:bg-primary/30 transition">
+                            Valider maintenant
+                        </Link>
+                    </div>
+
+                    <!-- Validated stats -->
+                    <div class="bg-white p-4 rounded-xl border flex flex-col gap-3">
+                        <div class="flex justify-between items-center">
+                            <p class="text-base text-zinc-600">Stats validées</p>
+                            <i class="fa-solid fa-circle-check text-green-500 text-2xl"></i>
+                        </div>
+                        <p class="text-3xl font-bold text-green-500">{{ props.validatedCount }}</p>
+                        <div class="h-10"></div>
+                    </div>
+
+                    <!-- Classements -->
+                    <div class="bg-white p-4 rounded-xl border flex flex-col gap-3">
+                        <div class="flex justify-between items-center">
+                            <p class="text-base text-zinc-600">Classements mis à jour</p>
+                            <i class="fa-solid fa-trophy text-yellow-500 text-2xl"></i>
+                        </div>
+                        <p class="text-3xl font-bold">Aujourd'hui</p>
+                        <Link href="/admin/stats/classements"
+                              class="w-full text-center py-2 px-4 rounded-lg bg-primary/20 text-primary font-semibold hover:bg-primary/30 transition">
+                            Voir classements
+                        </Link>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <h3 class="text-lg font-bold px-4 pb-2 pt-8">Actions rapides</h3>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 p-4">
+
+                    <Link href="/admin/stats/create"
+                          class="group flex flex-col items-center justify-center gap-4 p-8 bg-white rounded-xl border hover:border-primary hover:scale-105 transition cursor-pointer">
+                        <i class="fa-solid fa-plus-circle text-primary text-5xl"></i>
+                        <p class="text-lg font-semibold">Ajouter une statistique</p>
+                    </Link>
+
+                    <Link href="/admin/stats/pending"
+                          class="group flex flex-col items-center justify-center gap-4 p-8 bg-white rounded-xl border hover:border-primary hover:scale-105 transition cursor-pointer">
+                        <i class="fa-solid fa-list-check text-primary text-5xl"></i>
+                        <p class="text-lg font-semibold">Valider les statistiques</p>
+                    </Link>
+
+                    <Link href="/admin/stats/classements"
+                          class="group flex flex-col items-center justify-center gap-4 p-8 bg-white rounded-xl border hover:border-primary hover:scale-105 transition cursor-pointer">
+                        <i class="fa-solid fa-ranking-star text-primary text-5xl"></i>
+                        <p class="text-lg font-semibold">Voir les classements</p>
+                    </Link>
+                </div>
+
+                <!-- Historique récent -->
+                <h3 class="text-lg font-bold px-4 pb-2 pt-8">Historique récent</h3>
+
+                <div class="flex flex-col gap-2 p-4">
+
+                    <!-- Message si aucun historique -->
+                    <div v-if="props.lastStats.length === 0"
+                         class="p-4 bg-white border rounded-lg text-center text-zinc-600">
+                        <i class="fa-regular fa-folder-open text-4xl mb-2 text-zinc-400"></i>
+                        <p>Aucune statistique récente pour le moment.</p>
+                    </div>
+
+                    <!-- Boucle stats -->
+                    <div v-for="item in props.lastStats"
+                         :key="item.id"
+                         class="flex items-center gap-4 p-3 bg-white rounded-lg border hover:border-zinc-300 transition">
+
+                        <img :src="item.user.avatar"
+                             class="h-10 w-10 rounded-full object-cover" />
+
+                        <div class="flex-grow">
+                            <p class="font-medium">{{ item.user.name }}</p>
+                            <p class="text-sm text-zinc-500">
+                                {{ item.goals }} buts — {{ item.assists }} passes — match du {{ item.date }}
                             </p>
                         </div>
+
+                        <span class="text-xs font-semibold py-1 px-3 rounded-full"
+                              :class="item.validated_by_admin ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'">
+                            {{ item.validated_by_admin ? 'Validée' : 'En attente' }}
+                        </span>
                     </div>
-                    <nav class="flex flex-col gap-2 mt-4">
-                        <a
-                            class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-white hover:bg-gray-100 dark:hover:bg-[#233648]"
-                            href="#"
-                        >
-                            <span class="material-symbols-outlined"
-                                >dashboard</span
-                            >
-                            <p class="text-sm font-medium leading-normal">
-                                Dashboard
-                            </p>
-                        </a>
-                        <a
-                            class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-white hover:bg-gray-100 dark:hover:bg-[#233648]"
-                            href="#"
-                        >
-                            <span class="material-symbols-outlined">group</span>
-                            <p class="text-sm font-medium leading-normal">
-                                Players
-                            </p>
-                        </a>
-                        <a
-                            class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-white hover:bg-gray-100 dark:hover:bg-[#233648]"
-                            href="#"
-                        >
-                            <span class="material-symbols-outlined"
-                                >sports_soccer</span
-                            >
-                            <p class="text-sm font-medium leading-normal">
-                                Matches
-                            </p>
-                        </a>
-                        <a
-                            class="flex items-center gap-3 px-3 py-2 rounded-lg bg-primary/10 dark:bg-[#233648] text-primary dark:text-white"
-                            href="#"
-                        >
-                            <span
-                                class="material-symbols-outlined"
-                                style="font-variation-settings: 'FILL' 1"
-                                >monitoring</span
-                            >
-                            <p class="text-sm font-medium leading-normal">
-                                Statistics
-                            </p>
-                        </a>
-                        <a
-                            class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-white hover:bg-gray-100 dark:hover:bg-[#233648]"
-                            href="#"
-                        >
-                            <span class="material-symbols-outlined"
-                                >settings</span
-                            >
-                            <p class="text-sm font-medium leading-normal">
-                                Settings
-                            </p>
-                        </a>
-                    </nav>
                 </div>
-                <div class="flex flex-col gap-1">
-                    <a
-                        class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-white hover:bg-gray-100 dark:hover:bg-[#233648]"
-                        href="#"
-                    >
-                        <span class="material-symbols-outlined">logout</span>
-                        <p class="text-sm font-medium leading-normal">Logout</p>
-                    </a>
-                </div>
+
             </div>
-        </aside> -->
-        <AdminsideBar />
-        <!-- Main Content -->
-        <main class="flex-1 p-6 lg:p-10">
-            <div class="mx-auto max-w-7xl">
-                <!-- Page Heading -->
-                <header class="mb-8">
-                    <p
-                        class="text-gray-900 dark:text-white text-3xl md:text-4xl font-black leading-tight tracking-[-0.033em]"
-                    >
-                        Gestion manuelle des statistiques
-                    </p>
-                </header>
-                <!-- Form Section -->
-                <FormStats />
-                <!-- Data Table Section -->
-                <section>
-                    <div
-                        class="bg-white dark:bg-[#111a22] rounded-xl shadow-sm border border-gray-200 dark:border-gray-800 overflow-hidden"
-                    >
-                        <div class="overflow-x-auto">
-                            <table class="w-full text-sm text-left">
-                                <thead
-                                    class="bg-gray-50 dark:bg-[#192633] text-xs text-gray-700 dark:text-gray-400 uppercase"
-                                >
-                                    <tr>
-                                        <th class="px-6 py-3" scope="col">
-                                            Joueur
-                                        </th>
-                                        <th class="px-6 py-3" scope="col">
-                                            Match
-                                        </th>
-                                        <th
-                                            class="px-6 py-3 text-center"
-                                            scope="col"
-                                        >
-                                            Buts
-                                        </th>
-                                        <th
-                                            class="px-6 py-3 text-center"
-                                            scope="col"
-                                        >
-                                            Passes D.
-                                        </th>
-                                        <th
-                                            class="px-6 py-3 text-center"
-                                            scope="col"
-                                        >
-                                            Min.
-                                        </th>
-                                        <th
-                                            class="px-6 py-3 text-center"
-                                            scope="col"
-                                        >
-                                            CJ
-                                        </th>
-                                        <th
-                                            class="px-6 py-3 text-center"
-                                            scope="col"
-                                        >
-                                            CR
-                                        </th>
-                                        <th
-                                            class="px-6 py-3 text-right"
-                                            scope="col"
-                                        >
-                                            Actions
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr
-                                        class="border-b border-gray-200 dark:border-gray-800"
-                                    >
-                                        <td
-                                            class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
-                                        >
-                                            Kylian Mbappé
-                                        </td>
-                                        <td
-                                            class="px-6 py-4 text-gray-600 dark:text-gray-300"
-                                        >
-                                            PSG vs Marseille
-                                        </td>
-                                        <td
-                                            class="px-6 py-4 text-center text-gray-600 dark:text-gray-300"
-                                        >
-                                            2
-                                        </td>
-                                        <td
-                                            class="px-6 py-4 text-center text-gray-600 dark:text-gray-300"
-                                        >
-                                            1
-                                        </td>
-                                        <td
-                                            class="px-6 py-4 text-center text-gray-600 dark:text-gray-300"
-                                        >
-                                            90
-                                        </td>
-                                        <td
-                                            class="px-6 py-4 text-center text-gray-600 dark:text-gray-300"
-                                        >
-                                            0
-                                        </td>
-                                        <td
-                                            class="px-6 py-4 text-center text-gray-600 dark:text-gray-300"
-                                        >
-                                            0
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            <div
-                                                class="flex items-center justify-end gap-4"
-                                            >
-                                                <button
-                                                    class="text-primary dark:text-blue-400 hover:underline"
-                                                >
-                                                    <span
-                                                        class="material-symbols-outlined text-xl"
-                                                        >edit</span
-                                                    >
-                                                </button>
-                                                <button
-                                                    class="text-red-600 dark:text-red-500 hover:underline"
-                                                >
-                                                    <span
-                                                        class="material-symbols-outlined text-xl"
-                                                        >delete</span
-                                                    >
-                                                </button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr
-                                        class="border-b border-gray-200 dark:border-gray-800"
-                                    >
-                                        <td
-                                            class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
-                                        >
-                                            Antoine Griezmann
-                                        </td>
-                                        <td
-                                            class="px-6 py-4 text-gray-600 dark:text-gray-300"
-                                        >
-                                            PSG vs Marseille
-                                        </td>
-                                        <td
-                                            class="px-6 py-4 text-center text-gray-600 dark:text-gray-300"
-                                        >
-                                            0
-                                        </td>
-                                        <td
-                                            class="px-6 py-4 text-center text-gray-600 dark:text-gray-300"
-                                        >
-                                            1
-                                        </td>
-                                        <td
-                                            class="px-6 py-4 text-center text-gray-600 dark:text-gray-300"
-                                        >
-                                            85
-                                        </td>
-                                        <td
-                                            class="px-6 py-4 text-center text-gray-600 dark:text-gray-300"
-                                        >
-                                            1
-                                        </td>
-                                        <td
-                                            class="px-6 py-4 text-center text-gray-600 dark:text-gray-300"
-                                        >
-                                            0
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            <div
-                                                class="flex items-center justify-end gap-4"
-                                            >
-                                                <button
-                                                    class="text-primary dark:text-blue-400 hover:underline"
-                                                >
-                                                    <span
-                                                        class="material-symbols-outlined text-xl"
-                                                        >edit</span
-                                                    >
-                                                </button>
-                                                <button
-                                                    class="text-red-600 dark:text-red-500 hover:underline"
-                                                >
-                                                    <span
-                                                        class="material-symbols-outlined text-xl"
-                                                        >delete</span
-                                                    >
-                                                </button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr
-                                        class="border-b border-gray-200 dark:border-gray-800"
-                                    >
-                                        <td
-                                            class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
-                                        >
-                                            N'Golo Kanté
-                                        </td>
-                                        <td
-                                            class="px-6 py-4 text-gray-600 dark:text-gray-300"
-                                        >
-                                            Lyon vs Monaco
-                                        </td>
-                                        <td
-                                            class="px-6 py-4 text-center text-gray-600 dark:text-gray-300"
-                                        >
-                                            0
-                                        </td>
-                                        <td
-                                            class="px-6 py-4 text-center text-gray-600 dark:text-gray-300"
-                                        >
-                                            0
-                                        </td>
-                                        <td
-                                            class="px-6 py-4 text-center text-gray-600 dark:text-gray-300"
-                                        >
-                                            90
-                                        </td>
-                                        <td
-                                            class="px-6 py-4 text-center text-gray-600 dark:text-gray-300"
-                                        >
-                                            0
-                                        </td>
-                                        <td
-                                            class="px-6 py-4 text-center text-gray-600 dark:text-gray-300"
-                                        >
-                                            0
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            <div
-                                                class="flex items-center justify-end gap-4"
-                                            >
-                                                <button
-                                                    class="text-primary dark:text-blue-400 hover:underline"
-                                                >
-                                                    <span
-                                                        class="material-symbols-outlined text-xl"
-                                                        >edit</span
-                                                    >
-                                                </button>
-                                                <button
-                                                    class="text-red-600 dark:text-red-500 hover:underline"
-                                                >
-                                                    <span
-                                                        class="material-symbols-outlined text-xl"
-                                                        >delete</span
-                                                    >
-                                                </button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            <!-- Empty State -->
-                            <!--
-                     <div class="text-center py-16">
-                         <span class="material-symbols-outlined text-5xl text-gray-400 dark:text-gray-600">query_stats</span>
-                         <p class="mt-4 text-gray-600 dark:text-gray-400">Aucune statistique trouvée.</p>
-                         <p class="text-sm text-gray-500 dark:text-gray-500">Utilisez le formulaire ci-dessus pour ajouter la première entrée.</p>
-                     </div>
-                     -->
-                        </div>
-                    </div>
-                </section>
-            </div>
-        </main>
+        </div>
+    </div>
     </div>
 </template>
-
-<style scoped></style>
