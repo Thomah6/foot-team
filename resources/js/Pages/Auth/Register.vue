@@ -9,6 +9,7 @@ import { Head, Link, useForm } from '@inertiajs/vue3';
 const form = useForm({
     name: '',
     email: '',
+    pseudo: '',
     password: '',
     password_confirmation: '',
 });
@@ -36,6 +37,21 @@ const submit = () => {
                     required
                     autofocus
                     autocomplete="name"
+                />
+
+                <InputError class="mt-2" :message="form.errors.name" />
+            </div>
+            <div>
+                <InputLabel for="pseudo" value="Pseudo" />
+
+                <TextInput
+                    id="pseudo"
+                    type="text"
+                    class="mt-1 block w-full"
+                    v-model="form.pseudo"
+                    required
+                    autofocus
+                    autocomplete="pseudo"
                 />
 
                 <InputError class="mt-2" :message="form.errors.name" />
