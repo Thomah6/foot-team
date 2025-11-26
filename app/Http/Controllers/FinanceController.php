@@ -56,6 +56,15 @@ class FinanceController extends Controller
         return back()->with('success', 'Dépôt effectué avec succès ! Attente validation admin.');
     }
 
+    // Validation par admin
+    public function valider($id)
+    {
+        $finance = Finance::findOrFail($id);
+        // $this->authorize('valider', $finance);
+        $finance->update(['statut_valide' => true]);
+        return back()->with('success', 'Dépôt validé.');
+    }
+
     
 
 
