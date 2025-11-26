@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -18,10 +17,11 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->string('pseudo')->unique();
-            $table->string('avatar')->nullabe();
-            $table->string('poster')->nullabe();
+            $table->string('avatar')->nullable();
+            $table->string('poster')->nullable();
             $table->enum('role', ['admin', 'bureau', 'simple'])->default('simple'); // Different role
-            $table->string('position')->nullabe(); //Poste du Joueur 
+            $table->string('position')->nullable(); //Poste du Joueur 
+            $table->boolean('is_active')->default(false);
             $table->rememberToken();
             $table->timestamps();
         });
