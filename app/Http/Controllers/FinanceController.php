@@ -5,9 +5,12 @@ namespace App\Http\Controllers;
 use App\Models\Finance;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class FinanceController extends Controller
 {
+    use AuthorizesRequests;
+
     public function index(Request $request)
     {
         $query = Finance::with('user');
@@ -66,7 +69,7 @@ class FinanceController extends Controller
     public function valider($id)
     {
         $finance = Finance::findOrFail($id);
-        // $this->authorize('valider', $finance);
+        $this->authorize('valider', $finance);
         $finance->update(['statut_valide' => true]);
         return back()->with('success', 'Dépôt validé.');
     }
