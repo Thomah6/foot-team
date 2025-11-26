@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\VoteController;
 use Inertia\Inertia;
 
 Route::get('/', function () {
@@ -12,6 +13,15 @@ Route::get('/', function () {
         'laravelVersion' => Application::VERSION,
         'phpVersion' => PHP_VERSION,
     ]);
+});
+Route::middleware('auth')->group(function () {
+    Route::get('/vote', [VoteController::class, 'index'])->name('vote.index');
+
+    // Route pour enregistrer un vote
+    Route::post('/vote', [VoteController::class, 'store'])->name('vote.store');
+
+    // Route pour valider un vote (admin uniquement)
+    Route::post('/vote/validate', [VoteController::class, 'validateVote'])->name('vote.validate');
 });
 
 Route::get('/dashboard', function () {
