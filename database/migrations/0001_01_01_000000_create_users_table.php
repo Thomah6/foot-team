@@ -17,6 +17,11 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->string('pseudo')->unique();
+            $table->string('avatar')->nullabe();
+            $table->string('poster')->nullabe();
+            $table->enum('role', ['admin', 'bureau', 'simple'])->default('simple'); // Different role
+            $table->string('position')->nullabe(); //Poste du Joueur 
             $table->rememberToken();
             $table->timestamps();
         });

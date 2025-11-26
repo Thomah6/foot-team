@@ -9,40 +9,84 @@ use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
-     */
     protected $fillable = [
-        'name',
+        'pseudo',
         'email',
         'password',
+        'avatar',
+        'poster',
+        'role',
+        'position',
+        'is_active',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var list<string>
-     */
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
-    protected function casts(): array
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+    ];
+
+    // Relations
+
+    public function teams()
     {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
+        return $this->belongsToMany(Team::class, 'team_user')
+                    ->withPivot('start_date', 'end_date')
+                    ->withTimestamps();
+    }
+
+    public function reflections()
+    {
+        return $this->hasMany(Reflection::class);
+    }
+
+    public function votes()
+    {
+        return $this->hasMany(Vote::class);
+    }
+
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
+
+    public function stats()
+    {
+        return $this->hasMany(Stat::class);
+    }
+
+    public function presences()
+    {
+        return $this->hasMany(Presence::class);
+    }
+
+    public function finances()
+    {
+        return $this->hasMany(Finance::class);
+    }
+
+    public function galleries()
+    {
+        return $this->hasMany(Gallery::class);
+    }
+
+    public function galleryLikes()
+    {
+        return $this->hasMany(GalleryLike::class);
+    }
+
+    public function news()
+    {
+        return $this->hasMany(News::class);
+    }
+
+    public function playerOfTheMonths()
+    {
+        return $this->hasMany(PlayerOfTheMonth::class);
     }
 }

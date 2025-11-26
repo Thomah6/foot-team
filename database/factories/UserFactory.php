@@ -25,9 +25,15 @@ class UserFactory extends Factory
     {
         return [
             'name' => fake()->name(),
+            'pseudo' => $this->faker->userName(),
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
+            'avatar' => $this->faker->imageUrl(200, 200, 'people'),
+            'poster' => $this->faker->imageUrl(800, 400, 'sports'),
+            'role' => $this->faker->randomElement(['admin', 'bureau', 'simple']),
+            'position' => $this->faker->randomElement(['gardien', 'defenseur', 'milieu', 'attaquant']),
+            'is_active' => $this->faker->boolean(90),
             'remember_token' => Str::random(10),
         ];
     }
@@ -37,7 +43,7 @@ class UserFactory extends Factory
      */
     public function unverified(): static
     {
-        return $this->state(fn (array $attributes) => [
+        return $this->state(fn(array $attributes) => [
             'email_verified_at' => null,
         ]);
     }
