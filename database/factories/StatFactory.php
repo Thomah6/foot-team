@@ -18,14 +18,13 @@ class StatFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id' => User::factory(),
-            'goals' => $this->faker->numberBetween(0, 5),
-            'assists' => $this->faker->numberBetween(0, 3),
-            'goals_saved' => $this->faker->numberBetween(0, 10),
-            'goals_conceded' => $this->faker->numberBetween(0, 5),
-            'is_goalkeeper' => $this->faker->boolean(20),
-            'match_date' => $this->faker->dateTimeBetween('-1 month', 'now'),
-            'validated_by_admin' => $this->faker->boolean(80),
+            'user_id'            => User::factory(),
+            'goals'              => $this->faker->numberBetween(0, 20),
+            'assists'            => $this->faker->numberBetween(0, 15),
+            'goals_against'      => $this->faker->numberBetween(0, 10),
+            'matches_played'     => $this->faker->numberBetween(0, 30),
+            'date'               => $this->faker->date(),
+            'validated_by_admin' => $this->faker->boolean(30), // 30% true
         ];
     }
 }
