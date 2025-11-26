@@ -39,11 +39,17 @@ class FinanceController extends Controller
         return Inertia::render('Finance/Index', compact('finances', 'solde_cotisations', 'solde_depenses', 'solde_total', 'total_attente'));
     }
 
+    // Formulaire pour un dépôt
+    public function createDepot()
+    {
+        return Inertia::render('Finance/Create');
+    }
+
     // Soumettre un dépôt
-    public function store(Request $request)
+    public function storeDepot(Request $request)
     {
         $request->validate([
-            'montant' => 'required|numeric|min:5|max:1000',
+            'montant' => 'required|numeric|min:100|max:10000',
             'description' => 'nullable|string'
         ]);
         Finance::create([
@@ -65,7 +71,29 @@ class FinanceController extends Controller
         return back()->with('success', 'Dépôt validé.');
     }
 
-    
+    public function createDepense()
+    {
+        return Inertia::render('Finance/CreateDepense');
+    }
 
-
+    public function storeDepense(Request $request)
+    {
+        $request->validate([
+            'montant' => 'required|numeric|min:100|max:100000',
+            'description' => 'required|string'
+        ]);
+        Finance::create([
+            'user_id' => auth()->id(),
+            'montant' => $request->montant,
+            'type' => 'dépense',
+            'statut_valide' => true,
+            'description' => $request->description,
+        ]);
+        return back()->with('success', 'Dépense ajoutée.');
+    }
 }
+
+
+
+
+
