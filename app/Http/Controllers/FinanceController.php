@@ -39,6 +39,23 @@ class FinanceController extends Controller
         return Inertia::render('Finance/Index', compact('finances', 'solde_cotisations', 'solde_depenses', 'solde_total', 'total_attente'));
     }
 
+    // Soumettre un dépôt
+    public function store(Request $request)
+    {
+        $request->validate([
+            'montant' => 'required|numeric|min:5|max:1000',
+            'description' => 'nullable|string'
+        ]);
+        Finance::create([
+            'user_id' => auth()->id(),
+            'montant' => $request->montant,
+            'type' => 'cotisation',
+            'statut_valide' => false,
+            'description' => $request->description,
+        ]);
+        return back()->with('success', 'Dépôt effectué avec succès ! Attente validation admin.');
+    }
+
     
 
 
