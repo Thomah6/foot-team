@@ -7,6 +7,7 @@ import TextInput from '@/Components/TextInput.vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
 
 const form = useForm({
+    pseudo: '',
     name: '',
     email: '',
     password: '',
@@ -39,6 +40,21 @@ const submit = () => {
                 />
 
                 <InputError class="mt-2" :message="form.errors.name" />
+            </div>
+
+            <div class="mt-4">
+                <InputLabel for="pseudo" value="Pseudo" />
+
+                <TextInput
+                    id="pseudo"
+                    type="text"
+                    class="mt-1 block w-full"
+                    v-model="form.pseudo"
+                    required
+                    autocomplete="username"
+                />
+
+                <InputError class="mt-2" :message="form.errors.pseudo" />
             </div>
 
             <div class="mt-4">
