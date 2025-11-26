@@ -9,7 +9,9 @@ class Finance extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['user_id', 'type', 'amount', 'description', 'date'];
+    protected $fillable = [
+        'user_id', 'montant', 'type', 'statut_valide', 'description'
+    ];
 
     public function user()
     {
