@@ -1,6 +1,6 @@
 <script setup>
 import { Head, Link } from '@inertiajs/vue3';
-import AdminsideBar from '@/Components/AdminsideBar.vue';  
+import AdminsideBar from '@/Components/AdminsideBar.vue';
 
 
 defineProps({
@@ -30,6 +30,6 @@ function handleImageError() {
 
 <template>
     <Head title="Welcome" />
-    <AdminsideBar />
+    <!-- <AdminsideBar /> -->
 
 </template>
