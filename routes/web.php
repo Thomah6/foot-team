@@ -1,10 +1,12 @@
 <?php
 
+use App\Http\Controllers\Bureau\BureauMemberController;
 use App\Http\Controllers\TeamController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReflectionController;
 use App\Http\Controllers\Admin\StatController;
-use App\Http\Controllers\MemberController;
+use App\Http\Controllers\Admin\MemberController;
+
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -38,6 +40,10 @@ Route::middleware('auth')->group(function () {
         Route::delete('/members/{member}', [MemberController::class, 'destroy'])->name('members.destroy');
         Route::patch('/members/{member}/toggle-status', [MemberController::class, 'toggleStatus'])->name('members.toggle-status');
         Route::patch('/members/{member}/role', [MemberController::class, 'updateRole'])->name('members.update-role');
+    });
+
+    Route::prefix('bureau/members')->middleware('role:bureau')->group(function(){
+        Route::get('/',[BureauMemberController::class,'index'])->name('bureau.members.index');
     });
 });
 

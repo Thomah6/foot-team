@@ -11,6 +11,7 @@ import { Link, usePage } from '@inertiajs/vue3';
 const showingNavigationDropdown = ref(false);
 const page = usePage();
 const isAdmin = () => page.props.auth.user.role === 'admin';
+const isBureau = () => page.props.auth.user.role === 'bureau'
 </script>
 
 <template>
@@ -48,6 +49,13 @@ const isAdmin = () => page.props.auth.user.role === 'admin';
                                     Membres
                                 </NavLink>
                                 <NavLink
+                                    v-if="isBureau()"
+                                    :href="route('bureau.members.index')"
+                                    :active="route().current('bureau.members.*')"
+                                >
+                                    Membres
+                                </NavLink>
+                                <NavLink    
                                     v-if="isAdmin()"
                                     :href="route('reflections.index')"
                                     :active="route().current('reflections.*')"
