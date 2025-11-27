@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\StatController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
@@ -41,5 +42,11 @@ Route::prefix('admin')->middleware('role:admin')->group(function () {
 
 
 Route::get('/admin', [AdminController::class,'index'])->name('Admin.AdminLayout');
+
+
+Route::get('/admin/create', [StatController::class,'create'])->name('Admin.CreateStats');
+
+
+
 
 require __DIR__.'/auth.php';

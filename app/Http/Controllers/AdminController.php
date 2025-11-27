@@ -4,18 +4,34 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Nette\MemberAccessException;
 
 class AdminController extends Controller
 {
     /**
      * Page principale du layout Admin
      */
-    public function index()
-    {
-        return Inertia::render('Admin/AdminLayout', 
-          
-        );
-    }
+public function index()
+{
+    // Nombre total d'utilisateurs
+    $totalUsers = \App\Models\User::count();
+
+    // Balance totale de la caisse (somme de la colonne amount dans finances)
+    $balance = \App\Models\Finance::sum('amount');
+
+    // On regroupe les stats dans un tableau
+    $stats = [
+        'totalUsers' => $totalUsers,
+        'balance'    => $balance,
+    ];
+
+    return Inertia::render('Admin/AdminLayout', [
+        'stats' => $stats
+    ]);
+}
+
+
+
 
     /**
      * Dashboard Admin
