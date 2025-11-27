@@ -1,6 +1,7 @@
 <?php
 
 namespace Database\Factories;
+
 use App\Models\User;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -26,5 +27,12 @@ class StatFactory extends Factory
             'date' => $this->faker->dateTimeBetween('-1 month', 'now'),
             'validated_by_admin' => $this->faker->boolean(80),
         ];
+    }
+
+    public function forUser($id)
+    {
+        return $this->state([
+            'user_id' => $id,
+        ]);
     }
 }

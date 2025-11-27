@@ -3,16 +3,16 @@
 namespace Database\Seeders;
 
 use App\Models\Reflection;
-use App\Models\Team;
 use App\Models\User;
-use App\Models\Stat;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
+use App\Models\Stat;
+use App\Models\PlayerOfTheMonth;
+use Carbon\Carbon;
+
 class DatabaseSeeder extends Seeder
 {
-    use WithoutModelEvents;
-
     /**
      * Seed the application's database.
      */
@@ -24,8 +24,25 @@ class DatabaseSeeder extends Seeder
             'email' => 'test@example.com',
         ]);
 
-        User::factory(10)->create();
-        Stat::factory(20)->create();
-        Team::factory(20)->create();
+        // Créer des utilisateurs supplémentaires pour les stats
+        User::factory()->create([
+            'name' => 'Jean Dupont',
+            'email' => 'jean@example.com',
+        ]);
+
+        User::factory()->create([
+            'name' => 'Marie Martin',
+            'email' => 'marie@example.com',
+        ]);
+
+        User::factory()->create([
+            'name' => 'Pierre Durand',
+            'email' => 'pierre@example.com',
+        ]);
+
+        // Ensuite créer les stats (maintenant il y a des utilisateurs)
+        $this->call([
+            StatSeeder::class,
+        ]);
     }
 }
