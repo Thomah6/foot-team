@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('poster')->nullable();
             $table->enum('role', ['admin', 'bureau', 'simple'])->default('simple');
             $table->string('position')->nullable();
-            $table->boolean('is_active')->default(true);
+            $table->boolean('is_active')->default(false);
             $table->rememberToken();
             $table->timestamps();
         });

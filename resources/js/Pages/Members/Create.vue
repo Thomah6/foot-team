@@ -1,43 +1,22 @@
 <script setup>
-import { ref } from 'vue';
 import { useForm } from '@inertiajs/vue3';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 
-const props = defineProps({
-  member: Object,
-});
-
-const isEditing = props.member !== undefined;
+// Aucun props ici, car on ne reçoit rien pour la création
 
 const form = useForm({
-  pseudo: props.member?.pseudo || '',
-  name: props.member?.name || '',
-  email: props.member?.email || '',
+  pseudo: '',
+  name: '',
+  email: '',
   password: '',
   password_confirmation: '',
-  role: props.member?.role || 'simple',
-  position: props.member?.position || '',
-  is_active: props.member?.is_active ?? true,
+  role: 'simple',
+  position: '',
+  is_active: '',
 });
 
-const showPassword = ref(false);
-const showPasswordConfirm = ref(false);
-const errors = ref({});
-
 const submit = () => {
-  if (isEditing) {
-    form.patch(route('members.update', props.member.id), {
-      onError: (e) => {
-        errors.value = e;
-      },
-    });
-  } else {
-    form.post(route('members.store'), {
-      onError: (e) => {
-        errors.value = e;
-      },
-    });
-  }
+  form.post(route('members.store'));
 };
 </script>
 
@@ -45,7 +24,7 @@ const submit = () => {
   <AuthenticatedLayout>
     <template #header>
       <h2 class="text-xl font-semibold leading-tight text-gray-800">
-        {{ isEditing ? 'Editer le Membre' : 'Creer un Nouveau Membre' }}
+        Créer un Nouveau Membre
       </h2>
     </template>
 
@@ -53,169 +32,84 @@ const submit = () => {
       <div class="mx-auto max-w-2xl px-4 sm:px-6 lg:px-8">
         <div class="rounded-lg bg-white p-6 shadow-sm sm:p-8">
           <form @submit.prevent="submit" class="space-y-6">
+
             <!-- Pseudo -->
             <div>
-              <label for="pseudo" class="block text-sm font-medium text-gray-700 mb-2">
-                Pseudo <span class="text-red-500">*</span>
-              </label>
-              <input
-                id="pseudo"
-                v-model="form.pseudo"
-                type="text"
-                class="w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Entrez le pseudo"
-              />
-              <p v-if="form.errors.pseudo" class="mt-2 text-sm text-red-600">{{ form.errors.pseudo }}</p>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Pseudo *</label>
+              <input v-model="form.pseudo" type="text" class="w-full rounded-lg border px-4 py-2" />
+              <p v-if="form.errors.pseudo" class="text-red-600 text-sm">{{ form.errors.pseudo }}</p>
             </div>
 
             <!-- Name -->
             <div>
-              <label for="name" class="block text-sm font-medium text-gray-700 mb-2">
-                Nom <span class="text-red-500">*</span>
-              </label>
-              <input
-                id="name"
-                v-model="form.name"
-                type="text"
-                class="w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Entrez le nom complet"
-              />
-              <p v-if="form.errors.name" class="mt-2 text-sm text-red-600">{{ form.errors.name }}</p>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Nom *</label>
+              <input v-model="form.name" type="text" class="w-full rounded-lg border px-4 py-2" />
+              <p v-if="form.errors.name" class="text-red-600 text-sm">{{ form.errors.name }}</p>
             </div>
 
             <!-- Email -->
             <div>
-              <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
-                Email <span class="text-red-500">*</span>
-              </label>
-              <input
-                id="email"
-                v-model="form.email"
-                type="email"
-                class="w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="exemple@email.com"
-              />
-              <p v-if="form.errors.email" class="mt-2 text-sm text-red-600">{{ form.errors.email }}</p>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Email *</label>
+              <input v-model="form.email" type="email" class="w-full rounded-lg border px-4 py-2" />
+              <p v-if="form.errors.email" class="text-red-600 text-sm">{{ form.errors.email }}</p>
             </div>
 
             <!-- Position -->
             <div>
-              <label for="position" class="block text-sm font-medium text-gray-700 mb-2">Position</label>
-              <input
-                id="position"
-                v-model="form.position"
-                type="text"
-                class="w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Ex: Gardien, Defenseur..."
-              />
-              <p v-if="form.errors.position" class="mt-2 text-sm text-red-600">{{ form.errors.position }}</p>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Position</label>
+              <input v-model="form.position" type="text" class="w-full rounded-lg border px-4 py-2" />
+              <p v-if="form.errors.position" class="text-red-600 text-sm">{{ form.errors.position }}</p>
             </div>
 
             <!-- Role -->
             <div>
-              <label for="role" class="block text-sm font-medium text-gray-700 mb-2">
-                Role <span class="text-red-500">*</span>
-              </label>
-              <select
-                id="role"
-                v-model="form.role"
-                class="w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
+              <label class="block text-sm font-medium text-gray-700 mb-2">Role *</label>
+              <select v-model="form.role" class="w-full rounded-lg border px-4 py-2">
                 <option value="simple">Simple</option>
                 <option value="bureau">Bureau</option>
                 <option value="admin">Administrateur</option>
               </select>
-              <p class="mt-1 text-xs text-gray-500">
-                Simple: Membre ordinaire | Bureau: Membre du bureau | Admin: Administrateur complet
-              </p>
-              <p v-if="form.errors.role" class="mt-2 text-sm text-red-600">{{ form.errors.role }}</p>
+              <p v-if="form.errors.role" class="text-red-600 text-sm">{{ form.errors.role }}</p>
             </div>
 
-            <!-- Password (only for new members or optional update) -->
-            <div class="border-t border-gray-200 pt-6">
-              <h3 class="text-lg font-semibold text-gray-900 mb-4">
-                {{ isEditing ? 'Changer le Mot de Passe (Optionnel)' : 'Mot de Passe' }}
-              </h3>
+            <!-- Password -->
+            <div class="border-t pt-6">
+              <h3 class="font-semibold mb-4">Mot de Passe *</h3>
 
               <div>
-                <label for="password" class="block text-sm font-medium text-gray-700 mb-2">
-                  Mot de Passe {{ !isEditing ? '*' : '' }}
-                </label>
-                <div class="relative">
-                  <input
-                    id="password"
-                    v-model="form.password"
-                    :type="showPassword ? 'text' : 'password'"
-                    class="w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    :placeholder="isEditing ? 'Laissez vide pour ne pas modifier' : 'Entrez le mot de passe'"
-                  />
-                  <button
-                    type="button"
-                    @click="showPassword = !showPassword"
-                    class="absolute right-3 top-2.5 text-gray-500 hover:text-gray-700"
-                  >
-                    {{ showPassword ? 'Masquer' : 'Afficher' }}
-                  </button>
-                </div>
-                <p v-if="form.errors.password" class="mt-2 text-sm text-red-600">{{ form.errors.password }}</p>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Mot de Passe</label>
+                <input v-model="form.password" type="password" class="w-full rounded-lg border px-4 py-2" />
+                <p v-if="form.errors.password" class="text-red-600 text-sm">{{ form.errors.password }}</p>
               </div>
 
               <div class="mt-4">
-                <label for="password_confirmation" class="block text-sm font-medium text-gray-700 mb-2">
-                  Confirmer le Mot de Passe {{ !isEditing ? '*' : '' }}
-                </label>
-                <div class="relative">
-                  <input
-                    id="password_confirmation"
-                    v-model="form.password_confirmation"
-                    :type="showPasswordConfirm ? 'text' : 'password'"
-                    class="w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    :placeholder="isEditing ? 'Laissez vide pour ne pas modifier' : 'Confirmez le mot de passe'"
-                  />
-                  <button
-                    type="button"
-                    @click="showPasswordConfirm = !showPasswordConfirm"
-                    class="absolute right-3 top-2.5 text-gray-500 hover:text-gray-700"
-                  >
-                    {{ showPasswordConfirm ? 'Masquer' : 'Afficher' }}
-                  </button>
-                </div>
-                <p v-if="form.errors.password_confirmation" class="mt-2 text-sm text-red-600">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Confirmation</label>
+                <input v-model="form.password_confirmation" type="password"
+                  class="w-full rounded-lg border px-4 py-2" />
+                <p v-if="form.errors.password_confirmation" class="text-red-600 text-sm">
                   {{ form.errors.password_confirmation }}
                 </p>
               </div>
             </div>
 
-            <!-- Status -->
+            <!-- Active Status -->
             <div class="flex items-center gap-3">
-              <input
-                id="is_active"
-                v-model="form.is_active"
-                type="checkbox"
-                class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-2 focus:ring-blue-500"
-              />
-              <label for="is_active" class="text-sm font-medium text-gray-700">
-                Compte Actif
-              </label>
+              <input v-model="form.is_active" type="checkbox" class="h-4 w-4 rounded border-gray-300" />
+              <label class="text-sm font-medium text-gray-700">Compte Actif</label>
             </div>
-            <p v-if="form.errors.is_active" class="text-sm text-red-600">{{ form.errors.is_active }}</p>
 
             <!-- Buttons -->
-            <div class="flex gap-3 pt-6 border-t border-gray-200">
-              <a
-                href="/members"
-                class="flex-1 rounded-lg border border-gray-300 px-4 py-2 text-center font-medium text-gray-700 hover:bg-gray-50 transition"
-              >
+            <div class="flex gap-3 pt-6 border-t">
+              <a href="/members" class="flex-1 border rounded-lg py-2 text-center hover:bg-gray-50">
                 Annuler
               </a>
-              <button
-                type="submit"
-                :disabled="form.processing"
-                class="flex-1 rounded-lg bg-blue-600 px-4 py-2 font-medium text-white hover:bg-blue-700 transition disabled:opacity-50"
-              >
-                {{ form.processing ? 'Traitement...' : (isEditing ? 'Modifier' : 'Creer') }}
+
+              <button type="submit" :disabled="form.processing"
+                class="flex-1 bg-blue-600 text-white rounded-lg py-2 hover:bg-blue-700">
+                {{ form.processing ? 'Création...' : 'Créer' }}
               </button>
             </div>
+
           </form>
         </div>
       </div>
