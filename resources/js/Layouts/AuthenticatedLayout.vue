@@ -167,6 +167,16 @@ const isAdmin = () => page.props.auth.user.role === 'admin';
                         >
                             Membres
                         </ResponsiveNavLink>
+                        <ResponsiveNavLink
+                                    v-if="isAdmin()"
+                                    :href="route('reflections.index')"
+                                    :active="route().current('reflections.*')"
+                        >
+                                    Reflexions
+                        </ResponsiveNavLink>
+                        <Link :href="route('reflections.index')">
+                        Voir les Réflexions
+                        </Link>
                     </div>
 
                     <!-- Responsive Settings Options -->
