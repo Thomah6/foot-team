@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\FinanceController;
 use App\Http\Controllers\TeamController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\StatController;
@@ -125,6 +126,14 @@ Route::middleware(['auth', 'role:admin']) // 👉 Accès réservé aux Admins
 Route::get('/teams/{team}/affect', [TeamController::class, 'affectPage'])
     ->name('teams.affect');
 Route::post('/teams/{team}/affect/save', [TeamController::class, 'saveAffect']);
+
+
+Route::get('/finances', [FinanceController::class, 'index'])->name('finances.index');
+Route::get('/finances/depot/create', [FinanceController::class, 'createDepot'])->name('finances.createDepot');
+Route::post('/finances', [FinanceController::class, 'storeDepot'])->name('finances.storeDepot');
+Route::get('/finances/depense/create', [FinanceController::class, 'createDepense'])->name('finances.createDepense');
+Route::post('/finances/depense', [FinanceController::class, 'storeDepense'])->name('finances.storeDepense');
+Route::post('/finances/valider', [FinanceController::class, 'valider'])->name('finances.valider');
 
 
 require __DIR__.'/auth.php';

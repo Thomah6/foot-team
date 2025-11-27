@@ -45,7 +45,7 @@ class FinanceController extends Controller
     // Formulaire pour un dépôt
     public function createDepot()
     {
-        return Inertia::render('Finance/Create');
+        return Inertia::render('Finance/CreateDepot');
     }
 
     // Soumettre un dépôt
