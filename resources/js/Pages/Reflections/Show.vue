@@ -1,6 +1,7 @@
 <template>
-  <Layout>
-    <div class="max-w-4xl mx-auto py-10 px-4 sm:px-6 lg:px-8">
+    <AuthenticatedLayout>
+  <Layout class="flex flex-col sm:flex-row">
+    <div class="max-w-4xl mx-auto py-10 px-4 sm:px-6 lg:px-8 ">
 
       <div class="bg-white p-8 rounded-2xl shadow-2xl border-t-4 border-indigo-600 mb-10">
 
@@ -117,21 +118,24 @@
               Par **{{ comment.user.name }}** le {{ formatCommentDate(comment.created_at) }}
             </div>
           </div>
-
-          <div v-if="reflection.comments.length === 0" class="text-center p-6 bg-gray-50 rounded-lg text-gray-500 italic">
-            Soyez le premier à commenter !
-          </div>
         </div>
       </div>
 
     </div>
+    <div class=" mx-auto py-10 px-4 sm:px-6 lg:px-8">
+        <div v-if="reflection.comments.length === 0" class="text-center p-6 bg-gray-50 rounded-lg text-gray-500 italic w-full">
+            Soyez le premier à commenter !
+        </div>
+    </div>
   </Layout>
+</AuthenticatedLayout>
 </template>
 
 <script setup>
 import { defineProps, computed } from 'vue';
 import { router } from '@inertiajs/vue3';
 import Dropdown from '@/Components/Dropdown.vue';
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
 // import Layout from '@/Layouts/AppLayout.vue';
 
