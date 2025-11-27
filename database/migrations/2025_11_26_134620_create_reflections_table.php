@@ -13,11 +13,11 @@ return new class extends Migration
     {
         Schema::create('reflections', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
-            $table->text('content');
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->boolean('is_active')->default(false);
-            $table->integer('duration')->default(7); // Durée en jours
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+            $table->string('titre');
+            $table->text('contenu');
+            $table->enum('statut', ['ouvert', 'ferme', 'valide'])->default('ouvert');
+            $table->dateTime('date_fin_vote')->nullable();
             $table->timestamps();
         });
     }

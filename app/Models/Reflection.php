@@ -4,12 +4,17 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\User;
+use App\Models\Vote;
+use App\Models\Comment;
 
 class Reflection extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['title', 'content', 'user_id', 'is_active', 'duration'];
+    protected $fillable = [
+        'user_id', 'titre', 'contenu', 'statut', 'date_fin_vote'
+    ];
 
     public function user()
     {

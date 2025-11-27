@@ -25,7 +25,7 @@ class UserFactory extends Factory
     {
         return [
             'name' => fake()->name(),
-            'pseudo' => $this->faker->userName(),
+            'pseudo' => $this->faker->unique()->userName(),
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
@@ -33,7 +33,7 @@ class UserFactory extends Factory
             'poster' => $this->faker->imageUrl(800, 400, 'sports'),
             'role' => $this->faker->randomElement(['admin', 'bureau', 'simple']),
             'position' => $this->faker->randomElement(['gardien', 'defenseur', 'milieu', 'attaquant']),
-            'is_active' => $this->faker->boolean(90),
+  
             'remember_token' => Str::random(10),
         ];
     }
