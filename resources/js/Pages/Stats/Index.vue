@@ -1,5 +1,6 @@
 <script setup>
 import { Link } from '@inertiajs/vue3'
+import { useForm } from '@inertiajs/vue3'
 import AdminsideBar from '@/Components/AdminsideBar.vue';
 
 const props = defineProps({
@@ -7,6 +8,29 @@ const props = defineProps({
     validatedCount: Number,
     lastStats: Array
 })
+
+// Formulaire pour valider/rejeter
+const form = useForm({})
+
+const validateStat = (statId) => {
+    form.post(`/admin/stats/${statId}/validate`, {
+        preserveScroll: true,
+        onSuccess: () => {
+            // La page se mettra à jour automatiquement via Inertia
+        }
+    })
+}
+
+const rejectStat = (statId) => {
+    if (confirm('Êtes-vous sûr de vouloir rejeter cette statistique ?')) {
+        form.delete(`/admin/stats/${statId}/reject`, {
+            preserveScroll: true,
+            onSuccess: () => {
+                // La page se mettra à jour automatiquement via Inertia
+            }
+        })
+    }
+}
 </script>
 
 <template>
@@ -71,30 +95,6 @@ const props = defineProps({
                     </div>
                 </div>
 
-                <!-- Quick Actions -->
-                <h3 class="text-lg font-bold px-4 pb-2 pt-8">Actions rapides</h3>
-
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 p-4">
-
-                    <Link href="/admin/stats/create"
-                          class="group flex flex-col items-center justify-center gap-4 p-8 bg-white rounded-xl border hover:border-primary hover:scale-105 transition cursor-pointer">
-                        <i class="fa-solid fa-plus-circle text-primary text-5xl"></i>
-                        <p class="text-lg font-semibold">Ajouter une statistique</p>
-                    </Link>
-
-                    <Link href="/admin/stats/pending"
-                          class="group flex flex-col items-center justify-center gap-4 p-8 bg-white rounded-xl border hover:border-primary hover:scale-105 transition cursor-pointer">
-                        <i class="fa-solid fa-list-check text-primary text-5xl"></i>
-                        <p class="text-lg font-semibold">Valider les statistiques</p>
-                    </Link>
-
-                    <Link href="/admin/stats/classements"
-                          class="group flex flex-col items-center justify-center gap-4 p-8 bg-white rounded-xl border hover:border-primary hover:scale-105 transition cursor-pointer">
-                        <i class="fa-solid fa-ranking-star text-primary text-5xl"></i>
-                        <p class="text-lg font-semibold">Voir les classements</p>
-                    </Link>
-                </div>
-
                 <!-- Historique récent -->
                 <h3 class="text-lg font-bold px-4 pb-2 pt-8">Historique récent</h3>
 
@@ -112,20 +112,38 @@ const props = defineProps({
                          :key="item.id"
                          class="flex items-center gap-4 p-3 bg-white rounded-lg border hover:border-zinc-300 transition">
 
-                        <img :src="item.user.avatar"
+                        <img :src="item.user?.avatar || 'https://via.placeholder.com/100x100.png/00ee99?text=J'"
                              class="h-10 w-10 rounded-full object-cover" />
 
                         <div class="flex-grow">
-                            <p class="font-medium">{{ item.user.name }}</p>
+                            <p class="font-medium">{{ item.user?.name || 'Joueur inconnu' }}</p>
                             <p class="text-sm text-zinc-500">
                                 {{ item.goals }} buts — {{ item.assists }} passes — match du {{ item.date }}
                             </p>
                         </div>
 
+                        <!-- Statut -->
                         <span class="text-xs font-semibold py-1 px-3 rounded-full"
                               :class="item.validated_by_admin ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'">
                             {{ item.validated_by_admin ? 'Validée' : 'En attente' }}
                         </span>
+
+                        <!-- Boutons d'action si en attente -->
+                        <div v-if="!item.validated_by_admin" class="flex gap-2">
+                            <button @click="validateStat(item.id)"
+                                    :disabled="form.processing"
+                                    class="px-3 py-1 bg-green-500 text-white text-xs rounded hover:bg-green-600 transition disabled:opacity-50">
+                                <i class="fas fa-check mr-1"></i>
+                                Valider
+                            </button>
+                            
+                            <button @click="rejectStat(item.id)"
+                                    :disabled="form.processing"
+                                    class="px-3 py-1 bg-red-100 text-red-600 text-xs rounded hover:bg-red-200 transition disabled:opacity-50">
+                                <i class="fas fa-times mr-1"></i>
+                                Rejeter
+                            </button>
+                        </div>
                     </div>
                 </div>
 
