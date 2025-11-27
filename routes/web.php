@@ -3,6 +3,7 @@
 use App\Http\Controllers\TeamController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReflectionController;
+use App\Http\Controllers\PresenceController;
 use App\Http\Controllers\Admin\StatController;
 use App\Http\Controllers\MemberController;
 use Illuminate\Foundation\Application;
@@ -26,6 +27,19 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    // ===== ROUTES PRÉSENCES =====
+    Route::get('/presence', [PresenceController::class, 'index'])->name('presence.index');
+    Route::get('/presence/history', [PresenceController::class, 'history'])->name('presence.history');
+    Route::post('/presence', [PresenceController::class, 'store'])->name('presence.store');
+    Route::get('/presence/day', [PresenceController::class, 'getByDate'])->name('presence.getByDate');
+
+    // Admin only routes for presence
+    Route::middleware('role:admin')->group(function () {
+        Route::patch('/presence/{presence}/validate', [PresenceController::class, 'validate'])->name('presence.validate');
+        Route::patch('/presence/{presence}', [PresenceController::class, 'update'])->name('presence.update');
+        Route::get('/presence/monthly-report', [PresenceController::class, 'monthlyReport'])->name('presence.monthlyReport');
+    });
 
     // Members management routes - Admin only
     Route::middleware('role:admin')->group(function () {
