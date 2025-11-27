@@ -18,6 +18,7 @@ return new class extends Migration
             $table->integer('losses')->default(0);
             $table->integer('draws')->default(0);
             $table->date('month'); // 2024-01-01 pour janvier 2024
+            $table->boolean('validated')->default(true);
             $table->timestamps();
         });
     }

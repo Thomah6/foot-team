@@ -1,12 +1,15 @@
 <?php
 
 use Inertia\Inertia;
+use App\Http\Controllers\Admin\StatController;
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Admin\TeamStatController;
 use App\Http\Controllers\Bureau\BureauMemberController;
 use App\Http\Controllers\TeamController;
-use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReflectionController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\Admin\StatController;
+use App\Http\Controllers\Bureau\BureauStatController;
 use App\Http\Controllers\Admin\MemberController;
 use App\Http\Controllers\GalleryController;
 use Illuminate\Foundation\Application;
@@ -26,6 +29,8 @@ Route::get('/', function () {
 Route::get('/dashboard', [DashboardController::class, 'index'])
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
+
+
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -53,7 +58,7 @@ Route::prefix('reflections')->group(function () {
     Route::get('/', [ReflectionController::class, 'index'])->name('reflections.index');
     Route::get('/{reflection}', [ReflectionController::class, 'show'])->name('reflections.show');
     Route::get('/create', [ReflectionController::class, 'create'])->name('admin.reflections.create');
-    Route::post('/', [ReflectionController::class, 'store'])->name('admin.reflections.store');
+    Route::post('/', [ReflectionController::class, 'store'])->name('reflections.store');
     Route::get('/{id}/edit', [ReflectionController::class, 'edit'])->name('admin.reflections.edit');
     Route::get('/{id}/validate', [ReflectionController::class, 'validate'])->name('reflections.validate');
     Route::put('/{id}', [ReflectionController::class, 'update'])->name('admin.reflections.update');
@@ -84,6 +89,18 @@ Route::middleware(['auth', 'role:admin']) // 👉 Accès réservé aux Admins
          */
         Route::post('/stats', [StatController::class, 'store'])
             ->name('stats.store');
+
+// Routes admin avec authentification
+Route::middleware(['auth'])
+    ->prefix('admin')
+    ->name('admin.')
+    ->group(function () {
+
+        Route::get('/stats', [StatController::class, 'index'])
+            ->name('stats.index');
+
+        Route::get('/stats/classements', [StatController::class, 'adminClassementsIndex'])
+            ->name('stats.classements');
 
 
         /**
@@ -154,7 +171,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/gallery-upload', function () {
         return Inertia::render('GalleryUpload');
     })->name('gallery.upload');
-    
+
 
     // Déclare un ensemble de routes RESTful pour le controller GalleryController
     // On limite volontairement aux méthodes utiles :
