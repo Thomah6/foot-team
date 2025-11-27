@@ -5,12 +5,15 @@ use App\Http\Controllers\Bureau\BureauMemberController;
 use App\Http\Controllers\TeamController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReflectionController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Admin\StatController;
 use App\Http\Controllers\Admin\MemberController;
 
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use App\Http\Controllers\NewsController;
+use App\Http\Controllers\PlayerOfTheMonthController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -21,9 +24,9 @@ Route::get('/', function () {
     ]);
 });
 
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', [DashboardController::class, 'index'])
+    ->middleware(['auth', 'verified'])
+    ->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -137,12 +140,30 @@ Route::get('/teams/{team}/affect', [TeamController::class, 'affectPage'])
 Route::post('/teams/{team}/affect/save', [TeamController::class, 'saveAffect']);
 
 
-Route::get('/finances', [FinanceController::class, 'index'])->name('finances.index');
-Route::get('/finances/depot/create', [FinanceController::class, 'createDepot'])->name('finances.createDepot');
-Route::post('/finances', [FinanceController::class, 'storeDepot'])->name('finances.storeDepot');
-Route::get('/finances/depense/create', [FinanceController::class, 'createDepense'])->name('finances.createDepense');
-Route::post('/finances/depense', [FinanceController::class, 'storeDepense'])->name('finances.storeDepense');
-Route::post('/finances/valider/{id}', [FinanceController::class, 'valider'])->name('finances.valider');
+Route::prefix('admin/news')->group(function () {
 
+    Route::get('/index', [NewsController::class, 'index'])->name('admin.news.index');
+
+    Route::get('/showReglement', [NewsController::class, 'showReglement'])->name('admin.news.showReglement');
+
+    Route::get('/bannerplayermonth', [PlayerOfTheMonthController::class, 'index'])
+        ->name('admin.news.bannerplayermonth');
+
+    Route::put('/BannerPlayerMonth', [PlayerOfTheMonthController::class, 'update']);
+
+    Route::delete('/BannerPlayerMonth', [PlayerOfTheMonthController::class, 'destroy']);
+
+    Route::get('/create', [NewsController::class, 'create'])->name('admin.news.create');
+
+    Route::post('/', [NewsController::class, 'store'])->name('admin.news.store');
+
+    Route::get('/{id}/edit', [NewsController::class, 'edit'])->name('admin.news.edit');
+
+    Route::put('/{id}', [NewsController::class, 'update'])->name('admin.news.update');
+
+    Route::delete('/{id}', [NewsController::class, 'destroy'])->name('admin.news.destroy');
+
+    Route::patch('/{id}/toggle-banner', [NewsController::class, 'toggleBanner'])->name('admin.news.toggle_banner'); // joueur du mois
+});
 
 require __DIR__ . '/auth.php';
