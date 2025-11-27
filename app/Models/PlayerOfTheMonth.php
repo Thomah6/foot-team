@@ -11,6 +11,11 @@ class PlayerOfTheMonth extends Model
 
     protected $fillable = ['user_id', 'month', 'reason', 'is_active'];
 
+    protected $casts = [
+        'month' => 'date',
+        'is_active' => 'boolean',
+    ];
+
     public function user()
     {
         return $this->belongsTo(User::class);

@@ -1,14 +1,18 @@
 <?php
 
+use App\Http\Controllers\Bureau\BureauMemberController;
 use App\Http\Controllers\TeamController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReflectionController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Admin\StatController;
 use App\Http\Controllers\MemberController;
 use App\Http\Controllers\GalleryController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use App\Http\Controllers\NewsController;
+use App\Http\Controllers\PlayerOfTheMonthController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -19,9 +23,9 @@ Route::get('/', function () {
     ]);
 });
 
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', [DashboardController::class, 'index'])
+    ->middleware(['auth', 'verified'])
+    ->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -38,6 +42,10 @@ Route::middleware('auth')->group(function () {
         Route::delete('/members/{member}', [MemberController::class, 'destroy'])->name('members.destroy');
         Route::patch('/members/{member}/toggle-status', [MemberController::class, 'toggleStatus'])->name('members.toggle-status');
         Route::patch('/members/{member}/role', [MemberController::class, 'updateRole'])->name('members.update-role');
+    });
+
+    Route::prefix('bureau/members')->middleware('role:bureau')->group(function(){
+        Route::get('/',[BureauMemberController::class,'index'])->name('bureau.members.index');
     });
 });
 
@@ -93,30 +101,8 @@ Route::middleware(['auth', 'role:admin']) // 👉 Accès réservé aux Admins
         Route::post('/stats/{stat}/validate', [StatController::class, 'validateStat'])
             ->name('stats.validate');
 
-
-        /**
-         * 🟦 5. Classement des buteurs
-         * Filtré uniquement sur les stats validées
-         * Seuil : min 2 buts
-         */
-        Route::get('/stats/classements/buteurs', [StatController::class, 'classementsGoals'])
-            ->name('stats.classements.buteurs');
-
-
-        /**
-         * 🟦 6. Classement des passeurs
-         * Filtré sur les assists validées
-         */
-        Route::get('/stats/classements/passeurs', [StatController::class, 'classementsAssists'])
-            ->name('stats.classements.passeurs');
-
-
-        /**
-         * 🟦 7. Classement des gardiens
-         * Basé sur “goals_against”, classement inversé (moins encaisse → meilleur)
-         */
-        Route::get('/stats/classements/gardiens', [StatController::class, 'classementsGardiens'])
-            ->name('stats.classements.gardiens');
+        Route::delete('/stats/{stat}/reject', [StatController::class, 'rejectStat'])
+            ->name('stats.reject');
     });
 
 
@@ -127,6 +113,13 @@ Route::middleware(['auth', 'role:admin']) // 👉 Accès réservé aux Admins
 //     Route::post('/teams/assign-members', [TeamController::class, 'assignMembers']);
 //     Route::post('/teams/mercato', [TeamController::class, 'mercato']);
 // });
+Route::get('/teams', [TeamController::class, 'vue'])->name('admin.teams');
+Route::get('/teams/index', [TeamController::class, 'index'])->name('admin.teams.index');
+Route::get('teams/create', [TeamController::class, 'create'])->name('admin.teams.create');
+Route::post('/teams', [TeamController::class, 'store'])->name('admin.teams.store');
+Route::get('/teams/{id}/edit', [TeamController::class, 'edit'])->name('admin.teams.edit');
+Route::put('/teams/{team}', [TeamController::class, 'update'])->name('admin.teams.update');
+Route::delete('/teams/{id}', [TeamController::class, 'destroy'])->name('admin.teams.destroy');
 Route::get('/teams', [TeamController::class, 'vue'])->name('admin.teams');
 Route::get('/teams/index', [TeamController::class, 'index'])->name('admin.teams.index');
 Route::get('teams/create', [TeamController::class, 'create'])->name('admin.teams.create');
@@ -181,3 +174,30 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/galleries/{gallery}', [GalleryController::class, 'destroy'])->name('galleries.destroy');
 });
 
+Route::prefix('admin/news')->group(function () {
+
+    Route::get('/index', [NewsController::class, 'index'])->name('admin.news.index');
+
+    Route::get('/showReglement', [NewsController::class, 'showReglement'])->name('admin.news.showReglement');
+
+    Route::get('/bannerplayermonth', [PlayerOfTheMonthController::class, 'index'])
+        ->name('admin.news.bannerplayermonth');
+
+    Route::put('/BannerPlayerMonth', [PlayerOfTheMonthController::class, 'update']);
+
+    Route::delete('/BannerPlayerMonth', [PlayerOfTheMonthController::class, 'destroy']);
+
+    Route::get('/create', [NewsController::class, 'create'])->name('admin.news.create');
+
+    Route::post('/', [NewsController::class, 'store'])->name('admin.news.store');
+
+    Route::get('/{id}/edit', [NewsController::class, 'edit'])->name('admin.news.edit');
+
+    Route::put('/{id}', [NewsController::class, 'update'])->name('admin.news.update');
+
+    Route::delete('/{id}', [NewsController::class, 'destroy'])->name('admin.news.destroy');
+
+    Route::patch('/{id}/toggle-banner', [NewsController::class, 'toggleBanner'])->name('admin.news.toggle_banner'); // joueur du mois
+});
+
+require __DIR__ . '/auth.php';
