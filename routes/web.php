@@ -16,23 +16,38 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\PlayerOfTheMonthController;
+use App\Http\Controllers\Auth\GoogleAuthController;
+
+// Routes d'authentification Google
+Route::get('/auth/google', [GoogleAuthController::class, 'redirect'])->name('google.login');
+Route::get('/auth/google/callback', [GoogleAuthController::class, 'callback']);
+
+// Route::get('/', function () {
+//     if (auth()->check()) {
+//         return redirect()->route('dashboard');
+//     }
+    
+//     return Inertia::render('Welcome', [
+//         'canLogin' => Route::has('login'),
+//         'canRegister' => Route::has('register'),
+//         'laravelVersion' => Application::VERSION,
+//         'phpVersion' => PHP_VERSION,
+//     ]);
+// });
 
 Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
+    return auth()->check() 
+        ? redirect()->route('dashboard')
+        : redirect()->route('login');
 });
 
 Route::get('/dashboard', [DashboardController::class, 'index'])
-    ->middleware(['auth', 'verified'])
+    ->middleware(['auth', 'is.active'])
     ->name('dashboard');
 
 
 
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'is.active'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
@@ -114,7 +129,7 @@ Route::get('/admin/create', [StatController::class,'create'])->name('Admin.Creat
  * 📊 Stats admin (accès authentifié)
  */
 Route::get('/admin/stats', [StatController::class, 'index'])
-    ->middleware('auth')
+    ->middleware(['auth', 'is.active'])
     ->name('admin.stats.index');
 
 /**
@@ -148,7 +163,7 @@ Route::get('/classements/gardiens', [StatController::class, 'classementsGardiens
     ->name('stats.classement.gardiens');
 
 // Routes admin avec authentification
-Route::middleware(['auth'])
+Route::middleware(['auth', 'is.active'])
     ->prefix('admin')
     ->name('admin.')
     ->group(function () {
