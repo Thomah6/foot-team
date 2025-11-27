@@ -12,7 +12,9 @@ class Reflection extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['title', 'content', 'user_id', 'is_active', 'duration'];
+    protected $fillable = [
+        'user_id', 'titre', 'contenu', 'statut', 'date_fin_vote'
+    ];
 
     public function user()
     {
