@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Finance;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
@@ -23,7 +24,7 @@ class FinanceController extends Controller
         if ($request->date_to)
             $query->where('created_at', '<=', $request->date_to);
 
-        $finances = $query->orderByDesc('created_at')->paginate(20);
+        $finances = $query->orderByDesc('created_at')->get();
 
         // Données calculées
         $solde_cotisations = Finance::where('statut_valide', true)
@@ -38,8 +39,22 @@ class FinanceController extends Controller
 
         $total_attente = Finance::where('statut_valide', false)
             ->where('type', 'cotisation')->sum('montant');
+        
+        $nb_attente = Finance::where('statut_valide', false)
+            ->where('type', 'cotisation')->count();
+        
+            $users = User::all();
 
-        return Inertia::render('Finance/Index', compact('finances', 'solde_cotisations', 'solde_depenses', 'solde_total', 'total_attente'));
+            // Return props using camelCase keys expected by the Vue components
+            return Inertia::render('Finance/Index', [
+                'finances' => $finances->toArray(),
+                'soldeCotisations' => $solde_cotisations,
+                'soldeDepenses' => $solde_depenses,
+                'soldeTotal' => $solde_total,
+                'totalAttente' => $total_attente,
+                'nbAttente' => $nb_attente,
+                'users' => $users,
+            ]);
     }
 
     // Formulaire pour un dépôt

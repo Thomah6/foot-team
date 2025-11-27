@@ -29,7 +29,10 @@
 </template>
 <script setup>
 const props = defineProps({
-  finances: Array
+  finances: {
+    type: Array,
+    default: () => []
+  }
 })
 function montantClass(finance) {
   if (finance.type === 'dépense') return 'text-danger'

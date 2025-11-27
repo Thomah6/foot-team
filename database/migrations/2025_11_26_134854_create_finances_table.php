@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('finances', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users')->onDelete('set null');
+            $table->foreignId('user_id')->nullable()->constrained('users')->onDelete('set null');
             $table->enum('type', ['cotisation', 'dépense', 'autre']);
             $table->decimal('montant', 10, 2);
             $table->boolean('statut_valide')->default(false);

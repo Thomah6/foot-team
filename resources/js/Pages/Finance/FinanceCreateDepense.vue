@@ -1,4 +1,5 @@
 <script setup>
+import AuthenticatedLayout from 'vendor/laravel/breeze/stubs/inertia-react/resources/js/Layouts/AuthenticatedLayout'
 import { ref } from 'vue'
 const visible = ref(false)
 const montant = ref('')
@@ -14,6 +15,7 @@ function submit() {
 defineExpose({ open, close })
 </script>
 <template>
+  <AuthenticatedLayout>
   <div v-if="visible" class="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
     <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-lg">
       <h2 class="text-xl font-bold mb-6">Ajouter une dépense</h2>
@@ -33,4 +35,5 @@ defineExpose({ open, close })
       </form>
     </div>
   </div>
+  </AuthenticatedLayout>
 </template>
