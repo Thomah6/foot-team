@@ -4,7 +4,7 @@ use App\Http\Controllers\TeamController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\StatController;
 use App\Http\Controllers\MemberController;
-
+use App\Http\Models\Reflection;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\VoteController;
