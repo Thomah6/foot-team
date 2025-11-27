@@ -13,7 +13,7 @@ class ReflectionController extends Controller
     /**
      * Affiche la page publique avec le formulaire et la liste des réflexions.
      */
-    public function index()
+    public function index(Request $request)
     {
         // 1. Listing réflexions (filtrées par activation et durée)
         $reflections = Reflection::query()
@@ -24,6 +24,17 @@ class ReflectionController extends Controller
 
         return Inertia::render('Reflections/Index', [
             'reflections' => $reflections,
+            'success' => $request->session()->get('success'),
+        ]);
+    }
+    public function show(Reflection $reflection){
+        // On charge manuellement les relations 'user' et 'comments'
+        // avant de passer l'objet à la vue.
+        $reflection->load('user', 'comments');
+
+        return Inertia::render('Reflections/Show', [
+            'reflection' => $reflection,
+            // Vous pouvez aussi passer les votes ici quand ils seront prêts
         ]);
     }
 

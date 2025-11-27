@@ -25,8 +25,9 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::prefix('admin/reflections')->middleware('role:admin')->group(function () {
+Route::prefix('admin/reflections')->group(function () {
     Route::get('/', [ReflectionController::class, 'index'])->name('admin.reflections.index');
+    Route::get('/{reflection}', [ReflectionController::class, 'show'])->name('reflections.show');
     Route::get('/create', [ReflectionController::class, 'create'])->name('admin.reflections.create');
     Route::post('/', [ReflectionController::class, 'store'])->name('admin.reflections.store');
     Route::get('/{id}/edit', [ReflectionController::class, 'edit'])->name('admin.reflections.edit');

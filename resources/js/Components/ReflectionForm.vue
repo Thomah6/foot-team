@@ -1,3 +1,21 @@
+<script setup>
+import { useForm } from '@inertiajs/vue3';
+import { usePage } from '@inertiajs/vue3';
+
+// Formulaire Inertia
+const form = useForm({
+  content: '',
+});
+
+const page = usePage();
+
+const submit = () => {
+  form.post(route('reflections.store'), {
+    onSuccess: () => form.reset('content'), // Réinitialise le contenu après succès
+  });
+};
+</script>
+
 <template>
   <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-100">
     <h3 class="text-2xl font-bold text-gray-800 mb-4">Partagez votre réflexion</h3>
@@ -35,20 +53,4 @@
   </div>
 </template>
 
-<script setup>
-import { useForm } from '@inertiajs/vue3';
-import { usePage } from '@inertiajs/vue3';
 
-// Formulaire Inertia
-const form = useForm({
-  content: '',
-});
-
-const page = usePage();
-
-const submit = () => {
-  form.post(route('reflections.store'), {
-    onSuccess: () => form.reset('content'), // Réinitialise le contenu après succès
-  });
-};
-</script>
