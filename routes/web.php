@@ -65,6 +65,13 @@ Route::prefix('reflections')->group(function () {
 Route::get('/stats', [StatController::class, 'publicIndex'])->name('stats.public.index');
 
 /**
+ * 📊 Stats admin (accès authentifié)
+ */
+Route::get('/admin/stats', [StatController::class, 'index'])
+    ->middleware('auth')
+    ->name('admin.stats.index');
+
+/**
  * 🏆 Joueur du Mois (public)
  */
 Route::get('/joueur-du-mois', [StatController::class, 'currentPlayerOfMonth'])
@@ -102,6 +109,9 @@ Route::middleware(['auth'])
 
         Route::get('/stats', [StatController::class, 'index'])
             ->name('stats.index');
+
+        Route::get('/stats/classements', [StatController::class, 'adminClassementsIndex'])
+            ->name('stats.classements');
 
         Route::get('/stats/pending', [StatController::class, 'pending'])
             ->name('stats.pending');

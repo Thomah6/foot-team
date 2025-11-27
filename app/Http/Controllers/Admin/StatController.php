@@ -76,6 +76,11 @@ public function rejectStat(Stat $stat)
 
 public function classementsIndex()
 {
+    return Inertia::render('Classements');
+}
+
+public function adminClassementsIndex()
+{
     return Inertia::render('Admin/Stats/Classements');
 }
 

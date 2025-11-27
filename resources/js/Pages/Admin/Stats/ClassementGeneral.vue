@@ -22,7 +22,7 @@ const formatMonth = (month) => {
 </script>
 
 <template>
-    <div class="min-h-screen bg-background-light text-zinc-800 font-display">
+    <div class="min-h-screen bg-gray-50 text-gray-900 font-display">
         <!-- Sidebar -->
         <AdminsideBar />
         
@@ -36,10 +36,10 @@ const formatMonth = (month) => {
                         <div class="flex justify-between items-center p-4 mb-6">
                             <div>
                                 <p class="text-4xl font-black tracking-tight">Classement Général</p>
-                                <p class="text-zinc-600 mt-2">Points = Buts + Passes/2</p>
+                                <p class="text-gray-600 mt-2">Points = Buts + Passes/2</p>
                             </div>
                             <Link href="/classements" 
-                                  class="px-4 py-2 bg-zinc-200 text-zinc-700 rounded-lg hover:bg-zinc-300 transition">
+                                  class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition">
                                 <i class="fas fa-arrow-left mr-2"></i>
                                 Retour aux classements
                             </Link>
