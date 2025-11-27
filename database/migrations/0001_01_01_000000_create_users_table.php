@@ -22,11 +22,7 @@ return new class extends Migration
             $table->string('poster')->nullable();
             $table->enum('role', ['admin', 'bureau', 'simple'])->default('simple'); // Different role
             $table->string('position')->nullable(); //Poste du Joueur 
-<<<<<<< HEAD
             $table->boolean('is_active')->default(false);
-=======
-            $table->boolean('is_active')->default(false); // Account activation status
->>>>>>> 2c1a49016dcb68c1e4d7a8e4f236e22ab0dcae81
             $table->rememberToken();
             $table->timestamps();
         });

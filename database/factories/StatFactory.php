@@ -1,6 +1,7 @@
 <?php
 
 namespace Database\Factories;
+
 use App\Models\User;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -24,7 +25,14 @@ class StatFactory extends Factory
             'goals_against'      => $this->faker->numberBetween(0, 10),
             'matches_played'     => $this->faker->numberBetween(0, 30),
             'date'               => $this->faker->date(),
-            'validated_by_admin' => $this->faker->boolean(30), // 30% true
+            'validated_by_admin' => $this->faker->boolean(30),
         ];
+    }
+
+    public function forUser($id)
+    {
+        return $this->state([
+            'user_id' => $id,
+        ]);
     }
 }
