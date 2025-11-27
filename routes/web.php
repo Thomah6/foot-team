@@ -156,3 +156,4 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('galleries', GalleryController::class)
         ->only(['store', 'update', 'destroy']);
 });
+

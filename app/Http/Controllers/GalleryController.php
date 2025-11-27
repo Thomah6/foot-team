@@ -32,22 +32,26 @@ class GalleryController extends Controller
     {
         //Validation des données envoyées par le formulaire
         $request->validate([
-            'image' => 'required|image|max:2048', // fichier obligatoire, doit être une image, max 2MB
+            'images' => 'required',
+            'images.*' => 'image|mimes:jpeg,png,gif|max:2048', // fichier obligatoire, doit être une image, max 2MB
             'description' => 'nullable|string|max:255', // description optionnelle
         ]);
 
-        // Sauvegarde du fichier dans le dossier "galleries" du disque public
-        $path = $request->file('image')->store('galleries', 'public');
 
-        // Création d'un nouvel enrégistrement en base de données
-        Gallery::create([
-            'user_id' => auth()->id(), // l'utilisateur connecté est l'uploader
-            'image_path' => $path, // chemin du fichier stocké
-            'description' => $request->description, // description si fournie
-        ]);
+        // 📂 Boucle sur chaque fichier envoyé
+        foreach ($request->file('images') as $image) {
+            $path = $image->store('galleries', 'public'); // Sauvegarde du fichier dans le dossier "galleries" du disque public (storage/app/public/uploads)
+
+            // 💾 Création d'un nouvel enrégistrement en base de données
+            Gallery::create([
+                'user_id' => auth()->id(), // l'utilisateur connecté est l'uploader
+                'image_path' => $path, // chemin du fichier stocké
+                'description' => $request->description, // description si fournie
+            ]);
+        }
 
         // Redirection avec message de succès
-        return redirect()->back()->with('success', 'Photo uploaded successfully');
+        return redirect()->back()->with('success', 'Images uploaded successfully');
     }
 
     /**

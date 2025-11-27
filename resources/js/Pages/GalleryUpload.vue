@@ -1,117 +1,17 @@
-<script setup>
-import { ref, computed } from "vue";
-import { useForm } from "@inertiajs/vue3";
-
-// Inertia form
-const form = useForm({
-    images: [],
-    description: "",
-});
-
-const files = ref([]);
-const dragover = ref(false);
-const uploading = ref(false);
-const uploaded = ref(false);
-const progress = ref(0);
-
-const progressOffset = computed(() => {
-    const circumference = 2 * Math.PI * 25;
-    return circumference - (progress.value / 100) * circumference;
-});
-
-function handleFiles(fileList) {
-    Array.from(fileList).forEach((file) => {
-        if (validateFile(file)) {
-            //   const reader = new FileReader()
-            //   reader.onload = e => {
-            //     const fileObj = {
-            //       id: Date.now() + Math.random(),
-            //       name: file.name,
-            //       size: formatFileSize(file.size),
-            //       preview: e.target.result,
-            //       status: 'pending'
-            //     }
-            //     files.value.push(fileObj)
-            //     form.images.push(file) // ajout au form Inertia
-            //   }
-            //   reader.readAsDataURL(file)
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                const fileObj = {
-                    id: Date.now() + Math.random(),
-                    name: file.name,
-                    size: formatFileSize(file.size),
-                    preview: e.target.result, // ✅ utilisé par <img>
-                    status: "pending",
-                };
-                files.value.push(fileObj);
-                form.images.push(file);
-            };
-            reader.readAsDataURL(file);
-        }
-    });
-}
-
-function validateFile(file) {
-    const allowedTypes = ["image/jpeg", "image/png", "image/gif"];
-    const maxFileSize = 10 * 1024 * 1024;
-    if (!allowedTypes.includes(file.type)) return false;
-    if (file.size > maxFileSize) return false;
-    return true;
-}
-
-function formatFileSize(bytes) {
-    const sizes = ["Bytes", "KB", "MB", "GB"];
-    const i = Math.floor(Math.log(bytes) / Math.log(1024));
-    return (bytes / Math.pow(1024, i)).toFixed(2) + " " + sizes[i];
-}
-
-function removeFile(id) {
-    files.value = files.value.filter((f) => f.id !== id);
-    form.images = form.images.filter((f, idx) => files.value[idx]); // synchroniser avec Inertia
-}
-
-function submit() {
-  uploading.value = true
-  form.post(route('galleries.store'), {
-    forceFormData: true,
-    onProgress: e => progress.value = e.percentage,
-    onSuccess: () => {
-      uploading.value = false
-      uploaded.value = true   // ✅ active l’affichage du cadre
-      // ⚠️ ne pas vider files.value tout de suite
-      form.reset()
-    },
-    onError: () => uploading.value = false
-  })
-}
-
-function startNewUpload() {
-    files.value = [];
-    form.reset();
-    progress.value = 0;
-    uploading.value = false;
-    uploaded.value = false;
-}
-
-function viewUploadedFiles() {
-    uploaded.value = false;
-}
-</script>
-
 <template>
     <div class="container">
         <div class="upload-container">
             <!-- Upload Box -->
             <div
                 class="upload-box"
-                @click="$refs.fileInput.click()"
-                @dragover.prevent="dragover = true"
-                @dragleave.prevent="dragover = false"
-                @drop.prevent="handleFiles($event.dataTransfer.files)"
-                :class="{ dragover, uploading }"
+                :class="{ dragover: isDragging, uploading: isUploading }"
+                @click="triggerFileInput"
+                @dragover="handleDragOver"
+                @dragleave="handleDragLeave"
+                @drop="handleDrop"
             >
-                <div class="upload-content" v-show="!uploading">
+                <!-- Upload Content -->
+                <div class="upload-content" v-show="!isUploading">
                     <div class="upload-icon">
                         <svg
                             width="64"
@@ -138,7 +38,7 @@ function viewUploadedFiles() {
                     <button
                         class="upload-button"
                         type="button"
-                        @click="$refs.fileInput.click()"
+                        @click.stop="triggerFileInput"
                     >
                         Choose Files
                     </button>
@@ -148,19 +48,19 @@ function viewUploadedFiles() {
                         multiple
                         accept="image/*"
                         hidden
-                        @change="handleFiles($event.target.files)"
+                        @change="handleFileInputChange"
                     />
                 </div>
 
-                <!-- Progress -->
-                <div class="upload-progress" v-show="uploading">
+                <!-- Upload Progress -->
+                <div class="upload-progress" v-show="isUploading">
                     <div class="progress-circle">
                         <svg class="progress-ring" width="60" height="60">
                             <circle
                                 cx="30"
                                 cy="30"
                                 r="25"
-                                stroke="#4a5568"
+                                stroke="currentColor"
                                 stroke-width="4"
                                 fill="none"
                             />
@@ -169,16 +69,14 @@ function viewUploadedFiles() {
                                 cx="30"
                                 cy="30"
                                 r="25"
-                                stroke="#f093fb"
+                                :stroke="primaryColor"
                                 stroke-width="4"
                                 fill="none"
                                 stroke-dasharray="157"
                                 :stroke-dashoffset="progressOffset"
                             />
                         </svg>
-                        <span class="progress-text"
-                            >{{ Math.round(progress) }}%</span
-                        >
+                        <span class="progress-text">{{ uploadProgress }}%</span>
                     </div>
                     <p class="progress-label">Uploading files...</p>
                 </div>
@@ -187,16 +85,14 @@ function viewUploadedFiles() {
             <!-- Files Preview -->
             <div
                 class="files-preview"
-                :class="{ show: files.length }"
+                :class="{ show: files.length > 0 && !showUploadComplete }"
             >
                 <div class="preview-header">
-                    <h4 class="preview-title">
-                        {{ uploaded ? "Uploaded Files" : "Selected Files" }}
-                    </h4>
+                    <h4 class="preview-title">Selected Files</h4>
                     <button
                         class="add-more-btn"
-                        v-show="files.length"
-                        @click="$refs.fileInput.click()"
+                        v-show="files.length > 0 && !isUploading"
+                        @click="triggerFileInput"
                     >
                         Add More Files
                     </button>
@@ -210,7 +106,9 @@ function viewUploadedFiles() {
                         />
                         <div class="file-info">
                             <div class="file-name">{{ file.name }}</div>
-                            <div class="file-size">{{ file.size }}</div>
+                            <div class="file-size">
+                                {{ file.sizeFormatted }}
+                            </div>
                         </div>
                         <div class="file-status">
                             <div
@@ -237,13 +135,11 @@ function viewUploadedFiles() {
             </div>
 
             <!-- Upload Complete -->
-            <div class="upload-complete" v-show="uploaded">
+            <div class="upload-complete" v-show="showUploadComplete">
                 <div class="complete-header">
                     <div class="success-icon">✓</div>
                     <h3 class="complete-title">Upload Successful!</h3>
-                    <p class="complete-subtitle">
-                        {{ files.length }} file(s) uploaded successfully
-                    </p>
+                    <p class="complete-subtitle">{{ uploadCompleteMessage }}</p>
                 </div>
                 <div class="complete-actions">
                     <button class="new-upload-btn" @click="startNewUpload">
@@ -276,6 +172,641 @@ function viewUploadedFiles() {
     </div>
 </template>
 
-<style src="resources/css/upload.css">
-/* Ton CSS complet collé ici */
+<script>
+import { useForm } from "@inertiajs/vue3";
+
+export default {
+    name: "FileUpload",
+    data() {
+        return {
+            files: [],
+            isDragging: false,
+            isUploading: false,
+            uploadProgress: 0,
+            showUploadComplete: false,
+            maxFileSize: 10 * 1024 * 1024, // 10MB
+            allowedTypes: ["image/jpeg", "image/png", "image/gif"],
+            primaryColor: "#13ec6d",
+            form: useForm({
+                images: [],
+                description: "",
+            }),
+        };
+    },
+    computed: {
+        progressOffset() {
+            const circumference = 157;
+            return circumference - (this.uploadProgress / 100) * circumference;
+        },
+        uploadCompleteMessage() {
+            const count = this.files.length;
+            return `${count} file${
+                count !== 1 ? "s" : ""
+            } uploaded successfully`;
+        },
+    },
+    methods: {
+        triggerFileInput() {
+            this.$refs.fileInput.click();
+        },
+        handleFileInputChange(event) {
+            this.handleFiles(event.target.files);
+        },
+        handleDragOver(event) {
+            event.preventDefault();
+            this.isDragging = true;
+        },
+        handleDragLeave(event) {
+            event.preventDefault();
+            this.isDragging = false;
+        },
+        handleDrop(event) {
+            event.preventDefault();
+            this.isDragging = false;
+            this.handleFiles(event.dataTransfer.files);
+        },
+        async handleFiles(fileList) {
+            const newFiles = Array.from(fileList);
+            for (const file of newFiles) {
+                if (this.validateFile(file)) {
+                    await this.addFile(file);
+                }
+            }
+        },
+        validateFile(file) {
+            if (!this.allowedTypes.includes(file.type)) {
+                this.showError(
+                    `${file.name}: Only JPG, PNG, and GIF files are allowed.`
+                );
+                return false;
+            }
+            if (file.size > this.maxFileSize) {
+                this.showError(
+                    `${file.name}: File size must be less than 10MB.`
+                );
+                return false;
+            }
+            return true;
+        },
+        async addFile(file) {
+            const fileObj = {
+                id: Date.now() + Math.random(),
+                name: file.name,
+                size: file.size,
+                sizeFormatted: this.formatFileSize(file.size),
+                file: file,
+                status: "pending",
+                preview: await this.generatePreview(file),
+            };
+            this.files.push(fileObj);
+            this.form.images.push(file); // ✅ ajout au form Inertia
+        },
+        generatePreview(file) {
+            return new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.onload = (e) => resolve(e.target.result);
+                reader.readAsDataURL(file);
+            });
+        },
+        // submit() {
+        //     this.isUploading = true;
+        //     this.form.post(route("galleries.store"), {
+        //         forceFormData: true,
+        //         onProgress: (event) => {
+        //             this.uploadProgress = event.percentage;
+        //         },
+        //         onSuccess: () => {
+        //             this.isUploading = false;
+        //             this.showUploadComplete = true;
+        //             this.form.reset();
+        //         },
+        //         onError: () => {
+        //             this.isUploading = false;
+        //         },
+        //     });
+        // },
+        submit() {
+            console.log("➡️ Bouton cliqué, submit() déclenché");
+
+            // Vérifier les fichiers ajoutés
+            console.log("📂 Fichiers présents dans this.files :", this.files);
+            console.log(
+                "📂 Fichiers présents dans form.images :",
+                this.form.images
+            );
+
+            // Vérifier la route appelée
+            console.log("📡 Route appelée :", route("galleries.store"));
+
+            this.isUploading = true;
+
+            this.form.post(route("galleries.store"), {
+                forceFormData: true,
+                onProgress: (event) => {
+                    console.log("⏳ Progression :", event.percentage + "%");
+                    this.uploadProgress = event.percentage;
+                },
+                onSuccess: () => {
+                    console.log("✅ Upload terminé avec succès");
+                    this.isUploading = false;
+                    this.showUploadComplete = true;
+                    this.form.reset();
+                },
+                onError: (errors) => {
+                    console.error("❌ Erreurs reçues :", errors);
+                    this.isUploading = false;
+                },
+            });
+        },
+        startNewUpload() {
+            this.files = [];
+            this.uploadProgress = 0;
+            this.showUploadComplete = false;
+            this.isUploading = false;
+            this.form.reset();
+            this.$refs.fileInput.value = "";
+        },
+        viewUploadedFiles() {
+            this.showUploadComplete = false;
+        },
+        formatFileSize(bytes) {
+            if (bytes === 0) return "0 Bytes";
+            const k = 1024;
+            const sizes = ["Bytes", "KB", "MB", "GB"];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return (
+                parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i]
+            );
+        },
+        showError(message) {
+            const errorDiv = document.createElement("div");
+            errorDiv.className = "error-notification";
+            errorDiv.style.animation = "slideInRight 0.3s ease";
+            errorDiv.textContent = message;
+            document.body.appendChild(errorDiv);
+            setTimeout(() => {
+                errorDiv.style.animation = "slideOutRight 0.3s ease";
+                setTimeout(() => errorDiv.remove(), 300);
+            }, 4000);
+        },
+        removeFile(fileId) {
+            this.files = this.files.filter((f) => f.id !== fileId);
+            this.form.images = this.form.images.filter(
+                (f, idx) => this.files[idx]
+            );
+        },
+    },
+};
+</script>
+
+<style scoped>
+/* Les styles restent exactement les mêmes que dans ta version précédente */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    background: #102218; /* background-dark */
+    min-height: 100vh;
+    padding: 2rem;
+    color: #f6f8f7; /* text-dark */
+}
+
+.container {
+    max-width: 800px;
+    margin: 50px auto;
+}
+
+.upload-container {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+/* Upload Box */
+.upload-box {
+    position: relative;
+    padding: 6rem;
+    text-align: center;
+    border: 3px dashed #2a3d33; /* border-dark */
+    border-radius: 20px;
+    transition: all 0.3s ease;
+    background: #182c21; /* surface-dark */
+    cursor: pointer;
+}
+
+.upload-box.dragover {
+    border-color: #13ec6d; /* primary */
+    background: #182c21;
+    transform: scale(1.02);
+}
+
+.upload-box.uploading {
+    border-color: #13ec6d;
+    background: #182c21;
+}
+
+.upload-icon {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+    color: #13ec6d;
+}
+
+.upload-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: #f6f8f7;
+}
+
+.upload-subtitle {
+    color: #a0b5a9;
+    margin-bottom: 2rem;
+    font-size: 0.95rem;
+}
+
+.upload-button {
+    background: #13ec6d;
+    color: #102218;
+    border: none;
+    padding: 1rem 2rem;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(19, 236, 109, 0.3);
+}
+
+.upload-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(19, 236, 109, 0.4);
+}
+
+/* Progress */
+.upload-progress {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+
+.progress-circle {
+    position: relative;
+    display: inline-block;
+    margin-bottom: 1rem;
+}
+
+.progress-ring {
+    transform: rotate(-90deg);
+}
+
+.progress-bar {
+    transition: stroke-dashoffset 0.3s ease;
+    stroke-linecap: round;
+}
+
+.progress-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-weight: 600;
+    font-size: 1rem;
+    color: #f6f8f7;
+}
+
+.progress-label {
+    color: #a0b5a9;
+    font-size: 0.9rem;
+}
+
+/* Files Preview */
+.files-preview {
+    background: #182c21;
+    border: 1px solid #2a3d33;
+    border-radius: 20px;
+    padding: 2rem;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(20px);
+    transition: all 0.4s ease;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+.files-preview.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.preview-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.preview-title {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #f6f8f7;
+}
+
+.add-more-btn {
+    background: rgba(19, 236, 109, 0.1);
+    color: #13ec6d;
+    border: 1px solid #13ec6d;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.add-more-btn:hover {
+    background: rgba(19, 236, 109, 0.2);
+}
+
+.files-list {
+    display: grid;
+    gap: 1rem;
+}
+
+.file-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid #2a3d33;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+}
+
+.file-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateY(-2px);
+}
+
+.file-preview {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.file-info {
+    flex: 1;
+}
+
+.file-name {
+    font-weight: 500;
+    color: #f6f8f7;
+    margin-bottom: 0.25rem;
+}
+
+.file-size {
+    font-size: 0.85rem;
+    color: #a0b5a9;
+}
+
+.file-status {
+    margin-right: 1rem;
+}
+
+.status-icon {
+    font-size: 1.5rem;
+}
+
+.status-uploading {
+    color: #13ec6d;
+}
+
+.status-success {
+    color: #13ec6d;
+}
+
+.file-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.file-action {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid #2a3d33;
+    color: #f6f8f7;
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.file-action:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.file-action.delete:hover {
+    background: rgba(220, 38, 38, 0.2);
+    border-color: #dc2626;
+}
+
+/* Upload Complete */
+.upload-complete {
+    background: #182c21;
+    border: 1px solid #2a3d33;
+    border-radius: 20px;
+    padding: 3rem 2rem;
+    text-align: center;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+.complete-header {
+    margin-bottom: 2rem;
+}
+
+.success-icon {
+    width: 80px;
+    height: 80px;
+    background: #13ec6d;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    color: #102218;
+    margin: 0 auto 1.5rem;
+    animation: successBounce 0.6s ease;
+}
+
+@keyframes successBounce {
+    0% {
+        transform: scale(0);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.complete-title {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: #f6f8f7;
+    margin-bottom: 0.5rem;
+}
+
+.complete-subtitle {
+    color: #a0b5a9;
+    font-size: 1rem;
+}
+
+.complete-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
+
+.new-upload-btn,
+.view-files-btn {
+    padding: 1rem 1.5rem;
+    border: none;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.new-upload-btn {
+    background: #13ec6d;
+    color: #102218;
+    box-shadow: 0 4px 15px rgba(19, 236, 109, 0.3);
+}
+
+.new-upload-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(19, 236, 109, 0.4);
+}
+
+.view-files-btn {
+    background: rgba(255, 255, 255, 0.1);
+    color: #f6f8f7;
+    border: 1px solid #2a3d33;
+}
+
+.view-files-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+/* Error States */
+.file-item.error {
+    border: 1px solid #fecaca;
+    background: #fef2f2;
+}
+
+.error-message {
+    color: #dc2626;
+    font-size: 0.75rem;
+    margin-top: 0.25rem;
+}
+
+/* Responsive Design */
+@media (max-width: 640px) {
+    body {
+        padding: 1rem;
+    }
+
+    .upload-box {
+        padding: 2rem 1rem;
+        margin: 1rem;
+    }
+
+    .upload-title {
+        font-size: 1.25rem;
+    }
+
+    .files-preview {
+        padding: 1rem;
+    }
+
+    .file-item {
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
+    }
+
+    .file-preview {
+        margin-right: 0;
+    }
+
+    .file-actions {
+        justify-content: center;
+    }
+
+    .complete-actions {
+        flex-direction: column;
+    }
+}
+
+/* Error notifications */
+.error-notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: rgba(254, 226, 226, 0.95);
+    color: #dc2626;
+    padding: 1rem;
+    border-radius: 12px;
+    border: 1px solid rgba(252, 165, 165, 0.5);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    backdrop-filter: blur(10px);
+    max-width: 300px;
+}
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideOutRight {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+}
+
+@keyframes slideOut {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+}
 </style>
