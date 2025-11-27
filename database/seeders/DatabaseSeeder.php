@@ -42,6 +42,13 @@ class DatabaseSeeder extends Seeder
         // Dont un actif
         // -----------------------------------
 
+        // Images spécifiques pour les joueurs du mois (validées et fonctionnelles)
+        $playerImages = [
+            'https://picsum.photos/seed/player1/400/500.jpg',
+            'https://picsum.photos/seed/player2/400/500.jpg', 
+            'https://picsum.photos/seed/player3/400/500.jpg'
+        ];
+
         // Mois actuels pour éviter les erreurs
         $months = [
             Carbon::now()->startOfMonth(),
@@ -52,11 +59,12 @@ class DatabaseSeeder extends Seeder
         foreach ($months as $index => $month) {
             $user = $users->random();
 
-            // Crée un "Joueur du Mois"
+            // Crée un "Joueur du Mois" avec une image spécifique
             PlayerOfTheMonth::factory()->create([
                 'user_id' => $user->id,
                 'month'   => $month,
                 'is_active' => $index === 0, // Le premier est actif
+                'image'   => $playerImages[$index], // Image spécifique pour chaque mois
             ]);
 
             // Génère des stats validées liées à ce mois
@@ -70,6 +78,6 @@ class DatabaseSeeder extends Seeder
                 ->create();
         }
 
-        echo "\n🌱 Database seeded successfully !\n";
+        echo "\n Database seeded successfully !\n";
     }
 }

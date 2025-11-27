@@ -209,16 +209,30 @@ public function classementsGardiens()
  */
 public function currentPlayerOfMonth()
 {
+    // Debug temporaire
+    \Log::info('currentPlayerOfMonth called');
+    
     $currentMonthDate = now()->startOfMonth()->format('Y-m-d');
     $player = PlayerOfTheMonth::with('user')
         ->where('month', $currentMonthDate)
         ->first();
+        
+    \Log::info('Player found: ' . ($player ? 'YES' : 'NO'));
+    if ($player) {
+        \Log::info('Player name: ' . $player->user->name);
+        \Log::info('Player image: ' . $player->image);
+    }
         
     // Si pas encore généré ce mois-ci, prendre le mois précédent
     if (!$player) {
         $player = PlayerOfTheMonth::with('user')
             ->orderByDesc('month')
             ->first();
+    }
+    
+    // Si toujours aucun joueur, créer un objet par défaut
+    if (!$player) {
+        $player = null;
     }
         
     return Inertia::render('PlayerOfMonth/Current', [

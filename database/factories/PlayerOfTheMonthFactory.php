@@ -16,11 +16,19 @@ class PlayerOfTheMonthFactory extends Factory
 
     public function definition()
 {
+    $playerImages = [
+        'https://picsum.photos/seed/factory1/400/500.jpg',
+        'https://picsum.photos/seed/factory2/400/500.jpg',
+        'https://picsum.photos/seed/factory3/400/500.jpg',
+        'https://picsum.photos/seed/factory4/400/500.jpg'
+    ];
+
     return [
         'user_id' => User::factory(),
         'month'   => $this->faker->dateTimeBetween('-1 years', 'now')->format('Y-m-01'),
         'reason'  => $this->faker->sentence(),
         'is_active' => $this->faker->boolean(20),
+        'image'   => $this->faker->randomElement($playerImages),
     ];
 }
 

@@ -13,13 +13,26 @@
                 </header>
 
                 <div class="p-6 md:p-8 lg:p-10 space-y-8">
+                    <!-- Message si aucun joueur trouvé -->
+                    <div v-if="!props.player" class="text-center py-12">
+                        <div class="bg-amber-100 dark:bg-amber-900/20 rounded-xl p-8 max-w-md mx-auto">
+                            <i class="fas fa-trophy text-amber-500 text-6xl mb-4"></i>
+                            <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+                                Aucun joueur du mois
+                            </h2>
+                            <p class="text-gray-600 dark:text-gray-400">
+                                Le joueur du mois n'a pas encore été sélectionné pour cette période.
+                            </p>
+                        </div>
+                    </div>
+
                     <!-- Carte du joueur -->
-                    <div class="flex p-4 @container bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-800">
+                    <div v-else class="flex p-4 @container bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-800">
                         <div class="flex w-full flex-col gap-4 @[520px]:flex-row @[520px]:justify-between @[520px]:items-center">
                             <div class="flex gap-4 items-center">
                                 <div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full min-h-32 w-32 flex-shrink-0 border-4 border-amber-300" 
                                      data-alt="Photo du joueur du mois" 
-                                     :style='`background-image: url("${props.player?.user?.avatar || "https://via.placeholder.com/200x200/FFD700?text=🏆"}");`'>
+                                     :style='`background-image: url("${props.player?.image || "https://via.placeholder.com/200x200/FFD700?text=🏆"}");`'>
                                 </div>
                                 <div class="flex flex-col justify-center">
                                     <div class="flex items-center gap-3 flex-wrap">
