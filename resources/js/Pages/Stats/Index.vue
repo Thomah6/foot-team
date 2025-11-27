@@ -94,7 +94,10 @@ const rejectStat = (statId) => {
                         </Link>
                     </div>
                 </div>
-
+ <a href="/admin/create"
+       class="px-4 py-2 bg-black text-white rounded-lg shadow hover:bg-gray-800 transition font-medium">
+        Renseigner mes stats
+    </a>
                 <!-- Historique récent -->
                 <h3 class="text-lg font-bold px-4 pb-2 pt-8">Historique récent</h3>
 

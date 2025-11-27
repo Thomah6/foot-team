@@ -13,10 +13,12 @@ use App\Models\Comment;
 use App\Models\Stat;
 use App\Models\Presence;
 use App\Models\Finance;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
     use HasFactory, Notifiable;
+    use HasRoles;
 
     protected $fillable = [
         'name',

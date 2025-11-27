@@ -1,11 +1,12 @@
 <?php
 
+use App\Http\Controllers\Admin\StatController;
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Bureau\BureauMemberController;
 use App\Http\Controllers\TeamController;
-use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReflectionController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\Admin\StatController;
 use App\Http\Controllers\Admin\MemberController;
 
 use Illuminate\Foundation\Application;
@@ -27,10 +28,21 @@ Route::get('/dashboard', [DashboardController::class, 'index'])
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
 
+
+
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+Route::prefix('admin')->middleware('role:admin')->group(function () {
+
+    Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+
+    Route::get('/settings', [AdminController::class, 'settings'])->name('admin.settings');
+
+  
 
     // Members management routes - Admin only
     Route::middleware('role:admin')->group(function () {
@@ -67,6 +79,14 @@ Route::prefix('reflections')->group(function () {
  */
 Route::get('/stats', [StatController::class, 'publicIndex'])->name('stats.public.index');
 
+
+ 
+
+
+Route::get('/admin', [AdminController::class,'index'])->name('Admin.AdminLayout');
+
+
+Route::get('/admin/create', [StatController::class,'create'])->name('Admin.CreateStats');
 /**
  * 📊 Stats admin (accès authentifié)
  */

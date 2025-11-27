@@ -45,6 +45,7 @@ public function publicIndex()
     Stat::create($data);
 
     return back()->with('success', 'Stat ajoutée (en attente de validation admin)');
+    
 }
 
 
@@ -58,6 +59,17 @@ public function pending(){
         'stats' => $stats
     ]);
 }
+
+
+public function create( Request $request)
+{
+     $users = user::all();
+    return Inertia::render('Admin/CreateStats', ['success'=> $request->session()->get('success'),'users'=>$users ]);
+}
+
+
+
+
 
 
 public function validateStat(Stat $stat)
