@@ -14,96 +14,52 @@ class FinanceController extends Controller
 
     public function index(Request $request)
     {
-        // Fonction helper pour appliquer les filtres communs
-        $applyFilters = function($baseQuery) use ($request) {
-            if ($request->member_id)
-                $baseQuery->where('user_id', $request->member_id);
-            if ($request->date_from)
-                $baseQuery->whereDate('created_at', '>=', $request->date_from);
-            if ($request->date_to)
-                $baseQuery->whereDate('created_at', '<=', $request->date_to);
-            if ($request->type)
-                $baseQuery->where('type', $request->type);
-            if ($request->has('statut_valide') && $request->statut_valide !== '') {
-                $stat = $request->statut_valide;
-                if (is_string($stat)) {
-                    $stat = strtolower($stat) === 'true' || $stat === '1' ? true : ($stat === 'false' || $stat === '0' ? false : null);
-                }
-                if (!is_null($stat)) {
-                    $baseQuery->where('statut_valide', $stat);
-                }
-            }
-            return $baseQuery;
-        };
-
-        // Requête filtrée pour la liste
         $query = Finance::with('user');
-        $query = $applyFilters($query);
+
+        // Filtres
+        if ($request->member_id)
+            $query->where('user_id', $request->member_id);
+        if ($request->date_from)
+            $query->where('created_at', '>=', $request->date_from);
+        if ($request->date_to)
+            $query->where('created_at', '<=', $request->date_to);
+        if ($request->type)
+            $query->where('type', $request->type);
+        if ($request->statut_valide !== null)
+            $query->where('statut_valide', $request->statut_valide);
+        
+
         $finances = $query->orderByDesc('created_at')->get();
 
-        // Somme des cotisations validées (sur la sélection actuelle)
-        $solde_cotisations = $applyFilters(Finance::query())
-            ->where('statut_valide', true)
+        // Données calculées
+        $solde_cotisations = Finance::where('statut_valide', true)
             ->where('type', 'cotisation')
             ->sum('montant');
 
-        // Somme des dépenses validées (sur la sélection actuelle)
-        $solde_depenses = $applyFilters(Finance::query())
-            ->where('statut_valide', true)
+        $solde_depenses = Finance::where('statut_valide', true)
             ->where('type', 'dépense')
             ->sum('montant');
 
-        // Solde calculé à partir des résultats filtrés
         $solde_total = $solde_cotisations - $solde_depenses;
 
-        // Totaux en attente (sur la sélection actuelle)
-        $total_attente = $applyFilters(Finance::query())
-            ->where('statut_valide', false)
-            ->where('type', 'cotisation')
-            ->sum('montant');
-
-        $nb_attente = $applyFilters(Finance::query())
-            ->where('statut_valide', false)
-            ->where('type', 'cotisation')
-            ->count();
-
-        // --- Totaux globaux (non filtrés) ---
-        $solde_cotisations_global = Finance::where('statut_valide', true)
-            ->where('type', 'cotisation')
-            ->sum('montant');
-
-        $solde_depenses_global = Finance::where('statut_valide', true)
-            ->where('type', 'dépense')
-            ->sum('montant');
-
-        $solde_total_global = $solde_cotisations_global - $solde_depenses_global;
-
-        $total_attente_global = Finance::where('statut_valide', false)
-            ->where('type', 'cotisation')
-            ->sum('montant');
-
-        $nb_attente_global = Finance::where('statut_valide', false)
-            ->where('type', 'cotisation')
-            ->count();
+        $total_attente = Finance::where('statut_valide', false)
+            ->where('type', 'cotisation')->sum('montant');
         
-        $users = User::all();
+        $nb_attente = Finance::where('statut_valide', false)
+            ->where('type', 'cotisation')->count();
+        
+            $users = User::all();
 
-        // Return props using camelCase keys expected by the Vue components
-        return Inertia::render('Finance/Index', [
-            'finances' => $finances->toArray(),
-            'soldeCotisations' => (int) $solde_cotisations,
-            'soldeDepenses' => (int) $solde_depenses,
-            'soldeTotal' => (int) $solde_total,
-            'totalAttente' => (int) $total_attente,
-            'nbAttente' => $nb_attente,
-            // global totals (non-filtered)
-            'soldeCotisationsGlobal' => (int) $solde_cotisations_global,
-            'soldeDepensesGlobal' => (int) $solde_depenses_global,
-            'soldeTotalGlobal' => (int) $solde_total_global,
-            'totalAttenteGlobal' => (int) $total_attente_global,
-            'nbAttenteGlobal' => $nb_attente_global,
-            'users' => $users,
-        ]);
+            // Return props using camelCase keys expected by the Vue components
+            return Inertia::render('Finance/Index', [
+                'finances' => $finances->toArray(),
+                'soldeCotisations' => $solde_cotisations,
+                'soldeDepenses' => $solde_depenses,
+                'soldeTotal' => $solde_total,
+                'totalAttente' => $total_attente,
+                'nbAttente' => $nb_attente,
+                'users' => $users,
+            ]);
     }
 
     // Formulaire pour un dépôt

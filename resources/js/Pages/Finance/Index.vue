@@ -16,12 +16,6 @@ const props = defineProps({
   soldeTotal: Number,
   totalAttente: Number,
   nbAttente: Number,
-  // global
-  soldeCotisationsGlobal: Number,
-  soldeDepensesGlobal: Number,
-  soldeTotalGlobal: Number,
-  totalAttenteGlobal: Number,
-  nbAttenteGlobal: Number,
   // autres
   finances: Array,
   users: Array,
@@ -69,11 +63,6 @@ function handleAjustement() {
           :nb-attente="props.nbAttente"
           :solde-cotisations="props.soldeCotisations"
           :solde-depenses="props.soldeDepenses"
-          :solde-total-global="props.soldeTotalGlobal"
-          :total-attente-global="props.totalAttenteGlobal"
-          :nb-attente-global="props.nbAttenteGlobal"
-          :solde-cotisations-global="props.soldeCotisationsGlobal"
-          :solde-depenses-global="props.soldeDepensesGlobal"
         />
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">

@@ -5,12 +5,7 @@ defineProps({
   nbAttente: Number,
   soldeCotisations: Number,
   soldeDepenses: Number,
-  // global stats (all data)
-  soldeTotalGlobal: Number,
-  totalAttenteGlobal: Number,
-  nbAttenteGlobal: Number,
-  soldeCotisationsGlobal: Number,
-  soldeDepensesGlobal: Number,
+
 })
 </script>
 <template>
