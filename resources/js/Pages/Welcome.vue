@@ -30,6 +30,6 @@ function handleImageError() {
 
 <template>
     <Head title="Welcome" />
-    <!-- <AdminsideBar /> -->
+    <AdminsideBar />
 
 </template>
