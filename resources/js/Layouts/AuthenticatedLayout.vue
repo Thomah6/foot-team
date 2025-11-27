@@ -1,5 +1,6 @@
 <script setup>
 import { ref } from 'vue';
+import AdminsideBar from '@/Components/AdminsideBar.vue';
 import ApplicationLogo from '@/Components/ApplicationLogo.vue';
 import Dropdown from '@/Components/Dropdown.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
@@ -14,8 +15,8 @@ const isBureau = () => page.props.auth.user.role === 'bureau'
 </script>
 
 <template>
-    <div>
-        <div class="min-h-screen bg-gray-100">
+    <div class=" overflow-hidden">
+        <div class="min-h-screen  bg-gray-100">
             <nav
                 class="border-b border-gray-100 bg-white"
             >
@@ -53,6 +54,13 @@ const isBureau = () => page.props.auth.user.role === 'bureau'
                                     :active="route().current('bureau.members.*')"
                                 >
                                     Membres
+                                </NavLink>
+                                <NavLink    
+                                    v-if="isAdmin()"
+                                    :href="route('reflections.index')"
+                                    :active="route().current('reflections.*')"
+                                >
+                                    Reflexions
                                 </NavLink>
                             </div>
                         </div>
@@ -202,18 +210,24 @@ const isBureau = () => page.props.auth.user.role === 'bureau'
             </nav>
 
             <!-- Page Heading -->
-            <header
+            <!-- <header
                 class="bg-white shadow"
                 v-if="$slots.header"
             >
                 <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
                     <slot name="header" />
                 </div>
-            </header>
+            </header> -->
 
             <!-- Page Content -->
-            <main>
-                <slot />
+            <main class="flex h-full border" >
+                <div class="min-h-full sticky top-0">
+                    <AdminsideBar />
+                </div>
+                <div class="h-[calc(100vh-4rem)] overflow-y-scroll w-full ">
+                   <slot/>
+                </div>
+                 
             </main>
         </div>
     </div>
