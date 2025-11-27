@@ -27,7 +27,7 @@ const form = useForm({ month: '', year: '', from: '', to: '' })
             <p class="text-sm text-zinc-500 text-center mt-1 text-4xl">Bilan et historique </p>
           </div>
           <div class="flex items-center gap-3">
-            <Link href="/bureau/stats" class="py-2 px-3 rounded-lg bg-primary/10 text-primary">Retour</Link>
+            <Link href="/bureau/stats" class="py-2 px-3 rounded-lg bg-red-500 text-white text-sm"><-Retour</Link>
           </div>
         </div>
 
@@ -58,7 +58,7 @@ const form = useForm({ month: '', year: '', from: '', to: '' })
                 <option v-for="m in 12" :value="m">{{ m }}</option>
               </select>
               <select v-model="form.year" name="year" class="px-3 py-2 border rounded-lg">
-                <option value="">— Année —</option>
+                <option value="">Année</option>
                 <option v-for="y in [2023,2024,2025,2026]" :value="y">{{ y }}</option>
               </select>
               <input v-model="form.from" name="from" type="date" class="px-3 py-2 border rounded-lg" />
@@ -96,10 +96,10 @@ const form = useForm({ month: '', year: '', from: '', to: '' })
             <div v-for="s in props.stats" :key="s.id" class="p-3 border rounded-lg flex justify-between items-center">
               <div>
                 <div class="flex items-center gap-3">
-                  <div class="w-10 h-10 rounded-full bg-zinc-100 flex items-center justify-center font-bold text-zinc-600">{{ props.user.name.substring(0,1) }}</div>
+                  <div class="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center font-bold text-yellow-600">{{ props.user.name.substring(0,1) }}</div>
                   <div>
                     <p class="font-medium">{{ props.user.name }}</p>
-                    <p class="text-xs text-zinc-400">{{ s.date }} — match</p>
+                     <p class="text-sm text-zinc-500">{{ new Date(s.date).toLocaleDateString('fr-FR') }}</p>
                   </div>
                 </div>
               </div>

@@ -22,26 +22,26 @@ const search = ref('')
       <div class="max-w-[1000px] mx-auto">
         <div class="flex justify-between items-center mb-6">
           <div>
-            <h1 class="text-3xl font-black">Espace Bureau — Statistiques et performances</h1>
+            <h1 class="text-3xl font-black text-center">Statistiques et performances</h1>
             <p class="text-sm text-zinc-600 mt-1">Consultez les performances des joueurs, historiques et classements.</p>
           </div>
           <div class="flex gap-2">
-            <Link href="/bureau/stats/leaderboards" class="py-2 px-4 rounded-lg bg-primary text-white font-semibold">Voir classements</Link>
+            <Link href="/bureau/stats/leaderboards" class="py-2 px-4 rounded-lg bg-primary border border-primary bg-primary/10 text-primary font-semibold">Voir classements</Link>
           </div>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
           <div class="bg-white p-4 rounded-xl border">
-            <p class="text-sm text-zinc-500">Nombre d'entrées statistiques</p>
-            <p class="text-2xl font-bold mt-2">{{ props.totalStats }}</p>
+            <p class="text-sm text-zinc-500 text-center">Nombre d'entrées statistiques</p>
+            <p class="text-3xl text-purple-600 font-bold mt-2 text-center">{{ props.totalStats }}</p>
           </div>
           <div class="bg-white p-4 rounded-xl border">
-            <p class="text-sm text-zinc-500">Joueurs avec stats</p>
-            <p class="text-2xl font-bold mt-2">{{ props.activePlayers }}</p>
+            <p class="text-sm text-zinc-500 text-center">Joueurs avec stats</p>
+            <p class="text-3xl text-blue-600 font-bold mt-2 text-center">{{ props.activePlayers }}</p>
           </div>
           <div class="bg-white p-4 rounded-xl border">
-            <p class="text-sm text-zinc-500">Historique récent</p>
-            <p class="text-2xl font-bold mt-2">{{ props.latestStats.length }}</p>
+            <p class="text-sm text-zinc-500 text-center">Historique récent</p>
+            <p class="text-3xl text-red-600 font-bold mt-2 text-center">{{ props.latestStats.length }}</p>
           </div>
         </div>
 
@@ -55,10 +55,11 @@ const search = ref('')
                 <div class="flex justify-between items-center">
                   <div>
                     <p class="font-medium">{{ s.user.name }}</p>
-                    <p class="text-sm text-zinc-500">{{ s.goals }} buts — {{ s.assists }} passes — le {{ s.date }}</p>
+                  <p class="text-sm text-zinc-500">{{ s.goals }} buts — {{ s.assists }} passes —  {{ new Date(s.date).toLocaleDateString('fr-FR') }}</p>
+
                   </div>
                   <div>
-                    <Link :href="`/bureau/stats/members/${s.user.id}/stats`" class="text-xs px-3 py-1 bg-primary/10 text-primary rounded-full">Voir joueur</Link>
+                    <Link :href="`/bureau/stats/members/${s.user.id}/stats`" class="text-xs px-4 py-1  text-primary rounded-full font-semibold bg-blue-500/10">Voir joueur</Link>
                   </div>
                 </div>
               </div>

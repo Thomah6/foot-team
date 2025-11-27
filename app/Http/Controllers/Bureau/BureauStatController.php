@@ -125,6 +125,7 @@ class BureauStatController extends Controller
 				'labels' => $months,
 				'goals' => $goalsPoints,
 				'assists' => $assistsPoints,
+                
 			],
 		]);
 	}

@@ -22,7 +22,7 @@ const props = defineProps({
         <div class="flex justify-between items-center mb-6">
           <h1 class="text-3xl font-black">Classements — Bureau</h1>
           <div>
-            <Link href="/bureau/stats" class="py-2 px-3 rounded-lg bg-primary/10 text-primary text-sm bg-red-500 text-white"><-Retour</Link>
+            <Link href="/bureau/stats" class="py-2 px-3 rounded-lg bg-red-500 text-primary text-sm bg-red-500 text-white"><-Retour</Link>
           </div>
         </div>
 
@@ -44,7 +44,7 @@ const props = defineProps({
                 </div>
               </div>
             </div>
-            <div class="mt-4 text-xs text-zinc-500">Voir la table complète ci‑dessous.</div>
+            
           </div>
 
           <div class="bg-white border rounded-xl p-4">
@@ -64,7 +64,7 @@ const props = defineProps({
                 </div>
               </div>
             </div>
-            <div class="mt-4 text-xs text-zinc-500">Voir la table complète ci‑dessous.</div>
+            
           </div>
         </div>
 
