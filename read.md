@@ -397,3 +397,119 @@ avatar, poster de lui  etc etc
 - **Models partagés** : User, Team (coordination nécessaire)
 - **Design system** : Couleurs, typo, composants de base
 - **Navigation globale** : Routes et layout principal
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+## 🔥 **TÂCHES IMMÉDIATES - 15h-18h**
+ 
+### **1. ALEXIO - Dashboard Admin Complet**
+```
+✅ CRUD membres avec recherche/filtres
+✅ Interface changement rôles (admin/bureau/simple)
+✅ Activation/désactivation comptes
+✅ Tableau membres avec pagination
+```
+ 
+### **2. FRANCIS - Gestion Sous-équipes Admin**
+```
+✅ CRUD équipes (créer/modifier/supprimer)
+✅ Interface drag & drop affectation membres
+✅ Système mercato (transferts entre équipes)
+✅ Visualisation équipes et leurs membres
+```
+ 
+### **3. MATHIEU - Gestion Réflexions Admin**
+```
+✅ CRUD réflexions complet
+✅ Activation/désactivation réflexions
+✅ Validation réflexions après délai
+✅ Interface modération réflexions
+```
+ 
+### **4. PRINCE - Système Votes Admin**
+```
+✅ Panel monitoring votes en cours
+✅ Calcul résultats votes pondérés
+✅ Validation résultats automatique
+✅ Historique votes
+```
+ 
+### **5. NADEGE - Stats & Performances Admin**
+```
+✅ Interface validation stats membres
+✅ CRUD stats manuelles
+✅ Calcul classements (buteurs, passeurs, gardiens)
+✅ Seuils minimaux (2 buts, etc.)
+```
+ 
+### **6. RAOUL - Présences Admin**
+```
+✅ Validation des présences des membres
+ 
+✅ Historique présences
+```
+ 
+### **7. MANU JR - Finances Admin**
+```
+✅ Dashboard financier complet
+✅ Validation transactions membres
+✅ Définition dépenses/déductions
+✅ Solde global et historiques
+```
+ 
+### **8. KARIM - Galerie Admin**
+```
+✅ Upload/suppression photos
+✅ Modération galerie
+✅ Gestion médias (avatars/posters)
+```
+ 
+### **9. FADEL - "À la Une" Admin**
+```
+✅ Rédaction contenu "À la une"
+✅ Publication actualités
+✅ Gestion bannière joueur du mois
+✅ Slider règlement intérieur
+```
+ 
+### **10. WARISS - Règlement Admin**
+```
+✅ Édition règlement intérieur
+✅ Interface slider/scroll
+✅ Versioning documents
+```
+ 
+### **11. SERGIO - Joueur du Mois Admin**
+```
+✅ Sélection joueur du mois
+✅ Activation/désactivation affichage
+✅ Durée limitée (1 semaine)
+✅ Historique joueurs du mois
+```
+ 
+### **12. Thamas - Navigation & Layout Admin**
+```
+✅ Sidebar/header admin
+✅ Dashboard agrégé admin
+✅ Navigation avec permissions
+✅ Design system admin
+```
+ 
+ 
+ 
