@@ -29,12 +29,13 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Vite::prefetch(concurrency: 3);
-
-        // Lecture : tout le monde peut voir
+        
+        // Lecture globale : liste
         Gate::define('view-rule', function (User $user, Regulation $rule) {
             return true;
         });
-
+        
+        // Lecture : tout le monde peut voir : Lecture globale : liste
          Gate::define('viewAny-rule', function (User $user) {
             return true;
         });
@@ -43,12 +44,12 @@ class AppServiceProvider extends ServiceProvider
         Gate::define('create-rule', function (User $user) {
             return $user->role === 'admin';
         });
-        // Mise à jour : seulement admin
+        // Mise à jour à jour d’un règlement: seulement admin
         Gate::define('update-rule', function (User $user, Regulation $rule) {
             return $user->role === 'admin';
         });
 
-        // Suppression : seulement admin
+        // Suppression  d’un règlement : seulement admin
         Gate::define('delete-rule', function (User $user, Regulation $rule) {
             return $user->role === 'admin';
         });

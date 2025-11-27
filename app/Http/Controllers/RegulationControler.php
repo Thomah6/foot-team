@@ -21,11 +21,19 @@ class RegulationControler extends Controller
             'rules' => $rules,
             'can' => [
                 'create' => Gate::allows('create-rule'),
-                'update' => Gate::allows('update-rule'),
-                'delete' => Gate::allows('delete-rule'),
+
             ],
         ]);
 
+    }
+
+        public function show(Regulation $regulation)
+        {
+            Gate::authorize('view-rule', $regulation);
+
+            return inertia('Regulations/Show', [
+                'rule' => $regulation,
+            ]);
     }
 
     /**
@@ -60,21 +68,21 @@ class RegulationControler extends Controller
         /**
      * Formulaire d’édition.
      */
-    public function edit(Regulation $rule)
+    public function edit(Regulation $regulation)
     {
-        Gate::authorize('update-rule', $rule);
+        Gate::authorize('update-rule', $regulation);
 
-        return inertia('Rules/Edit', [
-            'rule' => $rule,
+        return inertia('Regulations/Edit', [
+            'rule' => $regulation,
         ]);
     }
 
     /**
      * Mettre à jour un règlement.
      */
-    public function update(Request $request, Regulation $rule)
+    public function update(Request $request, Regulation $regulation)
     {
-        Gate::authorize('update-rule', $rule);
+        Gate::authorize('update-rule', $regulation);
 
         $validated = $request->validate([
             'title' => 'required|string|max:255',
@@ -83,7 +91,7 @@ class RegulationControler extends Controller
             'order' => 'nullable|integer',
         ]);
 
-        $rule->update($validated);
+        $regulation->update($validated);
 
         return redirect()->route('regulations.index')->with('success', 'Règlement mis à jour.');
     }
@@ -91,11 +99,11 @@ class RegulationControler extends Controller
     /**
      * Supprimer un règlement.
      */
-    public function destroy(Regulation $rule)
+    public function destroy(Regulation $regulation)
     {
-        Gate::authorize('delete-rule', $rule);
+        Gate::authorize('delete-rule', $regulation);
 
-        $rule->delete();
+        $regulation->delete();
 
         return redirect()->route('regulations.index')->with('success', 'Règlement supprimé.');
     }

@@ -20,7 +20,7 @@ class RegulationPolicy
     /**
      * Tout le monde peut voir un règlement.
      */
-    public function view(User $user, Regulation $rule): bool
+    public function view(User $user, Regulation $regulation): bool
     {
         return true;
     }
@@ -36,7 +36,7 @@ class RegulationPolicy
     /**
      * Seul l’admin peut mettre à jour.
      */
-    public function update(User $user, Regulation $rule): bool
+    public function update(User $user, Regulation $regulation): bool
     {
         return $user->role === 'admin';
     }
@@ -44,7 +44,7 @@ class RegulationPolicy
     /**
      * Seul l’admin peut supprimer.
      */
-    public function delete(User $user, Regulation $rule): bool
+    public function delete(User $user, Regulation $regulation): bool
     {
         return $user->role === 'admin';
     }
@@ -52,7 +52,7 @@ class RegulationPolicy
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(User $user, Regulation $rule): bool
+    public function restore(User $user, Regulation $regulation): bool
     {
         return false;
     }
@@ -60,7 +60,7 @@ class RegulationPolicy
     /**
      * Determine whether the user can permanently delete the model.
      */
-    public function forceDelete(User $user, Regulation $rule): bool
+    public function forceDelete(User $user, Regulation $regulation): bool
     {
         return false;
     }
