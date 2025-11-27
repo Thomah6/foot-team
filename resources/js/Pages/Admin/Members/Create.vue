@@ -12,7 +12,7 @@ const form = useForm({
   password_confirmation: '',
   role: 'simple',
   position: '',
-  is_active: '',
+  is_active: false,
 });
 
 const submit = () => {

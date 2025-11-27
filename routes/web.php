@@ -3,7 +3,7 @@
 use App\Http\Controllers\TeamController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\StatController;
-use App\Http\Controllers\MemberController;
+use App\Http\Controllers\Admin\MemberController;
 
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
