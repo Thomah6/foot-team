@@ -54,8 +54,8 @@ Route::prefix('reflections')->group(function () {
 });
 
 
-       Route::get('/stats', [StatController::class, 'index'])
-            ->name('stats.index');
+Route::get('/stats', [StatController::class, 'index'])
+    ->name('stats.index');
 
 Route::middleware(['auth', 'role:admin']) // 👉 Accès réservé aux Admins
     ->prefix('admin')                    // 👉 URL commence par /admin
@@ -127,19 +127,30 @@ Route::middleware(['auth', 'role:admin']) // 👉 Accès réservé aux Admins
 //     Route::post('/teams/assign-members', [TeamController::class, 'assignMembers']);
 //     Route::post('/teams/mercato', [TeamController::class, 'mercato']);
 // });
- Route::get('/teams', [TeamController::class, 'vue'])->name('admin.teams');
- Route::get('/teams/index', [TeamController::class, 'index'])->name('admin.teams.index');
-   Route::get('teams/create', [TeamController::class, 'create'])->name('admin.teams.create');
-    Route::post('/teams', [TeamController::class, 'store'])->name('admin.teams.store');
-    Route::get('/teams/{id}/edit', [TeamController::class, 'edit'])->name('admin.teams.edit');
-    Route::put('/teams/{team}', [TeamController::class, 'update'])->name('admin.teams.update');
-    Route::delete('/teams/{id}', [TeamController::class, 'destroy'])->name('admin.teams.destroy');
+Route::get('/teams', [TeamController::class, 'vue'])->name('admin.teams');
+Route::get('/teams/index', [TeamController::class, 'index'])->name('admin.teams.index');
+Route::get('teams/create', [TeamController::class, 'create'])->name('admin.teams.create');
+Route::post('/teams', [TeamController::class, 'store'])->name('admin.teams.store');
+Route::get('/teams/{id}/edit', [TeamController::class, 'edit'])->name('admin.teams.edit');
+Route::put('/teams/{team}', [TeamController::class, 'update'])->name('admin.teams.update');
+Route::delete('/teams/{id}', [TeamController::class, 'destroy'])->name('admin.teams.destroy');
 Route::get('/teams/{team}/affect', [TeamController::class, 'affectPage'])
     ->name('teams.affect');
 Route::post('/teams/{team}/affect/save', [TeamController::class, 'saveAffect']);
 
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
+
+
+/*
+|--------------------------------------------------------------------------
+| Galerie publique
+|--------------------------------------------------------------------------
+|
+| Accessible à tous les visiteurs, même non authentifiés.
+|
+*/
+Route::get('/galleries', [GalleryController::class, 'index'])->name('galleries.index');
 
 
 /*
@@ -165,7 +176,8 @@ Route::middleware(['auth'])->group(function () {
     // - store   : pour uploader une nouvelle photo
     // - update  : pour modifier la description d'une photo existante
     // - destroy : pour supprimer une photo
-    Route::resource('galleries', GalleryController::class)
-        ->only(['store', 'update', 'destroy']);
+    Route::post('/galleries', [GalleryController::class, 'store'])->name('galleries.store');
+    Route::put('/galleries/{gallery}', [GalleryController::class, 'update'])->name('galleries.update');
+    Route::delete('/galleries/{gallery}', [GalleryController::class, 'destroy'])->name('galleries.destroy');
 });
 

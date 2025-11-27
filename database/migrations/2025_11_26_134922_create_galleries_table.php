@@ -16,7 +16,7 @@ return new class extends Migration
             // Lien vers l'utilisateur qui a uploadé la photo
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
 
-            // Chemin du fichie image
+            // Chemin du fichier image
             $table->string('image_path');
 
             // Description optionnelle de la photo

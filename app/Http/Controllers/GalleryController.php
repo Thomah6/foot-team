@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Gallery;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 use Illuminate\Support\Facades\Storage;
 
 class GalleryController extends Controller
@@ -13,7 +14,14 @@ class GalleryController extends Controller
      */
     public function index()
     {
-        //
+        // Récupérer toutes les images déjà présentes en base
+        $galleries = Gallery::all();
+        // dd($galleries);
+        // Envoyer ces données au composant Vue
+        return Inertia::render('GalleryPage', [
+            'galleries' => $galleries
+        ]);
+
     }
 
     /**
@@ -38,20 +46,31 @@ class GalleryController extends Controller
         ]);
 
 
+        $uploaded = [];
+
         // 📂 Boucle sur chaque fichier envoyé
         foreach ($request->file('images') as $image) {
             $path = $image->store('galleries', 'public'); // Sauvegarde du fichier dans le dossier "galleries" du disque public (storage/app/public/uploads)
 
             // 💾 Création d'un nouvel enrégistrement en base de données
-            Gallery::create([
+            $gallery = Gallery::create([
                 'user_id' => auth()->id(), // l'utilisateur connecté est l'uploader
                 'image_path' => $path, // chemin du fichier stocké
                 'description' => $request->description, // description si fournie
             ]);
+
+            // On stocke l'ID et le chemin
+            $uploaded[] = [
+                'id' => $gallery->id,
+                'image_path' => $gallery->image_path,
+            ];
         }
 
         // Redirection avec message de succès
-        return redirect()->back()->with('success', 'Images uploaded successfully');
+        return Inertia::render('GalleryUpload', [
+            'success' => 'Images uploaded successfully',
+            'uploaded' => $uploaded
+        ]);
     }
 
     /**
@@ -97,7 +116,11 @@ class GalleryController extends Controller
     public function destroy(Gallery $gallery)
     {
         // Suppression du fichier physique dans le disque public
-        Storage::disk('public')->delete($gallery->image_path);
+        // Storage::disk('public')->delete($gallery->image_path);
+
+        if ($gallery->image_path && Storage::disk('public')->exists($gallery->image_path)) {
+            Storage::disk('public')->delete($gallery->image_path);
+        }
 
         // Suppression de l'enregistrement en base
         $gallery->delete();
