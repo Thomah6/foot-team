@@ -13,7 +13,7 @@
         </div>
         <Link
           :href="route('presence.index')"
-          class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold leading-normal tracking-[0.015em] border border-primary shadow-sm hover:opacity-90"
+          class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-blue-600 dark:bg-blue-700 text-white text-sm font-bold leading-normal tracking-[0.015em] border border-blue-600 dark:border-blue-700 shadow-sm hover:bg-blue-700 dark:hover:bg-blue-600"
         >
           <span class="truncate">Retour au calendrier</span>
         </Link>

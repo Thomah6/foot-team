@@ -108,13 +108,12 @@ handleSearch()
             Calendrier des Présences
           </p>
           <p class="text-[#636f88] dark:text-slate-400 text-base font-normal leading-normal">
-            Suivez et gérez la présence des membres aux événements.
+            Suivez et gérez la présence des membres aux événements footballistiques.
           </p>
         </div>
         <Link
-          v-if="isAdmin"
-          :href="route('presence.monthlyReport')"
-          class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-white dark:bg-slate-700 text-[#111318] dark:text-white text-sm font-bold leading-normal tracking-[0.015em] border border-slate-200 dark:border-slate-600 shadow-sm hover:bg-gray-50 dark:hover:bg-slate-600"
+          :href="route('presence.history')"
+          class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-blue-600 dark:bg-blue-700 text-white text-sm font-bold leading-normal tracking-[0.015em] border border-blue-600 dark:border-blue-700 shadow-sm hover:bg-blue-700 dark:hover:bg-blue-600"
         >
           <span class="truncate">Voir l'historique</span>
         </Link>
@@ -169,7 +168,7 @@ handleSearch()
           <button
             v-if="!isAdmin"
             @click="showDeclarePresenceModal = true"
-            class="flex w-full md:w-auto max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 bg-primary text-white gap-2 text-sm font-bold leading-normal tracking-[0.015em] min-w-0 px-4 shadow-sm hover:opacity-90"
+            class="flex w-full md:w-auto max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 bg-blue-600 dark:bg-blue-700 text-white gap-2 text-sm font-bold leading-normal tracking-[0.015em] min-w-0 px-4 shadow-sm hover:bg-blue-700 dark:hover:bg-blue-600"
           >
             <span class="material-symbols-outlined fill text-base">add_circle</span>
             <span class="truncate">Déclarer ma présence</span>
