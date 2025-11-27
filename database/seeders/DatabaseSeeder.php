@@ -2,8 +2,11 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
+use App\Models\Comment;
+use App\Models\Reflection;
 use App\Models\User;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Illuminate\Database\Seeder;
 use App\Models\Stat;
 use App\Models\PlayerOfTheMonth;
 use Carbon\Carbon;
@@ -79,5 +82,9 @@ class DatabaseSeeder extends Seeder
         }
 
         echo "\n Database seeded successfully !\n";
+        // Reflection::factory(40)->create();
+        // Comment::factory(200)->create();
+
+        // User::factory(10)->create();
     }
 }
