@@ -7,6 +7,7 @@ use App\Http\Controllers\Bureau\BureauMemberController;
 use App\Http\Controllers\TeamController;
 use App\Http\Controllers\ReflectionController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\Bureau\BureauStatController;
 use App\Http\Controllers\Admin\MemberController;
 
 use Illuminate\Foundation\Application;
@@ -168,6 +169,21 @@ Route::get('/teams/{team}/affect', [TeamController::class, 'affectPage'])
     ->name('teams.affect');
 Route::post('/teams/{team}/affect/save', [TeamController::class, 'saveAffect']);
 
+
+
+Route::prefix('bureau/stats')->middleware('role:bureau')->group(function () {
+    Route::get('/', [BureauStatController::class, 'index'])->name('bureau.stats.index');
+
+    Route::get('/leaderboards', [BureauStatController::class, 'leaderboards'])->name('bureau.stats.leaderboards');
+
+    Route::get('/leaderboards/goals', [BureauStatController::class, 'goalLeaders'])->name('bureau.stats.leaderboards.goals');
+
+    Route::get('/leaderboards/assists', [BureauStatController::class, 'assistLeaders'])->name('bureau.stats.leaderboards.assists');
+
+    Route::get('/leaderboards/goalkeepers', [BureauStatController::class, 'goalkeeperLeaders'])->name('bureau.stats.leaderboards.goalkeepers');
+    
+    Route::get('/members/{user}/stats', [BureauStatController::class, 'memberStats'])->name('bureau.stats.member');
+});
 
 Route::prefix('admin/news')->group(function () {
 

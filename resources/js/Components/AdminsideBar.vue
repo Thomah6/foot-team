@@ -10,6 +10,7 @@ const menu = [
     { label: "Stats", icon: "fas fa-chart-bar", link: route('admin.stats.index'), active: route().current('admin.stats.*') },
     { label: "Voir classements", icon: "fas fa-trophy", link: route('stats.classements.index'), active: route().current('stats.classements.*') },
     { label: "Profile", icon: "fas fa-user", link: route('profile.edit'), active: route().current('profile.edit') },
+
 ]
 
 const bottomMenu = [

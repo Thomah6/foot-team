@@ -55,6 +55,7 @@ const isBureau = () => page.props.auth.user.role === 'bureau'
                                 >
                                     Membres
                                 </NavLink>
+                               
                                 <NavLink    
                                     v-if="isAdmin()"
                                     :href="route('reflections.index')"
@@ -62,6 +63,7 @@ const isBureau = () => page.props.auth.user.role === 'bureau'
                                 >
                                     Reflexions
                                 </NavLink>
+                              
                             </div>
                         </div>
 
