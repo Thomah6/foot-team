@@ -33,6 +33,7 @@ const togglePublish = (id) => {
       <thead>
         <tr class="bg-gray-100 text-left">
           <th class="p-2 border">Titre</th>
+          <th class="p-2 border">Contenue</th>
           <th class="p-2 border">Auteur</th>
           <th class="p-2 border">Publié</th>
           <th class="p-2 border">Actions</th>
@@ -46,6 +47,7 @@ const togglePublish = (id) => {
           class="border-b"
         >
           <td class="p-2 border">{{ item.title }}</td>
+          <td class="p-2 border">{{ item.content }}</td>
           <td class="p-2 border">{{ item.user?.name }}</td>
           <td class="p-2 border">
             <span

@@ -5,7 +5,9 @@ const props = defineProps({
     player: Object,
     stats: Object,
     previousPlayers: Array
+
 });
+
 
 const placeholder = "https://via.placeholder.com/400x500?text=Joueur";
 

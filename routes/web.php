@@ -3,6 +3,7 @@
 use App\Http\Controllers\TeamController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReflectionController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Admin\StatController;
 use App\Http\Controllers\MemberController;
 use Illuminate\Foundation\Application;
@@ -20,9 +21,9 @@ Route::get('/', function () {
     ]);
 });
 
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', [DashboardController::class, 'index'])
+    ->middleware(['auth', 'verified'])
+    ->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -142,7 +143,7 @@ Route::post('/teams/{team}/affect/save', [TeamController::class, 'saveAffect']);
 
 Route::prefix('admin/news')->group(function () {
 
-    Route::get('/', [NewsController::class, 'index'])->name('admin.news.index');
+    Route::get('/index', [NewsController::class, 'index'])->name('admin.news.index');
 
     Route::get('/showReglement', [NewsController::class, 'showReglement'])->name('admin.news.showReglement');
 
