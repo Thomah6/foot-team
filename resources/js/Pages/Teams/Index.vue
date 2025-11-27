@@ -115,7 +115,7 @@ function affect(teamId) {
           <h2 class="font-semibold text-xl mb-2">{{ team.name }}</h2>
           <p class="text-gray-600 mb-4">{{ team.description }}</p>
 
-          <h3 class="font-semibold">Membres :</h3>
+          <h3 class="font-semibold">Membres :{{ team.users.length }}</h3>
           <ul class="list-disc ml-4 text-sm mb-4">
             <li v-for="m in team.members" :key="m.id">{{ m.name }}</li>
           </ul>

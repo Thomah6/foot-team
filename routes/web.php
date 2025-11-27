@@ -41,7 +41,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('/teams/{id}', [TeamController::class, 'destroy'])->name('admin.teams.destroy');
 Route::get('/teams/{team}/affect', [TeamController::class, 'affectPage'])
     ->name('teams.affect');
-Route::post('/teams/{team}/affect/save', [TeamController::class, 'saveAffect']);
+Route::post('/teams/{team}/affect/save', [TeamController::class, 'saveAffect'])->name('teams.affect.save');
+Route::get('/teams/{team}', [TeamController::class, 'show'])->name('teams.show');
 
 
 require __DIR__.'/auth.php';
