@@ -5,6 +5,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue'
 const menu = [
   { label: "Dashboard", icon: "fas fa-tachometer-alt", link: route('dashboard'), active: route().current('dashboard') },
   { label: "Profile", icon: "fas fa-user", link: route('profile.edit'), active: route().current('profile.edit') },
+  { label: "Finances", icon: "fas fa-wallet", link: route('finances.index'), active: route().current('finances.*') },
 ]
 
 const bottomMenu = [
@@ -43,6 +44,12 @@ const bottomMenu = [
           :class="menu[1].active ? 'bg-blue-500/20 text-blue-600' : 'hover:bg-blue-500/10 text-text-primary-light dark:text-text-primary-dark'">
         <i :class="menu[1].icon" class="text-lg"></i>
         <p class="text-sm font-medium">{{ menu[1].label }}</p>
+        </Link>
+        
+        <Link :href="menu[2].link" class="flex items-center gap-3 px-3 py-2 rounded-md transition-colors"
+          :class="menu[2].active ? 'bg-blue-500/20 text-blue-600' : 'hover:bg-blue-500/10 text-text-primary-light dark:text-text-primary-dark'">
+        <i :class="menu[2].icon" class="text-lg"></i>
+        <p class="text-sm font-medium">{{ menu[2].label }}</p>
         </Link>
 
       </nav>
