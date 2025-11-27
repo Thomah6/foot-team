@@ -1,8 +1,10 @@
 <template>
-  <Layout>
-    <div class="max-w-6xl mx-auto py-10 px-4 sm:px-6 lg:px-8">
-
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-100">
+<AuthenticatedLayout>
+    <Layout>
+        <div class="max-w-6xl mx-auto py-10 px-4 sm:px-6 lg:px-8">
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-100">
+          <AdminsideBar/>
 
         <div class="md:col-span-2">
 
@@ -23,13 +25,14 @@
       </div>
     </div>
   </Layout>
+</AuthenticatedLayout>
 </template>
-
 <script setup>
 import { defineProps } from 'vue';
-// import Layout from '@/Layouts/AppLayout.vue'; // Assurez-vous que le chemin est correct
+import AdminsideBar from '@/Components/AdminsideBar.vue';
 import ReflectionForm from '@/Components/ReflectionForm.vue';
 import ReflectionCard from '@/Components/ReflectionCard.vue';
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 
 defineProps({
   reflections: Array, // Reçoit les données du contrôleur Laravel
