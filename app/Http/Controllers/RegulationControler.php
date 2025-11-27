@@ -15,18 +15,21 @@ class RegulationControler extends Controller
     {
         Gate::authorize('viewAny-rule');
 
-        $rules = Regulation::with('children')->orderBy('order')->get();
+        // On récupère tous les règlements (titres + contenus)
+        $rules = Regulation::orderBy('created_at')->get();
 
         return inertia('Regulations/Index', [
             'rules' => $rules,
             'can' => [
                 'create' => Gate::allows('create-rule'),
-
             ],
         ]);
-
     }
 
+
+        /**
+     * Afficher un règlement (titre ou contenu).
+     */
         public function show(Regulation $regulation)
         {
             Gate::authorize('view-rule', $regulation);
@@ -36,34 +39,62 @@ class RegulationControler extends Controller
             ]);
     }
 
+    // Création d’un titre
+        // public function storeTitle(Request $request)
+        // {
+        //     $validated = $request->validate([
+        //         'title' => 'required|string|max:255',
+        //     ]);
+
+        //     Regulation::create([
+        //         'title' => $validated['title'],
+        //         'content' => null, // pas de contenu
+        //     ]);
+
+        //     return redirect()->route('regulations.index')->with('success', 'Titre créé avec succès.');
+        // }
+
+        // public function createTitle()
+        // {
+        //     Gate::authorize('create-rule');
+
+        //     return inertia('Regulations/CreateTitle');
+        // }
+
+        // Création d’un contenu lié à un titre
+        public function storeContent(Request $request)
+        {
+            $validated = $request->validate([
+                'title' => 'required|string|exists:regulations,title',
+                'content' => 'nullable|string',
+            ]);
+
+            Regulation::create($validated);
+
+            return redirect()->route('regulations.index')->with('success', 'Contenu ajouté avec succès.');
+        }
+
+
+
     /**
-     * Formulaire de création.
+     * Formulaire de création de contenu.
      */
     public function create()
     {
         Gate::authorize('create-rule');
 
-        return inertia('Regulations/Create');
-    }
+        // On récupère uniquement les titres (content = null)
+        $titles = Regulation::whereNull('content')->get();
 
-    /**
-     * Enregistrer un nouveau règlement.
-     */
-    public function store(Request $request)
-    {
-        Gate::authorize('create-rule');
-
-        $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'content' => 'required|string',
-            'parent_id' => 'nullable|exists:regulations,id',
-            'order' => 'nullable|integer',
+        return inertia('Regulations/Create', [
+            'titles' => $titles,
         ]);
-
-        Regulation::create($validated);
-
-        return redirect()->route('regulations.index')->with('success', 'Règlement créé avec succès.');
     }
+
+
+
+
+    
 
         /**
      * Formulaire d’édition.
@@ -87,8 +118,6 @@ class RegulationControler extends Controller
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'content' => 'required|string',
-            'parent_id' => 'nullable|exists:regulations,id',
-            'order' => 'nullable|integer',
         ]);
 
         $regulation->update($validated);

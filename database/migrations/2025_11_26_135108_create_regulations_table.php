@@ -13,15 +13,10 @@ return new class extends Migration
     {
         Schema::create('regulations', function (Blueprint $table) {
             $table->id();
-            $table->string('title');              // Titre du règlement ou section
-            $table->text('content');              // Contenu du règlement
-            $table->unsignedBigInteger('parent_id')->nullable(); // Pour gérer les sous-sections (1.1, 2.1, etc.)
-            $table->integer('order')->default(0); // Ordre d’affichage
+            $table->string('title');      // Titre du règlement ou section
+            $table->text('content')->nullable();      // Contenu du règlement
             $table->timestamps();
-
-            // Clé étrangère pour la hiérarchie
-            $table->foreign('parent_id')->references('id')->on('regulations')->onDelete('cascade');
-        });
+ });
     }
 
     /**

@@ -49,19 +49,6 @@ function submit() {
         <div v-if="form.errors.content" class="text-red-500 text-sm mt-1">{{ form.errors.content }}</div>
       </div>
 
-      <!-- Champ parent_id -->
-      <div>
-        <label class="block text-sm font-medium">ID Parent (Optionnel)</label>
-        <input v-model="form.parent_id" type="number" class="border p-2 w-full rounded" />
-         <div v-if="form.errors.parent_id" class="text-red-500 text-sm mt-1">{{ form.errors.parent_id }}</div>
-      </div>
-
-      <!-- Champ ordre -->
-      <div>
-        <label class="block text-sm font-medium">Ordre</label>
-        <input v-model="form.order" type="number" class="border p-2 w-full rounded" />
-         <div v-if="form.errors.order" class="text-red-500 text-sm mt-1">{{ form.errors.order }}</div>
-      </div>
 
       <!-- Bouton -->
       <button 
