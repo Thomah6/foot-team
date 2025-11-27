@@ -3,6 +3,7 @@
 import { Link } from '@inertiajs/vue3'
 import { useForm } from '@inertiajs/vue3'
 import AdminsideBar from '@/Components/AdminsideBar.vue';
+import ConfirmModal from '@/Components/ConfirmModal.vue';
 
 const props = defineProps({
     stats: Array
@@ -20,15 +21,20 @@ const validateStat = (statId) => {
     })
 }
 
+const showRejectModal = ref(false)
+const rejectingId = ref(null)
+
 const rejectStat = (statId) => {
-    if (confirm('Êtes-vous sûr de vouloir rejeter cette statistique ?')) {
-        form.delete(`/admin/stats/${statId}/reject`, {
-            preserveScroll: true,
-            onSuccess: () => {
-                // La page se mettra à jour automatiquement via Inertia
-            }
-        })
-    }
+    rejectingId.value = statId
+    showRejectModal.value = true
+}
+
+const confirmReject = () => {
+    if (!rejectingId.value) return
+    form.delete(`/admin/stats/${rejectingId.value}/reject`, {
+        preserveScroll: true,
+    })
+    rejectingId.value = null
 }
 
 const format = (date) => {
@@ -143,4 +149,5 @@ const format = (date) => {
             </div>
         </div>
     </div>
+                                        <ConfirmModal v-model="showRejectModal" title="Rejeter la statistique" message="Êtes-vous sûr de vouloir rejeter cette statistique ?" confirm-text="Rejeter" cancel-text="Annuler" variant="danger" @confirm="confirmReject" />
 </template>

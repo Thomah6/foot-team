@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\StatController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Admin\TeamStatController;
 use App\Http\Controllers\Bureau\BureauMemberController;
 use App\Http\Controllers\TeamController;
 use App\Http\Controllers\ReflectionController;
@@ -56,6 +57,27 @@ Route::prefix('admin')->middleware('role:admin')->group(function () {
         Route::delete('/members/{member}', [MemberController::class, 'destroy'])->name('members.destroy');
         Route::patch('/members/{member}/toggle-status', [MemberController::class, 'toggleStatus'])->name('members.toggle-status');
         Route::patch('/members/{member}/role', [MemberController::class, 'updateRole'])->name('members.update-role');
+
+        //ROUTES POUR LES STATS MANUELLES A RENTRER PAR L'admin
+
+        Route::get('/stats', [StatController::class,'index'])->name('admin.stats.index');
+        Route::get('/stats/pending',[StatController::class,'pending'])->name('admin.stats.pending');
+        
+        //Routes pour les stats d'équipes
+        Route::get('/team-stats',[TeamStatController::class,'index'])->name('admin.team-stats.index');
+        Route::get('/team-stats/create',[TeamStatController::class,'create'])->name('admin.team-stats.create');
+        Route::post('/team-stats',[TeamStatController::class,'store'])->name('admin.team-stats.store');
+        Route::get('/team-stats/{teamStat}/edit',[TeamStatController::class,'edit'])->name('admin.team-stats.edit');
+        Route::patch('/team-stats/{teamStat}',[TeamStatController::class,'update'])->name('admin.team-stats.update');
+
+        Route::delete('/team-stats/{teamStat}',[TeamStatController::class,'destroy'])->name('admin.team-stats.destroy');
+
+        Route::get('/team-stats/team/{team}',[TeamStatController::class,'byTeam'])->name('admin.team-stats.by-team');
+
+        Route::get('/team-stats/api/current-month',[TeamStatController::class,'currentMonthStats'])->name('admin.team-stats.current-month-api');
+
+        Route::post('/team-stats/bulk-validate',[TeamStatController::class,'bulkValidate'])->name('admin.team-stats.bulk-validate');
+
     });
 
     Route::prefix('bureau/members')->middleware('role:bureau')->group(function(){

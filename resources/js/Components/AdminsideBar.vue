@@ -1,7 +1,6 @@
 <script setup>
 import { ref } from 'vue'
 import { Link } from '@inertiajs/vue3'
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue'
 
 const isOpen = ref(false)
 
