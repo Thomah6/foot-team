@@ -26,71 +26,65 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+/**
+ * 🟦 Public routes (accessible sans authentification)
+ */
 
+/**
+ * 🟢 Stats publiques (consultation libre)
+ */
+Route::get('/stats', [StatController::class, 'publicIndex'])->name('stats.public.index');
 
-       Route::get('/stats', [StatController::class, 'index'])
-            ->name('stats.index');
+/**
+ * 🏆 Joueur du Mois (public)
+ */
+Route::get('/joueur-du-mois', [StatController::class, 'currentPlayerOfMonth'])
+    ->name('player.month.current');
 
-Route::middleware(['auth', 'role:admin']) // 👉 Accès réservé aux Admins
-    ->prefix('admin')                    // 👉 URL commence par /admin
-    ->name('admin.')                     // 👉 Nom des routes commence par admin.
+Route::get('/joueur-du-mois/historique', [StatController::class, 'historyPlayerOfMonth'])
+    ->name('player.month.history');
+
+Route::get('/joueur-du-mois/{month}/stats', [StatController::class, 'monthlyStats'])
+    ->name('player.month.stats');
+
+/**
+ * 📊 Classements publics
+ */
+Route::get('/classements', [StatController::class, 'classementsIndex'])
+    ->name('stats.classements.index');
+
+Route::get('/classements/general', [StatController::class, 'classementGeneral'])
+    ->name('stats.classement.general');
+
+Route::get('/classements/buteurs', [StatController::class, 'classementsGoals'])
+    ->name('stats.classement.buteurs');
+
+Route::get('/classements/passeurs', [StatController::class, 'classementsAssists'])
+    ->name('stats.classement.passeurs');
+
+Route::get('/classements/gardiens', [StatController::class, 'classementsGardiens'])
+    ->name('stats.classement.gardiens');
+
+// Routes admin avec authentification
+Route::middleware(['auth'])
+    ->prefix('admin')
+    ->name('admin.')
     ->group(function () {
 
-        /**
-         * 🟦 1. Page principale Stats Admin
-         * Liste générale / accès aux sous-pages : validation, classement, ajout
-         */
- 
-
-
-        /**
-         * 🟦 2. Ajouter une statistique (SAISIE MANUELLE)
-         * Ex : ajouter buts / passes après un match
-         * Validation par un admin ensuite.
-         */
-        Route::post('/stats', [StatController::class, 'store'])
-            ->name('stats.store');
-
-
-        /**
-         * 🟦 3. Lister les stats en attente de validation
-         * Permet à l'admin de valider ou rejeter
-         */
+        Route::get('/stats', [StatController::class, 'index'])
+            ->name('stats.index');
+            
         Route::get('/stats/pending', [StatController::class, 'pending'])
             ->name('stats.pending');
 
+        Route::post('/stats', [StatController::class, 'store'])
+            ->name('stats.store');
 
-        /**
-         * 🟦 4. Valider une stat
-         * /admin/stats/12/validate → valide la stat ID=12
-         */
         Route::post('/stats/{stat}/validate', [StatController::class, 'validateStat'])
             ->name('stats.validate');
 
-
-        /**
-         * 🟦 5. Classement des buteurs
-         * Filtré uniquement sur les stats validées
-         * Seuil : min 2 buts
-         */
-        Route::get('/stats/classements/buteurs', [StatController::class, 'classementsGoals'])
-            ->name('stats.classements.buteurs');
-
-
-        /**
-         * 🟦 6. Classement des passeurs
-         * Filtré sur les assists validées
-         */
-        Route::get('/stats/classements/passeurs', [StatController::class, 'classementsAssists'])
-            ->name('stats.classements.passeurs');
-
-
-        /**
-         * 🟦 7. Classement des gardiens
-         * Basé sur “goals_against”, classement inversé (moins encaisse → meilleur)
-         */
-        Route::get('/stats/classements/gardiens', [StatController::class, 'classementsGardiens'])
-            ->name('stats.classements.gardiens');
+        Route::delete('/stats/{stat}/reject', [StatController::class, 'rejectStat'])
+            ->name('stats.reject');
     });
 
 
