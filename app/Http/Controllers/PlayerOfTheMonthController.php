@@ -23,6 +23,13 @@ class PlayerOfTheMonthController extends Controller
 
         $stats = null;
 
+        // 4 derniers joueurs du mois précédents (hors actif)
+        $previousPlayers = PlayerOfTheMonth::with('user')
+            ->where('is_active', false)
+            ->orderBy('month', 'desc')
+            ->take(4)
+            ->get();
+
         if ($player) {
             // Convertit la date du mois
             $month = \Carbon\Carbon::parse($player->month);
@@ -35,15 +42,9 @@ class PlayerOfTheMonthController extends Controller
                 ->first();
         }
 
-        // dd([
-        //     'player' => $player,
-        //     'player_month' => $month,
-        //     'stat_where' => Stat::where('user_id', $player->user_id)->get(),
-        //     'stats' => $stats,
-        // ]);
-
         return Inertia::render('Admin/News/BannerPlayerMonth', [
             'player' => $player,
+            'previousPlayers' => $previousPlayers,
             'stats'  => $stats,
         ]);
     }
