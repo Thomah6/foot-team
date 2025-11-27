@@ -20,9 +20,9 @@ return new class extends Migration
             $table->string('pseudo')->unique();
             $table->string('avatar')->nullable();
             $table->string('poster')->nullable();
-            $table->enum('role', ['admin', 'bureau', 'simple'])->default('simple');
-            $table->string('position')->nullable();
-            $table->boolean('is_active')->default(false);
+            $table->enum('role', ['admin', 'bureau', 'simple'])->default('simple'); // Different role
+            $table->string('position')->nullable(); //Poste du Joueur 
+            $table->boolean('is_active')->default(false); // Account activation status
             $table->rememberToken();
             $table->timestamps();
         });
