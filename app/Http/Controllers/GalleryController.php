@@ -12,17 +12,58 @@ class GalleryController extends Controller
     /**
      * Display a listing of the resource.
      */
+    // public function index()
+    // {
+    //     // Récupérer toutes les images déjà présentes en base
+    //     // $galleries = Gallery::all();
+    //     $galleries = Gallery::withCount('likes')->get();
+    //     // dd($galleries);
+    //     // Envoyer ces données au composant Vue
+    //     return Inertia::render('GalleryPage', [
+    //         'galleries' => $galleries
+    //     ]);
+
+    // }
     public function index()
     {
-        // Récupérer toutes les images déjà présentes en base
-        $galleries = Gallery::all();
-        // dd($galleries);
-        // Envoyer ces données au composant Vue
+        $userId = auth()->id();
+
+        $galleries = Gallery::withCount('likes')
+            ->get()
+            ->map(function ($gallery) use ($userId) {
+                $gallery->liked_by_user = $gallery->likes()->where('user_id', $userId)->exists();
+                return $gallery;
+            });
+
         return Inertia::render('GalleryPage', [
             'galleries' => $galleries
         ]);
-
     }
+
+    public function like(Gallery $gallery)
+    {
+        $user = auth()->user();
+
+        if (!$gallery->likes()->where('user_id', $user->id)->exists()) {
+            $gallery->likes()->create(['user_id' => $user->id]);
+        }
+
+        // Recharge uniquement les données nécessaires
+        return redirect()->route('galleries.index');
+    }
+
+    public function unlike(Gallery $gallery)
+    {
+        $user = auth()->user();
+
+        $gallery->likes()->where('user_id', $user->id)->delete();
+
+        return redirect()->route('galleries.index');
+    }
+
+
+
+
 
     /**
      * Show the form for creating a new resource.
@@ -67,10 +108,13 @@ class GalleryController extends Controller
         }
 
         // Redirection avec message de succès
-        return Inertia::render('GalleryUpload', [
-            'success' => 'Images uploaded successfully',
-            'uploaded' => $uploaded
-        ]);
+        // return Inertia::render('GalleryUpload', [
+        //     'success' => 'Images uploaded successfully',
+        //     'uploaded' => $uploaded
+        // ]);
+
+        return redirect()->route('galleries.index')
+        ->with('success', 'Images uploaded successfully');
     }
 
     /**

@@ -1,16 +1,16 @@
 <?php
 
+use Inertia\Inertia;
 use App\Http\Controllers\Bureau\BureauMemberController;
 use App\Http\Controllers\TeamController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReflectionController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Admin\StatController;
-use App\Http\Controllers\MemberController;
+use App\Http\Controllers\Admin\MemberController;
 use App\Http\Controllers\GalleryController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\PlayerOfTheMonthController;
 
@@ -44,8 +44,8 @@ Route::middleware('auth')->group(function () {
         Route::patch('/members/{member}/role', [MemberController::class, 'updateRole'])->name('members.update-role');
     });
 
-    Route::prefix('bureau/members')->middleware('role:bureau')->group(function(){
-        Route::get('/',[BureauMemberController::class,'index'])->name('bureau.members.index');
+    Route::prefix('bureau/members')->middleware('role:bureau')->group(function () {
+        Route::get('/', [BureauMemberController::class, 'index'])->name('bureau.members.index');
     });
 });
 
@@ -132,18 +132,7 @@ Route::get('/teams/{team}/affect', [TeamController::class, 'affectPage'])
 Route::post('/teams/{team}/affect/save', [TeamController::class, 'saveAffect']);
 
 
-require __DIR__ . '/auth.php';
 
-
-/*
-|--------------------------------------------------------------------------
-| Galerie publique
-|--------------------------------------------------------------------------
-|
-| Accessible à tous les visiteurs, même non authentifiés.
-|
-*/
-Route::get('/galleries', [GalleryController::class, 'index'])->name('galleries.index');
 
 
 /*
@@ -159,10 +148,13 @@ Route::get('/galleries', [GalleryController::class, 'index'])->name('galleries.i
 
 Route::middleware(['auth'])->group(function () {
 
+    Route::get('/galleries', [GalleryController::class, 'index'])->name('galleries.index');
+
+
     Route::get('/gallery-upload', function () {
         return Inertia::render('GalleryUpload');
     })->name('gallery.upload');
-
+    
 
     // Déclare un ensemble de routes RESTful pour le controller GalleryController
     // On limite volontairement aux méthodes utiles :
@@ -172,6 +164,11 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/galleries', [GalleryController::class, 'store'])->name('galleries.store');
     Route::put('/galleries/{gallery}', [GalleryController::class, 'update'])->name('galleries.update');
     Route::delete('/galleries/{gallery}', [GalleryController::class, 'destroy'])->name('galleries.destroy');
+
+
+
+    Route::post('/galleries/{gallery}/like', [GalleryController::class, 'like'])->name('galleries.like');
+    Route::delete('/galleries/{gallery}/unlike', [GalleryController::class, 'unlike'])->name('galleries.unlike');
 });
 
 Route::prefix('admin/news')->group(function () {

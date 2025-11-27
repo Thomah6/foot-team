@@ -1,21 +1,37 @@
 <script setup>
 // import GalleryList from "../Components/GalleryList.vue";
-import AdminsideBar from '@/Components/AdminsideBar.vue';
-const props = defineProps({
-    galleries: {
-        type: Array,
-        default: () => [],
-    },
-});
+import AdminsideBar from "@/Components/AdminsideBar.vue";
+import { router } from '@inertiajs/vue3';
+
+
+defineProps({
+  galleries: {
+    type: Array,
+    default: () => [],
+  },
+})
+
+function toggleLike(gallery) {
+  if (gallery.liked_by_user) {
+    router.delete(`/galleries/${gallery.id}/unlike`, {
+      only: ['galleries'], // ⚡ recharge uniquement la prop galleries
+      preserveScroll: true,
+    })
+  } else {
+    router.post(`/galleries/${gallery.id}/like`, {}, {
+      only: ['galleries'],
+      preserveScroll: true,
+    })
+  }
+}
 </script>
 
 <template>
-
     <div
         class="font-display bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark"
     >
         <div class="relative flex min-h-screen w-full">
-<AdminsideBar/>
+            <AdminsideBar />
             <main class="flex-1 overflow-y-auto">
                 <div class="p-6 md:p-10">
                     <!-- Page Heading -->
@@ -53,7 +69,7 @@ const props = defineProps({
                                 :alt="gallery.description || 'Image'"
                                 class="w-full h-48 object-cover"
                             />
-                            <div class="p-4">
+                            <div class="p-4 flex items-center justify-between">
                                 <p
                                     class="text-sm text-text-light dark:text-text-dark"
                                 >
@@ -62,6 +78,16 @@ const props = defineProps({
                                         "Sans description"
                                     }}
                                 </p>
+
+                                <button
+                                    @click="toggleLike(gallery)"
+                                    class="flex items-center gap-1 text-primary"
+                                >
+                                    <span class="material-symbols-outlined" :class="gallery.liked_by_user ? 'text-red-500' : 'text-gray-400'"
+                                        ><i class="fa-regular fa-thumbs-up"></i></span
+                                    >
+                                    <span>{{ gallery.likes_count }}</span>
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -72,10 +98,10 @@ const props = defineProps({
                         class="flex cursor-pointer items-center justify-center rounded-full h-16 w-16 bg-primary text-text-light shadow-lg hover:scale-105 transition-transform"
                     >
                         <span
-                            class="material-symbols-outlined text-4xl"
+                            class="cursor-pointer material-symbols-outlined text-4xl" @click="router.visit(route('gallery.upload'))"
                             style="font-variation-settings: 'wght' 500"
-                            >add</span
-                        >
+                            ><i class="fa-solid fa-plus"></i
+                        ></span>
                     </button>
                 </div>
             </main>
