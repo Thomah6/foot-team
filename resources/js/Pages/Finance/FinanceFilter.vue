@@ -8,8 +8,9 @@ const emit = defineEmits(['filter'])
 const selectedUser = ref('')
 const dateFrom = ref('')
 const dateTo = ref('')
+const selectedType = ref('')
 function applyFilter() {
-  emit('filter', { selectedUser: selectedUser.value, dateFrom: dateFrom.value, dateTo: dateTo.value })
+  emit('filter', { selectedUser: selectedUser.value, dateFrom: dateFrom.value, dateTo: dateTo.value, selectedType: selectedType.value })
 }
 </script>
 <template>
@@ -28,6 +29,14 @@ function applyFilter() {
     <div class="flex-1 min-w-[150px]">
       <label class="block text-sm font-medium mb-1">Au</label>
       <input type="date" v-model="dateTo" class="block w-full rounded border border-neutral-200" />
+    </div>
+    <div class="flex-1 min-w-[150px]">
+      <label class="block text-sm font-medium mb-1">Type</label>
+      <select v-model="selectedType" class="block w-full rounded border border-neutral-200">
+        <option value="">Tous les types</option>
+        <option value="cotisation">Cotisation</option>
+        <option value="dépense">Dépense</option>
+      </select>
     </div>
     <button @click="applyFilter" class="h-10 px-4 border border-primary text-primary font-bold rounded-lg ml-1">Filtrer</button>
   </div>

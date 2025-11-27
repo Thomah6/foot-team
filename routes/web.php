@@ -142,15 +142,7 @@ Route::get('/finances/depot/create', [FinanceController::class, 'createDepot'])-
 Route::post('/finances', [FinanceController::class, 'storeDepot'])->name('finances.storeDepot');
 Route::get('/finances/depense/create', [FinanceController::class, 'createDepense'])->name('finances.createDepense');
 Route::post('/finances/depense', [FinanceController::class, 'storeDepense'])->name('finances.storeDepense');
-Route::post('/finances/valider', [FinanceController::class, 'valider'])->name('finances.valider');
-
-
-Route::get('/finances', [FinanceController::class, 'index'])->name('finances.index');
-Route::get('/finances/depot/create', [FinanceController::class, 'createDepot'])->name('finances.createDepot');
-Route::post('/finances', [FinanceController::class, 'storeDepot'])->name('finances.storeDepot');
-Route::get('/finances/depense/create', [FinanceController::class, 'createDepense'])->name('finances.createDepense');
-Route::post('/finances/depense', [FinanceController::class, 'storeDepense'])->name('finances.storeDepense');
-Route::post('/finances/valider', [FinanceController::class, 'valider'])->name('finances.valider');
+Route::post('/finances/valider/{id}', [FinanceController::class, 'valider'])->name('finances.valider');
 
 
 require __DIR__ . '/auth.php';
