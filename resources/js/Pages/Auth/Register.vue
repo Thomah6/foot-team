@@ -41,7 +41,9 @@ const submit = () => {
 
                 <InputError class="mt-2" :message="form.errors.name" />
             </div>
-            <div>
+           
+
+            <div class="mt-4">
                 <InputLabel for="pseudo" value="Pseudo" />
 
                 <TextInput
@@ -50,11 +52,10 @@ const submit = () => {
                     class="mt-1 block w-full"
                     v-model="form.pseudo"
                     required
-                    autofocus
-                    autocomplete="pseudo"
+                    autocomplete="username"
                 />
 
-                <InputError class="mt-2" :message="form.errors.name" />
+                <InputError class="mt-2" :message="form.errors.pseudo" />
             </div>
 
             <div class="mt-4">

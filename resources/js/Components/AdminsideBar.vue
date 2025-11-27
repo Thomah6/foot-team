@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from 'vue'
 import { Link } from '@inertiajs/vue3'
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue'
 
 const isOpen = ref(false)
 
@@ -12,7 +13,7 @@ const menu = [
 ]
 
 const bottomMenu = [
-    { label: "Settings", icon: "fas fa-cog", link: route('profile.edit') },
+  { label: "Settings", icon: "fas fa-cog", link: route('profile.edit') },
 ]
 
 const toggleMenu = () => {
@@ -79,7 +80,7 @@ const closeMenu = () => {
         <p class="text-sm font-medium">{{ item.label }}</p>
       </Link>
 
-    </nav>
+      </nav>
 
     <!-- Bottom -->
     <div class="mt-auto flex flex-col gap-2 border-t border-gray-200 dark:border-gray-700 pt-4">
@@ -92,7 +93,7 @@ const closeMenu = () => {
       </Link>
     </div>
 
-  </aside>
+    </aside>
 </template>
 
 <style scoped>
@@ -182,4 +183,3 @@ aside {
   background: rgba(255, 255, 255, 0.2);
 }
 </style>
-
