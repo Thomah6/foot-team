@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('name')->nullable();
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
@@ -21,7 +21,8 @@ return new class extends Migration
             $table->string('avatar')->nullable();
             $table->string('poster')->nullable();
             $table->enum('role', ['admin', 'bureau', 'simple'])->default('simple'); // Different role
-            $table->string('position')->nullable(); //Poste du Joueur
+            $table->string('position')->nullable(); //Poste du Joueur 
+            $table->boolean('is_active')->default(false); // Account activation status
             $table->rememberToken();
             $table->timestamps();
         });

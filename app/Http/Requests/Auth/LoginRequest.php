@@ -49,6 +49,18 @@ class LoginRequest extends FormRequest
             ]);
         }
 
+        // Si la tentative a réussi, vérifier si le compte est actif.
+        // Si l'utilisateur est inactif, le déconnecter et renvoyer une erreur lisible.
+        $user = Auth::user();
+        if ($user && isset($user->is_active) && ! $user->is_active) {
+            Auth::logout();
+            RateLimiter::hit($this->throttleKey());
+
+            throw ValidationException::withMessages([
+                'email' => 'Votre compte est inactif. Veuillez contacter un administrateur.',
+            ]);
+        }
+
         RateLimiter::clear($this->throttleKey());
     }
 

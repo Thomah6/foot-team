@@ -1,18 +1,22 @@
 <script setup>
 import { ref } from 'vue';
+import AdminsideBar from '@/Components/AdminsideBar.vue';
 import ApplicationLogo from '@/Components/ApplicationLogo.vue';
 import Dropdown from '@/Components/Dropdown.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
 import NavLink from '@/Components/NavLink.vue';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
-import { Link } from '@inertiajs/vue3';
+import { Link, usePage } from '@inertiajs/vue3';
 
 const showingNavigationDropdown = ref(false);
+const page = usePage();
+const isAdmin = () => page.props.auth.user.role === 'admin';
+const isBureau = () => page.props.auth.user.role === 'bureau'
 </script>
 
 <template>
-    <div>
-        <div class="min-h-screen bg-gray-100">
+    <div class=" overflow-hidden">
+        <div class="min-h-screen  bg-gray-100">
             <nav
                 class="border-b border-gray-100 bg-white"
             >
@@ -23,9 +27,7 @@ const showingNavigationDropdown = ref(false);
                             <!-- Logo -->
                             <div class="flex shrink-0 items-center">
                                 <Link :href="route('dashboard')">
-                                    <ApplicationLogo
-                                        class="block h-9 w-auto fill-current text-gray-800"
-                                    />
+                                   
                                 </Link>
                             </div>
 
@@ -38,6 +40,27 @@ const showingNavigationDropdown = ref(false);
                                     :active="route().current('dashboard')"
                                 >
                                     Dashboard
+                                </NavLink>
+                                <NavLink
+                                    v-if="isAdmin()"
+                                    :href="route('members.index')"
+                                    :active="route().current('members.*')"
+                                >
+                                    Membres
+                                </NavLink>
+                                <NavLink
+                                    v-if="isBureau()"
+                                    :href="route('bureau.members.index')"
+                                    :active="route().current('bureau.members.*')"
+                                >
+                                    Membres
+                                </NavLink>
+                                <NavLink    
+                                    v-if="isAdmin()"
+                                    :href="route('reflections.index')"
+                                    :active="route().current('reflections.*')"
+                                >
+                                    Reflexions
                                 </NavLink>
                             </div>
                         </div>
@@ -146,6 +169,23 @@ const showingNavigationDropdown = ref(false);
                         >
                             Dashboard
                         </ResponsiveNavLink>
+                        <ResponsiveNavLink
+                            v-if="isAdmin()"
+                            :href="route('members.index')"
+                            :active="route().current('members.*')"
+                        >
+                            Membres
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink
+                                    v-if="isAdmin()"
+                                    :href="route('reflections.index')"
+                                    :active="route().current('reflections.*')"
+                        >
+                                    Reflexions
+                        </ResponsiveNavLink>
+                        <Link :href="route('reflections.index')">
+                        Voir les Réflexions
+                        </Link>
                     </div>
 
                     <!-- Responsive Settings Options -->
@@ -180,18 +220,24 @@ const showingNavigationDropdown = ref(false);
             </nav>
 
             <!-- Page Heading -->
-            <header
+            <!-- <header
                 class="bg-white shadow"
                 v-if="$slots.header"
             >
                 <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
                     <slot name="header" />
                 </div>
-            </header>
+            </header> -->
 
             <!-- Page Content -->
-            <main>
-                <slot />
+            <main class="flex h-full border" >
+                <div class="min-h-full sticky top-0">
+                    <AdminsideBar />
+                </div>
+                <div class="h-[calc(100vh-4rem)] overflow-y-scroll w-full ">
+                   <slot/>
+                </div>
+                 
             </main>
         </div>
     </div>

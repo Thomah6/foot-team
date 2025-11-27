@@ -19,6 +19,11 @@ class Stat extends Model
         'validated_by_admin'
     ];
 
+    protected $casts = [
+        'date' => 'date',
+        'validated_by_admin' => 'boolean',
+    ];
+
     public function user()
     {
         return $this->belongsTo(User::class);
