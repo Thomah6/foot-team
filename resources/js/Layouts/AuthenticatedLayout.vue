@@ -47,6 +47,13 @@ const isAdmin = () => page.props.auth.user.role === 'admin';
                                 >
                                     Membres
                                 </NavLink>
+                                <NavLink
+                                    v-if="isAdmin()"
+                                    :href="route('reflections.index')"
+                                    :active="route().current('reflections.*')"
+                                >
+                                    Reflexions
+                                </NavLink>
                             </div>
                         </div>
 
