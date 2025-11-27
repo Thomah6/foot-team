@@ -33,7 +33,7 @@ class UserFactory extends Factory
             'poster' => $this->faker->imageUrl(800, 400, 'sports'),
             'role' => $this->faker->randomElement(['admin', 'bureau', 'simple']),
             'position' => $this->faker->randomElement(['gardien', 'defenseur', 'milieu', 'attaquant']),
-            'is_active' => $this->faker->boolean(90),
+  
             'remember_token' => Str::random(10),
         ];
     }
