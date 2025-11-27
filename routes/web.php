@@ -90,65 +90,65 @@ Route::middleware(['auth', 'role:admin']) // 👉 Accès réservé aux Admins
         Route::post('/stats', [StatController::class, 'store'])
             ->name('stats.store');
 
-// Routes admin avec authentification
-Route::middleware(['auth'])
-    ->prefix('admin')
-    ->name('admin.')
-    ->group(function () {
+        // Routes admin avec authentification
+        Route::middleware(['auth'])
+            ->prefix('admin')
+            ->name('admin.')
+            ->group(function () {
 
-        Route::get('/stats', [StatController::class, 'index'])
-            ->name('stats.index');
+                Route::get('/stats', [StatController::class, 'index'])
+                    ->name('stats.index');
 
-        Route::get('/stats/classements', [StatController::class, 'adminClassementsIndex'])
-            ->name('stats.classements');
-
-
-        /**
-         * 🟦 3. Lister les stats en attente de validation
-         * Permet à l'admin de valider ou rejeter
-         */
-        Route::get('/stats/pending', [StatController::class, 'pending'])
-            ->name('stats.pending');
+                Route::get('/stats/classements', [StatController::class, 'adminClassementsIndex'])
+                    ->name('stats.classements');
 
 
-        /**
-         * 🟦 4. Valider une stat
-         * /admin/stats/12/validate → valide la stat ID=12
-         */
-        Route::post('/stats/{stat}/validate', [StatController::class, 'validateStat'])
-            ->name('stats.validate');
-
-        Route::delete('/stats/{stat}/reject', [StatController::class, 'rejectStat'])
-            ->name('stats.reject');
-    });
+                /**
+                 * 🟦 3. Lister les stats en attente de validation
+                 * Permet à l'admin de valider ou rejeter
+                 */
+                Route::get('/stats/pending', [StatController::class, 'pending'])
+                    ->name('stats.pending');
 
 
-//Routes pour la creation de team et mercato par l'admin
+                /**
+                 * 🟦 4. Valider une stat
+                 * /admin/stats/12/validate → valide la stat ID=12
+                 */
+                Route::post('/stats/{stat}/validate', [StatController::class, 'validateStat'])
+                    ->name('stats.validate');
+
+                Route::delete('/stats/{stat}/reject', [StatController::class, 'rejectStat'])
+                    ->name('stats.reject');
+            });
+
+
+        //Routes pour la creation de team et mercato par l'admin
 // Route::middleware(['auth', 'admin'])->group(function () {
 //     Route::resource('teams', TeamController::class);
 
-//     Route::post('/teams/assign-members', [TeamController::class, 'assignMembers']);
+        //     Route::post('/teams/assign-members', [TeamController::class, 'assignMembers']);
 //     Route::post('/teams/mercato', [TeamController::class, 'mercato']);
 // });
-Route::get('/teams', [TeamController::class, 'vue'])->name('admin.teams');
-Route::get('/teams/index', [TeamController::class, 'index'])->name('admin.teams.index');
-Route::get('teams/create', [TeamController::class, 'create'])->name('admin.teams.create');
-Route::post('/teams', [TeamController::class, 'store'])->name('admin.teams.store');
-Route::get('/teams/{id}/edit', [TeamController::class, 'edit'])->name('admin.teams.edit');
-Route::put('/teams/{team}', [TeamController::class, 'update'])->name('admin.teams.update');
-Route::delete('/teams/{id}', [TeamController::class, 'destroy'])->name('admin.teams.destroy');
-Route::get('/teams', [TeamController::class, 'vue'])->name('admin.teams');
-Route::get('/teams/index', [TeamController::class, 'index'])->name('admin.teams.index');
-Route::get('teams/create', [TeamController::class, 'create'])->name('admin.teams.create');
-Route::post('/teams', [TeamController::class, 'store'])->name('admin.teams.store');
-Route::get('/teams/{id}/edit', [TeamController::class, 'edit'])->name('admin.teams.edit');
-Route::put('/teams/{team}', [TeamController::class, 'update'])->name('admin.teams.update');
-Route::delete('/teams/{id}', [TeamController::class, 'destroy'])->name('admin.teams.destroy');
-Route::get('/teams/{team}/affect', [TeamController::class, 'affectPage'])
-    ->name('teams.affect');
-Route::post('/teams/{team}/affect/save', [TeamController::class, 'saveAffect']);
+        Route::get('/teams', [TeamController::class, 'vue'])->name('admin.teams');
+        Route::get('/teams/index', [TeamController::class, 'index'])->name('admin.teams.index');
+        Route::get('teams/create', [TeamController::class, 'create'])->name('admin.teams.create');
+        Route::post('/teams', [TeamController::class, 'store'])->name('admin.teams.store');
+        Route::get('/teams/{id}/edit', [TeamController::class, 'edit'])->name('admin.teams.edit');
+        Route::put('/teams/{team}', [TeamController::class, 'update'])->name('admin.teams.update');
+        Route::delete('/teams/{id}', [TeamController::class, 'destroy'])->name('admin.teams.destroy');
+        Route::get('/teams', [TeamController::class, 'vue'])->name('admin.teams');
+        Route::get('/teams/index', [TeamController::class, 'index'])->name('admin.teams.index');
+        Route::get('teams/create', [TeamController::class, 'create'])->name('admin.teams.create');
+        Route::post('/teams', [TeamController::class, 'store'])->name('admin.teams.store');
+        Route::get('/teams/{id}/edit', [TeamController::class, 'edit'])->name('admin.teams.edit');
+        Route::put('/teams/{team}', [TeamController::class, 'update'])->name('admin.teams.update');
+        Route::delete('/teams/{id}', [TeamController::class, 'destroy'])->name('admin.teams.destroy');
+        Route::get('/teams/{team}/affect', [TeamController::class, 'affectPage'])
+            ->name('teams.affect');
+        Route::post('/teams/{team}/affect/save', [TeamController::class, 'saveAffect']);
 
-
+    });
 
 
 
