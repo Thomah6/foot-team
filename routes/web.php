@@ -2,9 +2,9 @@
 
 use App\Http\Controllers\TeamController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ReflectionController;
 use App\Http\Controllers\Admin\StatController;
 use App\Http\Controllers\MemberController;
-
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -42,6 +42,17 @@ Route::middleware('auth')->group(function () {
     });
 });
 
+Route::prefix('reflections')->group(function () {
+    Route::get('/', [ReflectionController::class, 'index'])->name('reflections.index');
+    Route::get('/{reflection}', [ReflectionController::class, 'show'])->name('reflections.show');
+    Route::get('/create', [ReflectionController::class, 'create'])->name('admin.reflections.create');
+    Route::post('/', [ReflectionController::class, 'store'])->name('admin.reflections.store');
+    Route::get('/{id}/edit', [ReflectionController::class, 'edit'])->name('admin.reflections.edit');
+    Route::get('/{id}/validate', [ReflectionController::class, 'validate'])->name('reflections.validate');
+    Route::put('/{id}', [ReflectionController::class, 'update'])->name('admin.reflections.update');
+    Route::delete('/{id}', [ReflectionController::class, 'destroy'])->name('reflections.destroy');
+    Route::patch('/{id}/toggle', [ReflectionController::class, 'toggle'])->name('admin.reflections.toggle'); // activation/desactivationRoute::post('/{id}/validate', [ReflectionController::class, 'validateAfterDelay'])->name('admin.reflections.validate');
+});
 
 
        Route::get('/stats', [StatController::class, 'index'])
