@@ -123,8 +123,11 @@ defineProps({
         </div>
       </aside> -->
 
-    <a href="/admin/create">form</a>
+  
   <AdminsideBar />
+
+
+
 
 <div> 
       <!-- PageHeading -->
@@ -134,6 +137,9 @@ defineProps({
             <p
               class="text-text-primary-light dark:text-text-primary-dark text-3xl font-bold leading-tight tracking-tight">
               bienvenue sur la page des membres</p>
+
+
+              
           
               
           </div>
@@ -141,7 +147,18 @@ defineProps({
             <button
               class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-md h-10 px-4 bg-transparent text-text-primary-light dark:text-text-primary-dark border border-border-light dark:border-border-dark text-sm font-medium leading-normal hover:bg-surface-light dark:hover:bg-surface-dark transition-colors">
               <span class="truncate">Post News</span>
+
+
+              
             </button>
+
+     <div class="w-full flex justify-end">
+    <a href="/admin/create"
+       class="px-4 py-2 bg-black text-white rounded-lg shadow hover:bg-gray-800 transition font-medium">
+        renseigner
+    </a>
+</div>
+
             <button
               class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-md h-10 px-4 bg-primary text-white text-sm font-medium leading-normal hover:bg-primary/90 transition-colors">
               <span class="truncate">Add Member</span>

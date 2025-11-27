@@ -1,6 +1,7 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
+use App\Http\Controllers\Controller;
 
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -40,7 +41,7 @@ class MemberController extends Controller
         $members = $query->paginate($perPage)
                          ->appends($request->query());
 
-        return Inertia::render('Members/Index', [
+        return Inertia::render('Admin/Members/Index', [
             'members' => $members,
             'filters' => [
                 'search' => $request->input('search', ''),
@@ -56,7 +57,7 @@ class MemberController extends Controller
      */
     public function create()
     {
-        return Inertia::render('Members/Create');
+        return Inertia::render('Admin/Members/Create');
     }
 
     /**
@@ -88,7 +89,7 @@ class MemberController extends Controller
      */
     public function edit(User $member)
     {
-        return Inertia::render('Members/Edit', [
+        return Inertia::render('Admin/Members/Edit', [
             'member' => $member,
         ]);
     }

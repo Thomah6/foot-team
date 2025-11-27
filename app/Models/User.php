@@ -29,7 +29,6 @@ class User extends Authenticatable
         'poster',
         'role',
         'position',
-        'is_active',
     ];
 
     protected $hidden = [
@@ -42,6 +41,11 @@ class User extends Authenticatable
     ];
 
     // Relations
+
+    public function stats()
+    {
+        return $this->hasMany(Stat::class);
+    }
 
     public function teams()
     {
@@ -63,11 +67,6 @@ class User extends Authenticatable
     public function comments()
     {
         return $this->hasMany(Comment::class);
-    }
-
-    public function stats()
-    {
-        return $this->hasMany(Stat::class);
     }
 
     public function presences()
