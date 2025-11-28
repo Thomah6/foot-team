@@ -99,4 +99,22 @@ class User extends Authenticatable
     {
         return $this->hasMany(PlayerOfTheMonth::class);
     }
+
+    /**
+     * Helpers for role checks
+     */
+    public function isAdmin(): bool
+    {
+        return $this->role === 'admin';
+    }
+
+    public function isBureau(): bool
+    {
+        return $this->role === 'bureau';
+    }
+
+    public function isSimple(): bool
+    {
+        return $this->role === 'simple';
+    }
 }

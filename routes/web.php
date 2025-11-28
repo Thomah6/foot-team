@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\StatController;
 use App\Http\Controllers\Admin\TeamStatController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Auth\GoogleAuthController;
+use App\Http\Controllers\FinanceController;
 use App\Http\Controllers\Bureau\BureauMemberController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
@@ -142,3 +143,15 @@ Route::prefix('admin/news')->name('admin.news.')->middleware(['auth', 'role:admi
 });
 
 // Routes d'authentification
+
+
+
+
+// Routes de Finances 
+Route::get('/finances', [FinanceController::class, 'index'])->name('finances.index');
+Route::get('/finances/depot/create', [FinanceController::class, 'createDepot'])->name('finances.createDepot');
+Route::post('/finances', [FinanceController::class, 'storeDepot'])->name('finances.storeDepot');
+Route::get('/finances/depense/create', [FinanceController::class, 'createDepense'])->name('finances.createDepense');
+Route::post('/finances/depense', [FinanceController::class, 'storeDepense'])->name('finances.storeDepense');
+Route::post('/finances/valider/{id}', [FinanceController::class, 'valider'])->name('finances.valider');
+Route::post('/finances/valider-tous', [FinanceController::class, 'validerTous'])->name('finances.validerTous');

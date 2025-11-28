@@ -13,6 +13,7 @@ const menu = [
     // { label: "Voir classements", icon: "fas fa-trophy", link: route('stats.classements.index'), active: route().current('stats.classements.*') },
     { label: "Profile", icon: "fas fa-user", link: route('profile.edit'), active: route().current('profile.edit') },
      {label: "Stats des membres", icon: "fas fa-users", link: route('bureau.stats.index'), active: route().current('bureau.stats.index.*') },
+  { label: "Finances", icon: "fas fa-wallet", link: route('finances.index'), active: route().current('finances.*') },
 ]
 
 const bottomMenu = [
