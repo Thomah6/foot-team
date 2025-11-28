@@ -82,20 +82,20 @@ onUnmounted(stop)
 </script>
 
 <template>
-  <div class="flex">
+  <div class="flex flex-col md:flex-row overflow-x-hidden">
     <div>
       <AdminsideBar />
     </div>
 
-    <div class="p-6 flex-1">
-      <div class="p-6 max-w-5xl mx-auto">
+    <div class=" flex-1 min-w-0">
+      <div class="p-6  sm:p-3 max-w-5xl mx-auto">
 
         <!-- Header -->
-        <div class="flex justify-between items-center mb-6">
-          <h1 class="text-xl font-bold">Liste des règlements</h1>
+        <div class="flex justify-between items-center mb-6 ">
+          <h1 class="text-xl font-bold ">Liste des règlements</h1>
           <button
             v-if="props.can.create"
-            class="bg-green-500 text-black px-4 py-2 rounded"
+            class="bg-green-500 text-black px-3 py-2 rounded"
             @click="$inertia.visit('/regulations/create')"
           >
             Créer un contenu
@@ -103,19 +103,15 @@ onUnmounted(stop)
         </div>
 
         <!-- Search -->
-        <input
-          v-model="search"
-          type="text"
-          placeholder="Rechercher un règlement..."
-          class="border p-2 w-full mb-6 rounded"
-        />
-
-        <!-- Intro block -->
-        <div class="bg-white border-l-4 border-green-500 p-6 mb-8 shadow-md rounded-lg">
-          <h2 class="text-lg font-bold text-green-700 mb-2">Charte de comportement ASLM Football</h2>
-          <p class="text-gray-700 leading-relaxed">…</p>
-        </div>
-
+      <input
+        v-model="search"
+        type="text"
+        placeholder="Rechercher un règlement..."
+        class="border w-full mb-6 rounded p-2 text-base 
+              max-sm:p-1 max-sm:text-sm
+              focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500
+              autofill:bg-yellow-100"
+      />
         <!-- Empty state -->
         <div v-if="titles.length === 0" class="text-red-500 font-semibold mb-6">
           Aucun règlement trouvé pour "{{ search }}"
@@ -124,7 +120,7 @@ onUnmounted(stop)
         <!-- Carousel -->
         <div
           v-else
-          class="relative bg-gray-50 border rounded-lg p-5 cursor-grab active:cursor-grabbing overflow-hidden"
+          class="relative bg-gray-50 shadow-md border rounded-lg p-2  cursor-grab active:cursor-grabbing overflow-hidden"
           @mouseenter="stop"
           @mouseleave="start"
           @mousedown="onTouchStart"
@@ -142,7 +138,7 @@ onUnmounted(stop)
             <div
               v-for="t in titles"
               :key="t.id"
-              class="w-full flex-shrink-0 px-6"
+              class="w-full flex-shrink-0   px-2  box-border"
             >
               <h2 class="font-bold text-green-600 text-lg mb-4">
                 {{ t.title }}
@@ -155,7 +151,7 @@ onUnmounted(stop)
                   class="border p-3 rounded bg-white w-full overflow-hidden"
                 >
                   <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 ">
-                    <p class="text-gray-700 flex-1 ">- {{ c.content }}</p>
+                    <p class="text-gray-700 flex-1 md:text-1">- {{ c.content }}</p>
 
                     <div class="flex gap-2">
                       <button
