@@ -9,6 +9,7 @@ const menu = [
     // { label: "Stats", icon: "fas fa-chart-bar", link: route('admin.stats.index'), active: route().current('admin.stats.*') },
     // { label: "Voir classements", icon: "fas fa-trophy", link: route('stats.classements.index'), active: route().current('stats.classements.*') },
     { label: "Profile", icon: "fas fa-user", link: route('profile.edit'), active: route().current('profile.edit') },
+    { label: "Gallery", icon: "fa-solid fa-photo-film", link: route('galleries.index'), active: route().current('galleries.index') },
 
 ]
 
