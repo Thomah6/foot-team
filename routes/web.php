@@ -112,6 +112,7 @@ Route::prefix('reflections')->group(function () {
     Route::patch('/{id}/toggle', [ReflectionController::class, 'toggle'])->name('admin.reflections.toggle'); // activation/desactivationRoute::post('/{id}/validate', [ReflectionController::class, 'validateAfterDelay'])->name('admin.reflections.validate');
 });
 
+
 /**
  * 🟢 Stats publiques (consultation libre)
  */
