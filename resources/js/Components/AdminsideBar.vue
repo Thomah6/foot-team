@@ -1,7 +1,6 @@
 <script setup>
 import { ref } from 'vue'
 import { Link } from '@inertiajs/vue3'
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue'
 
 const isOpen = ref(false)
 
@@ -10,6 +9,7 @@ const menu = [
     { label: "Stats", icon: "fas fa-chart-bar", link: route('admin.stats.index'), active: route().current('admin.stats.*') },
     { label: "Voir classements", icon: "fas fa-trophy", link: route('stats.classements.index'), active: route().current('stats.classements.*') },
     { label: "Profile", icon: "fas fa-user", link: route('profile.edit'), active: route().current('profile.edit') },
+
 ]
 
 const bottomMenu = [
@@ -45,7 +45,7 @@ const closeMenu = () => {
   <aside :class="[
     'fixed lg:static inset-y-0 left-0 z-40 transform transition-transform duration-300 ease-in-out',
     'flex w-64 flex-col border-r border-border-light dark:border-border-dark bg-surface-light dark:bg-surface-dark p-4 font-inter',
-    'backdrop-blur-sm bg-white/95 dark:bg-gray-900/95',
+    'backdrop-blur-sm bg-white/95 dark:bg-gray-900/95 h-[100vh]',
     isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
   ]">
 
