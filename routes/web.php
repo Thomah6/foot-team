@@ -18,6 +18,7 @@ use App\Http\Controllers\ReflectionController;
 use App\Http\Controllers\TeamController;
 use App\Http\Controllers\VoteController;
 use App\Http\Controllers\SuggestionController;
+use App\Http\Controllers\RegulationControler;
 use App\Http\Controllers\CommentsSuggestionController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Auth;
@@ -221,6 +222,18 @@ Route::middleware(['auth', 'is.active'])->group(function () {
         Route::post('/valider/{id}', [FinanceController::class, 'valider'])->name('finances.valider');
         Route::post('/valider-tous', [FinanceController::class, 'validerTous'])->name('finances.validerTous');
     });
+});
+
+// Routes pour les règlements
+Route::middleware(['auth', 'is.active'])->group(function () {
+    Route::resource('regulations', RegulationControler::class);
+    Route::post('/regulations/content', [RegulationControler::class, 'storeContent'])->name('regulations.storeContent');
+});
+
+// Routes pour les ajustements financiers
+Route::middleware(['auth', 'is.active'])->group(function () {
+    Route::get('/finances/ajustement', [FinanceController::class, 'createAjustement'])->name('finances.createAjustement');
+    Route::post('/finances/ajustement', [FinanceController::class, 'storeAjustement'])->name('finances.storeAjustement');
 });
 
 // Routes pour les suggestions
