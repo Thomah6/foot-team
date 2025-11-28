@@ -511,5 +511,92 @@ avatar, poster de lui  etc etc
 ✅ Design system admin
 ```
  
- 
- 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Vous voulez rendre publiques les routes des classements. Je vais déplacer ces routes dans la section publique :
+
+Maintenant je vais supprimer les anciennes routes admin pour les classements qui sont maintenant publiques :
+
+Je vais continuer à supprimer les anciennes routes admin des classements :
+
+Je vais corriger les routes qui restent dans la section admin :
+
+Je vais remettre les routes de validation dans la section admin :
+
+## ✅ **Routes Publiques des Classements - Terminé !**
+
+Parfait ! J'ai déplacé toutes les routes des classements dans la section publique. Voici le résumé :
+
+### 🌐 **Routes Publiques (sans authentification)**
+
+| Route | URL | Fonction |
+|-------|-----|----------|
+| **Liste classements** | `/classements` | Vue d'ensemble des 4 classements |
+| **Classement général** | `/classements/general` | Joueur du mois |
+| **Classement buteurs** | `/classements/buteurs` | Top buteurs (2+ buts) |
+| **Classement passeurs** | `/classements/passeurs` | Top passeurs (2+ passes) |
+| **Classement gardiens** | `/classements/gardiens** | Gardiens (moins encaissés) |
+| **Joueur du mois** | `/joueur-du-mois` | Joueur du mois actuel |
+| **Historique joueurs** | `/joueur-du-mois/historique` | Tous les joueurs du mois |
+| **Stats joueur mois** | `/joueur-du-mois/{month}/stats` | Stats détaillées |
+
+### 🔒 **Routes Admin (avec authentification)**
+
+| Route | URL | Fonction |
+|-------|-----|----------|
+| **Dashboard stats** | `/admin/stats` | Vue d'ensemble admin |
+| **Validation** | `/admin/stats/pending` | Valider/rejeter stats |
+| **Actions** | `POST/DELETE` | Valider/rejeter individuel |
+
+### 🎯 **Avantages :**
+
+1. **Accès public** aux classements pour tous les visiteurs
+2. **URLs simples** sans préfixe `/admin`
+3. **Consultation libre** des performances
+4. **Actions admin** protégées par authentification
+
+### 📱 **Nouvelles URLs à utiliser :**
+
+- **Visiteurs** : `/classements` pour voir tous les classements
+- **Admins** : `/admin/stats/pending` pour valider les stats
+
+Les classements sont maintenant **publiquement accessibles** pour tout le monde ! 🎉
