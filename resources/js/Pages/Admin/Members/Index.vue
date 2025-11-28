@@ -43,6 +43,8 @@ onMounted(() => {
   roleFilter.value = (filters && filters.role) || '';
   statusFilter.value = (filters && filters.status) || '';
   perPageValue.value = (filters && filters.perPage) || 10;
+  
+
 });
 
 // Recherche en direct (live search) avec debounce manuel
