@@ -99,4 +99,10 @@ class User extends Authenticatable
     {
         return $this->hasMany(PlayerOfTheMonth::class);
     }
+    public function commentActivity()
+    {
+        return $this->belongsToMany(comment::class, 'comment_user_activity')
+            ->withPivot(['event', '']) // Expose les colonnes supplémentaires
+            ->withTimestamps();
+    }
 }

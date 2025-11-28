@@ -20,10 +20,11 @@ class ReflectionController extends Controller
         // 1. Listing réflexions (filtrées par activation et durée)
         $reflections = Reflection::query()
             ->with('user') // Relation avec User
+            ->with('votes') // Relation avec vote
             // ->where('created_at', '>', now()->subDays(7)) // Durée limitée (ex: 7 jours)
             // ->latest()
             ->get();
-
+        // dd($reflections->toArray());
         return Inertia::render('Reflections/Index', [
             'reflections' => $reflections,
             'success' => $request->session()->get('success'),
@@ -31,7 +32,11 @@ class ReflectionController extends Controller
     }
     public function show(Reflection $reflection){
 
-        $comments=CommentController::index($reflection);
+        
+
+        $comments=CommentController::ravel($reflection);
+
+        $reflection->load('user', 'comments');
         // dd($comments);
         // je charge manuellement les relations 'user' et 'comments'
         // avant de passer l'objet à la vue.
