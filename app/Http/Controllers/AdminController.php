@@ -17,7 +17,7 @@ public function index()
     $totalUsers = \App\Models\User::count();
 
     // Balance totale de la caisse (somme de la colonne amount dans finances)
-    $balance = \App\Models\Finance::sum('amount');
+    $balance = \App\Models\Finance::sum('montant');
 
     // On regroupe les stats dans un tableau
     $stats = [
