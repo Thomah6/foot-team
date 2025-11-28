@@ -15,12 +15,11 @@ class ReflectionFactory extends Factory
     public function definition()
     {
         return [
-            // Lie chaque réflexion à un utilisateur existant aléatoirement
-            'user_id'       => User::inRandomOrder()->first()->id,
+            'user_id'       => User::inRandomOrder('id')->first()->id,
             'titre'         => $this->faker->sentence(4),
             'contenu'       => $this->faker->realText(400),
             'statut'        => $this->faker->randomElement(['ouvert', 'ferme', 'valide']),
-            'date_fin_vote' => $this->faker->optional(0.7)->dateTimeInInterval('+1 week', '+2 weeks'), // 70% de chance d'avoir une date
+            'date_fin_vote' => $this->faker->dateTimeInInterval('+1 week', '+2 weeks'), // 100% de chance d'avoir une date
             'created_at'    => $this->faker->dateTimeBetween('-1 month', 'now'),
             'updated_at'    => function (array $attributes) {
                 return $this->faker->dateTimeBetween($attributes['created_at'], 'now');

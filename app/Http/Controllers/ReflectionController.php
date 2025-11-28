@@ -6,6 +6,7 @@ use App\Models\Reflection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
+use App\Http\Controllers\VoteController;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\CommentController;
 
@@ -19,10 +20,11 @@ class ReflectionController extends Controller
         // 1. Listing réflexions (filtrées par activation et durée)
         $reflections = Reflection::query()
             ->with('user') // Relation avec User
+            ->with('votes') // Relation avec vote
             // ->where('created_at', '>', now()->subDays(7)) // Durée limitée (ex: 7 jours)
             // ->latest()
             ->get();
-
+        // dd($reflections->toArray());
         return Inertia::render('Reflections/Index', [
             'reflections' => $reflections,
             'success' => $request->session()->get('success'),
@@ -30,15 +32,28 @@ class ReflectionController extends Controller
     }
     public function show(Reflection $reflection){
 
+
+        
+
         $comments=CommentController::ravel($reflection);
+
+        $reflection->load('user', 'comments');
         // dd($comments);
         // je charge manuellement les relations 'user' et 'comments'
         // avant de passer l'objet à la vue.
-        $reflection->load('user', 'comments');
-        // dd($reflection->toArray());
+
+        $voteController = new VoteController;
+        $returnVote = $voteController->index($reflection->id);
+
+        $isVoteEnded = now()->greaterThanOrEqualTo($reflection->date_fin_vote);
+        $isAdmin = Auth::user()->role === 'admin';
+        
         return Inertia::render('Reflections/Show', [
             'reflection' => $reflection,
             'comments'=>$comments,
+            'isVoteEnded' => $isVoteEnded,
+            'isAdmin' => $isAdmin,
+            ...$returnVote,
         ]);
     }
 

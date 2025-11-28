@@ -23,14 +23,14 @@ class CommentController extends Controller
         $comments = Comment::where("reflection_id",$reflection->id)->get();
         return $comments;
     }
-     static function ravel(Reflection $reflection){
+
+
+    static function ravel(Reflection $reflection){
         // dd($reflection->toArray());
 
-        $comments = Comment::with('user', 'reflection')->where("reflection_id",$reflection->id)->get();
+        $comments = Comment::with('user', 'reflection','likes')->where("reflection_id",$reflection->id)->get();
         return $comments;
     }
-
-
     public function store(Request $request, Reflection $reflection)
     {
         // dd($request->toArray());
