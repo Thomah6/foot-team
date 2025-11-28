@@ -11,7 +11,7 @@
 
         <div class="flex justify-between items-center text-gray-500 text-sm">
           <p class="font-semibold text-indigo-700">Publié par {{ reflection.user.name }}</p>
-          <p>Le {{ formattedDate }}</p>
+          <p>Le {{ formatCommentDate(reflection.created_at) }}</p>
         </div>
 
         <hr class="my-6" />
@@ -19,29 +19,7 @@
         <div class="flex items-center space-x-6">
           <h4 class="font-bold text-lg text-gray-700">Score de la Réflexion :</h4>
 
-          <button
-            @click="handleVote(true)"
-            :disabled="!$page.props.auth.user"
-            :class="{'text-green-600 font-extrabold': user_vote && user_vote.is_upvote, 'text-gray-400 hover:text-green-500': !user_vote || !user_vote.is_upvote}"
-            class="flex items-center space-x-1 transition duration-200 disabled:opacity-50"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" viewBox="0 0 20 20" fill="currentColor">
-              <path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 11-3 0v-6zM6.3 5.86c.64-.64 1.48-.96 2.33-.96h3.48c1.67 0 3.2.78 4.28 2.06.66.78 1.05 1.62 1.05 2.51v1.98a2.6 2.6 0 01-2.6 2.6H11v3.25a.75.75 0 01-.75.75h-2a.75.75 0 01-.75-.75V11H6.3a.75.75 0 01-.7-.41L3.92 8.7a1.5 1.5 0 01.3-1.63L6.3 5.86z" />
-            </svg>
-            <span class="text-xl">{{ upvotes_count }}</span>
-          </button>
-
-          <button
-            @click="handleVote(false)"
-            :disabled="!$page.props.auth.user"
-            :class="{'text-red-600 font-extrabold': user_vote && !user_vote.is_upvote, 'text-gray-400 hover:text-red-500': !user_vote || user_vote.is_upvote}"
-            class="flex items-center space-x-1 transition duration-200 disabled:opacity-50"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 transform rotate-180" viewBox="0 0 20 20" fill="currentColor">
-              <path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 11-3 0v-6zM6.3 5.86c.64-.64 1.48-.96 2.33-.96h3.48c1.67 0 3.2.78 4.28 2.06.66.78 1.05 1.62 1.05 2.51v1.98a2.6 2.6 0 01-2.6 2.6H11v3.25a.75.75 0 01-.75.75h-2a.75.75 0 01-.75-.75V11H6.3a.75.75 0 01-.7-.41L3.92 8.7a1.5 1.5 0 01.3-1.63L6.3 5.86z" />
-            </svg>
-            <span class="text-xl">{{ downvotes_count }}</span>
-          </button>
+         
 
           <div class="relative ms-3">
             <Dropdown align="right" width="48">
