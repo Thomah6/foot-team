@@ -118,7 +118,7 @@ function handleDepense() {
 }
 
 function handleAjustement() {
-    // À implémenter : modal ou route pour ajustement manuel
+  router.get(route('finances.createAjustement'))
 }
 </script>
 

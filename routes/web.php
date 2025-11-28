@@ -23,7 +23,7 @@ Route::get('/auth/google/callback', [GoogleAuthController::class, 'callback']);
 
 // Redirection racine
 Route::get('/', function () {
-    return auth()->check() 
+    return auth()->check()
         ? redirect()->route('dashboard')
         : redirect()->route('login');
 });
@@ -43,7 +43,7 @@ Route::get('/classements/gardiens', [StatController::class, 'classementsGardiens
 Route::middleware(['auth', 'is.active'])->group(function () {
     // Tableau de bord
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    
+
     // Profil utilisateur
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -79,7 +79,7 @@ Route::middleware(['auth', 'is.active'])->group(function () {
     // Administration
     Route::prefix('admin')->name('admin.')->middleware('role:admin')->group(function () {
         Route::get('/', [AdminController::class, 'index'])->name('dashboard');
-        
+
         // Gestion des statistiques
         Route::get('/stats', [StatController::class, 'index'])->name('stats.index');
         Route::get('/stats/create', [StatController::class, 'create'])->name('stats.create');
@@ -88,7 +88,7 @@ Route::middleware(['auth', 'is.active'])->group(function () {
         Route::post('/stats/{stat}/validate', [StatController::class, 'validateStat'])->name('stats.validate');
         Route::delete('/stats/{stat}/reject', [StatController::class, 'rejectStat'])->name('stats.reject');
         Route::get('/stats/classements', [StatController::class, 'adminClassementsIndex'])->name('stats.classements');
-        
+
         // Gestion des équipes
         Route::get('/teams', [TeamController::class, 'index'])->name('teams.index');
         Route::get('/teams/create', [TeamController::class, 'create'])->name('teams.create');
@@ -114,7 +114,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/galleries', [GalleryController::class, 'store'])->name('galleries.store');
     Route::put('/galleries/{gallery}', [GalleryController::class, 'update'])->name('galleries.update');
     Route::delete('/galleries/{gallery}', [GalleryController::class, 'destroy'])->name('galleries.destroy');
-    
+
     // Gestion des likes
     Route::post('/galleries/{gallery}/like', [GalleryController::class, 'like'])->name('galleries.like');
     Route::delete('/galleries/{gallery}/unlike', [GalleryController::class, 'unlike'])->name('galleries.unlike');
@@ -130,10 +130,10 @@ Route::prefix('admin/news')->name('admin.news.')->middleware(['auth', 'role:admi
     Route::put('/{id}', [NewsController::class, 'update'])->name('update');
     Route::delete('/{id}', [NewsController::class, 'destroy'])->name('destroy');
     Route::patch('/{id}/toggle-banner', [NewsController::class, 'toggleBanner'])->name('toggle_banner');
-    
+
     // Règlement
     Route::get('/showReglement', [NewsController::class, 'showReglement'])->name('showReglement');
-    
+
     // Joueur du mois
     Route::prefix('bannerplayermonth')->group(function () {
         Route::get('/', [PlayerOfTheMonthController::class, 'index'])->name('bannerplayermonth');
@@ -155,3 +155,7 @@ Route::get('/finances/depense/create', [FinanceController::class, 'createDepense
 Route::post('/finances/depense', [FinanceController::class, 'storeDepense'])->name('finances.storeDepense');
 Route::post('/finances/valider/{id}', [FinanceController::class, 'valider'])->name('finances.valider');
 Route::post('/finances/valider-tous', [FinanceController::class, 'validerTous'])->name('finances.validerTous');
+Route::get('/finances/ajustement', [FinanceController::class, 'createAjustement'])
+    ->name('finances.createAjustement');
+Route::post('/finances/ajustement', [FinanceController::class, 'storeAjustement'])
+    ->name('finances.storeAjustement');

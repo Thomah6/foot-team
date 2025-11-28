@@ -139,6 +139,39 @@ class FinanceController extends Controller
         ]);
         return back()->with('success', 'Dépense ajoutée.');
     }
+
+    public function createAjustement()
+{
+    $this->authorize('ajustement', Finance::class); // à définir dans ta policy
+    return Inertia::render('Finance/FinanceCreateAjustement');
+}
+
+// Enregistrement ajustement manuel (admin)
+public function storeAjustement(Request $request)
+{
+    $this->authorize('ajustement', Finance::class);
+
+    $request->validate([
+        'montant' => 'required|numeric|not_in:0',
+        'sens' => 'required|in:credit,debit',
+        'description' => 'required|string|max:255',
+    ]);
+
+    $montant = $request->sens === 'credit'
+        ? abs($request->montant)
+        : -abs($request->montant);
+
+    Finance::create([
+        'user_id' => auth()->id(),
+        'montant' => $montant,
+        'type' => 'ajustement',
+        'statut_valide' => true,
+        'description' => $request->description,
+    ]);
+
+    return redirect()->route('finances.index')
+        ->with('success', 'Ajustement manuel enregistré avec succès.');
+}
 }
 
 

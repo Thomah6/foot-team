@@ -43,4 +43,9 @@ class FinancePolicy
         return $user->isAdmin();
     }
 
+    public function ajustement(User $user): bool
+    {
+        return $user->isAdmin();
+    }
+
 }
