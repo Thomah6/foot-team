@@ -50,6 +50,8 @@ Route::get('/dashboard', [DashboardController::class, 'index'])
 Route::middleware(['auth', 'is.active'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::post('/profile/avatar', [ProfileController::class, 'updateAvatar'])->name('profile.avatar.update');
+    Route::post('/profile/poster', [ProfileController::class, 'updatePoster'])->name('profile.poster.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     // Members management routes - Admin only
@@ -81,6 +83,9 @@ Route::prefix('reflections')->group(function () {
     Route::patch('/{id}/toggle', [ReflectionController::class, 'toggle'])->name('admin.reflections.toggle'); // activation/desactivationRoute::post('/{id}/validate', [ReflectionController::class, 'validateAfterDelay'])->name('admin.reflections.validate');
 });
 
+/**
+ * 🟢 Stats publiques (consultation libre)
+ */
 
 Route::get('/stats', [StatController::class, 'index'])
     ->name('stats.index');
@@ -97,11 +102,12 @@ Route::get('/admin', [AdminController::class,'index'])->name('Admin.AdminLayout'
 Route::get('/admin/create', [StatController::class,'create'])->name('Admin.CreateStats');
 /**
  * 📊 Stats admin (accès authentifié)
- */
+*/
 Route::get('/admin/stats', [StatController::class, 'index'])
-    ->middleware(['auth', 'is.active'])
+->middleware('auth')
     ->name('admin.stats.index');
 
+Route::get('/stats', [StatController::class, 'publicIndex'])->name('stats.public.index');
 /**
  * 🏆 Joueur du Mois (public)
  */
