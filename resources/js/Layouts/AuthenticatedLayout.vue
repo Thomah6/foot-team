@@ -26,7 +26,7 @@ const isAdmin = () => page.props.auth.user.role === 'admin';
                             <!-- Logo -->
                             <div class="flex shrink-0 items-center">
                                 <Link :href="route('dashboard')">
-                                   
+
                                 </Link>
                             </div>
 
@@ -226,10 +226,10 @@ const isAdmin = () => page.props.auth.user.role === 'admin';
                 <div class="min-h-full sticky top-0">
                     <AdminsideBar />
                 </div>
-                <div class="h-[calc(100vh-4rem)] overflow-y-scroll w-full ">
+                <div class="h-[calc(100vh-4rem)] overflow-y-scroll flex-1 p-6">
                    <slot/>
                 </div>
-                 
+
             </main>
         </div>
     </div>

@@ -30,12 +30,12 @@ class ReflectionController extends Controller
     }
     public function show(Reflection $reflection){
 
-        $comments=CommentController::index($reflection);
-        dd($comments);
+        $comments=CommentController::ravel($reflection);
+        // dd($comments);
         // je charge manuellement les relations 'user' et 'comments'
         // avant de passer l'objet à la vue.
         $reflection->load('user', 'comments');
-
+        // dd($reflection->toArray());
         return Inertia::render('Reflections/Show', [
             'reflection' => $reflection,
             'comments'=>$comments,

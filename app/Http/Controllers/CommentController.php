@@ -23,15 +23,26 @@ class CommentController extends Controller
         $comments = Comment::where("reflection_id",$reflection->id)->get();
         return $comments;
     }
+     static function ravel(Reflection $reflection){
+        // dd($reflection->toArray());
+
+        $comments = Comment::with('user', 'reflection')->where("reflection_id",$reflection->id)->get();
+        return $comments;
+    }
+
+
     public function store(Request $request, Reflection $reflection)
     {
+        // dd($request->toArray());
         $request->validate([
             'content' => ['required', 'string', 'max:1000'],
         ]);
 
-        $reflection->comments()->create([
-            'content' => $request->input('content'),
+
+        Comment::create([
+            'reflection_id'=>$request->reflection_id,
             'user_id' => Auth::id(),
+            'content' => $request->input('content'),
         ]);
 
         return back()->with('success', 'Commentaire ajouté avec succès.');

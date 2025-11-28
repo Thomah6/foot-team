@@ -19,8 +19,8 @@ class CommentFactory extends Factory
     public function definition(): array
     {
         return [
-            'reflection_id' => Reflection::factory(),
-            'user_id' => User::factory(),
+            'reflection_id' => Reflection::inRandomOrder()->first()->id,
+            'user_id' => User::inRandomOrder()->first()->id,
             'content' => $this->faker->realText(200), //Generates a string of 200 characters
             'created_at' => $this->faker->dateTimeBetween('-1 month', 'now'),
             'updated_at' => function (array $attributes) {

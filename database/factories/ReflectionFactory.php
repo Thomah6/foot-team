@@ -16,7 +16,7 @@ class ReflectionFactory extends Factory
     {
         return [
             // Lie chaque réflexion à un utilisateur existant aléatoirement
-            'user_id'       => User::factory(),
+            'user_id'       => User::inRandomOrder()->first()->id,
             'titre'         => $this->faker->sentence(4),
             'contenu'       => $this->faker->realText(400),
             'statut'        => $this->faker->randomElement(['ouvert', 'ferme', 'valide']),

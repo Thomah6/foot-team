@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\TeamController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReflectionController;
@@ -50,7 +51,14 @@ Route::prefix('reflections')->group(function () {
     Route::put('/{id}', [ReflectionController::class, 'update'])->name('admin.reflections.update');
     Route::delete('/{id}', [ReflectionController::class, 'destroy'])->name('reflections.destroy');
     Route::patch('/{id}/toggle', [ReflectionController::class, 'toggle'])->name('admin.reflections.toggle'); // activation/desactivationRoute::post('/{id}/validate', [ReflectionController::class, 'validateAfterDelay'])->name('admin.reflections.validate');
+    //Routes concernant les commentaires sur les reflexions
+    Route::post('/comments',[CommentController::class,'store'])->name('comments.store');
+
 });
+
+
+
+
 
 
        Route::get('/stats', [StatController::class, 'index'])
@@ -65,7 +73,7 @@ Route::middleware(['auth', 'role:admin']) // 👉 Accès réservé aux Admins
          * 🟦 1. Page principale Stats Admin
          * Liste générale / accès aux sous-pages : validation, classement, ajout
          */
- 
+
 
 
         /**

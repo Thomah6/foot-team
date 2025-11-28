@@ -5,6 +5,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue'
 const menu = [
   { label: "Dashboard", icon: "fas fa-tachometer-alt", link: route('dashboard'), active: route().current('dashboard') },
   { label: "Profile", icon: "fas fa-user", link: route('profile.edit'), active: route().current('profile.edit') },
+  { label: "Reflections", icon: "fas fa-user", link: route('reflections.index'), active: route().current('reflections.index') },
 ]
 
 const bottomMenu = [
