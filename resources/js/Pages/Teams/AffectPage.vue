@@ -1,8 +1,11 @@
 <template>
-  <div class="p-6">
-    <h1 class="text-2xl font-bold mb-4">
-      Affectation des joueurs — {{ team.name }}
-    </h1>
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <section class="flex gap-12">
+        <section> <AdminsideBar /> </section>
+        <div class="p-6">
+            <h1 class="text-2xl font-bold mb-4">
+              Affectation des joueurs — {{ team.name }}
+            </h1>
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
@@ -29,6 +32,7 @@
             draggable="true"
             @dragstart="dragStart(player, 'available')"
           >
+            <i class="fa-solid fa-futbol"></i>
             {{ player.name }}
           </div>
         </div>
@@ -36,7 +40,7 @@
 
       <!-- JOUEURS AFFECTÉS -->
       <div
-        class="bg-white rounded-xl shadow p-4 min-h-[400px]"
+        class="bg-white rounded-xl shadow p-4 min-h-[400px] terrain"
         @dragover.prevent
         @drop="dropToAssigned"
       >
@@ -46,11 +50,14 @@
           <div
             v-for="player in assignedPlayers"
             :key="player.id"
-            class="p-3 bg-green-100 rounded-lg border cursor-move transform transition-all duration-200 hover:scale-[1.02]"
+            class="p-2 rounded-lg cursor-move transform transition-all duration-200 hover:scale-[1.02]"
             draggable="true"
             @dragstart="dragStart(player, 'assigned')"
           >
-            {{ player.name }}
+          <div class="flex flex-col items-center">
+            <i class="fa-solid fa-futbol"></i>
+            <p class="text-white">{{ player.name }}</p>
+          </div>
           </div>
         </div>
       </div>
@@ -64,19 +71,42 @@
       >
         Sauvegarder
       </button>
+      <!-- MERCATO -->
+<div class="mt-6 flex items-center gap-3">
+  <input
+    type="number"
+    v-model.number="mercatoCount"
+    min="1"
+    :max="availablePlayers.length"
+    placeholder="Nombre de joueurs à affecter"
+    class="border p-2 rounded w-48"
+  />
+  <button
+    class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+    @click="doMercato"
+    :disabled="availablePlayers.length === 0 || !mercatoCount"
+  >
+    Mercato
+  </button>
+</div>
+
     </div>
+
   </div>
+    </section>
 </template>
 
 <script setup>
 import { ref, computed } from 'vue'
 import { router } from '@inertiajs/vue3'
+import AdminsideBar from "@/Components/AdminsideBar.vue";
 
 const props = defineProps({
   team: Object,
   available: Array,
   assigned: Array,
 })
+console.log(props.available);
 
 const searchQuery = ref("")
 const draggedPlayer = ref(null)
@@ -124,4 +154,61 @@ function saveAffectation() {
     onFinish: () => saving.value = false
   })
 }
+
+
+//Mercato
+const mercatoCount = ref(0);
+function doMercato(){
+    if(mercatoCount.value < 0) return
+
+    //melanger
+    const shulffled = [...availablePlayers.value].sort(()=>Math.random() - 0.5)
+
+    //Sélectionner le nombre demander
+    const selected = shulffled.slice(0, Math.min(mercatoCount.value, availablePlayers.value.length))
+    //Les affecter
+    selected.forEach(player => {
+        availablePlayers.value = availablePlayers.value.filter(p => p.id !== player.id);
+        assignedPlayers.value.push(player)
+    })
+
+    //Réinitialiser l'input
+    mercatoCount.value = 0
+}
+
 </script>
+<style>
+/* .terrain{
+    background-image: url('@/../../../public/terrain.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    width: 125%;
+} */
+ .terrain {
+    position: relative;
+    background-image: url('@/../../../public/terrain.jpg');
+    background-size: 100%;       /* affiche toute l’image sans couper */
+    background-repeat: no-repeat;   /* pas de répétition */
+    /* background-position: center;    bien centré */
+    width: 128%;                    /* full width en mobile */
+    min-height: 300px;              /* donne une vraie zone à l’image */
+    /* display: block; */
+}
+/* TABLETTE */
+@media (min-width: 768px) {
+    .terrain {
+        background-size: cover;     /* maintenant on peut couvrir */
+
+        min-height: 400px;
+    }
+}
+
+
+/* DESKTOP */
+@media (min-width: 1024px) {
+    .terrain {
+        width: 125%;                /* ton ancien style, mais seulement en desktop */
+        min-height: 500px;
+    }
+}
+</style>

@@ -7,6 +7,7 @@ const user = page.props.auth.user;
 const isAdmin = () => page.props.auth.user.role === 'admin';
 const isBureau = () => page.props.auth.user.role === 'bureau';
 
+
 const isOpen = ref(false)
 
 
@@ -19,6 +20,8 @@ const menu = computed(() => {
     // { label: "Voir classements", icon: "fas fa-trophy", link: route('stats.classements.index'), active: route().current('stats.classements.*') },
   { label: "Profile", icon: "fas fa-user", link: route('profile.edit'), active: route().current('profile.edit') },
   { label: "Présences", icon: "fas fa-calendar-check", link: route('presence.index'), active: route().current('presence.*') },
+    { label: "Teams", icon: "fas fa-people-group", link: route('admin.teams'), active: route().current('admin.teams')},
+    { label: "SuggestionBox", icon: "fas fa-lightbulb", link: route('suggestions'), active: route().current('suggestions')},
 
   ];
 
@@ -50,6 +53,7 @@ const menu = computed(() => {
 
   return items;
 });
+    
 
 const bottomMenu = [
   { label: "Settings", icon: "fas fa-cog", link: route('profile.edit') },
@@ -97,7 +101,7 @@ const handleImageError = (event) => {
     <div class="flex items-center justify-between px-2 py-2">
       <div class="flex items-center gap-3">
         <div class="relative">
-          <img 
+          <img
             :src="user.avatar && user.avatar !== '' ? '/storage/' + user.avatar : `https://ui-avatars.com/api/?name=${user.name}&color=7F9CF5&background=EBF4FF&size=40`"
             :alt="user.name"
             class="w-10 h-10 rounded-lg object-cover border-2 border-white dark:border-gray-700 shadow-sm"
