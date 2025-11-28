@@ -10,6 +10,8 @@ const menu = [
     { label: "Stats", icon: "fas fa-chart-bar", link: route('admin.stats.index'), active: route().current('admin.stats.*') },
     { label: "Voir classements", icon: "fas fa-trophy", link: route('stats.classements.index'), active: route().current('stats.classements.*') },
     { label: "Profile", icon: "fas fa-user", link: route('profile.edit'), active: route().current('profile.edit') },
+    { label: "Teams", icon: "fas fa-people-group", link: route('admin.teams'), active: route().current('admin.teams')},
+    { label: "SuggestionBox", icon: "fas fa-lightbulb", link: route('suggestions'), active: route().current('suggestions')}
 ]
 
 const bottomMenu = [

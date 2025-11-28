@@ -1,4 +1,7 @@
 <template>
+    <div>
+        <section> <AdminsideBar /> </section>
+    </div>
   <main class="flex-1 p-8">
     <div class="max-w-7xl mx-auto">
 
@@ -85,7 +88,7 @@
 
 <script setup>
 import { reactive, computed } from 'vue'
-
+import AdminsideBar from "@/Components/AdminsideBar.vue";
 const props = defineProps({
   team: Array,       // toutes les équipes
 })

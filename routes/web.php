@@ -6,7 +6,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReflectionController;
 use App\Http\Controllers\Admin\StatController;
 use App\Http\Controllers\Admin\MemberController;
-
+use App\Http\Controllers\SuggestionController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -136,5 +136,14 @@ Route::get('/teams/{team}/affect', [TeamController::class, 'affectPage'])
 Route::post('/teams/{team}/affect/save', [TeamController::class, 'saveAffect'])->name('teams.affect.save');
 Route::get('/teams/{team}', [TeamController::class, 'show'])->name('teams.show');
 
+//Route pour les suggestions 
+Route::middleware(['auth'])->group(function () {
+    Route::get('/suggestions', [SuggestionController::class, 'index'])->name('suggestions');
+
+    Route::post('/suggestions', [SuggestionController::class, 'store']);
+    Route::post('/suggestions/{suggestion}/react', [SuggestionController::class, 'react']);
+    Route::post('/suggestions/{suggestion}/comment', [SuggestionController::class, 'comment']);
+    Route::delete('/suggestions/{suggestion}', [SuggestionController::class, 'destroy']);
+});
 
 require __DIR__ . '/auth.php';

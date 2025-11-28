@@ -1,6 +1,7 @@
 <script setup>
 import { useForm, router } from '@inertiajs/vue3'
 import { ref } from 'vue'
+import AdminsideBar from "@/Components/AdminsideBar.vue";
 
 const props = defineProps({
   teams: Array
@@ -56,6 +57,7 @@ function affect(teamId) {
 </script>
 
 <template>
+    <section> <AdminsideBar /> </section>
   <div class="p-6">
     <h1 class="text-2xl font-bold mb-6">Gestion des sous-équipes</h1>
 

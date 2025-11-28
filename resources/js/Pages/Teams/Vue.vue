@@ -1,7 +1,7 @@
 <script setup>
 import { computed, ref } from "vue"
 import { router, useForm } from "@inertiajs/vue3"
-
+import AdminsideBar from "@/Components/AdminsideBar.vue";
 // Props venant du backend
 const props = defineProps({
   teams: Array,
@@ -18,7 +18,11 @@ const filteredTeams = computed(()=>{
 </script>
 
 <template>
-  <div class="p-8">
+ <article class="flex justify-between">
+    <section> <AdminsideBar /> </section>
+
+    <section>
+         <div class="p-8">
 
     <!-- Header -->
     <div class="flex justify-between items-center mb-8">
@@ -77,4 +81,6 @@ const filteredTeams = computed(()=>{
 
 
   </div>
+    </section>
+ </article>
 </template>

@@ -1,4 +1,5 @@
 <template>
+    <section> <AdminsideBar /> </section>
   <div class="p-6">
     <h1 class="text-2xl font-bold mb-4">
       Affectation des joueurs — {{ team.name }}
@@ -91,6 +92,7 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { router } from '@inertiajs/vue3'
+import AdminsideBar from "@/Components/AdminsideBar.vue";
 
 const props = defineProps({
   team: Object,
