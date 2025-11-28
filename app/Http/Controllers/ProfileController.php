@@ -8,6 +8,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -38,6 +39,60 @@ class ProfileController extends Controller
         $request->user()->save();
 
         return Redirect::route('profile.edit');
+    }
+
+    /**
+     * Update the user's avatar.
+     */
+    public function updateAvatar(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'avatar' => ['required', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
+        ]);
+
+        $user = $request->user();
+
+        // Delete old avatar if exists
+        if ($user->avatar) {
+            Storage::disk('public')->delete($user->avatar);
+        }
+
+        // Store new avatar
+        $path = $request->file('avatar')->store('avatars', 'public');
+        $user->avatar = $path;
+        $user->save();
+
+        // Debug pour vérifier la sauvegarde
+        \Log::info('Avatar saved for user ' . $user->id . ': ' . $path);
+
+        return Redirect::route('profile.edit')->with('success', 'Avatar mis à jour avec succès!');
+    }
+
+    /**
+     * Update the user's poster.
+     */
+    public function updatePoster(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'poster' => ['required', 'image', 'mimes:jpeg,png,jpg', 'max:5120'],
+        ]);
+
+        $user = $request->user();
+
+        // Delete old poster if exists
+        if ($user->poster) {
+            Storage::disk('public')->delete($user->poster);
+        }
+
+        // Store new poster
+        $path = $request->file('poster')->store('posters', 'public');
+        $user->poster = $path;
+        $user->save();
+
+        // Debug pour vérifier la sauvegarde
+        \Log::info('Poster saved for user ' . $user->id . ': ' . $path);
+
+        return Redirect::route('profile.edit')->with('success', 'Poster mis à jour avec succès!');
     }
 
     /**
