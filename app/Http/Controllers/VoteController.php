@@ -2,59 +2,53 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Vote;
 use App\Models\Reflection;
-use Illuminate\Http\Request;
+use App\Models\Vote;
 use Illuminate\Support\Facades\Auth;
-use Inertia\Inertia;
+use Illuminate\Http\Request;
 
 class VoteController extends Controller
 {
     /**
-     * Affiche les options de vote.
+     * Retourne les options de vote et le vote existant.
      */
-    public function index()
+    public function index($reflectionId)
     {
         $options = [
             ['id' => 1, 'option' => 'POUR'],
             ['id' => 2, 'option' => 'CONTRE'],
         ];
-        $reflectionId= 1;
-        $existingVotes = Vote::where('reflection_id', $reflectionId)->where('user_id', Auth::id())->first();
+        
+        $existingVote = Vote::where('reflection_id', $reflectionId)
+        ->where('user_id', Auth::id())
+        ->first();
 
-        return Inertia::render('Reflections/Index', [
+        // dd($existingVote);
+        return [
             'options' => $options,
-            'isAdmin' => Auth::user()->role === 'admin',
-            'isVoteEnded' => now()->greaterThanOrEqualTo('2025-11-27 10:06:00'), // Exemple de délai
-            'existingVote' => $existingVotes? $existingVotes->value : null,
-        ]);
+            'existingVote' => $existingVote ? $existingVote->value : null,
+        ];
     }
 
     /**
-     * Enregistre un vote.
+     * Enregistre ou met à jour un vote.
      */
     public function store(Request $request)
     {
-    
         $request->validate([
             'reflection_id' => 'required|exists:reflections,id',
             'value' => 'required|integer|in:1,-1',
         ]);
 
-        $reflection = Reflection::findOrFail($request->reflection_id);
-
-        // Vérifier si l'utilisateur a déjà voté pour cette réflexion
-        $existingVote = Vote::where('reflection_id', $reflection->id)
+        $existingVote = Vote::where('reflection_id', $request->reflection_id)
             ->where('user_id', Auth::id())
             ->first();
 
         if ($existingVote) {
-            // Mettre à jour le vote existant
             $existingVote->update(['value' => $request->value]);
         } else {
-            // Créer un nouveau vote
             Vote::create([
-                'reflection_id' => $reflection->id,
+                'reflection_id' => $request->reflection_id,
                 'user_id' => Auth::id(),
                 'value' => $request->value,
             ]);
@@ -67,11 +61,19 @@ class VoteController extends Controller
      */
     public function validateVote(Request $request)
     {
+        // dd($request->all());
+        $request->validate([
+            'reflection_id' => 'required|exists:reflections,id',
+        ]);
+
+        $reflection = Reflection::findOrFail($request->reflection_id);
+
         if (Auth::user()->role !== 'admin') {
             return response()->json(['message' => 'Action non autorisée.'], 403);
         }
 
         // Logique pour valider le vote (exemple : mettre à jour le statut de la réflexion)
-        return response()->json(['message' => 'Vote validé avec succès.']);
+        $reflection->update(['statut' => 'valide']);
+
     }
 }

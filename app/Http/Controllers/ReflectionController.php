@@ -6,6 +6,7 @@ use App\Models\Reflection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
+use App\Http\Controllers\VoteController;
 use App\Http\Controllers\Controller;
 
 class ReflectionController extends Controller
@@ -27,14 +28,21 @@ class ReflectionController extends Controller
             'success' => $request->session()->get('success'),
         ]);
     }
-    public function show(Reflection $reflection){
-        // On charge manuellement les relations 'user' et 'comments'
-        // avant de passer l'objet à la vue.
-        $reflection->load('user', 'comments');
+    public function show(Reflection $reflection)
+    {
+        $reflection->load('user');
+
+        $voteController = new VoteController;
+        $returnVote = $voteController->index($reflection->id);
+
+        $isVoteEnded = now()->greaterThanOrEqualTo($reflection->date_fin_vote);
+        $isAdmin = Auth::user()->role === 'admin';
 
         return Inertia::render('Reflections/Show', [
             'reflection' => $reflection,
-            // Vous pouvez aussi passer les votes ici quand ils seront prêts
+            'isVoteEnded' => $isVoteEnded,
+            'isAdmin' => $isAdmin,
+            ...$returnVote,
         ]);
     }
 

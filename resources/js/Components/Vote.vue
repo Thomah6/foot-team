@@ -25,8 +25,8 @@
                     {{ option.option }}
                 </div>
             </label>
-            <div>{{existingVote}}</div>
         </div>
+        <!-- Bouton de validation visible uniquement pour l'admin et après la date limite -->
         <button
             v-if="isAdmin && isVoteEnded"
             @click="validateVote"
@@ -38,10 +38,10 @@
 </template>
 
 <script setup>
-import { ref, defineProps, onMounted } from "vue";
+import { ref, defineProps } from "vue";
 import { router } from "@inertiajs/vue3";
 
-defineProps({
+const props = defineProps({
     options: {
         type: Array,
         required: true,
@@ -56,8 +56,9 @@ defineProps({
     },
     existingVote: {
         type: Number,
-        default:null,
+        default: null,
     },
+    reflection: Object,
 });
 
 const selectedOption = ref(null);
@@ -68,27 +69,15 @@ const submitVote = (option) => {
     const value = option.option === "POUR" ? 1 : -1;
 
     router.post(route("vote.store"), {
-        reflection_id: 1, // Exemple d'ID de réflexion (à remplacer par une valeur dynamique si nécessaire)
+        reflection_id: props.reflection.id, 
         value: value,
     });
 };
 
-onMounted(() => {
-    console.log("existingVote prop value:", existingVote);
-    if (existingVote === 1) {
-        selectedOption.value = 1; // ID de l'option POUR
-    } else if (existingVote === -1) {
-        selectedOption.value = 2; // ID de l'option CONTRE
-    }
-});
-
 const validateVote = () => {
-    if (selectedOption.value !== null) {
-        alert(`Vote validated for option ID: ${selectedOption.value}`);
-        // Emit the event or handle the validation logic here
-    } else {
-        alert("Please select an option before validating the vote.");
-    }
+    router.post(route("vote.validate"), {
+        reflection_id: props.reflection.id, // Exemple d'ID de réflexion (à remplacer par une valeur dynamique si nécessaire)
+    })
 };
 </script>
 

@@ -18,6 +18,6 @@ class DatabaseSeeder extends Seeder
     {
         Reflection::factory(40)->create();
 
-        User::factory(10)->create();
+        // User::factory(10)->create();
     }
 }
