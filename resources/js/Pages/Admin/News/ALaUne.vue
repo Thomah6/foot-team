@@ -15,6 +15,7 @@ const props = defineProps({
             <h2 class="text-xl font-bold mb-2">À la une</h2>
             <div v-if="featured && featured.title" class="space-y-2">
                 <h3 class="text-lg font-semibold">{{ featured.title }}</h3>
+                <p>Cliquez pour voir plus d'actualités</p>
             </div>
             <p v-else class="text-gray-500">Aucun contenu mis en avant.</p>
         </section>

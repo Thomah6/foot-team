@@ -35,7 +35,7 @@ const formatMonthYear = (dateString) => {
         <!-- Stats -->
         <div class="flex-1 flex flex-col gap-6">
             <h2 class="text-3xl font-bold lg:hidden">
-                {{ player?.user?.name ?? "Aucun joueur sélectionné" }}
+                {{ player?.user?.name ?? "Aucun joueur sélectionné" }} alias {{ player?.user?.pseudo }}
             </h2>
             <div class="grid grid-cols-2 gap-4">
                 <div class="flex flex-col p-4 rounded bg-gray-100">
