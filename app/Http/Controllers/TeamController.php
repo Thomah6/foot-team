@@ -9,13 +9,13 @@ use Inertia\Inertia;
 
 class TeamController extends Controller
 {
-    public function vue()
+    public function index()
     {
         return Inertia::render("Teams/Vue", [
             'teams' => Team::with('users')->get()
         ]);
     }
-    public function index()
+    public function create()
     {
         return Inertia::render("Teams/Index", [
             'teams' => Team::with('users')->get()
@@ -29,7 +29,7 @@ class TeamController extends Controller
             'description' => 'nullable',
         ]);
         Team::create($validated);
-        return redirect()->route('admin.teams')->with('success', '');
+        return redirect()->route('admin.teams.index')->with('success', '');
     }
 
     public function update(Request $request, Team $team)

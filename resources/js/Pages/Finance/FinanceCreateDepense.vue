@@ -1,5 +1,5 @@
 <script setup>
-import AuthenticatedLayout from 'vendor/laravel/breeze/stubs/inertia-react/resources/js/Layouts/AuthenticatedLayout'
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue'
 import { ref } from 'vue'
 const visible = ref(false)
 const montant = ref('')

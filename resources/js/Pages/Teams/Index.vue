@@ -14,7 +14,7 @@ const createForm = useForm({
 })
 
 function createTeam() {
-  createForm.post('/teams', {
+  createForm.post('teams/create', {
     onSuccess: () => createForm.reset()
   })
 }

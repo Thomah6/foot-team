@@ -44,7 +44,7 @@ const showCreateModal = ref(false)
       <h1 class="text-3xl font-bold text-gray-800">Teams</h1>
 
       <div class="flex gap-3">
-        <a href="/teams/index">
+        <a href="teams/create">
 <button
           class="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700"
         >

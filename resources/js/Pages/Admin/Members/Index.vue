@@ -108,7 +108,10 @@ const updateRole = () => {
 // FONCTION: Bascule l'état activation/désactivation d'un membre
 const toggleStatus = (member) => {
   const statusForm = useForm({})
-  statusForm.patch(route('members.toggle-status', member.id))
+  statusForm.patch(route('members.toggle-status', member.id), {
+    preserveScroll: true,
+    preserveState: true,
+  })
 }
 
 // FONCTION: Prépare la suppression d'un membre (ouvre le modal de confirmation)
@@ -151,18 +154,18 @@ const getRoleLabel = (role) => {
 
 <template>
   <AuthenticatedLayout>
-    <!-- En-tête de la page avec titre et bouton d'ajout -->
-    
+     <!-- En-tête de la page avec titre et bouton d'ajout -->
+
     <div class="py-4 sm:py-6">
-     
-        <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <h2 class="text-xl font-semibold leading-tight text-gray-800">Gestion des Membres</h2>
-          <Link :href="route('members.create')"
-            class="rounded-lg bg-blue-600 px-4 py-2 text-white font-medium hover:bg-blue-700 transition">
-          + Ajouter un Membre
-          </Link>
-        </div>
-     
+
+      <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <h2 class="text-xl font-semibold leading-tight text-gray-800">Gestion des Membres</h2>
+        <Link :href="route('members.create')"
+          class="rounded-lg bg-blue-600 px-4 py-2 text-white font-medium hover:bg-blue-700 transition">
+        + Ajouter un Membre
+        </Link>
+      </div>
+
       <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <!-- SECTION FILTRES ET RECHERCHE -->
         <!-- Conteneur avec arrière-plan blanc et ombre pour les filtres -->
@@ -363,7 +366,7 @@ const getRoleLabel = (role) => {
               <div class="text-sm text-gray-600">
                 Affichage de <span class="font-medium">{{ members.from }}</span> a <span class="font-medium">{{
                   members.to
-                  }}</span> sur <span class="font-medium">{{ members.total }}</span> membres
+                }}</span> sur <span class="font-medium">{{ members.total }}</span> membres
               </div>
 
               <!-- Boutons de navigation entre les pages -->
@@ -396,6 +399,7 @@ const getRoleLabel = (role) => {
         </div>
       </div>
     </div>
+    
 
     <!-- MODAL CHANGEMENT DE RÔLE -->
     <!-- Modal pour afficher/modifier le rôle d'un membre sélectionné -->
@@ -453,6 +457,8 @@ const getRoleLabel = (role) => {
         </div>
       </div>
     </div>
-    
   </AuthenticatedLayout>
+   
+
+ 
 </template>

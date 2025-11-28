@@ -180,7 +180,7 @@ Route::middleware(['auth', 'is.active'])->group(function () {
         Route::prefix('teams')->name('teams.')->group(function () {
             Route::get('/', [TeamController::class, 'index'])->name('index');
             Route::get('/create', [TeamController::class, 'create'])->name('create');
-            Route::post('/', [TeamController::class, 'store'])->name('store');
+            Route::post('/create', [TeamController::class, 'store'])->name('store');
             Route::get('/{team}/edit', [TeamController::class, 'edit'])->name('edit');
             Route::put('/{team}', [TeamController::class, 'update'])->name('update');
             Route::delete('/{team}', [TeamController::class, 'destroy'])->name('destroy');
