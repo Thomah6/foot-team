@@ -10,6 +10,7 @@ use App\Http\Controllers\Bureau\BureauStatController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FinanceController;
 use App\Http\Controllers\GalleryController;
+use App\Http\Controllers\IdentityController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\PlayerOfTheMonthController;
 use App\Http\Controllers\ProfileController;
@@ -198,7 +199,7 @@ Route::prefix('admin')->middleware('role:admin')->group(function () {
         Route::get('/create', [StatController::class, 'create'])->name('CreateStats');
 
         // Identity management
-        // Route::get('/identity', [IdentityController::class, 'index'])->name('identity');
+        Route::get('/identity', [IdentityController::class, 'index'])->name('identity');
 
         // Gestion des statistiques
         Route::prefix('stats')->group(function () {
@@ -301,6 +302,11 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/galleries/{gallery}/unlike', [GalleryController::class, 'unlike'])->name('galleries.unlike');
 });
 
+
+/**
+ * 🟢 Stats publiques (consultation libre)
+ */
+Route::get('/stats', [StatController::class, 'publicIndex'])->name('stats.public.index');
 // Finances
 Route::prefix('finances')->group(function () {
     Route::get('/', [FinanceController::class, 'index'])->name('finances.index');
@@ -358,6 +364,21 @@ Route::get('/teams/{team}', [TeamController::class, 'show'])->name('teams.show')
 // Routes pour les commentaires des suggestions
 Route::put('/comments/{comment}', [CommentsSuggestionController::class, 'update']);
 Route::delete('/comments/{comment}', [CommentsSuggestionController::class, 'destroy']);
+
+
+Route::get('/admin', [AdminController::class,'index'])->name('Admin.AdminLayout');
+ 
+ 
+Route::get('/admin/create', [StatController::class,'create'])->name('Admin.CreateStats');
+ 
+Route::get('/identity', [IdentityController::class, 'index'])->name('admin.identity');
+ 
+ 
+Route::get('/admin/identity', [IdentityController::class, 'index']);
+ 
+Route::post('/admin/identity/update', [IdentityController::class, 'update'])
+    ->name('admin.identity.update');
+ 
 
 // Routes d'authentification
 require __DIR__ . '/auth.php';
