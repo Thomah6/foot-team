@@ -77,8 +77,6 @@ Route::prefix('news')->group(function () {
 
 // Routes authentifiées
 Route::middleware(['auth', 'is.active'])->group(function () {
-    // Tableau de bord
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     // Profil utilisateur
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
