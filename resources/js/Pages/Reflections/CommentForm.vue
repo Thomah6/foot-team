@@ -30,19 +30,10 @@
         <div v-else class="mb-8 p-4 bg-yellow-50 rounded-lg text-yellow-800 border border-yellow-200">
             Connectez-vous pour commenter cette réflexion.
         </div>
-
-        <div class="space-y-5">
-          <div v-for="comment in reflection.comments" :key="comment.id" class="bg-white p-5 rounded-lg shadow-md border-l-4 border-blue-200">
-            <p class="text-gray-700 mb-3">{{ comment.contenu }}</p>
-            <div class="text-xs text-gray-400 font-medium">
-              Par **{{ comment.user.name }}** le {{ formatCommentDate(comment.created_at) }}
-            </div>
-          </div>
-        </div>
       </div>
 </template>
 
-<script setup>  
+<script setup>
 import { defineProps, ref } from 'vue';
 const props = defineProps({
     reflection: {
