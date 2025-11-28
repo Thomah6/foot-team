@@ -1,10 +1,12 @@
 <script setup>
+import { Head, Link } from '@inertiajs/vue3';
+import { usePage } from '@inertiajs/vue3';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head, usePage, Link } from '@inertiajs/vue3';
-import BannerPlayerMonth from '@/Pages/Admin/News/BannerPlayerMonth.vue'
-import ALaUne from '@/Pages/Admin/News/ALaUne.vue'
 import AdminsideBar from '@/Components/AdminsideBar.vue';
+import BannerPlayerMonth from '@/Pages/Admin/News/BannerPlayerMonth.vue';
+import ALaUne from '@/Pages/Admin/News/ALaUne.vue';
 
+// Props passées par le contrôleur
 const page = usePage();
 
 function handleImageError() {
@@ -30,7 +32,6 @@ function handleImageError() {
             <div class="lg:ml-64">
                 <!-- Padding pour mobile pour ne pas être sous le hamburger -->
                 <div class="pt-16 lg:pt-0">
-                    <!-- Main Content -->
                     <main class="flex-1 overflow-y-auto">
                         <div class="p-8">
                             <!-- Hero Section -->
