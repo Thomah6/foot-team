@@ -9,9 +9,12 @@ use Inertia\Inertia;
 use App\Http\Controllers\VoteController;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\CommentController;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class ReflectionController extends Controller
 {
+    use AuthorizesRequests;
+    
     /**
      * Affiche la page publique avec le formulaire et la liste des réflexions.
      */
