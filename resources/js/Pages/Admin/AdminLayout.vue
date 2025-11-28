@@ -158,6 +158,12 @@ defineProps({
         renseigner
     </a>
 </div>
+     <div class="w-full flex justify-end">
+    <a href="/admin/identity"
+       class="px-4 py-2 bg-black text-white rounded-lg shadow hover:bg-gray-800 transition font-medium">
+        Identité
+    </a>
+</div>
 
             <button
               class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-md h-10 px-4 bg-primary text-white text-sm font-medium leading-normal hover:bg-primary/90 transition-colors">

@@ -253,28 +253,9 @@ Route::get('/identity', [IdentityController::class, 'index'])->name('admin.ident
 
 Route::get('/admin/identity', [IdentityController::class, 'index']);
 
-Route::post('/admin/identity/update', function (\Illuminate\Http\Request $request) {
+Route::post('/admin/identity/update', [IdentityController::class, 'update'])
+    ->name('admin.identity.update');
 
-    $request->validate([
-        'name' => 'required|string',
-        'description' => 'nullable|string',
-        'logo' => 'nullable|image|max:2048',
-    ]);
-
-    $identity = \App\Models\Identity::first() ?? new \App\Models\Identity();
-
-    if ($request->hasFile('logo')) {
-        $path = $request->file('logo')->store('logos', 'public');
-        $identity->logo = "/storage/" . $path;
-    }
-
-    $identity->name = $request->name;
-  
-
-    $identity->save();
-
-    return back()->with('success', 'Identité mise à jour');
-});
 
 
 

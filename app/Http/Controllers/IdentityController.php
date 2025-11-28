@@ -54,4 +54,68 @@ class IdentityController extends Controller
 
         return back()->with('success', 'Identité du club enregistrée !');
     }
+
+public function stores(Request $request) {
+
+    $request->validate([
+        'name' => 'required|string',
+        'description' => 'nullable|string',
+        'logo' => 'nullable|image|max:2048',
+    ]);
+
 }
+
+
+public function update(Request $request)
+{
+    $request->validate([
+        'name' => 'required|string',
+        'description' => 'nullable|string',
+        'logo' => 'nullable|image|max:2048',
+    ]);
+
+    $identity = Identity::first() ?? new Identity();
+
+    // Upload du logo si présent
+    if ($request->hasFile('logo')) {
+        $path = $request->file('logo')->store('logos', 'public');
+        $identity->logo = "/storage/" . $path;
+    }
+
+    $identity->name = $request->name;
+   
+    $identity->save();
+
+    return back()->with('success', 'Identité mise à jour');
+}
+
+
+
+}
+
+
+
+
+// Route::post('/admin/identity/update', function (\Illuminate\Http\Request $request) {
+
+//     $request->validate([
+//         'name' => 'required|string',
+//         'description' => 'nullable|string',
+//         'logo' => 'nullable|image|max:2048',
+//     ]);
+
+//     $identity = \App\Models\Identity::first() ?? new \App\Models\Identity();
+
+//     if ($request->hasFile('logo')) {
+//         $path = $request->file('logo')->store('logos', 'public');
+//         $identity->logo = "/storage/" . $path;
+//     }
+
+//     $identity->name = $request->name;
+  
+
+//     $identity->save();
+
+//     return back()->with('success', 'Identité mise à jour');
+// });
+
