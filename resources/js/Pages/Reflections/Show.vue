@@ -5,7 +5,6 @@
     <div class="max-w-4xl  w-full lg:w-1/2 mx-auto py-10 px-4 sm:px-6 lg:px-8">
         
         <div class="bg-white p-8 rounded-2xl shadow-2xl border-t-4 border-indigo-600 mb-10">
-          
         <blockquote
           class="text-sm sm:text-xl lg:text-3xl font-serif text-gray-900 italic mb-6 border-l-4 border-gray-300 pl-4 "
         >
@@ -109,8 +108,7 @@
             </div>
         </div>
     </div>
-  </Layout>
-</AuthenticatedLayout>
+  </AuthenticatedLayout>
 </template>
 
 <script setup>
@@ -119,27 +117,12 @@ import { router } from '@inertiajs/vue3';
 import Dropdown from '@/Components/Dropdown.vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
-import CreateForm from './CreateForm.vue';
 import CommentForm from './CommentForm.vue';
 // import Layout from '@/Layouts/AppLayout.vue';
 
 import Vote from "@/Components/Vote.vue";
 
-
-
 defineProps({
-  options: {
-    type: Array,
-    required: true,
-  },
-  isAdmin: {
-    type: Boolean,
-    default: false,
-  },
-  isVoteEnded: {
-    type: Boolean,
-    default: false,
-  },
   reflection: Object,
   comments:Array,
 });
@@ -160,39 +143,13 @@ const formatCommentDate = (dateString) => {
   return date.toLocaleDateString("fr-FR");
 };
 
-
 function deleteRef(id) {
   router.get(route("reflections.destroy", id));
 }
+
 function activeRef(id) {
   router.get(route("reflections.validate", id));
 }
-// Logique pour gérer le vote (cette route doit être créée)
-const handleVote = (isUpvote) => {
-  if (!props.$page.props.auth.user) {
-    alert("Veuillez vous connecter pour voter.");
-    return;
-  }
-
-  // Envoi de la requête POST ou PUT à une nouvelle route de contrôleur (ex: VoteController)
-  // Ici, nous simulons l'appel avec un simple rechargement pour l'exemple
-
-  // Exemple de routage vers une route à créer:
-  // router.post(route('reflections.vote', props.reflection.id), { is_upvote: isUpvote }, {
-  //     preserveScroll: true,
-  //     preserveState: true,
-  // });
-
-  alert(
-    `Vote ${isUpvote ? "positif" : "négatif"} enregistré ! (Action API à implémenter)`
-  );
-  // Pour une expérience réelle, vous rechargeriez la page après le vote réussi
-  // router.reload({ only: ['upvotes_count', 'downvotes_count', 'user_vote'] });
-};
-
-const validateVote = () => {
-  alert("Vote validé !");
-};
 </script>
 
 <style scoped></style>

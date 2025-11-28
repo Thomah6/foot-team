@@ -35,16 +35,15 @@ const filteredTeams = computed(()=>{
           Teams Management
         </h1>
 
-        <div class="flex gap-3">
-          <!-- Add -->
-          <a href="/teams/index">
-            <button
-              class="flex items-center gap-3 bg-blue-600 text-white px-5 py-3 rounded-xl shadow-md hover:bg-blue-700 transition font-semibold"
-            >
-              <i class="fas fa-plus-circle text-lg"></i>
-              Add New Team
-            </button>
-          </a>
+      <div class="flex gap-3">
+        <a href="/teams/index">
+<button
+          class="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700"
+        >
+          ➕ Add New Team
+        </button>
+
+        </a>
 
           <!-- Filter -->
           <!-- <button

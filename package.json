@@ -23,6 +23,7 @@
     "dependencies": {
         "@inertiajs/inertia": "^0.11.1",
         "@inertiajs/inertia-vue3": "^0.6.0",
-        "lodash": "^4.17.21"
+        "lodash": "^4.17.21",
+        "vuedraggable": "^2.24.3"
     }
 }
