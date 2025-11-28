@@ -2,9 +2,11 @@
 import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
+import CreateForm from '@/Pages/Reflections/CreateForm.vue';
 import { useForm, usePage, router } from '@inertiajs/vue3';
 import { ref } from 'vue';
 
+const create=ref(false);
 const user = usePage().props.auth.user;
 
 const avatarForm = useForm({
@@ -197,6 +199,12 @@ const updatePoster = () => {
                     >
                         Mettre à jour le poster
                     </PrimaryButton>
+                    <PrimaryButton
+                        v-if="!create"
+                        @click="create=true"
+                    >
+                        Créer une Réflexion
+                    </PrimaryButton>
 
                     <Transition
                         enter-active-class="transition ease-in-out"
@@ -212,6 +220,7 @@ const updatePoster = () => {
                         </p>
                     </Transition>
                 </div>
+                <CreateForm v-if="create" @close="create = false" />
             </div>
         </div>
     </section>

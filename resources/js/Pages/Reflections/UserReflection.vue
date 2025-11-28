@@ -1,9 +1,6 @@
 <template>
     <div @click="show(reflection.id)" 
-        :class="{ 
-            '': reflection.votes.find(vote => vote.user_id=== $page.props.auth.user?.id),
-            'bg-white': reflection.votes.find(vote => vote.user_id=== $page.props.auth.user?.id)=== undefined}"
-        class="p-6 rounded-lg shadow-md hover:shadow-lg transition duration-300 border-l-4 border-indigo-500"
+        class="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition duration-300 border-l-4 border-indigo-500"
         >
 
         <p class="text-gray-700 italic mb-4 h-10">

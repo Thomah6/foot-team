@@ -15,8 +15,8 @@ defineProps({
     },
 });
 </script>
-
 <template>
+<AuthenticatedLayout>
     <Head title="Profile" />
 
     <div class="min-h-screen bg-gray-50">
@@ -84,4 +84,5 @@ defineProps({
             </div>
         </div>
     </div>
+    </AuthenticatedLayout>
 </template>

@@ -28,10 +28,22 @@ class ReflectionController extends Controller
             // ->latest()
             ->get();
         // dd($reflections->toArray());
-        return Inertia::render('Reflections/Index', [
+        $isAdmin = Auth::user()->role === 'admin';
+        if($isAdmin)
+        {
+            return Inertia::render('Reflections/Index', [
             'reflections' => $reflections,
             'success' => $request->session()->get('success'),
-        ]);
+            ]);
+
+        }else{
+            return Inertia::render('Reflections/AdminIndex', [
+            'reflections' => $reflections,
+            'success' => $request->session()->get('success'),
+            ]);
+
+        }
+        
     }
     public function show(Reflection $reflection){
 
@@ -49,13 +61,25 @@ class ReflectionController extends Controller
         $returnVote = $voteController->index($reflection->id);
         $isVoteEnded = now()->greaterThanOrEqualTo($reflection->date_fin_vote);
         $isAdmin = Auth::user()->role === 'admin';
-        return Inertia::render('Reflections/Show', [
-            'reflection' => $reflection,
-            'comments'=>$comments,
-            'isVoteEnded' => $isVoteEnded,
-            'isAdmin' => $isAdmin,
-            ...$returnVote,
-        ]);
+        if($isAdmin)
+        {
+            return Inertia::render('Reflections/Show', [
+                'reflection' => $reflection,
+                'comments'=>$comments,
+                'isVoteEnded' => $isVoteEnded,
+                'isAdmin' => $isAdmin,
+                ...$returnVote,
+            ]);
+        }else{
+            return Inertia::render('Reflections/Show', [
+                'reflection' => $reflection,
+                'comments'=>$comments,
+                'isVoteEnded' => $isVoteEnded,
+                'isAdmin' => $isAdmin,
+                ...$returnVote,
+            ]);
+        }
+        
     }
 
     /**

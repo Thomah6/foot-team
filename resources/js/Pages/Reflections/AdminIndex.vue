@@ -24,7 +24,7 @@
                             </div>
 
                             <ReflectionCard 
-                                v-for="reflection in sortedReflections" 
+                                v-for="reflection in reflections" 
                                 :key="reflection.id"
                                 :reflection="reflection" 
                             />
@@ -55,15 +55,7 @@ const props = defineProps({
 // exposer reflections pour le template (réactif)
 const reflections = props.reflections;
 
-// computed : filtrer (ouvert | valide) et trier (ouvert avant valide)
-const sortedReflections = computed(() => {
-    return reflections
-        .filter(r => ['ouvert', 'valide'].includes(r.statut))
-        .sort((a, b) => {
-            const order = { ouvert: 1, valide: 2 };
-            return order[a.statut] - order[b.statut];
-        });
-});
+
 </script>
 
 <style scoped>
