@@ -113,9 +113,9 @@
                                         </tr>
                                     </thead>
                                     <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
-                                        <tr v-if="props.stats.length === 0">
+                                        <tr v-if="!props.stats">
                                             <td colspan="5" class="px-6 py-8 text-center text-gray-500 dark:text-gray-400">
-                                                Aucune statistique détaillée disponible pour ce mois
+                                                Aucune statistique détaillée disponible pour ce mois 
                                             </td>
                                         </tr>
                                         <tr v-for="stat in props.stats" :key="stat.id" class="hover:bg-gray-50 dark:hover:bg-gray-800/50">
