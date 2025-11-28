@@ -14,7 +14,7 @@ const menu = [
     { label: "Profile", icon: "fas fa-user", link: route('profile.edit'), active: route().current('profile.edit') },
     { label: "Teams", icon: "fas fa-people-group", link: route('admin.teams'), active: route().current('admin.teams')},
     { label: "SuggestionBox", icon: "fas fa-lightbulb", link: route('suggestions'), active: route().current('suggestions')},
-         {label: "Stats des membres", icon: "fas fa-users", link: route('bureau.stats.index'), active: route().current('bureau.stats.index.*') },
+     {label: "Stats des membres", icon: "fas fa-users", link: route('bureau.stats.index'), active: route().current('bureau.stats.index.*') },
   { label: "Finances", icon: "fas fa-wallet", link: route('finances.index'), active: route().current('finances.*') },
 ]
 

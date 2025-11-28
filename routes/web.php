@@ -201,7 +201,7 @@ Route::prefix('admin')->middleware('role:admin')->group(function () {
 
         // Gestion des équipes
         Route::prefix('teams')->name('teams.')->group(function () {
-            Route::get('/', [TeamController::class, 'index'])->name('index');
+            Route::get('/', [TeamController::class, 'vue'])->name('index');
             Route::get('/create', [TeamController::class, 'create'])->name('create');
             Route::post('/', [TeamController::class, 'store'])->name('store');
             Route::get('/{team}/edit', [TeamController::class, 'edit'])->name('edit');
@@ -209,10 +209,6 @@ Route::prefix('admin')->middleware('role:admin')->group(function () {
             Route::delete('/{team}', [TeamController::class, 'destroy'])->name('destroy');
             Route::get('/{team}/affect', [TeamController::class, 'affectPage'])->name('affect');
             Route::post('/{team}/affect/save', [TeamController::class, 'saveAffect'])->name('affect.save');
-
-            // Mercato
-            Route::post('/assign-members', [TeamController::class, 'assignMembers'])->name('assign-members');
-            Route::post('/mercato', [TeamController::class, 'mercato'])->name('mercato');
         });
 
         // Gestion des actualités (Admin)
