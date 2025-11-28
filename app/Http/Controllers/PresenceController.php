@@ -136,7 +136,9 @@ class PresenceController extends Controller
      */
     public function validate(Request $request, Presence $presence)
     {
-        $this->authorize('admin');
+        if (auth()->user()->role !== 'admin') {
+            return redirect('/dashboard')->with('error', 'Accès non autorisé');
+        }
 
         $validated = $request->validate([
             'validated' => 'required|boolean',
@@ -154,7 +156,9 @@ class PresenceController extends Controller
      */
     public function update(Request $request, Presence $presence)
     {
-        $this->authorize('admin');
+        if (auth()->user()->role !== 'admin') {
+            return redirect('/dashboard')->with('error', 'Accès non autorisé');
+        }
 
         $validated = $request->validate([
             'present' => 'required|boolean',
@@ -193,7 +197,9 @@ class PresenceController extends Controller
      */
     public function monthlyReport(Request $request)
     {
-        $this->authorize('admin');
+        if (auth()->user()->role !== 'admin') {
+            return redirect('/dashboard')->with('error', 'Accès non autorisé');
+        }
 
         $month = $request->query('month') ? Carbon::parse($request->query('month')) : Carbon::now();
         $startOfMonth = $month->clone()->startOfMonth();

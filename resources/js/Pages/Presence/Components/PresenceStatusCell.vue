@@ -25,7 +25,8 @@
       <!-- Dropdown Menu -->
       <div
         v-if="showMenu"
-        class="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-600 rounded-lg shadow-lg z-50 min-w-[150px]"
+        class="fixed bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-600 rounded-lg shadow-lg z-50 min-w-[150px]"
+        :style="{ top: menuTop + 'px', left: menuLeft + 'px' }"
       >
         <button
           @click="updateStatus(true, true)"
@@ -70,7 +71,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 
 const props = defineProps({
   presence: Object,
@@ -80,8 +81,19 @@ const props = defineProps({
 const emit = defineEmits(['update'])
 
 const showMenu = ref(false)
+const menuTop = ref(0)
+const menuLeft = ref(0)
 
 const toggleMenu = () => {
+  if (!showMenu.value) {
+    // Calculate position
+    const button = event.target.closest('button')
+    if (button) {
+      const rect = button.getBoundingClientRect()
+      menuTop.value = rect.bottom + 8 // 8px below button
+      menuLeft.value = rect.left + rect.width / 2 - 75 // Center (150/2 = 75)
+    }
+  }
   showMenu.value = !showMenu.value
 }
 

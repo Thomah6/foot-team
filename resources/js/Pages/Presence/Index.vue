@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 import { Link, useForm } from '@inertiajs/vue3'
 import DeclarePresenceModal from './Components/DeclarePresenceModal.vue'
 import PresenceStatusCell from './Components/PresenceStatusCell.vue'
@@ -19,15 +19,6 @@ const props = defineProps({
 const searchQuery = ref(props.searchQuery)
 const showDeclarePresenceModal = ref(false)
 const filteredPresenceData = ref(props.presenceData)
-const month = ref(new Date(props.month))
-
-const formatMonth = (date) => {
-  const formatter = new Intl.DateTimeFormat('fr-FR', {
-    month: 'long',
-    year: 'numeric',
-  })
-  return formatter.format(date).charAt(0).toUpperCase() + formatter.format(date).slice(1)
-}
 
 const formatDateHeader = (date) => {
   const d = new Date(date)
@@ -48,30 +39,14 @@ const handleSearch = () => {
   }
 }
 
-const previousMonth = () => {
-  const newMonth = new Date(month.value)
-  newMonth.setMonth(newMonth.getMonth() - 1)
-  month.value = newMonth
-  // Charger les données du mois précédent
-  loadMonthData()
-}
+// Month navigation replaced by native month input (monthInput/loadMonthFromInput)
 
-const nextMonth = () => {
-  const newMonth = new Date(month.value)
-  newMonth.setMonth(newMonth.getMonth() + 1)
-  month.value = newMonth
-  // Charger les données du mois suivant
-  loadMonthData()
-}
-
-const goToToday = () => {
-  month.value = new Date()
-  loadMonthData()
-}
-
-const loadMonthData = () => {
-  const monthStr = month.value.toISOString().split('T')[0].slice(0, 7)
-  window.location.href = route('presence.index', { month: monthStr })
+// Month picker (format YYYY-MM) for native month input like in History.vue
+const monthInput = ref(props.month ? props.month.slice(0, 7) : new Date().toISOString().slice(0, 7))
+const loadMonthFromInput = () => {
+  if (monthInput.value) {
+    window.location.href = route('presence.index', { month: monthInput.value })
+  }
 }
 
 const declarPresence = (date) => {
@@ -90,7 +65,26 @@ const declarPresence = (date) => {
 const updatePresence = (presenceId, data) => {
   if (props.isAdmin) {
     const form = useForm(data)
-    form.patch(route('presence.update', { presence: presenceId }))
+    form.patch(route('presence.update', { presence: presenceId }), {
+      onSuccess: () => {
+        // Trouver et mettre à jour l'objet présence dans les données
+        const presenceToUpdate = filteredPresenceData.value.find((row) => {
+          return Object.values(row.presences).some((p) => p && p.id === presenceId)
+        })
+        
+        if (presenceToUpdate) {
+          // Trouver la date de cette présence et la mettre à jour
+          for (const [date, presence] of Object.entries(presenceToUpdate.presences)) {
+            if (presence && presence.id === presenceId) {
+              // Mettre à jour les propriétés de la présence
+              presence.present = data.present
+              presence.validated_by_admin = data.validated_by_admin
+              break
+            }
+          }
+        }
+      },
+    })
   }
 }
 
@@ -123,28 +117,14 @@ handleSearch()
       <div class="flex flex-col md:flex-row items-center justify-between gap-4 p-3 bg-white dark:bg-background-dark border border-slate-200 dark:border-white/10 rounded-xl">
         <!-- Calendar Navigation -->
         <div class="flex w-full md:w-auto items-center gap-2">
-          <button
-            @click="previousMonth"
-            class="p-2 text-[#111318] dark:text-white rounded-lg hover:bg-black/5 dark:hover:bg-white/5"
-          >
-            <span class="material-symbols-outlined">chevron_left</span>
-          </button>
-          <span class="text-[#111318] dark:text-white font-semibold text-lg min-w-[120px] text-center">
-            {{ formatMonth(month) }}
-          </span>
-          <button
-            @click="nextMonth"
-            class="p-2 text-[#111318] dark:text-white rounded-lg hover:bg-black/5 dark:hover:bg-white/5"
-          >
-            <span class="material-symbols-outlined">chevron_right</span>
-          </button>
-          <button
-            @click="goToToday"
-            class="p-2 ml-2 text-[#111318] dark:text-white rounded-lg hover:bg-black/5 dark:hover:bg-white/5"
-            title="Aller à aujourd'hui"
-          >
-            <span class="material-symbols-outlined">calendar_today</span>
-          </button>
+          <!-- Native month picker (visible) to match History.vue -->
+          <input
+            v-model="monthInput"
+            @change="loadMonthFromInput"
+            type="month"
+            class="px-3 py-2 border border-slate-200 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-[#111318] dark:text-white focus:outline-0"
+            title="Sélectionner le mois"
+          />
         </div>
 
         <!-- Search and Actions -->
@@ -178,7 +158,7 @@ handleSearch()
 
       <!-- Table -->
       <div class="w-full @container">
-        <div class="flex overflow-hidden rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-background-dark shadow-sm overflow-x-auto">
+        <div class="flex rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-background-dark shadow-sm overflow-x-auto">
           <table class="w-full">
             <thead class="border-b border-slate-200 dark:border-white/10">
               <tr class="bg-white dark:bg-background-dark">
