@@ -40,7 +40,6 @@ class ReflectionController extends Controller
         // dd($comments);
         // je charge manuellement les relations 'user' et 'comments'
         // avant de passer l'objet à la vue.
-        $reflection->load('user', 'comments');
 
         $voteController = new VoteController;
         $returnVote = $voteController->index($reflection->id);

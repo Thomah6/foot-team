@@ -2,26 +2,36 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Comment;
 use App\Models\Commentlike;
 use App\Http\Requests\StoreCommentlikeRequest;
 use App\Http\Requests\UpdateCommentlikeRequest;
+use Illuminate\Support\Facades\Auth;
 
 class CommentlikeController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
-        //
+    public function like(Comment $comment){
+        $commentlike = CommentLike::create([
+            "user_id"=> Auth::user()->id,
+            "comment_id"=>$comment->id,
+        ]);
+        if ($commentlike) {
+            return back();
+        }
     }
-
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function dislike(Comment $comment)
     {
-        //
+        $commentlike = CommentLike::where("user_id", Auth::user()->id)->where("comment_id", $comment->id)->first();
+        $dislik= $commentlike->delete();
+        if($dislik){
+            return back();
+        }
     }
 
     /**

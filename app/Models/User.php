@@ -105,4 +105,7 @@ class User extends Authenticatable
             ->withPivot(['event', '']) // Expose les colonnes supplémentaires
             ->withTimestamps();
     }
+    public function commentlikes(){
+        return $this->hasMany(Commentlike::class);
+    }
 }

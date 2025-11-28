@@ -2,8 +2,10 @@
 
 namespace Database\Factories;
 
+use App\Models\Comment;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Reflection;
+use App\Models\Reflection;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Commentlike>
@@ -19,12 +21,8 @@ class CommentlikeFactory extends Factory
     {
         return [
              // Lie chaque réflexion à un utilisateur existant aléatoirement
-            'user_id'       => User::factory(),
-            'reflection_id'=>Reflection::factory(),
-            'created_at'    => ,
-            'updated_at'    => function (array $attributes) {
-                return $this->faker->dateTimeBetween($attributes['created_at'], 'now');
-            },
+            'user_id'       => User::inRandomOrder('id')->first()->id,
+            'comment_id'=> Comment::inRandomOrder('id')->first()->id,
         ];
     }
 }

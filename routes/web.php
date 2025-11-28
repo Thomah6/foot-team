@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\Admin\StatController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\CommentController;
+use App\Http\Controllers\CommentlikeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\TeamStatController;
 use App\Http\Controllers\Bureau\BureauMemberController;
@@ -11,6 +13,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Bureau\BureauStatController;
 use App\Http\Controllers\Admin\MemberController;
 
+use App\Models\Commentlike;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\VoteController;
@@ -120,6 +123,12 @@ Route::prefix('reflections')->group(function () {
     Route::put('/{id}', [ReflectionController::class, 'update'])->name('reflections.update');
     Route::delete('/{id}', [ReflectionController::class, 'destroy'])->name('reflections.destroy');
     Route::patch('/{id}/toggle', [ReflectionController::class, 'toggle'])->name('reflections.toggle'); // activation/desactivationRoute::post('/{id}/validate', [ReflectionController::class, 'validateAfterDelay'])->name('admin.reflections.validate');
+    //Routes concernant les commentaires sur les reflexions
+    Route::post('/comments',[CommentController::class,'store'])->name('comments.store');
+
+    //Routes pour les likes des commentaires
+    Route::get('/comments/like/{id}',[CommentlikeController::class,'like'])->name('likeComment');
+    Route::get('/comments/dislike/{id}',[CommentlikeController::class,'dislike'])->name('dislikeComment');
 });
 
 /**

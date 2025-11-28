@@ -99,6 +99,12 @@
                     </div>
                 </div>
                 <p class="break-words">{{ comment.content }}</p>
+                <div class="flex">
+                    <span @click="like(comment.id)"
+                    :class="{'text-red-700': comment.likes.find(like=> like.user_id=== $page.props.auth.user?.id)}">like</span>
+                    <span @click="dislike(comment.id)"
+                    :class="{'text-red-700': comment.likes.find(like=> like.user_id=== undefined)}">dislike</span>
+                </div>
             </div>
         </div>
     </div>
@@ -137,6 +143,13 @@ defineProps({
   comments:Array,
 });
 
+
+function like(id){
+    router.get(route('likeComment',id));
+}
+function dislike(id){
+    router.get(route('dislikeComment',id));
+}
 // Formatage de la date des commentaires
 const formatCommentDate = (dateString) => {
   const date = new Date(dateString);
