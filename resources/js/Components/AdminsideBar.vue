@@ -1,43 +1,87 @@
 <script setup>
-import { ref } from 'vue'
-import { Link } from '@inertiajs/vue3'
+import { ref, computed } from 'vue'
+import { Link, usePage } from '@inertiajs/vue3'
+const page = usePage();
+const isAdmin = () => page.props.auth.user.role === 'admin';
+const isBureau = () => page.props.auth.user.role === 'bureau';
 
 const isOpen = ref(false)
 
-const menu = [
+const menu = computed(() => {
+  const items = [
     { label: "Dashboard", icon: "fas fa-tachometer-alt", link: route('dashboard'), active: route().current('dashboard') },
     { label: "Stats", icon: "fas fa-chart-bar", link: route('admin.stats.index'), active: route().current('admin.stats.*') },
     { label: "Voir classements", icon: "fas fa-trophy", link: route('stats.classements.index'), active: route().current('stats.classements.*') },
     { label: "Profile", icon: "fas fa-user", link: route('profile.edit'), active: route().current('profile.edit') },
-]
+  ];
+
+  // 👉 Ajouter l’item "membres" *seulement si admin ou bureau*
+  if (isAdmin()) {
+    items.push({
+      label: "Membres",
+      icon: "fas fa-user",
+      link: route('members.index'),
+      active: route().current('members.index')
+    }, {
+      label: "Statisques des Équipes",
+      icon: "fas fa-chart-line",
+      link: route('admin.team-stats.index'),
+      active: route().current('admin.team-stats.index')
+    });
+  }
+  if (isBureau()) {
+
+    items.push({
+      label: "Membres",
+      icon: "fas fa-user",
+      link: route('bureau.members.index'),
+      active: route().current('bureau.members.index')
+    });
+
+  }
+
+
+  return items;
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 const bottomMenu = [
   { label: "Settings", icon: "fas fa-cog", link: route('profile.edit') },
 ]
 
 const toggleMenu = () => {
-    isOpen.value = !isOpen.value
+  isOpen.value = !isOpen.value
 }
 
 const closeMenu = () => {
-    isOpen.value = false
+  isOpen.value = false
 }
 </script>
 
 <template>
   <!-- Font Awesome CDN -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-  
+
   <!-- Menu hamburger pour mobile -->
-  <button v-if="!isOpen" @click="toggleMenu" 
-          class="lg:hidden fixed top-4 left-4 z-40 p-3 bg-white rounded-lg shadow-lg border hover:bg-gray-50 transition">
+  <button v-if="!isOpen" @click="toggleMenu"
+    class="lg:hidden fixed top-4 left-4 z-40 p-3 bg-white rounded-lg shadow-lg border hover:bg-gray-50 transition">
     <i class="fas fa-bars text-gray-700"></i>
   </button>
 
   <!-- Overlay pour mobile -->
-  <div v-if="isOpen" 
-       @click="closeMenu"
-       class="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-30">
+  <div v-if="isOpen" @click="closeMenu" class="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-30">
   </div>
 
   <!-- Sidebar -->
@@ -59,10 +103,9 @@ const closeMenu = () => {
           <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark">Admin Panel</p>
         </div>
       </div>
-      
+
       <!-- Bouton close pour mobile -->
-      <button @click="closeMenu" 
-              class="lg:hidden p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition">
+      <button @click="closeMenu" class="lg:hidden p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition">
         <i class="fas fa-times text-gray-600 dark:text-gray-300"></i>
       </button>
     </div>
@@ -70,29 +113,25 @@ const closeMenu = () => {
     <!-- Navigation Items -->
     <nav class="flex flex-col gap-2 mt-4 flex-1 overflow-y-auto">
 
-      <Link v-for="(item, index) in menu" :key="index"
-            :href="item.link"
-            @click="closeMenu"
-            class="flex items-center gap-3 px-3 py-2 rounded-md transition-colors"
-            :class="item.active ? 'bg-blue-500/20 text-blue-600' : 'hover:bg-blue-500/10 text-text-primary-light dark:text-text-primary-dark'">
-        <i :class="item.icon" class="text-lg w-5 text-center"></i>
-        <p class="text-sm font-medium">{{ item.label }}</p>
+      <Link v-for="(item, index) in menu" :key="index" :href="item.link" @click="closeMenu"
+        class="flex items-center gap-3 px-3 py-2 rounded-md transition-colors"
+        :class="item.active ? 'bg-blue-500/20 text-blue-600' : 'hover:bg-blue-500/10 text-text-primary-light dark:text-text-primary-dark'">
+      <i :class="item.icon" class="text-lg w-5 text-center"></i>
+      <p class="text-sm font-medium">{{ item.label }}</p>
       </Link>
 
-      </nav>
+    </nav>
 
     <!-- Bottom -->
     <div class="mt-auto flex flex-col gap-2 border-t border-gray-200 dark:border-gray-700 pt-4">
-      <Link v-for="(item, index) in bottomMenu" :key="`bottom-${index}`"
-            :href="item.link"
-            @click="closeMenu"
-            class="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-blue-500/10 transition-colors text-text-primary-light dark:text-text-primary-dark">
-        <i :class="item.icon" class="text-lg w-5 text-center"></i>
-        <p class="text-sm font-medium">{{ item.label }}</p>
+      <Link v-for="(item, index) in bottomMenu" :key="`bottom-${index}`" :href="item.link" @click="closeMenu"
+        class="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-blue-500/10 transition-colors text-text-primary-light dark:text-text-primary-dark">
+      <i :class="item.icon" class="text-lg w-5 text-center"></i>
+      <p class="text-sm font-medium">{{ item.label }}</p>
       </Link>
     </div>
 
-    </aside>
+  </aside>
 </template>
 
 <style scoped>
@@ -149,7 +188,7 @@ aside {
     box-shadow: 0 0 40px rgba(0, 0, 0, 0.15);
     background-color: rgba(255, 255, 255, 1);
   }
-  
+
   .dark aside {
     background-color: rgba(17, 24, 39, 1);
   }

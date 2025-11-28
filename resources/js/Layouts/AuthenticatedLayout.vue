@@ -31,7 +31,7 @@ const isBureau = () => page.props.auth.user.role === 'bureau'
 
                             <!-- Navigation Links -->
                             <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                                <NavLink :href="route('dashboard')" :active="route().current('dashboard')">
+                                <!-- <NavLink :href="route('dashboard')" :active="route().current('dashboard')">
                                     Dashboard
                                 </NavLink>
                                 <NavLink v-if="isAdmin()" :href="route('members.index')"
@@ -46,6 +46,10 @@ const isBureau = () => page.props.auth.user.role === 'bureau'
                                     :active="route().current('reflections.*')">
                                     Reflexions
                                 </NavLink>
+                                <NavLink v-if="isBureau()" :href="route('bureau.members.index')"
+                                    :active="route().current('bureau.members.*')">
+                                    Members
+                                </NavLink> -->
                             </div>
                         </div>
 

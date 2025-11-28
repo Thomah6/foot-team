@@ -152,14 +152,14 @@ const getRoleLabel = (role) => {
 <template>
   <AuthenticatedLayout>
     <!-- En-tête de la page avec titre et bouton d'ajout -->
-    <template #header>
+    
       <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <h2 class="text-xl font-semibold leading-tight text-gray-800">Gestion des Membres</h2>
         <Link :href="route('members.create')" class="rounded-lg bg-blue-600 px-4 py-2 text-white font-medium hover:bg-blue-700 transition">
           + Ajouter un Membre
         </Link>
       </div>
-    </template>
+    
 
     <div class="py-4 sm:py-6">
       <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
