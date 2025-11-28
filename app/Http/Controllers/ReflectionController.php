@@ -31,7 +31,7 @@ class ReflectionController extends Controller
     public function show(Reflection $reflection){
 
         $comments=CommentController::index($reflection);
-        dd($comments);
+        // dd($comments);
         // je charge manuellement les relations 'user' et 'comments'
         // avant de passer l'objet à la vue.
         $reflection->load('user', 'comments');

@@ -99,13 +99,13 @@
             <div v-for="comment in comments" :key="comment.id" class="mb-6 p-6 bg-white rounded-lg shadow">
                 <div class="flex justify-between items-center mb-4">
                     <div class="flex items-center">
-                        <img
+                        <!-- <img
                             :src="comment.user.profile_photo_url"
                             alt="Photo de profil"
                             class="w-10 h-10 rounded-full me-4"
-                        />
+                        /> -->
                         <div>
-                            <p class="font-semibold text-gray-800">{{ comment.user.name }}</p>
+                            <!-- <p class="font-semibold text-gray-800">{{ comment.user.name }}</p> -->
                             <p class="text-sm text-gray-500">Le {{ formatCommentDate(comment.created_at) }}</p>
                         </div>
                     </div>
