@@ -27,6 +27,10 @@ public function share(Request $request): array
                 'id'    => $user->id,
                 'name'  => $user->name,
                 'email' => $user->email,
+                'avatar' => $user->avatar,
+                'poster' => $user->poster,
+                'role' => $user->role,
+                'pseudo' => $user->pseudo,
             ] : null,
 
             // Empêche totalement l’erreur SQL

@@ -4,12 +4,15 @@ import AdminsideBar from '@/Components/AdminsideBar.vue';
 </script>
 
 <template>
-    <div class="min-h-screen bg-gray-50 text-gray-900 font-display">
+    <div class=" flex min-h-screen bg-gray-50 text-gray-900 font-display">
         <!-- Sidebar -->
+         <div class="">
+
         <AdminsideBar />
-        
+         </div>
+         
         <!-- Contenu principal -->
-        <div class="lg:ml-64">
+        <div class="">
             <!-- Padding pour mobile pour ne pas être sous le hamburger -->
             <div class="pt-16 lg:pt-0">
                 <div class="px-4 sm:px-8 md:px-16 lg:px-24 xl:px-40 py-5 flex justify-center">

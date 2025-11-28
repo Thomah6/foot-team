@@ -14,26 +14,26 @@
               </p>
             </div>
 
-            <ReflectionCard
-              v-for="reflection in reflections"
-              :key="reflection.id"
-              :reflection="reflection"
-            />
-          </div>
-        </div>
-      </div>
-    </div>
-  </Layout>
-</AuthenticatedLayout>
+                            <ReflectionCard
+                                v-for="reflection in reflections"
+                                :key="reflection.id"
+                                :reflection="reflection"
+                            />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </Layout>
+    </AuthenticatedLayout>
 </template>
 <script setup>
-import { defineProps } from 'vue';
-import AdminsideBar from '@/Components/AdminsideBar.vue';
-import ReflectionForm from '@/Components/ReflectionForm.vue';
-import ReflectionCard from '@/Components/ReflectionCard.vue';
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+import { defineProps } from "vue";
+import AdminsideBar from "@/Components/AdminsideBar.vue";
+import ReflectionForm from "@/Components/ReflectionForm.vue";
+import ReflectionCard from "@/Components/ReflectionCard.vue";
+import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 
 defineProps({
-  reflections: Array, // Reçoit les données du contrôleur Laravel
+    reflections: Array, // Reçoit les données du contrôleur Laravel
 });
 </script>

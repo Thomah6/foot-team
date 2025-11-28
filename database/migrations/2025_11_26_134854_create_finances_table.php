@@ -13,13 +13,14 @@ return new class extends Migration
     {
         Schema::create('finances', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->nullable()->constrained()->onDelete('set null');
-            $table->enum('type', ['cotisation', 'depense', 'participation', 'autre']);
-            $table->decimal('amount', 10, 2);
+            $table->foreignId('user_id')->nullable()->constrained('users')->onDelete('set null');
+            $table->enum('type', ['cotisation', 'dépense', 'autre']);
+            $table->integer('montant');
+            $table->boolean('statut_valide')->default(false);
             $table->text('description')->nullable();
-            $table->date('date');
             $table->timestamps();
         });
+   
     }
 
     /**
