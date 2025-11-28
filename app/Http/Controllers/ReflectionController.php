@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use App\Http\Controllers\VoteController;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\CommentController;
 
 class ReflectionController extends Controller
 {
@@ -28,6 +29,13 @@ class ReflectionController extends Controller
             'success' => $request->session()->get('success'),
         ]);
     }
+    public function show(Reflection $reflection){
+
+        $comments=CommentController::index($reflection);
+        dd($comments);
+        // je charge manuellement les relations 'user' et 'comments'
+        // avant de passer l'objet à la vue.
+        $reflection->load('user', 'comments');
     public function show(Reflection $reflection)
     {
         $reflection->load('user');
@@ -40,6 +48,7 @@ class ReflectionController extends Controller
 
         return Inertia::render('Reflections/Show', [
             'reflection' => $reflection,
+            'comments'=>$comments,
             'isVoteEnded' => $isVoteEnded,
             'isAdmin' => $isAdmin,
             ...$returnVote,
@@ -51,16 +60,31 @@ class ReflectionController extends Controller
      */
     public function store(Request $request)
     {
+
+        // dd($request->all());
         // Validation du formulaire soumission réflexion
         $request->validate([
-            'content' => 'required|string|max:500',
+            'titre'=>'required',
+            'contenu' => 'required|string|max:500',
         ]);
 
-        // Création et Relation avec User
-        Auth::user()->reflections()->create([
-            'content' => $request->input('content'),
-            'is_active' => true, // Par défaut, active (ajustez si vous voulez une modération)
-        ]);
+        if(Auth::user()->role==="admin"){// je mets automatiquement le statut sur ouvert directement puisqu'li n'a pas beasoi d'être valider par quelqu'un d'autre
+            // Création et Relation avec User en mettant les statut sur ouvert
+            $request->statut="ouvert";
+            $request->user_id=Auth::user();
+            Auth::user()->reflections()->create([
+                'titre' => $request->input('titre'),
+                'contenu' => $request->input('contenu'),
+                'statut' => "ouvert",
+            ]);
+        }else{
+            // Création et Relation avec User en mettant les statut sur ouvert
+            Auth::user()->reflections()->create([
+                'content' => $request->input('content'),
+                'statut' => "ferme",
+            ]);
+
+        }
 
         return redirect()->back()
             ->with('success', 'Votre réflexion a été soumise avec succès !');
