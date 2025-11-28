@@ -1,7 +1,9 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { Link, usePage } from '@inertiajs/vue3'
+
 const page = usePage();
+const user = page.props.auth.user;
 const isAdmin = () => page.props.auth.user.role === 'admin';
 const isBureau = () => page.props.auth.user.role === 'bureau';
 
@@ -11,8 +13,8 @@ const isOpen = ref(false)
 const menu = computed(() => {
   const items = [
     { label: "Dashboard", icon: "fas fa-tachometer-alt", link: route('dashboard'), active: route().current('dashboard') },
-    { label: "Stats des membres", icon: "fas fa-users", link: route('bureau.stats.index'), active: route().current('bureau.stats.index.*') },
-    { label: "Finances", icon: "fas fa-wallet", link: route('finances.index'), active: route().current('finances.*') },
+       {label: "Stats des membres", icon: "fas fa-table", link: route('bureau.stats.index'), active: route().current('bureau.stats.index.*') },
+  { label: "Finances", icon: "fas fa-wallet", link: route('finances.index'), active: route().current('finances.*') },
     // { label: "Stats", icon: "fas fa-chart-bar", link: route('admin.stats.index'), active: route().current('admin.stats.*') },
     // { label: "Voir classements", icon: "fas fa-trophy", link: route('stats.classements.index'), active: route().current('stats.classements.*') },
     { label: "Profile", icon: "fas fa-user", link: route('profile.edit'), active: route().current('profile.edit') },
@@ -22,7 +24,7 @@ const menu = computed(() => {
   if (isAdmin()) {
     items.push({
       label: "Membres",
-      icon: "fas fa-user",
+      icon: "fas fa-user-friends",
       link: route('members.index'),
       active: route().current('members.index')
     }, {
@@ -36,7 +38,7 @@ const menu = computed(() => {
 
     items.push({
       label: "Membres",
-      icon: "fas fa-user",
+      icon: "fas fa-user-friends",
       link: route('bureau.members.index'),
       active: route().current('bureau.members.index')
     });
@@ -59,7 +61,7 @@ const menu = computed(() => {
 
 
 
-
+  
 
 
 const bottomMenu = [
@@ -75,8 +77,8 @@ const closeMenu = () => {
 }
 
 const handleImageError = (event) => {
-  // Si l'image ne charge pas, utiliser l'avatar par défaut
-  event.target.src = `https://ui-avatars.com/api/?name=${user.name}&color=7F9CF5&background=EBF4FF&size=40`
+    // Si l'image ne charge pas, utiliser l'avatar par défaut
+    event.target.src = `https://ui-avatars.com/api/?name=${user.name}&color=7F9CF5&background=EBF4FF&size=40`
 }
 </script>
 
@@ -86,12 +88,14 @@ const handleImageError = (event) => {
 
   <!-- Menu hamburger pour mobile -->
   <button v-if="!isOpen" @click="toggleMenu"
-    class="lg:hidden fixed top-4 left-4 z-40 p-3 bg-white rounded-lg shadow-lg border hover:bg-gray-50 transition">
+          class="lg:hidden fixed top-4 left-4 z-40 p-3 bg-white rounded-lg shadow-lg border hover:bg-gray-50 transition">
     <i class="fas fa-bars text-gray-700"></i>
   </button>
 
   <!-- Overlay pour mobile -->
-  <div v-if="isOpen" @click="closeMenu" class="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-30">
+  <div v-if="isOpen"
+       @click="closeMenu"
+       class="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-30">
   </div>
 
   <!-- Sidebar -->
@@ -106,14 +110,13 @@ const handleImageError = (event) => {
     <div class="flex items-center justify-between px-2 py-2">
       <div class="flex items-center gap-3">
         <div class="relative">
-          <img
+          <img 
             :src="user.avatar && user.avatar !== '' ? '/storage/' + user.avatar : `https://ui-avatars.com/api/?name=${user.name}&color=7F9CF5&background=EBF4FF&size=40`"
             :alt="user.name"
             class="w-10 h-10 rounded-lg object-cover border-2 border-white dark:border-gray-700 shadow-sm"
-            @error="handleImageError">
-          <div
-            class="absolute -bottom-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-white dark:border-gray-700">
-          </div>
+            @error="handleImageError"
+          >
+          <div class="absolute -bottom-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-white dark:border-gray-700"></div>
         </div>
         <div>
           <h1 class="text-base font-bold text-text-primary-light dark:text-text-primary-dark">{{ user.name }}</h1>
@@ -122,7 +125,8 @@ const handleImageError = (event) => {
       </div>
 
       <!-- Bouton close pour mobile -->
-      <button @click="closeMenu" class="lg:hidden p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition">
+      <button @click="closeMenu"
+              class="lg:hidden p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition">
         <i class="fas fa-times text-gray-600 dark:text-gray-300"></i>
       </button>
     </div>
