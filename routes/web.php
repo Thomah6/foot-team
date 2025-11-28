@@ -1,69 +1,93 @@
 <?php
 
-use App\Http\Controllers\Admin\StatController;
-use App\Http\Controllers\AdminController;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\Admin\TeamStatController;
-use App\Http\Controllers\Bureau\BureauMemberController;
-use App\Http\Controllers\TeamController;
-use App\Http\Controllers\ReflectionController;
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\Bureau\BureauStatController;
 use App\Http\Controllers\Admin\MemberController;
-
-use Illuminate\Foundation\Application;
-use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
+use App\Http\Controllers\Admin\StatController;
+use App\Http\Controllers\Admin\TeamStatController;
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\Auth\GoogleAuthController;
+use App\Http\Controllers\Bureau\BureauMemberController;
+use App\Http\Controllers\Bureau\BureauStatController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\FinanceController;
+use App\Http\Controllers\GalleryController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\PlayerOfTheMonthController;
-use App\Http\Controllers\Auth\GoogleAuthController;
+use App\Http\Controllers\ProfileController;
+// use App\Http\Controllers\PresenceController;
+use App\Http\Controllers\ReflectionController;
+use App\Http\Controllers\TeamController;
+use App\Http\Controllers\VoteController;
+use App\Http\Controllers\SuggestionController;
+// use App\Http\Controllers\RegulationControler;
+use App\Http\Controllers\CommentsSuggestionController;
+use Illuminate\Foundation\Application;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\CommentController;
+// use App\Http\Controllers\IdentityController;
+use Inertia\Inertia;
 
 // Routes d'authentification Google
 Route::get('/auth/google', [GoogleAuthController::class, 'redirect'])->name('google.login');
 Route::get('/auth/google/callback', [GoogleAuthController::class, 'callback']);
 
-// Route::get('/', function () {
-//     if (auth()->check()) {
-//         return redirect()->route('dashboard');
-//     }
-    
-//     return Inertia::render('Welcome', [
-//         'canLogin' => Route::has('login'),
-//         'canRegister' => Route::has('register'),
-//         'laravelVersion' => Application::VERSION,
-//         'phpVersion' => PHP_VERSION,
-//     ]);
-// });
+// Page d'accueil
 
+// Redirection racine si authentifié
 Route::get('/', function () {
-    return auth()->check() 
+    return auth()->check()
         ? redirect()->route('dashboard')
         : redirect()->route('login');
+})->name('home');
+
+// Routes de vote
+Route::middleware('auth')->group(function () {
+    Route::get('/vote', [VoteController::class, 'index'])->name('vote.index');
+    Route::post('/vote', [VoteController::class, 'store'])->name('vote.store');
+    Route::post('/vote/validate', [VoteController::class, 'validateVote'])->name('vote.validate');
+    Route::get('/vote/history', [VoteController::class, 'history'])->name('vote.history');
+    Route::get('/vote/list/admin', [VoteController::class, 'listAdmin'])->name('vote.list.admin');
 });
 
+// Route dashboard avec middleware
 Route::get('/dashboard', [DashboardController::class, 'index'])
     ->middleware(['auth', 'is.active'])
     ->name('dashboard');
 
+// Routes publiques
+Route::get('/stats', [StatController::class, 'publicIndex'])->name('stats.public.index');
 
+// Routes du joueur du mois
+Route::get('/joueur-du-mois', [StatController::class, 'currentPlayerOfMonth'])->name('player.month.current');
+Route::get('/joueur-du-mois/historique', [StatController::class, 'historyPlayerOfMonth'])->name('player.month.history');
+Route::get('/joueur-du-mois/{month}/stats', [StatController::class, 'monthlyStats'])->name('player.month.stats');
 
-Route::middleware(['auth', 'is.active'])->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+// Routes des classements
+Route::get('/classements', [StatController::class, 'classementsIndex'])->name('stats.classements.index');
+Route::get('/classements/general', [StatController::class, 'classementGeneral'])->name('stats.classement.general');
+Route::get('/classements/buteurs', [StatController::class, 'classementsGoals'])->name('stats.classement.buteurs');
+Route::get('/classements/passeurs', [StatController::class, 'classementsAssists'])->name('stats.classement.passeurs');
+Route::get('/classements/gardiens', [StatController::class, 'classementsGardiens'])->name('stats.classement.gardiens');
+
+// Routes pour les actualités (news)
+Route::prefix('news')->group(function () {
+    Route::get('/', [NewsController::class, 'index'])->name('news.index');
+    Route::get('/reglement', [NewsController::class, 'showReglement'])->name('news.reglement');
 });
 
-Route::prefix('admin')->middleware('role:admin')->group(function () {
+// Routes authentifiées
+Route::middleware(['auth', 'is.active'])->group(function () {
+    // Tableau de bord
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    // Profil utilisateur
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::post('/profile/avatar', [ProfileController::class, 'updateAvatar'])->name('profile.avatar.update');
+    Route::post('/profile/poster', [ProfileController::class, 'updatePoster'])->name('profile.poster.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
-
-    Route::get('/settings', [AdminController::class, 'settings'])->name('admin.settings');
-
-  
-
-    // Members management routes - Admin only
+    // Gestion des membres (Admin uniquement)
     Route::middleware('role:admin')->group(function () {
-        
         Route::get('/members', [MemberController::class, 'index'])->name('members.index');
         Route::get('/members/create', [MemberController::class, 'create'])->name('members.create');
         Route::post('/members', [MemberController::class, 'store'])->name('members.store');
@@ -72,44 +96,178 @@ Route::prefix('admin')->middleware('role:admin')->group(function () {
         Route::delete('/members/{member}', [MemberController::class, 'destroy'])->name('members.destroy');
         Route::patch('/members/{member}/toggle-status', [MemberController::class, 'toggleStatus'])->name('members.toggle-status');
         Route::patch('/members/{member}/role', [MemberController::class, 'updateRole'])->name('members.update-role');
-
-        //ROUTES POUR LES STATS MANUELLES A RENTRER PAR L'admin
-
-        Route::get('/stats', [StatController::class,'index'])->name('admin.stats.index');
-        Route::get('/stats/pending',[StatController::class,'pending'])->name('admin.stats.pending');
-        
-        //Routes pour les stats d'équipes
-        Route::get('/team-stats',[TeamStatController::class,'index'])->name('admin.team-stats.index');
-        Route::get('/team-stats/create',[TeamStatController::class,'create'])->name('admin.team-stats.create');
-        Route::post('/team-stats',[TeamStatController::class,'store'])->name('admin.team-stats.store');
-        Route::get('/team-stats/{teamStat}/edit',[TeamStatController::class,'edit'])->name('admin.team-stats.edit');
-        Route::patch('/team-stats/{teamStat}',[TeamStatController::class,'update'])->name('admin.team-stats.update');
-
-        Route::delete('/team-stats/{teamStat}',[TeamStatController::class,'destroy'])->name('admin.team-stats.destroy');
-
-        Route::get('/team-stats/team/{team}',[TeamStatController::class,'byTeam'])->name('admin.team-stats.by-team');
-
-        Route::get('/team-stats/api/current-month',[TeamStatController::class,'currentMonthStats'])->name('admin.team-stats.current-month-api');
-
-        Route::post('/team-stats/bulk-validate',[TeamStatController::class,'bulkValidate'])->name('admin.team-stats.bulk-validate');
-
     });
 
-    Route::prefix('bureau/members')->middleware('role:bureau')->group(function(){
-        Route::get('/',[BureauMemberController::class,'index'])->name('bureau.members.index');
+    // // ===== ROUTES PRÉSENCES =====
+    // Route::get('/presence', [PresenceController::class, 'index'])->name('presence.index');
+    // Route::get('/presence/history', [PresenceController::class, 'history'])->name('presence.history');
+    // Route::post('/presence', [PresenceController::class, 'store'])->name('presence.store');
+    // Route::get('/presence/day', [PresenceController::class, 'getByDate'])->name('presence.getByDate');
+
+    // // Admin only routes for presence
+    // Route::middleware('role:admin')->group(function () {
+    //     Route::patch('/presence/{presence}/validate', [PresenceController::class, 'validate'])->name('presence.validate');
+    //     Route::patch('/presence/{presence}', [PresenceController::class, 'update'])->name('presence.update');
+    //     Route::get('/presence/monthly-report', [PresenceController::class, 'monthlyReport'])->name('presence.monthlyReport');
+    // });
+
+    // Espace bureau - Gestion des membres
+    Route::prefix('bureau')->middleware('role:bureau')->group(function () {
+        Route::get('/members', [BureauMemberController::class, 'index'])->name('bureau.members.index');
+    });
+
+    // Espace bureau - Statistiques
+    Route::prefix('bureau/stats')->middleware('role:bureau')->group(function () {
+        Route::get('/', [BureauStatController::class, 'index'])->name('bureau.stats.index');
+        Route::get('/leaderboards', [BureauStatController::class, 'leaderboards'])->name('bureau.stats.leaderboards');
+        Route::get('/leaderboards/goals', [BureauStatController::class, 'goalLeaders'])->name('bureau.stats.leaderboards.goals');
+        Route::get('/leaderboards/assists', [BureauStatController::class, 'assistLeaders'])->name('bureau.stats.leaderboards.assists');
+        Route::get('/leaderboards/goalkeepers', [BureauStatController::class, 'goalkeeperLeaders'])->name('bureau.stats.leaderboards.goalkeepers');
+        Route::get('/members/{user}/stats', [BureauStatController::class, 'memberStats'])->name('bureau.stats.member');
+    });
+
+    // Réflexions
+    Route::prefix('reflections')->group(function () {
+        Route::get('/', [ReflectionController::class, 'index'])->name('reflections.index');
+        Route::get('/{reflection}', [ReflectionController::class, 'show'])->name('reflections.show');
+        Route::get('/create', [ReflectionController::class, 'create'])->name('reflections.create');
+        Route::post('/', [ReflectionController::class, 'store'])->name('reflections.store');
+        Route::get('/{id}/edit', [ReflectionController::class, 'edit'])->name('reflections.edit');
+        Route::get('/{id}/validate', [ReflectionController::class, 'validate'])->name('reflections.validate');
+        Route::put('/{id}', [ReflectionController::class, 'update'])->name('reflections.update');
+        Route::delete('/{id}', [ReflectionController::class, 'destroy'])->name('reflections.destroy');
+        Route::patch('/{id}/toggle', [ReflectionController::class, 'toggle'])->name('reflections.toggle');
+        
+        // Validation par l'administrateur
+        Route::post('/{id}/validate', [ReflectionController::class, 'validateAfterDelay'])->name('admin.reflections.validate');
+        
+        // Commentaires sur les réflexions
+        Route::post('/comments', [CommentController::class, 'store'])->name('comments.store');
+    });
+
+    // Administration
+    Route::prefix('admin')->name('admin.')->middleware('role:admin')->group(function () {
+        // Admin dashboard routes
+        Route::get('/', [AdminController::class, 'index'])->name('AdminLayout');
+        Route::get('/settings', [AdminController::class, 'settings'])->name('settings');
+        
+        // Stats management
+        Route::get('/create', [StatController::class, 'create'])->name('CreateStats');
+        
+        // Identity management
+        // Route::get('/identity', [IdentityController::class, 'index'])->name('identity');
+
+        // Gestion des statistiques
+        Route::prefix('stats')->group(function () {
+            Route::get('/', [StatController::class, 'index'])->name('stats.index');
+            Route::get('/create', [StatController::class, 'create'])->name('stats.create');
+            Route::post('/', [StatController::class, 'store'])->name('stats.store');
+            Route::get('/pending', [StatController::class, 'pending'])->name('stats.pending');
+            Route::post('/{stat}/validate', [StatController::class, 'validateStat'])->name('stats.validate');
+            Route::delete('/{stat}/reject', [StatController::class, 'rejectStat'])->name('stats.reject');
+
+            // Statistiques d'équipe
+            Route::prefix('team')->name('team.')->group(function () {
+                Route::get('/', [TeamStatController::class, 'index'])->name('index');
+                Route::get('/create', [TeamStatController::class, 'create'])->name('create');
+                Route::post('/', [TeamStatController::class, 'store'])->name('store');
+                Route::get('/{teamStat}/edit', [TeamStatController::class, 'edit'])->name('edit');
+                Route::patch('/{teamStat}', [TeamStatController::class, 'update'])->name('update');
+                Route::delete('/{teamStat}', [TeamStatController::class, 'destroy'])->name('destroy');
+                Route::get('/team/{team}', [TeamStatController::class, 'byTeam'])->name('by-team');
+                Route::post('/bulk-validate', [TeamStatController::class, 'bulkValidate'])->name('bulk-validate');
+            });
+        });
+
+        // Classements
+        Route::prefix('stats/classements')->name('stats.classements.')->group(function () {
+            Route::get('/', [StatController::class, 'adminClassementsIndex'])->name('index');
+            Route::get('/buteurs', [StatController::class, 'classementsGoals'])->name('buteurs');
+            Route::get('/passeurs', [StatController::class, 'classementsAssists'])->name('passeurs');
+            Route::get('/gardiens', [StatController::class, 'classementsGardiens'])->name('gardiens');
+        });
+
+        // Gestion des équipes
+        Route::get('/teams', [TeamController::class, 'vue'])->name('admin.teams');
+        Route::get('/teams/index', [TeamController::class, 'index'])->name('admin.teams.index');
+        Route::get('/teams/create', [TeamController::class, 'create'])->name('admin.teams.create');
+        Route::post('/teams', [TeamController::class, 'store'])->name('admin.teams.store');
+        Route::get('/teams/{id}/edit', [TeamController::class, 'edit'])->name('admin.teams.edit');
+        Route::put('/teams/{team}', [TeamController::class, 'update'])->name('admin.teams.update');
+        Route::delete('/teams/{id}', [TeamController::class, 'destroy'])->name('admin.teams.destroy');
+        Route::get('/teams/{team}/affect', [TeamController::class, 'affectPage'])->name('teams.affect');
+        Route::post('/teams/{team}/affect/save', [TeamController::class, 'saveAffect'])->name('teams.affect.save');
+        Route::get('/teams/{team}', [TeamController::class, 'show'])->name('teams.show');
+
+        // Mercato
+        Route::post('/teams/assign-members', [TeamController::class, 'assignMembers'])->name('assign-members');
+        Route::post('/teams/mercato', [TeamController::class, 'mercato'])->name('mercato');
+
+        // Gestion des actualités (Admin)
+        Route::prefix('news')->name('news.')->group(function () {
+            
+            Route::get('/create', [NewsController::class, 'create'])->name('create');
+            Route::post('/', [NewsController::class, 'store'])->name('store');
+            Route::get('/{id}/edit', [NewsController::class, 'edit'])->name('edit');
+            Route::put('/{id}', [NewsController::class, 'update'])->name('update');
+            Route::delete('/{id}', [NewsController::class, 'destroy'])->name('destroy');
+            Route::get('/showReglement', [NewsController::class, 'showReglement'])->name('showReglement');
+            Route::patch('/{id}/toggle-banner', [NewsController::class, 'toggleBanner'])->name('toggle-banner');
+
+            // Bannière du joueur du mois
+            Route::prefix('bannerplayermonth')->name('bannerplayermonth.')->group(function () {
+                Route::get('/', [PlayerOfTheMonthController::class, 'index'])->name('index');
+                Route::put('/', [PlayerOfTheMonthController::class, 'update'])->name('update');
+                Route::delete('/', [PlayerOfTheMonthController::class, 'destroy'])->name('destroy');
+            });
+        });
+
+        // Gestion des statistiques d'équipe
+        Route::prefix('team-stats')->name('team-stats.')->group(function () {
+            Route::get('/', [TeamStatController::class, 'index'])->name('index');
+            Route::get('/create', [TeamStatController::class, 'create'])->name('create');
+            Route::post('/', [TeamStatController::class, 'store'])->name('store');
+            Route::get('/{teamStat}/edit', [TeamStatController::class, 'edit'])->name('edit');
+            Route::patch('/{teamStat}', [TeamStatController::class, 'update'])->name('update');
+            Route::delete('/{teamStat}', [TeamStatController::class, 'destroy'])->name('destroy');
+            Route::get('/team/{team}', [TeamStatController::class, 'byTeam'])->name('by-team');
+            Route::get('/api/current-month', [TeamStatController::class, 'currentMonthStats'])->name('current-month-api');
+            Route::post('/bulk-validate', [TeamStatController::class, 'bulkValidate'])->name('bulk-validate');
+        });
+        // Les routes d'administration des actualités sont déjà définies plus haut
     });
 });
 
-Route::prefix('reflections')->group(function () {
-    Route::get('/', [ReflectionController::class, 'index'])->name('reflections.index');
-    Route::get('/{reflection}', [ReflectionController::class, 'show'])->name('reflections.show');
-    Route::get('/create', [ReflectionController::class, 'create'])->name('admin.reflections.create');
-    Route::post('/', [ReflectionController::class, 'store'])->name('reflections.store');
-    Route::get('/{id}/edit', [ReflectionController::class, 'edit'])->name('admin.reflections.edit');
-    Route::get('/{id}/validate', [ReflectionController::class, 'validate'])->name('reflections.validate');
-    Route::put('/{id}', [ReflectionController::class, 'update'])->name('admin.reflections.update');
-    Route::delete('/{id}', [ReflectionController::class, 'destroy'])->name('reflections.destroy');
-    Route::patch('/{id}/toggle', [ReflectionController::class, 'toggle'])->name('admin.reflections.toggle'); // activation/desactivationRoute::post('/{id}/validate', [ReflectionController::class, 'validateAfterDelay'])->name('admin.reflections.validate');
+// Les routes du bureau sont maintenant définies dans la section authentifiée
+
+/*
+|--------------------------------------------------------------------------
+| Routes protégées pour la galerie
+|--------------------------------------------------------------------------
+|
+| Ces routes permettent aux utilisateurs authentifiés (admin ou membres)
+| d'interagir avec la galerie. Comme il s'agit d'une galerie simple,
+| seules les actions nécessaires (store, update, destroy) sont exposées.
+|
+*/
+
+Route::middleware(['auth'])->group(function () {
+    // Affichage de la galerie
+    Route::get('/galleries', [GalleryController::class, 'index'])->name('galleries.index');
+
+    // Page de téléchargement
+    Route::get('/gallery-upload', function () {
+        return Inertia::render('GalleryUpload');
+    })->name('gallery.upload');
+
+    // Gestion des photos
+    Route::post('/galleries', [GalleryController::class, 'store'])->name('galleries.store');
+    Route::put('/galleries/{gallery}', [GalleryController::class, 'update'])->name('galleries.update');
+    Route::delete('/galleries/{gallery}', [GalleryController::class, 'destroy'])->name('galleries.destroy');
+
+    // Gestion des likes
+    Route::post('/galleries/{gallery}/like', [GalleryController::class, 'like'])->name('galleries.like');
+    Route::delete('/galleries/{gallery}/unlike', [GalleryController::class, 'unlike'])->name('galleries.unlike');
 });
 
 
@@ -117,136 +275,41 @@ Route::prefix('reflections')->group(function () {
  * 🟢 Stats publiques (consultation libre)
  */
 Route::get('/stats', [StatController::class, 'publicIndex'])->name('stats.public.index');
+// Finances
+Route::prefix('finances')->group(function () {
+    Route::get('/', [FinanceController::class, 'index'])->name('finances.index');
+    Route::get('/depot/create', [FinanceController::class, 'createDepot'])->name('finances.createDepot');
+    Route::post('/', [FinanceController::class, 'storeDepot'])->name('finances.storeDepot');
+    Route::get('/depense/create', [FinanceController::class, 'createDepense'])->name('finances.createDepense');
+    Route::post('/depense', [FinanceController::class, 'storeDepense'])->name('finances.storeDepense');
+    Route::post('/valider/{id}', [FinanceController::class, 'valider'])->name('finances.valider');
+    Route::post('/valider-tous', [FinanceController::class, 'validerTous'])->name('finances.validerTous');
+});
 
-
- 
-
-
-Route::get('/admin', [AdminController::class,'index'])->name('Admin.AdminLayout');
-
-
-Route::get('/admin/create', [StatController::class,'create'])->name('Admin.CreateStats');
-/**
- * 📊 Stats admin (accès authentifié)
- */
-Route::get('/admin/stats', [StatController::class, 'index'])
-    ->middleware(['auth', 'is.active'])
-    ->name('admin.stats.index');
-
-/**
- * 🏆 Joueur du Mois (public)
- */
-Route::get('/joueur-du-mois', [StatController::class, 'currentPlayerOfMonth'])
-    ->name('player.month.current');
-
-Route::get('/joueur-du-mois/historique', [StatController::class, 'historyPlayerOfMonth'])
-    ->name('player.month.history');
-
-Route::get('/joueur-du-mois/{month}/stats', [StatController::class, 'monthlyStats'])
-    ->name('player.month.stats');
-
-/**
- * 📊 Classements publics
- */
-Route::get('/classements', [StatController::class, 'classementsIndex'])
-    ->name('stats.classements.index');
-
-Route::get('/classements/general', [StatController::class, 'classementGeneral'])
-    ->name('stats.classement.general');
-
-Route::get('/classements/buteurs', [StatController::class, 'classementsGoals'])
-    ->name('stats.classement.buteurs');
-
-Route::get('/classements/passeurs', [StatController::class, 'classementsAssists'])
-    ->name('stats.classement.passeurs');
-
-Route::get('/classements/gardiens', [StatController::class, 'classementsGardiens'])
-    ->name('stats.classement.gardiens');
-
-// Routes admin avec authentification
-Route::middleware(['auth', 'is.active'])
-    ->prefix('admin')
-    ->name('admin.')
-    ->group(function () {
-
-        Route::get('/stats', [StatController::class, 'index'])
-            ->name('stats.index');
-
-        Route::get('/stats/classements', [StatController::class, 'adminClassementsIndex'])
-            ->name('stats.classements');
-
-        Route::get('/stats/pending', [StatController::class, 'pending'])
-            ->name('stats.pending');
-
-        Route::post('/stats', [StatController::class, 'store'])
-            ->name('stats.store');
-
-        Route::post('/stats/{stat}/validate', [StatController::class, 'validateStat'])
-            ->name('stats.validate');
-
-        Route::delete('/stats/{stat}/reject', [StatController::class, 'rejectStat'])
-            ->name('stats.reject');
-    });
-
-
-//Routes pour la creation de team et mercato par l'admin
-// Route::middleware(['auth', 'admin'])->group(function () {
-//     Route::resource('teams', TeamController::class);
-
-//     Route::post('/teams/assign-members', [TeamController::class, 'assignMembers']);
-//     Route::post('/teams/mercato', [TeamController::class, 'mercato']);
+// Routes pour les règlements
+// Route::middleware(['auth', 'is.active'])->group(function () {
+//     Route::resource('regulations', RegulationControler::class);
+//     Route::post('/regulations/content', [RegulationControler::class, 'storeContent'])->name('regulations.storeContent');
 // });
-Route::get('/teams', [TeamController::class, 'vue'])->name('admin.teams');
-Route::get('/teams/index', [TeamController::class, 'index'])->name('admin.teams.index');
-Route::get('teams/create', [TeamController::class, 'create'])->name('admin.teams.create');
-Route::post('/teams', [TeamController::class, 'store'])->name('admin.teams.store');
-Route::get('/teams/{id}/edit', [TeamController::class, 'edit'])->name('admin.teams.edit');
-Route::put('/teams/{team}', [TeamController::class, 'update'])->name('admin.teams.update');
-Route::delete('/teams/{id}', [TeamController::class, 'destroy'])->name('admin.teams.destroy');
-Route::get('/teams/{team}/affect', [TeamController::class, 'affectPage'])
-    ->name('teams.affect');
-Route::post('/teams/{team}/affect/save', [TeamController::class, 'saveAffect']);
 
-
-
-Route::prefix('bureau/stats')->middleware('role:bureau')->group(function () {
-    Route::get('/', [BureauStatController::class, 'index'])->name('bureau.stats.index');
-
-    Route::get('/leaderboards', [BureauStatController::class, 'leaderboards'])->name('bureau.stats.leaderboards');
-
-    Route::get('/leaderboards/goals', [BureauStatController::class, 'goalLeaders'])->name('bureau.stats.leaderboards.goals');
-
-    Route::get('/leaderboards/assists', [BureauStatController::class, 'assistLeaders'])->name('bureau.stats.leaderboards.assists');
-
-    Route::get('/leaderboards/goalkeepers', [BureauStatController::class, 'goalkeeperLeaders'])->name('bureau.stats.leaderboards.goalkeepers');
-    
-    Route::get('/members/{user}/stats', [BureauStatController::class, 'memberStats'])->name('bureau.stats.member');
+// Routes pour les ajustements financiers
+Route::prefix('finances')->group(function () {
+    Route::get('/ajustement', [FinanceController::class, 'createAjustement'])->name('finances.createAjustement');
+    Route::post('/ajustement', [FinanceController::class, 'storeAjustement'])->name('finances.storeAjustement');
 });
 
-Route::prefix('admin/news')->group(function () {
-
-    Route::get('/index', [NewsController::class, 'index'])->name('admin.news.index');
-
-    Route::get('/showReglement', [NewsController::class, 'showReglement'])->name('admin.news.showReglement');
-
-    Route::get('/bannerplayermonth', [PlayerOfTheMonthController::class, 'index'])
-        ->name('admin.news.bannerplayermonth');
-
-    Route::put('/BannerPlayerMonth', [PlayerOfTheMonthController::class, 'update']);
-
-    Route::delete('/BannerPlayerMonth', [PlayerOfTheMonthController::class, 'destroy']);
-
-    Route::get('/create', [NewsController::class, 'create'])->name('admin.news.create');
-
-    Route::post('/', [NewsController::class, 'store'])->name('admin.news.store');
-
-    Route::get('/{id}/edit', [NewsController::class, 'edit'])->name('admin.news.edit');
-
-    Route::put('/{id}', [NewsController::class, 'update'])->name('admin.news.update');
-
-    Route::delete('/{id}', [NewsController::class, 'destroy'])->name('admin.news.destroy');
-
-    Route::patch('/{id}/toggle-banner', [NewsController::class, 'toggleBanner'])->name('admin.news.toggle_banner'); // joueur du mois
+// Routes pour les suggestions
+Route::middleware(['auth'])->group(function () {
+    Route::get('/suggestions', [SuggestionController::class, 'index'])->name('suggestions');
+    Route::post('/suggestions', [SuggestionController::class, 'store']);
+    Route::post('/suggestions/{suggestion}/react', [SuggestionController::class, 'react']);
+    Route::post('/suggestions/{suggestion}/comment', [SuggestionController::class, 'comment']);
+    Route::delete('/suggestions/{suggestion}', [SuggestionController::class, 'destroy']);
 });
 
+// Routes pour les commentaires des suggestions
+Route::put('/comments/{comment}', [CommentsSuggestionController::class, 'update']);
+Route::delete('/comments/{comment}', [CommentsSuggestionController::class, 'destroy']);
+
+// Routes d'authentification
 require __DIR__ . '/auth.php';

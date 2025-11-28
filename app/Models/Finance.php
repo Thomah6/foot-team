@@ -9,10 +9,24 @@ class Finance extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['user_id', 'type', 'amount', 'description', 'date'];
+    protected $fillable = [
+        'user_id', 'montant', 'type', 'statut_valide', 'description'
+    ];
+
+    protected $appends = ['user_name', 'date'];
 
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function getUserNameAttribute()
+    {
+        return $this->user?->name ?? 'N/A';
+    }
+
+    public function getDateAttribute()
+    {
+        return $this->created_at->format('d/m/Y H:i');
     }
 }

@@ -170,7 +170,9 @@ import { computed } from 'vue'
 const props = defineProps({
     player: Object,
     stats: Array
-})
+});
+
+console.log(props.stats)
 
 const formatDate = (dateString) => {
     const date = new Date(dateString)
