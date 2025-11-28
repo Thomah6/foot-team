@@ -17,8 +17,8 @@
           </h1>
 
           <button class="flex items-center gap-2 bg-blue-600 text-white px-5 py-3 rounded-xl shadow-lg hover:bg-blue-700 hover:shadow-xl transition-all duration-200">
-            <i class="fas fa-user-plus text-lg"></i>
-            <span class="font-semibold">Add Member</span>
+            <!-- <i class="fas fa-user-plus text-lg"></i> -->
+            <span class="font-semibold">Retour</span>
           </button>
         </div>
 
@@ -95,7 +95,7 @@
               :key="member.id"
               class="flex items-center gap-5 bg-white p-5 rounded-2xl border border-gray-200 shadow-md hover:shadow-xl hover:border-blue-400 transition-all cursor-pointer"
               >
-              
+
               <!-- Avatar -->
               <div
                 class="w-14 h-14 rounded-full bg-cover bg-center shadow-md"

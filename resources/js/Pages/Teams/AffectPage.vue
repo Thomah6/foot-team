@@ -2,66 +2,68 @@
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     <section class="flex gap-12">
         <section> <AdminsideBar /> </section>
-        <div class="p-6">
+        <div class="p-6 flex-1 ">
             <h1 class="text-2xl font-bold mb-4">
               Affectation des joueurs — {{ team.name }}
             </h1>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div class="flex flex-col md:flex-row gap-4">
 
-      <!-- JOUEURS DISPONIBLES -->
+  <!-- JOUEURS DISPONIBLES -->
+  <div
+    class="bg-white w-full md:w-1/2 rounded-xl shadow p-4 min-h-[400px]"
+    @dragover.prevent
+    @drop="dropToAvailable"
+  >
+    <h2 class="text-xl font-semibold mb-3">Joueurs disponibles</h2>
+
+    <input
+      type="text"
+      v-model="searchQuery"
+      placeholder="Rechercher..."
+      class="border w-full p-2 mb-3 rounded"
+    />
+
+    <div class="space-y-2">
       <div
-        class="bg-white rounded-xl shadow p-4 min-h-[400px]"
-        @dragover.prevent
-        @drop="dropToAvailable"
+        v-for="player in filteredAvailable"
+        :key="player.id"
+        class="p-3 bg-gray-100 rounded-lg border cursor-move transform transition-all duration-200 hover:scale-[1.02]"
+        draggable="true"
+        @dragstart="dragStart(player, 'available')"
       >
-        <h2 class="text-xl font-semibold mb-3">Joueurs disponibles</h2>
-
-        <input
-          type="text"
-          v-model="searchQuery"
-          placeholder="Rechercher..."
-          class="border w-full p-2 mb-3 rounded"
-        />
-
-        <div class="space-y-2">
-          <div
-            v-for="player in filteredAvailable"
-            :key="player.id"
-            class="p-3 bg-gray-100 rounded-lg border cursor-move transform transition-all duration-200 hover:scale-[1.02]"
-            draggable="true"
-            @dragstart="dragStart(player, 'available')"
-          >
-            <i class="fa-solid fa-futbol"></i>
-            {{ player.name }}
-          </div>
-        </div>
+        <i class="fa-solid fa-futbol"></i>
+        {{ player.name }}
       </div>
+    </div>
+  </div>
 
-      <!-- JOUEURS AFFECTÉS -->
+  <!-- JOUEURS AFFECTÉS -->
+  <div
+    class="bg-white w-full md:w-1/2 rounded-xl shadow p-4 min-h-[400px] terrain"
+    @dragover.prevent
+    @drop="dropToAssigned"
+  >
+    <h2 class="text-2xl font-semibold mb-3">Joueurs affectés</h2>
+
+    <div class="space-y-2">
       <div
-        class="bg-white rounded-xl shadow p-4 min-h-[400px] terrain"
-        @dragover.prevent
-        @drop="dropToAssigned"
+        v-for="player in assignedPlayers"
+        :key="player.id"
+        class="p-2 rounded-lg cursor-move transform transition-all duration-200 hover:scale-[1.02]"
+        draggable="true"
+        @dragstart="dragStart(player, 'assigned')"
       >
-        <h2 class="text-xl font-semibold mb-3 text-green-600">Joueurs affectés</h2>
-
-        <div class="space-y-2">
-          <div
-            v-for="player in assignedPlayers"
-            :key="player.id"
-            class="p-2 rounded-lg cursor-move transform transition-all duration-200 hover:scale-[1.02]"
-            draggable="true"
-            @dragstart="dragStart(player, 'assigned')"
-          >
-          <div class="flex flex-col items-center">
-            <i class="fa-solid fa-futbol"></i>
-            <p class="text-white">{{ player.name }}</p>
-          </div>
-          </div>
+        <div class="flex flex-col items-center">
+          <i class="fa-solid fa-futbol text-white"></i>
+          <p class="text-white">{{ player.name }}</p>
         </div>
       </div>
     </div>
+  </div>
+
+</div>
+
 
     <div class="mt-6">
       <button
@@ -178,37 +180,22 @@ function doMercato(){
 
 </script>
 <style>
-/* .terrain{
-    background-image: url('@/../../../public/terrain.jpg');
-    background-size: cover;
-    background-repeat: no-repeat;
-    width: 125%;
-} */
+
  .terrain {
-    position: relative;
-    background-image: url('@/../../../public/terrain.jpg');
-    background-size: 100%;       /* affiche toute l’image sans couper */
-    background-repeat: no-repeat;   /* pas de répétition */
-    /* background-position: center;    bien centré */
-    width: 128%;                    /* full width en mobile */
-    min-height: 300px;              /* donne une vraie zone à l’image */
-    /* display: block; */
+  background-image: url('@/../../../public/terrain.jpg');
+  background-size: cover;      /* remplissage total sans déformation */
+  background-repeat: no-repeat;
+  background-position: center;
+  width: 100%;
+  min-height: 400px;
 }
-/* TABLETTE */
+
 @media (min-width: 768px) {
-    .terrain {
-        background-size: cover;     /* maintenant on peut couvrir */
-
-        min-height: 400px;
-    }
+  .terrain {
+    width: 50%;
+    min-height: 650px;
+  }
 }
 
 
-/* DESKTOP */
-@media (min-width: 1024px) {
-    .terrain {
-        width: 125%;                /* ton ancien style, mais seulement en desktop */
-        min-height: 500px;
-    }
-}
 </style>
