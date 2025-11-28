@@ -14,7 +14,7 @@ use App\Http\Controllers\IdentityController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\PlayerOfTheMonthController;
 use App\Http\Controllers\ProfileController;
-// use App\Http\Controllers\PresenceController;
+use App\Http\Controllers\PresenceController;
 use App\Http\Controllers\ReflectionController;
 use App\Http\Controllers\TeamController;
 use App\Http\Controllers\VoteController;
@@ -78,8 +78,6 @@ Route::prefix('news')->group(function () {
 
 // Routes authentifiées
 Route::middleware(['auth', 'is.active'])->group(function () {
-    // Tableau de bord
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     // Profil utilisateur
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -99,18 +97,18 @@ Route::middleware(['auth', 'is.active'])->group(function () {
         Route::patch('/members/{member}/role', [MemberController::class, 'updateRole'])->name('members.update-role');
     });
 
-    // // ===== ROUTES PRÉSENCES =====
-    // Route::get('/presence', [PresenceController::class, 'index'])->name('presence.index');
-    // Route::get('/presence/history', [PresenceController::class, 'history'])->name('presence.history');
-    // Route::post('/presence', [PresenceController::class, 'store'])->name('presence.store');
-    // Route::get('/presence/day', [PresenceController::class, 'getByDate'])->name('presence.getByDate');
+    // ===== ROUTES PRÉSENCES =====
+    Route::get('/presence', [PresenceController::class, 'index'])->name('presence.index');
+    Route::get('/presence/history', [PresenceController::class, 'history'])->name('presence.history');
+    Route::post('/presence', [PresenceController::class, 'store'])->name('presence.store');
+    Route::get('/presence/day', [PresenceController::class, 'getByDate'])->name('presence.getByDate');
 
-    // // Admin only routes for presence
-    // Route::middleware('role:admin')->group(function () {
-    //     Route::patch('/presence/{presence}/validate', [PresenceController::class, 'validate'])->name('presence.validate');
-    //     Route::patch('/presence/{presence}', [PresenceController::class, 'update'])->name('presence.update');
-    //     Route::get('/presence/monthly-report', [PresenceController::class, 'monthlyReport'])->name('presence.monthlyReport');
-    // });
+    // Routes administrateur pour la gestion des présences
+    Route::middleware('role:admin')->group(function () {
+        Route::patch('/presence/{presence}/validate', [PresenceController::class, 'validate'])->name('presence.validate');
+        Route::patch('/presence/{presence}', [PresenceController::class, 'update'])->name('presence.update');
+        Route::get('/presence/monthly-report', [PresenceController::class, 'monthlyReport'])->name('presence.monthlyReport');
+    });
 
     // Espace bureau - Gestion des membres
     Route::prefix('bureau')->middleware('role:bureau')->group(function () {
