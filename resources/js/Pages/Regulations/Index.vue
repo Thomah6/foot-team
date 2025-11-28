@@ -1,86 +1,198 @@
 <script setup>
-import { computed, ref } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import AdminsideBar from '@/Components/AdminsideBar.vue'
+
 const props = defineProps({
   rules: Array,
   can: Object
 })
 
-// Champ de recherche
+// Recherche
 const search = ref('')
 
-// Filtrer les titres (content null) + recherche
+// Titres filtrés
 const titles = computed(() =>
   props.rules
-    .filter(rule => rule.content === null) // uniquement les titres
-    .filter(rule =>
-      rule.title.toLowerCase().includes(search.value.toLowerCase())
-    )
+    .filter(r => r.content === null)
+    .filter(r => r.title.toLowerCase().includes(search.value.toLowerCase()))
 )
 
-// Filtrer les contenus liés à un titre
+// Contenus liés
 function contentsForTitle(title) {
-  return props.rules.filter(rule => rule.title === title && rule.content)
+  return props.rules.filter(r => r.title === title && r.content)
 }
+
+// Carousel state
+const current = ref(0)
+let timer = null
+const intervalMs = 5000
+
+function next() {
+  if (titles.value.length === 0) return
+  current.value = (current.value + 1) % titles.value.length
+}
+
+function prev() {
+  if (titles.value.length === 0) return
+  current.value = (current.value - 1 + titles.value.length) % titles.value.length
+}
+
+function goTo(i) {
+  if (titles.value.length === 0) return
+  current.value = i % titles.value.length
+}
+
+function start() {
+  stop()
+  timer = setInterval(next, intervalMs)
+}
+
+function stop() {
+  if (timer) clearInterval(timer)
+  timer = null
+}
+
+// --- Swipe / Drag ---
+let startX = 0
+let endX = 0
+
+function onTouchStart(e) {
+  startX = e.touches ? e.touches[0].clientX : e.clientX
+}
+
+function onTouchMove(e) {
+  endX = e.touches ? e.touches[0].clientX : e.clientX
+}
+
+function onTouchEnd() {
+  const diff = startX - endX
+  if (Math.abs(diff) > 50) {
+    if (diff > 0) {
+      next()
+    } else {
+      prev()
+    }
+  }
+  startX = 0
+  endX = 0
+}
+
+onMounted(start)
+onUnmounted(stop)
 </script>
 
 <template>
-  <div class="flex ">
+  <div class="flex">
     <div>
       <AdminsideBar />
     </div>
 
-    <div class="p-6 flex-1 justify-center">
-    <div class="p-6 max-w-5xl mx-auto">
-      <div class="flex justify-between items-center mb-6">
-        <h1 class="text-xl font-bold mb-4">Liste des règlements</h1>
-  
-        <!-- Bouton créer visible seulement si admin -->
-        <button v-if="props.can.create" class="bg-green-500 text-black px-4 py-2 rounded mb-4"
-          @click="$inertia.visit('/regulations/create')">
-          Créer un contenu
-        </button>
+    <div class="p-6 flex-1">
+      <div class="p-6 max-w-5xl mx-auto">
+
+        <!-- Header -->
+        <div class="flex justify-between items-center mb-6">
+          <h1 class="text-xl font-bold">Liste des règlements</h1>
+          <button
+            v-if="props.can.create"
+            class="bg-green-500 text-black px-4 py-2 rounded"
+            @click="$inertia.visit('/regulations/create')"
+          >
+            Créer un contenu
+          </button>
+        </div>
+
+        <!-- Search -->
+        <input
+          v-model="search"
+          type="text"
+          placeholder="Rechercher un règlement..."
+          class="border p-2 w-full mb-6 rounded"
+        />
+
+        <!-- Intro block -->
+        <div class="bg-white border-l-4 border-green-500 p-6 mb-8 shadow-md rounded-lg">
+          <h2 class="text-lg font-bold text-green-700 mb-2">Charte de comportement ASLM Football</h2>
+          <p class="text-gray-700 leading-relaxed">…</p>
+        </div>
+
+        <!-- Empty state -->
+        <div v-if="titles.length === 0" class="text-red-500 font-semibold mb-6">
+          Aucun règlement trouvé pour "{{ search }}"
+        </div>
+
+        <!-- Carousel -->
+        <div
+          v-else
+          class="relative bg-gray-50 border rounded-lg p-5 cursor-grab active:cursor-grabbing overflow-hidden"
+          @mouseenter="stop"
+          @mouseleave="start"
+          @mousedown="onTouchStart"
+          @mousemove="onTouchMove"
+          @mouseup="onTouchEnd"
+          @touchstart="onTouchStart"
+          @touchmove="onTouchMove"
+          @touchend="onTouchEnd"
+        >
+          <!-- Slides container -->
+          <div
+            class="flex transition-transform duration-500 ease-in-out w-full"
+            :style="{ transform: `translateX(-${current * 100}%)` }"
+          >
+            <div
+              v-for="t in titles"
+              :key="t.id"
+              class="w-full flex-shrink-0 px-6"
+            >
+              <h2 class="font-bold text-green-600 text-lg mb-4">
+                {{ t.title }}
+              </h2>
+
+              <ul class="space-y-4">
+                <li
+                  v-for="c in contentsForTitle(t.title)"
+                  :key="c.id"
+                  class="border p-3 rounded bg-white w-full overflow-hidden"
+                >
+                  <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 ">
+                    <p class="text-gray-700 flex-1 ">- {{ c.content }}</p>
+
+                    <div class="flex gap-2">
+                      <button
+                        v-if="$page.props.auth.user.role === 'admin'"
+                        class="bg-green-500 text-gray-700 px-3 py-1 rounded"
+                        @click="$inertia.visit(`/regulations/${c.id}/edit`)"
+                      >
+                        Modifier
+                      </button>
+                      <button
+                        v-if="$page.props.auth.user.role === 'admin'"
+                        class="bg-red-600 text-gray-700 px-3 py-1 rounded"
+                        @click="$inertia.delete(`/regulations/${c.id}`)"
+                      >
+                        Supprimer
+                      </button>
+                    </div>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Indicateurs -->
+          <div class="flex gap-2 justify-center mt-4">
+            <button
+              v-for="(t, i) in titles"
+              :key="t.id"
+              class="w-2.5 h-2.5 rounded-full"
+              :class="i === current ? 'bg-green-600' : 'bg-gray-300 hover:bg-gray-400'"
+              @click="goTo(i)"
+              aria-label="Indicateur de slide"
+            />
+          </div>
+        </div>
+
       </div>
-        
-
-
-
-      <!-- Champ recherche -->
-      <input v-model="search" type="text" placeholder="Rechercher un règlement..." class="border p-2 w-full mb-4 rounded" />
-
-      <!-- Message si aucun résultat -->
-      <div v-if="titles.length === 0" class="text-red-500 font-semibold">
-        Aucun règlement trouvé pour "{{ search }}"
-      </div>
-
-      <!-- Liste des titres + contenus -->
-      <ul v-else class="space-y-6">
-        <li v-for="t in titles" :key="t.id" class="border p-4 rounded bg-gray-50">
-          <h2 class="font-bold text-green-600">{{ t.title }}</h2>
-
-          <!-- Contenus liés -->
-          <ul class="mt-2 space-y-2">
-            <li v-for="c in contentsForTitle(t.title)" :key="c.id" class="border p-2 rounded bg-white">
-              <p class="text-gray-700">{{ c.content }}</p>
-
-              <!-- Boutons admin -->
-              <div class="mt-2 flex gap-2">
-                <button v-if="$page.props.auth.user.role === 'admin'" class="bg-yellow-500 text-black px-3 py-1 rounded"
-                  @click="$inertia.visit(`/regulations/${c.id}/edit`)">
-                  Modifier
-                </button>
-
-                <button v-if="$page.props.auth.user.role === 'admin'" class="bg-red-500 text-black px-3 py-1 rounded"
-                  @click="$inertia.delete(`/regulations/${c.id}`)">
-                  Supprimer
-                </button>
-              </div>
-            </li>
-          </ul>
-        </li>
-      </ul>
     </div>
-
-  </div>
   </div>
 </template>

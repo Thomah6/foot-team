@@ -34,8 +34,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::resource('regulations', RegulationControler::class);
-    Route::get('/regulations/create-title', [RegulationControler::class, 'createTitle'])->name('regulations.createTitle');
-    Route::post('/regulations/title', [RegulationControler::class, 'storeTitle'])->name('regulations.storeTitle');
+    // Route::post('/regulations/title', [RegulationControler::class, 'storeTitle'])->name('regulations.storeTitle');
     Route::post('/regulations/content', [RegulationControler::class, 'storeContent'])->name('regulations.storeContent');
 
 
