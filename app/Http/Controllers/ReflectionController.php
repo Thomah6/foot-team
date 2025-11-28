@@ -19,7 +19,8 @@ class ReflectionController extends Controller
     {
         // 1. Listing réflexions (filtrées par activation et durée)
         $reflections = Reflection::query()
-            ->with('user') // Relation avec User
+            ->with('user')
+            ->with('votes') // Relation avec User
             // ->where('created_at', '>', now()->subDays(7)) // Durée limitée (ex: 7 jours)
             // ->latest()
             ->get();

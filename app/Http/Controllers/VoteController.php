@@ -6,6 +6,7 @@ use App\Models\Reflection;
 use App\Models\Vote;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class VoteController extends Controller
 {
@@ -75,5 +76,57 @@ class VoteController extends Controller
         // Logique pour valider le vote (exemple : mettre à jour le statut de la réflexion)
         $reflection->update(['statut' => 'valide']);
 
+    }
+
+    public function history()
+    {
+        $votes = Vote::with('reflection:title,id')
+            ->where('user_id', Auth::id())
+            ->get(['id', 'reflection_id', 'value', 'created_at']);
+
+            return Inertia::render('VoteHistory', [
+                'votes' => $votes,
+            ]);
+    }
+
+    public function listAdmin()
+    {
+        $reflections = Reflection::with(['votes' => function ($query) {
+            $query->select('id', 'reflection_id', 'value', 'user_id')
+                ->with('user:id,role');
+        }])->get(['id', 'title']);
+
+        $data = $reflections->map(function ($reflection) {
+            $votes = $reflection->votes;
+            $pour = $votes->where('value', 1);
+            $contre = $votes->where('value', -1);
+
+            $pourCount = $pour->where('user.role', 'simple')->count() +
+                $pour->whereIn('user.role', ['admin', 'bureau'])->count() * 2;
+
+            $contreCount = $contre->where('user.role', 'simple')->count() +
+                $contre->whereIn('user.role', ['admin', 'bureau'])->count() * 2;
+
+            $total = $pourCount + $contreCount;
+
+            return [
+                'id' => $reflection->id,
+                'title' => $reflection->title,
+                'pourPercentage' => $total ? round(($pourCount / $total) * 100, 2) : 0,
+                'contrePercentage' => $total ? round(($contreCount / $total) * 100, 2) : 0,
+                'winner' => $pourCount > $contreCount ? 'POUR' : 'CONTRE',
+                'votes' => $votes->map(function ($vote) {
+                    return [
+                        'id' => $vote->id,
+                        'value' => $vote->value,
+                        'is_bureau' => in_array($vote->user->role, ['admin', 'bureau']),
+                    ];
+                }),
+            ];
+        });
+        return Inertia::render('VoteListAdmin', [
+            'reflections' => $data,
+        ]);
+    
     }
 }
