@@ -113,7 +113,7 @@
                                         </tr>
                                     </thead>
                                     <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
-                                        <tr v-if="!props.stats">
+                                        <tr v-if="props.stats.lenght === 0">
                                             <td colspan="5" class="px-6 py-8 text-center text-gray-500 dark:text-gray-400">
                                                 Aucune statistique détaillée disponible pour ce mois 
                                             </td>
@@ -171,6 +171,8 @@ const props = defineProps({
     player: Object,
     stats: Array
 })
+
+
 
 const formatDate = (dateString) => {
     const date = new Date(dateString)
