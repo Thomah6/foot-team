@@ -1,23 +1,11 @@
 <script setup>
 import { Head, Link } from '@inertiajs/vue3';
-import AdminsideBar from '@/Components/AdminsideBar.vue';
-
 
 defineProps({
-    canLogin: {
-        type: Boolean,
-    },
-    canRegister: {
-        type: Boolean,
-    },
-    laravelVersion: {
-        type: String,
-        required: true,
-    },
-    phpVersion: {
-        type: String,
-        required: true,
-    },
+    canLogin: Boolean,
+    canRegister: Boolean,
+    laravelVersion: String,
+    phpVersion: String,
 });
 
 function handleImageError() {
@@ -29,7 +17,21 @@ function handleImageError() {
 </script>
 
 <template>
-    <Head title="Welcome" />
-    <AdminsideBar />
+    <Head title="FC Dynamo - Club Management Dashboard" />
+    
+    <!-- Font Awesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    
 
 </template>
+
+<style>
+.material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    font-size: 24px;
+}
+
+.material-symbols-outlined.fill {
+    font-variation-settings: 'FILL' 1;
+}
+</style>

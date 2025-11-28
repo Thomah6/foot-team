@@ -1,5 +1,6 @@
 <script setup>
 import { router } from "@inertiajs/vue3";
+import { Link } from "@inertiajs/vue3";
 
 defineProps({
   news: Array
@@ -82,5 +83,9 @@ const togglePublish = (id) => {
         </tr>
       </tbody>
     </table>
+    <Link :href="route('dashboard')">
+        <-Retour
+    </Link>
+ 
   </div>
 </template>

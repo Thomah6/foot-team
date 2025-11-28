@@ -25,7 +25,7 @@ const formatMonthYear = (dateString) => {
     <section class="p-6 bg-white rounded-xl shadow-md flex flex-col lg:flex-row gap-6">
         <div class="w-full lg:w-1/3 aspect-[4/5] rounded-xl overflow-hidden">
             <div class="w-full h-full bg-center bg-cover"
-                 :style="`background-image: url(${player?.user?.image || placeholder});`"></div>
+                 :style="`background-image: url(${player?.image || placeholder});`"></div>
             <h2 class="text-3xl font-bold mt-4">
                 {{ player?.user?.name ?? "Aucun joueur sélectionné" }}
             </h2>
@@ -65,7 +65,7 @@ const formatMonthYear = (dateString) => {
             <div v-for="p in previousPlayers" :key="p.id" class="p-4 bg-white rounded-xl shadow-md flex flex-col gap-3">
                 <div class="aspect-[4/5] rounded-lg overflow-hidden">
                     <div class="w-full h-full bg-center bg-cover"
-                         :style="`background-image: url(${p.user?.image || placeholder});`"></div>
+                         :style="`background-image: url(${p.image || placeholder});`"></div>
                 </div>
                 <div class="flex flex-col">
                     <h3 class="font-bold text-lg">{{ p.user?.name }}</h3>
