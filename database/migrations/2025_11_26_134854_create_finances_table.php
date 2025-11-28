@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->nullable()->constrained('users')->onDelete('set null');
             $table->enum('type', ['cotisation', 'dépense', 'autre']);
-            $table->decimal('montant', 10, 2);
+            $table->integer('montant');
             $table->boolean('statut_valide')->default(false);
             $table->text('description')->nullable();
             $table->timestamps();

@@ -19,7 +19,7 @@ class FinanceFactory extends Factory
     {
         return [
             'user_id' => User::inRandomOrder()->first()->id,
-            'montant' => $this->faker->randomFloat(2, 5, 200),
+            'montant' => $this->faker->numberBetween(100, 10000),
             'type' => $this->faker->randomElement(['cotisation', 'dépense']),
             'statut_valide' => $this->faker->boolean(70),
             'description' => $this->faker->sentence,

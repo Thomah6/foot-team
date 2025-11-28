@@ -166,4 +166,13 @@ Route::prefix('admin/news')->group(function () {
     Route::patch('/{id}/toggle-banner', [NewsController::class, 'toggleBanner'])->name('admin.news.toggle_banner'); // joueur du mois
 });
 
+// Routes de Finances 
+Route::get('/finances', [FinanceController::class, 'index'])->name('finances.index');
+Route::get('/finances/depot/create', [FinanceController::class, 'createDepot'])->name('finances.createDepot');
+Route::post('/finances', [FinanceController::class, 'storeDepot'])->name('finances.storeDepot');
+Route::get('/finances/depense/create', [FinanceController::class, 'createDepense'])->name('finances.createDepense');
+Route::post('/finances/depense', [FinanceController::class, 'storeDepense'])->name('finances.storeDepense');
+Route::post('/finances/valider/{id}', [FinanceController::class, 'valider'])->name('finances.valider');
+Route::post('/finances/valider-tous', [FinanceController::class, 'validerTous'])->name('finances.validerTous');
+
 require __DIR__ . '/auth.php';

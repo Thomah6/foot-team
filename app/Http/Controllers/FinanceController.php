@@ -75,14 +75,23 @@ class FinanceController extends Controller
             'montant' => 'required|numeric|min:100|max:10000',
             'description' => 'nullable|string'
         ]);
+        
+        $user = auth()->user();
+        $isAdmin = $user->isAdmin();
+        
         Finance::create([
-            'user_id' => auth()->id(),
+            'user_id' => $user->id,
             'montant' => $request->montant,
             'type' => 'cotisation',
-            'statut_valide' => false,
+            'statut_valide' => $isAdmin, // Auto-validate if admin
             'description' => $request->description,
         ]);
-        return back()->with('success', 'Dépôt effectué avec succès ! Attente validation admin.');
+        
+        $message = $isAdmin 
+            ? 'Dépôt effectué et validé automatiquement.'
+            : 'Dépôt effectué avec succès ! Attente validation admin.';
+        
+        return back()->with('success', $message);
     }
 
     // Validation par admin
@@ -92,6 +101,22 @@ class FinanceController extends Controller
         $this->authorize('valider', $finance);
         $finance->update(['statut_valide' => true]);
         return back()->with('success', 'Dépôt validé.');
+    }
+
+    // Validation en masse des dépôts (admin)
+    public function validerTous()
+    {
+        $pending = Finance::where('statut_valide', false)
+            ->where('type', 'cotisation');
+
+        $this->authorize('validerTous', Finance::class);
+
+        $count = $pending->count();
+        if ($count > 0) {
+            $pending->update(['statut_valide' => true]);
+        }
+
+        return back()->with('success', "{$count} dépôt(s) validé(s).");
     }
 
     public function createDepense()
