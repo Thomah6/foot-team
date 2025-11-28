@@ -8,6 +8,8 @@ use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\Stat;
+use App\Models\TeamStat;
+use App\Models\Team;
 use App\Models\PlayerOfTheMonth;
 use Carbon\Carbon;
 

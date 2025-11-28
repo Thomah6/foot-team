@@ -1,17 +1,22 @@
 <script setup>
 import { ref } from 'vue';
-import AdminsideBar from '@/Components/AdminsideBar.vue';
 import ApplicationLogo from '@/Components/ApplicationLogo.vue';
 import Dropdown from '@/Components/Dropdown.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
 import NavLink from '@/Components/NavLink.vue';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
+import AdminsideBar from '@/Components/AdminsideBar.vue';
 import { Link, usePage } from '@inertiajs/vue3';
 
 const showingNavigationDropdown = ref(false);
 const page = usePage();
 const isAdmin = () => page.props.auth.user.role === 'admin';
 const isBureau = () => page.props.auth.user.role === 'bureau'
+
+const handleImageError = (event) => {
+    // Si l'image ne charge pas, utiliser l'avatar par défaut
+    event.target.src = `https://ui-avatars.com/api/?name=${page.props.auth.user.name}&color=7F9CF5&background=EBF4FF&size=24`
+}
 </script>
 
 <template>
@@ -56,8 +61,20 @@ const isBureau = () => page.props.auth.user.role === 'bureau'
                                 <Dropdown align="right" width="48">
                                     <template #trigger>
                                         <span class="inline-flex rounded-md">
-                                            <button type="button"
-                                                class="inline-flex items-center rounded-md border border-transparent bg-white px-3 py-2 text-sm font-medium leading-4 text-gray-500 transition duration-150 ease-in-out hover:text-gray-700 focus:outline-none">
+                                            <button
+                                                type="button"
+                                                class="inline-flex items-center rounded-md border border-transparent bg-white px-3 py-2 text-sm font-medium leading-4 text-gray-500 transition duration-150 ease-in-out hover:text-gray-700 focus:outline-none"
+                                            >
+                                                <img 
+                                                    v-if="$page.props.auth.user.avatar && $page.props.auth.user.avatar !== ''"
+                                                    :src="'/storage/' + $page.props.auth.user.avatar"
+                                                    :alt="$page.props.auth.user.name"
+                                                    class="w-6 h-6 rounded-full object-cover mr-2"
+                                                    @error="handleImageError"
+                                                >
+                                                <div v-else class="w-6 h-6 rounded-full bg-gradient-to-br from-green-400 to-blue-500 flex items-center justify-center mr-2">
+                                                    <i class="fas fa-user text-white text-xs"></i>
+                                                </div>
                                                 {{ $page.props.auth.user.name }}
 
                                                 <svg class="-me-0.5 ms-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg"
@@ -136,13 +153,24 @@ const isBureau = () => page.props.auth.user.role === 'bureau'
                     </div>
 
                     <!-- Responsive Settings Options -->
-                    <div class="border-t border-gray-200 pb-1 pt-4">
-                        <div class="px-4">
-                            <div class="text-base font-medium text-gray-800">
-                                {{ $page.props.auth.user.name }}
-                            </div>
-                            <div class="text-sm font-medium text-gray-500">
-                                {{ $page.props.auth.user.email }}
+                    <div
+                        class="border-t border-gray-200 pb-1 pt-4"
+                    >
+                        <div class="px-4 flex items-center gap-3">
+                            <img 
+                                :src="$page.props.auth.user.avatar ? '/storage/' + $page.props.auth.user.avatar : `https://ui-avatars.com/api/?name=${$page.props.auth.user.name}&color=7F9CF5&background=EBF4FF`"
+                                :alt="$page.props.auth.user.name"
+                                class="w-10 h-10 rounded-full object-cover"
+                            >
+                            <div>
+                                <div
+                                    class="text-base font-medium text-gray-800"
+                                >
+                                    {{ $page.props.auth.user.name }}
+                                </div>
+                                <div class="text-sm font-medium text-gray-500">
+                                    {{ $page.props.auth.user.email }}
+                                </div>
                             </div>
                         </div>
 
