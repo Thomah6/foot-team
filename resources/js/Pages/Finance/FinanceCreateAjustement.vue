@@ -57,11 +57,19 @@ function confirmSubmit() {
       description: description.value,
     },
     {
-      onSuccess: () => {
+      onSuccess: (page) => {
         showConfirm.value = false
         montant.value = 0
         sens.value = 'credit'
         description.value = ''
+        // Show toast if flash is provided by the server
+        if (page && page.props && page.props.flash && page.props.flash.success) {
+          showToast(page.props.flash.success, 'success')
+        }
+        // Delay navigation briefly so the toast is visible to the user
+        setTimeout(() => {
+          router.visit(route('finances.index'))
+        }, 800)
       },
       onError: () => {
         showConfirm.value = false

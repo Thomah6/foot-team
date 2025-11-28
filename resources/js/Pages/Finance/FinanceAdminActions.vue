@@ -1,5 +1,13 @@
 <script setup>
+import { usePage } from '@inertiajs/vue3'
+
 const emit = defineEmits(['valider', 'depense', 'ajustement'])
+const page = usePage()
+const role = page.props.auth.user.role
+
+const isAdmin = role === 'admin'
+const isBureau = role === 'bureau'
+
 function validerDepots() { emit('valider') }
 function ajouterDepense() { emit('depense') }
 function ajustementManuel() { emit('ajustement') }
@@ -10,7 +18,9 @@ function ajustementManuel() { emit('ajustement') }
     <h2 class="text-xl font-bold text-neutral-900">Actions Administrateur</h2>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+      <!-- Valider dépôts : admin par exemple -->
       <button
+        v-if="isAdmin"
         @click="validerDepots"
         type="button"
         class="flex items-center justify-center gap-2 h-12 px-4 border border-neutral-200 bg-white rounded-lg hover:bg-neutral-100 transition-colors"
@@ -19,7 +29,9 @@ function ajustementManuel() { emit('ajustement') }
         <span class="text-sm font-semibold text-neutral-800">Valider Dépôts</span>
       </button>
 
+      <!-- Ajouter dépense : admin + bureau -->
       <button
+        v-if="isAdmin || isBureau"
         @click="ajouterDepense"
         type="button"
         class="flex items-center justify-center gap-2 h-12 px-4 border border-neutral-200 bg-white rounded-lg hover:bg-neutral-100 transition-colors"
@@ -28,7 +40,9 @@ function ajustementManuel() { emit('ajustement') }
         <span class="text-sm font-semibold text-neutral-800">Ajouter Dépense</span>
       </button>
 
+      <!-- Ajustement manuel : admin seulement -->
       <button
+        v-if="isAdmin"
         @click="ajustementManuel"
         type="button"
         class="flex items-center justify-center gap-2 h-12 px-4 border border-neutral-200 bg-white rounded-lg hover:bg-neutral-100 transition-colors"

@@ -1,12 +1,13 @@
 <script setup>
-import { ref } from 'vue'
-import { router, usePage } from '@inertiajs/vue3'
+import { ref, defineEmits } from 'vue'
+import { router } from '@inertiajs/vue3'
 import ConfirmModalFinance from '@/Components/ConfirmModalFinance.vue'
+
+const emit = defineEmits(['refresh-table'])
 
 const montant = ref(100)
 const description = ref('')
 const showConfirmModal = ref(false)
-const page = usePage()
 
 function askConfirmation() {
   showConfirmModal.value = true
@@ -14,14 +15,21 @@ function askConfirmation() {
 
 function confirmDepot() {
   showConfirmModal.value = false
-  router.post(route('finances.storeDepot'), {
+  // Post to server and ask parent to refresh table on success
+  // We avoid client-side navigation so Toasts can be seen
+  const data = {
     montant: montant.value,
-    description: description.value
-  }, {
+    description: description.value,
+  }
+
+  // Use Inertia global router via window (already available in app), keep minimal imports
+  // eslint-disable-next-line no-undef
+  router.post(route('finances.storeDepot'), data, {
     onSuccess: () => {
       montant.value = 100
       description.value = ''
-    }
+      emit('refresh-table')
+    },
   })
 }
 
