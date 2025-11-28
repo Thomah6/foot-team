@@ -17,7 +17,9 @@ const menu = computed(() => {
   { label: "Finances", icon: "fas fa-wallet", link: route('finances.index'), active: route().current('finances.*') },
     // { label: "Stats", icon: "fas fa-chart-bar", link: route('admin.stats.index'), active: route().current('admin.stats.*') },
     // { label: "Voir classements", icon: "fas fa-trophy", link: route('stats.classements.index'), active: route().current('stats.classements.*') },
-    { label: "Profile", icon: "fas fa-user", link: route('profile.edit'), active: route().current('profile.edit') },
+  { label: "Profile", icon: "fas fa-user", link: route('profile.edit'), active: route().current('profile.edit') },
+  { label: "Présences", icon: "fas fa-calendar-check", link: route('presence.index'), active: route().current('presence.*') },
+
   ];
 
   // 👉 Ajouter l’item "membres" *seulement si admin ou bureau*
@@ -48,21 +50,6 @@ const menu = computed(() => {
 
   return items;
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
-
 
 const bottomMenu = [
   { label: "Settings", icon: "fas fa-cog", link: route('profile.edit') },
@@ -141,7 +128,14 @@ const handleImageError = (event) => {
       <p class="text-sm font-medium">{{ item.label }}</p>
       </Link>
 
-    </nav>
+        <Link :href="menu[2].link" class="flex items-center gap-3 px-3 py-2 rounded-md transition-colors"
+          :class="menu[2].active ? 'bg-blue-500/20 text-blue-600' : 'hover:bg-blue-500/10 text-text-primary-light dark:text-text-primary-dark'">
+        <i :class="menu[2].icon" class="text-lg"></i>
+        <p class="text-sm font-medium">{{ menu[2].label }}</p>
+        </Link>
+
+      </nav>
+
 
     <!-- Bottom -->
     <div class="mt-auto flex flex-col gap-2 border-t border-gray-200 dark:border-gray-700 pt-4">

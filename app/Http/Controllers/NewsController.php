@@ -53,7 +53,7 @@ class NewsController extends Controller
 
         News::create($validated);
 
-        return redirect()->route('admin.news.index')
+        return redirect()->route('news.index')
             ->with('success', 'Actualité créée avec succès.');
     }
 
@@ -84,7 +84,7 @@ class NewsController extends Controller
 
         $news->update($validated);
 
-        return redirect()->route('admin.news.index')
+        return redirect()->route('news.index')
             ->with('success', 'Actualité mise à jour.');
     }
 
@@ -96,7 +96,7 @@ class NewsController extends Controller
         $news = News::findOrFail($id);
         $news->delete();
 
-        return redirect()->route('admin.news.index')
+        return redirect()->route('news.index')
             ->with('success', 'Actualité supprimée.');
     }
 
@@ -111,7 +111,7 @@ class NewsController extends Controller
         $news->is_published = ! $news->is_published;
         $news->save();
 
-        return redirect()->route('admin.news.index')
+        return redirect()->route('news.index')
             ->with('success', 'Statut de publication mis à jour.');
     }
 }
