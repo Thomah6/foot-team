@@ -1,34 +1,66 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { Link, usePage } from '@inertiajs/vue3'
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue'
+
+const page = usePage();
+const user = page.props.auth.user;
+const isAdmin = () => page.props.auth.user.role === 'admin';
+const isBureau = () => page.props.auth.user.role === 'bureau';
 
 const isOpen = ref(false)
-const page = usePage()
-const user = page.props.auth.user
 
-const menu = [
+
+const menu = computed(() => {
+  const items = [
     { label: "Dashboard", icon: "fas fa-tachometer-alt", link: route('dashboard'), active: route().current('dashboard') },
+       {label: "Stats des membres", icon: "fas fa-table", link: route('bureau.stats.index'), active: route().current('bureau.stats.index.*') },
+  { label: "Finances", icon: "fas fa-wallet", link: route('finances.index'), active: route().current('finances.*') },
     // { label: "Stats", icon: "fas fa-chart-bar", link: route('admin.stats.index'), active: route().current('admin.stats.*') },
     // { label: "Voir classements", icon: "fas fa-trophy", link: route('stats.classements.index'), active: route().current('stats.classements.*') },
-    { label: "Profile", icon: "fas fa-user", link: route('profile.edit'), active: route().current('profile.edit') },
-     {label: "Stats des membres", icon: "fas fa-users", link: route('bureau.stats.index'), active: route().current('bureau.stats.index.*') },
-  { label: "Finances", icon: "fas fa-wallet", link: route('finances.index'), active: route().current('finances.*') },
-  { label: "Dashboard", icon: "fas fa-tachometer-alt", link: route('dashboard'), active: route().current('dashboard') },
   { label: "Profile", icon: "fas fa-user", link: route('profile.edit'), active: route().current('profile.edit') },
   { label: "Présences", icon: "fas fa-calendar-check", link: route('presence.index'), active: route().current('presence.*') },
-]
+
+  ];
+
+  // 👉 Ajouter l’item "membres" *seulement si admin ou bureau*
+  if (isAdmin()) {
+    items.push({
+      label: "Membres",
+      icon: "fas fa-user-friends",
+      link: route('members.index'),
+      active: route().current('members.index')
+    }, {
+      label: "Statisques des Équipes",
+      icon: "fas fa-chart-line",
+      link: route('admin.team-stats.index'),
+      active: route().current('admin.team-stats.index')
+    });
+  }
+  if (isBureau()) {
+
+    items.push({
+      label: "Membres",
+      icon: "fas fa-user-friends",
+      link: route('bureau.members.index'),
+      active: route().current('bureau.members.index')
+    });
+
+  }
+
+
+  return items;
+});
 
 const bottomMenu = [
   { label: "Settings", icon: "fas fa-cog", link: route('profile.edit') },
 ]
 
 const toggleMenu = () => {
-    isOpen.value = !isOpen.value
+  isOpen.value = !isOpen.value
 }
 
 const closeMenu = () => {
-    isOpen.value = false
+  isOpen.value = false
 }
 
 const handleImageError = (event) => {
@@ -89,13 +121,11 @@ const handleImageError = (event) => {
     <!-- Navigation Items -->
     <nav class="flex flex-col gap-2 mt-4 flex-1 overflow-y-auto">
 
-      <Link v-for="(item, index) in menu" :key="index"
-            :href="item.link"
-            @click="closeMenu"
-            class="flex items-center gap-3 px-3 py-2 rounded-md transition-colors"
-            :class="item.active ? 'bg-blue-500/20 text-blue-600' : 'hover:bg-blue-500/10 text-text-primary-light dark:text-text-primary-dark'">
-        <i :class="item.icon" class="text-lg w-5 text-center"></i>
-        <p class="text-sm font-medium">{{ item.label }}</p>
+      <Link v-for="(item, index) in menu" :key="index" :href="item.link" @click="closeMenu"
+        class="flex items-center gap-3 px-3 py-2 rounded-md transition-colors"
+        :class="item.active ? 'bg-blue-500/20 text-blue-600' : 'hover:bg-blue-500/10 text-text-primary-light dark:text-text-primary-dark'">
+      <i :class="item.icon" class="text-lg w-5 text-center"></i>
+      <p class="text-sm font-medium">{{ item.label }}</p>
       </Link>
 
         <Link :href="menu[2].link" class="flex items-center gap-3 px-3 py-2 rounded-md transition-colors"
@@ -106,18 +136,17 @@ const handleImageError = (event) => {
 
       </nav>
 
+
     <!-- Bottom -->
     <div class="mt-auto flex flex-col gap-2 border-t border-gray-200 dark:border-gray-700 pt-4">
-      <Link v-for="(item, index) in bottomMenu" :key="`bottom-${index}`"
-            :href="item.link"
-            @click="closeMenu"
-            class="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-blue-500/10 transition-colors text-text-primary-light dark:text-text-primary-dark">
-        <i :class="item.icon" class="text-lg w-5 text-center"></i>
-        <p class="text-sm font-medium">{{ item.label }}</p>
+      <Link v-for="(item, index) in bottomMenu" :key="`bottom-${index}`" :href="item.link" @click="closeMenu"
+        class="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-blue-500/10 transition-colors text-text-primary-light dark:text-text-primary-dark">
+      <i :class="item.icon" class="text-lg w-5 text-center"></i>
+      <p class="text-sm font-medium">{{ item.label }}</p>
       </Link>
     </div>
 
-    </aside>
+  </aside>
 </template>
 
 <style scoped>
