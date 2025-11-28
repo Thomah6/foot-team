@@ -8,6 +8,8 @@ use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\Stat;
+use App\Models\TeamStat;
+use App\Models\Team;
 use App\Models\PlayerOfTheMonth;
 use Carbon\Carbon;
 
@@ -18,6 +20,10 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        User::factory(10)->create();
+        Stat::factory(10)->create();
+        Team::factory(5)->create();
+        TeamStat::factory(15)->create();
         // Créer les utilisateurs de base d'abord
         User::factory()->create([
             'name' => 'Test User',
