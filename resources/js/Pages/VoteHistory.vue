@@ -1,6 +1,7 @@
 <template>
     <div class="vote-history p-4">
         <h2 class="text-lg font-bold mb-4 text-center">My Vote History</h2>
+                {{votes}}
         <ul>
             <li
                 v-for="vote in votes"
@@ -8,7 +9,7 @@
                 class="border p-4 mb-4 rounded-lg"
             >
                 <p class="text-sm">
-                    <strong>Reflection:</strong> {{ vote.reflection.title }}
+                    <strong>Reflection:</strong> {{ vote.reflection.titre }}
                 </p>
                 <p class="text-sm">
                     <strong>Vote:</strong>

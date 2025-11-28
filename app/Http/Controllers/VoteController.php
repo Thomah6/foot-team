@@ -80,10 +80,10 @@ class VoteController extends Controller
 
     public function history()
     {
-        $votes = Vote::with('reflection:title,id')
+        $votes = Vote::with('reflection')
             ->where('user_id', Auth::id())
             ->get(['id', 'reflection_id', 'value', 'created_at']);
-
+            dd($votes);
             return Inertia::render('VoteHistory', [
                 'votes' => $votes,
             ]);
@@ -94,7 +94,7 @@ class VoteController extends Controller
         $reflections = Reflection::with(['votes' => function ($query) {
             $query->select('id', 'reflection_id', 'value', 'user_id')
                 ->with('user:id,role');
-        }])->get(['id', 'title']);
+        }])->get(['id', 'titre']);
 
         $data = $reflections->map(function ($reflection) {
             $votes = $reflection->votes;

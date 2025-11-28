@@ -10,6 +10,7 @@ use Illuminate\Database\Seeder;
 use App\Models\Stat;
 use App\Models\TeamStat;
 use App\Models\Team;
+use App\Models\Vote;
 use App\Models\PlayerOfTheMonth;
 use Carbon\Carbon;
 
@@ -25,10 +26,6 @@ class DatabaseSeeder extends Seeder
         Team::factory(5)->create();
         TeamStat::factory(15)->create();
         // Créer les utilisateurs de base d'abord
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
 
         // Créer des utilisateurs supplémentaires pour les stats
         User::factory()->create([
@@ -76,7 +73,8 @@ class DatabaseSeeder extends Seeder
         //         ])
         //         ->create();
         // }
-
+        Reflection::factory(10)->create();
+        Vote::factory(10)->create();
         echo "\n Database seeded successfully !\n";
         // Reflection::factory(40)->create();
         // Comment::factory(200)->create();
