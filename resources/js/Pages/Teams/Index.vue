@@ -1,6 +1,7 @@
 <script setup>
 import { useForm, router } from '@inertiajs/vue3'
 import { ref } from 'vue'
+import ConfirmModal from '@/Components/ConfirmModal.vue'
 
 const props = defineProps({
   teams: Array
@@ -43,10 +44,19 @@ function submitEdit() {
 }
 
 // Suppression
+const deleteForm = useForm({})
+const showDeleteModal = ref(false)
+const deletingTeamId = ref(null)
+
 function deleteTeam(id) {
-  if (confirm("Voulez-vous vraiment supprimer cette sous-équipe ?")) {
-    useForm({}).delete(route('admin.teams.destroy', id))
-  }
+  deletingTeamId.value = id
+  showDeleteModal.value = true
+}
+
+function confirmDeleteTeam() {
+  if (!deletingTeamId.value) return
+  deleteForm.delete(route('admin.teams.destroy', deletingTeamId.value))
+  deletingTeamId.value = null
 }
 
 //Affectation
@@ -151,6 +161,7 @@ function affect(teamId) {
         </div>
       </div>
     </div>
+    <ConfirmModal v-model="showDeleteModal" title="Supprimer l'équipe" message="Voulez-vous vraiment supprimer cette équipe ?" confirm-text="Supprimer" cancel-text="Annuler" variant="danger" @confirm="confirmDeleteTeam" />
   </div>
 </template>
 

@@ -62,7 +62,10 @@ class ProfileController extends Controller
         $user->avatar = $path;
         $user->save();
 
-        return Redirect::route('profile.edit');
+        // Debug pour vérifier la sauvegarde
+        \Log::info('Avatar saved for user ' . $user->id . ': ' . $path);
+
+        return Redirect::route('profile.edit')->with('success', 'Avatar mis à jour avec succès!');
     }
 
     /**
@@ -86,7 +89,10 @@ class ProfileController extends Controller
         $user->poster = $path;
         $user->save();
 
-        return Redirect::route('profile.edit');
+        // Debug pour vérifier la sauvegarde
+        \Log::info('Poster saved for user ' . $user->id . ': ' . $path);
+
+        return Redirect::route('profile.edit')->with('success', 'Poster mis à jour avec succès!');
     }
 
     /**

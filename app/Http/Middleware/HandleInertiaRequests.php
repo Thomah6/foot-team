@@ -17,23 +17,31 @@ class HandleInertiaRequests extends Middleware
     /**
      * Determine the current asset version.
      */
-    public function version(Request $request): ?string
-    {
-        return parent::version($request);
-    }
+public function share(Request $request): array
+{
+    $user = $request->user();
 
-    /**
-     * Define the props that are shared by default.
-     *
-     * @return array<string, mixed>
-     */
-    public function share(Request $request): array
-    {
-        return [
-            ...parent::share($request),
-            'auth' => [
-                'user' => $request->user(),
-            ],
-        ];
-    }
+    return array_merge(parent::share($request), [
+        'auth' => [
+            'user' => $user ? [
+                'id'    => $user->id,
+                'name'  => $user->name,
+                'email' => $user->email,
+                'avatar' => $user->avatar,
+                'poster' => $user->poster,
+                'role' => $user->role,
+                'pseudo' => $user->pseudo,
+            ] : null,
+
+            // Empêche totalement l’erreur SQL
+            'permissions' => (
+                $user &&
+                \Illuminate\Support\Facades\Schema::hasTable('permissions') &&
+                method_exists($user, 'getPermissionNames')
+            )
+                ? $user->getPermissionNames()
+                : [],
+        ],
+    ]);
+}
 }

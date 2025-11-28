@@ -2,7 +2,7 @@
 import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
-import { useForm, usePage } from '@inertiajs/vue3';
+import { useForm, usePage, router } from '@inertiajs/vue3';
 import { ref } from 'vue';
 
 const user = usePage().props.auth.user;
@@ -46,11 +46,11 @@ const updateAvatar = () => {
     console.log('updateAvatar called', avatarForm.avatar);
     avatarForm.post(route('profile.avatar.update'), {
         preserveScroll: true,
-        onSuccess: () => {
-            console.log('Avatar update success');
+        onSuccess: (page) => {
+            console.log('Avatar update success', page);
             avatarForm.reset('avatar');
-            // Recharger la page pour voir la nouvelle image
-            window.location.reload();
+            // Forcer le rechargement complet de la page pour mettre à jour les données utilisateur
+            window.location.href = route('profile.edit');
         },
         onError: (errors) => {
             console.log('Avatar update error', errors);
@@ -62,11 +62,11 @@ const updatePoster = () => {
     console.log('updatePoster called', posterForm.poster);
     posterForm.post(route('profile.poster.update'), {
         preserveScroll: true,
-        onSuccess: () => {
-            console.log('Poster update success');
+        onSuccess: (page) => {
+            console.log('Poster update success', page);
             posterForm.reset('poster');
-            // Recharger la page pour voir la nouvelle image
-            window.location.reload();
+            // Forcer le rechargement complet de la page pour mettre à jour les données utilisateur
+            window.location.href = route('profile.edit');
         },
         onError: (errors) => {
             console.log('Poster update error', errors);
@@ -77,6 +77,12 @@ const updatePoster = () => {
 
 <template>
     <section>
+        <!-- Message de succès -->
+        <div v-if="$page.props.flash && $page.props.flash.success" 
+             class="mb-4 p-4 bg-green-50 border border-green-200 rounded-lg">
+            <p class="text-sm text-green-800">{{ $page.props.flash.success }}</p>
+        </div>
+        
         <header>
             <h2 class="text-lg font-medium text-gray-900">
                 Avatar et Poster

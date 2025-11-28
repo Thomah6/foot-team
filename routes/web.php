@@ -1,11 +1,14 @@
 <?php
 
+use App\Http\Controllers\Admin\StatController;
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Admin\TeamStatController;
 use App\Http\Controllers\Bureau\BureauMemberController;
 use App\Http\Controllers\TeamController;
-use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReflectionController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\Admin\StatController;
+use App\Http\Controllers\Bureau\BureauStatController;
 use App\Http\Controllers\Admin\MemberController;
 
 use Illuminate\Foundation\Application;
@@ -13,26 +16,52 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\PlayerOfTheMonthController;
+use App\Http\Controllers\Auth\GoogleAuthController;
+
+// Routes d'authentification Google
+Route::get('/auth/google', [GoogleAuthController::class, 'redirect'])->name('google.login');
+Route::get('/auth/google/callback', [GoogleAuthController::class, 'callback']);
+
+// Route::get('/', function () {
+//     if (auth()->check()) {
+//         return redirect()->route('dashboard');
+//     }
+    
+//     return Inertia::render('Welcome', [
+//         'canLogin' => Route::has('login'),
+//         'canRegister' => Route::has('register'),
+//         'laravelVersion' => Application::VERSION,
+//         'phpVersion' => PHP_VERSION,
+//     ]);
+// });
 
 Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
+    return auth()->check() 
+        ? redirect()->route('dashboard')
+        : redirect()->route('login');
 });
 
 Route::get('/dashboard', [DashboardController::class, 'index'])
-    ->middleware(['auth', 'verified'])
+    ->middleware(['auth', 'is.active'])
     ->name('dashboard');
 
-Route::middleware('auth')->group(function () {
+
+
+Route::middleware(['auth', 'is.active'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::post('/profile/avatar', [ProfileController::class, 'updateAvatar'])->name('profile.avatar.update');
     Route::post('/profile/poster', [ProfileController::class, 'updatePoster'])->name('profile.poster.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+Route::prefix('admin')->middleware('role:admin')->group(function () {
+
+    Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+
+    Route::get('/settings', [AdminController::class, 'settings'])->name('admin.settings');
+
+  
 
     // Members management routes - Admin only
     Route::middleware('role:admin')->group(function () {
@@ -45,6 +74,27 @@ Route::middleware('auth')->group(function () {
         Route::delete('/members/{member}', [MemberController::class, 'destroy'])->name('members.destroy');
         Route::patch('/members/{member}/toggle-status', [MemberController::class, 'toggleStatus'])->name('members.toggle-status');
         Route::patch('/members/{member}/role', [MemberController::class, 'updateRole'])->name('members.update-role');
+
+        //ROUTES POUR LES STATS MANUELLES A RENTRER PAR L'admin
+
+        Route::get('/stats', [StatController::class,'index'])->name('admin.stats.index');
+        Route::get('/stats/pending',[StatController::class,'pending'])->name('admin.stats.pending');
+        
+        //Routes pour les stats d'équipes
+        Route::get('/team-stats',[TeamStatController::class,'index'])->name('admin.team-stats.index');
+        Route::get('/team-stats/create',[TeamStatController::class,'create'])->name('admin.team-stats.create');
+        Route::post('/team-stats',[TeamStatController::class,'store'])->name('admin.team-stats.store');
+        Route::get('/team-stats/{teamStat}/edit',[TeamStatController::class,'edit'])->name('admin.team-stats.edit');
+        Route::patch('/team-stats/{teamStat}',[TeamStatController::class,'update'])->name('admin.team-stats.update');
+
+        Route::delete('/team-stats/{teamStat}',[TeamStatController::class,'destroy'])->name('admin.team-stats.destroy');
+
+        Route::get('/team-stats/team/{team}',[TeamStatController::class,'byTeam'])->name('admin.team-stats.by-team');
+
+        Route::get('/team-stats/api/current-month',[TeamStatController::class,'currentMonthStats'])->name('admin.team-stats.current-month-api');
+
+        Route::post('/team-stats/bulk-validate',[TeamStatController::class,'bulkValidate'])->name('admin.team-stats.bulk-validate');
+
     });
 
     Route::prefix('bureau/members')->middleware('role:bureau')->group(function(){
@@ -56,7 +106,7 @@ Route::prefix('reflections')->group(function () {
     Route::get('/', [ReflectionController::class, 'index'])->name('reflections.index');
     Route::get('/{reflection}', [ReflectionController::class, 'show'])->name('reflections.show');
     Route::get('/create', [ReflectionController::class, 'create'])->name('admin.reflections.create');
-    Route::post('/', [ReflectionController::class, 'store'])->name('admin.reflections.store');
+    Route::post('/', [ReflectionController::class, 'store'])->name('reflections.store');
     Route::get('/{id}/edit', [ReflectionController::class, 'edit'])->name('admin.reflections.edit');
     Route::get('/{id}/validate', [ReflectionController::class, 'validate'])->name('reflections.validate');
     Route::put('/{id}', [ReflectionController::class, 'update'])->name('admin.reflections.update');
@@ -68,6 +118,14 @@ Route::prefix('reflections')->group(function () {
  * 🟢 Stats publiques (consultation libre)
  */
 
+
+ 
+
+
+Route::get('/admin', [AdminController::class,'index'])->name('Admin.AdminLayout');
+
+
+Route::get('/admin/create', [StatController::class,'create'])->name('Admin.CreateStats');
 /**
  * 📊 Stats admin (accès authentifié)
 */
@@ -107,7 +165,7 @@ Route::get('/classements/gardiens', [StatController::class, 'classementsGardiens
     ->name('stats.classement.gardiens');
 
 // Routes admin avec authentification
-Route::middleware(['auth'])
+Route::middleware(['auth', 'is.active'])
     ->prefix('admin')
     ->name('admin.')
     ->group(function () {
@@ -150,6 +208,21 @@ Route::get('/teams/{team}/affect', [TeamController::class, 'affectPage'])
     ->name('teams.affect');
 Route::post('/teams/{team}/affect/save', [TeamController::class, 'saveAffect']);
 
+
+
+Route::prefix('bureau/stats')->middleware('role:bureau')->group(function () {
+    Route::get('/', [BureauStatController::class, 'index'])->name('bureau.stats.index');
+
+    Route::get('/leaderboards', [BureauStatController::class, 'leaderboards'])->name('bureau.stats.leaderboards');
+
+    Route::get('/leaderboards/goals', [BureauStatController::class, 'goalLeaders'])->name('bureau.stats.leaderboards.goals');
+
+    Route::get('/leaderboards/assists', [BureauStatController::class, 'assistLeaders'])->name('bureau.stats.leaderboards.assists');
+
+    Route::get('/leaderboards/goalkeepers', [BureauStatController::class, 'goalkeeperLeaders'])->name('bureau.stats.leaderboards.goalkeepers');
+    
+    Route::get('/members/{user}/stats', [BureauStatController::class, 'memberStats'])->name('bureau.stats.member');
+});
 
 Route::prefix('admin/news')->group(function () {
 
