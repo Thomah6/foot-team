@@ -1,179 +1,286 @@
 <template>
-    <div class="flex gap-8">
-        <section> <AdminsideBar /> </section>
-        <main class="flex-1 overflow-y-auto p-8">
-    <div class="mx-auto max-w-3xl">
+  <div class="flex">
 
-      <!-- PageHeading -->
-      <header class="flex flex-wrap items-center justify-between gap-4 border-b border-border-light pb-6 dark:border-border-dark">
-        <div class="flex flex-col gap-1">
-          <h1 class="text-4xl font-black tracking-tighter text-text-primary-light dark:text-text-primary-dark">Suggestion Box</h1>
-          <p class="text-base font-normal text-text-secondary-light dark:text-text-secondary-dark">Share your ideas to improve the club.</p>
-        </div>
+    <!-- Sidebar -->
+    <section class="hidden md:block">
+      <AdminsideBar />
+    </section>
 
-        <button
-          class="flex h-10 cursor-pointer items-center justify-center gap-2 overflow-hidden rounded-lg bg-blue-500 px-5 text-sm font-bold text-white transition-opacity hover:opacity-90"
-          @click="showNew = true"
-        >
-          <i class="fas fa-plus"></i>
-          <span class="truncate">New Suggestion</span>
-        </button>
-      </header>
+    <!-- Main content -->
+    <main class="flex-1 p-6 md:p-10 bg-gray-50 min-h-screen overflow-y-auto">
+      <div class="mx-auto max-w-3xl">
 
-      <!-- Suggestions Feed -->
-      <div class="mt-8 flex flex-col gap-8">
-
-        <!-- Empty state -->
-        <div v-if="!suggestions || suggestions.length === 0" class="text-center text-gray-500 py-12">
-          Aucune suggestion pour le moment. Sois le premier à proposer une idée !
-        </div>
-
-        <!-- Suggestion Card -->
-        <article
-          v-for="suggestion in suggestions"
-          :key="suggestion.id"
-          class="flex flex-col rounded-lg border border-border-light bg-card-light dark:border-border-dark dark:bg-card-dark"
-        >
-          <!-- Card Content -->
-          <div class="p-6">
-            <div class="flex items-center gap-3">
-              <div
-                class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10"
-                :style="`background-image: url('${suggestion.user.avatar ?? defaultAvatar}')`"
-                :title="suggestion.user.pseudo || suggestion.user.name || 'Member'"
-              ></div>
-
-              <div class="flex flex-col">
-                <p class="text-sm font-bold text-text-primary-light dark:text-text-primary-dark">
-                  {{ suggestion.user.pseudo || suggestion.user.name || 'Unknown' }}
-                </p>
-                <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark">
-                  {{ timeAgo(suggestion.created_at) }}
-                </p>
-              </div>
-
-              <div class="ml-auto flex items-center gap-2">
-                <!-- Only show delete for admin -->
-                <button
-                  v-if="isAdmin"
-                  class="text-text-secondary-light dark:text-text-secondary-dark"
-                  @click="confirmDelete(suggestion.id)"
-                >
-                  <i class="fas fa-trash-alt"></i>
-                </button>
-
-                <button class="text-text-secondary-light dark:text-text-secondary-dark" @click="toggleExpand(suggestion.id)">
-                  <i class="fas fa-ellipsis-v"></i>
-                </button>
-              </div>
-            </div>
-
-            <div class="mt-4">
-              <h2 class="text-xl font-bold leading-tight text-text-primary-light dark:text-text-primary-dark">{{ suggestion.title }}</h2>
-              <p class="mt-2 text-base font-normal text-text-secondary-light dark:text-text-secondary-dark">{{ suggestion.content }}</p>
-            </div>
+        <!-- Header -->
+        <header class="flex flex-wrap items-center justify-between gap-4 pb-6 border-b border-gray-200">
+          <div>
+            <h1 class="text-4xl font-extrabold tracking-tight text-gray-900">Suggestion Box</h1>
+            <p class="text-gray-600">Share your ideas to improve the club.</p>
           </div>
 
-          <!-- Reaction Bar -->
-          <div class="flex items-center gap-4 border-t border-border-light px-6 py-2 dark:border-border-dark">
-            <button
-              @click="react(suggestion.id, 'like')"
-              :class="['flex items-center gap-2 rounded-lg p-2 transition-colors', userReacted(suggestion, 'like') ? 'bg-background-light dark:bg-background-dark' : 'hover:bg-background-light dark:hover:bg-background-dark']"
-            >
-              <i class="fas fa-thumbs-up"></i>
-              <span class="text-sm font-bold text-positive">{{ countReactions(suggestion, 'like') }}</span>
-            </button>
+          <button
+            class="flex items-center gap-2 bg-blue-600 text-white px-5 py-3 rounded-xl shadow-lg hover:bg-blue-700 hover:shadow-xl transition-all"
+            @click="showNew = true"
+          >
+            <i class="fas fa-plus text-sm"></i>
+            New Suggestion
+          </button>
+        </header>
 
-            <button
-              @click="react(suggestion.id, 'dislike')"
-              :class="['flex items-center gap-2 rounded-lg p-2 transition-colors', userReacted(suggestion, 'dislike') ? 'bg-background-light dark:bg-background-dark' : 'hover:bg-background-light dark:hover:bg-background-dark']"
-            >
-              <i class="fas fa-thumbs-down"></i>
-              <span class="text-sm font-bold text-negatif">{{ countReactions(suggestion, 'dislike') }}</span>
-            </button>
+        <!-- Suggestions -->
+        <div class="mt-10 flex flex-col gap-8">
 
-            <button
-              @click="toggleComments(suggestion.id)"
-              class="flex items-center gap-2 rounded-lg p-2 text-text-secondary-light transition-colors hover:bg-background-light dark:text-text-secondary-dark dark:hover:bg-background-dark"
-            >
-              <i class="fas fa-comment-dots"></i>
-              <span class="text-sm font-bold">{{ suggestion.comments?.length || 0 }}</span>
-            </button>
+          <!-- Empty -->
+          <div v-if="!suggestions || suggestions.length === 0"
+               class="text-center py-12 text-gray-500 text-lg border border-dashed rounded-xl bg-white shadow-sm">
+            Aucune suggestion pour le moment. Sois le premier à proposer une idée !
           </div>
 
-          <!-- Comments Section (toggle) -->
-          <div v-if="expanded[suggestion.id]" class="border-t border-border-light bg-background-light p-6 dark:border-border-dark dark:bg-background-dark">
-            <!-- Existing comments -->
-            <div v-if="suggestion.comments && suggestion.comments.length">
-              <div v-for="c in suggestion.comments" :key="c.id" class="flex w-full flex-row items-start justify-start gap-3 mb-4">
-                <div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full w-10 shrink-0" :style="`background-image: url('${c.user.avatar ?? defaultAvatar}')`"></div>
-                <div class="flex h-full flex-1 flex-col items-start justify-start gap-1">
-                  <div class="flex items-baseline gap-x-2">
-                    <p class="text-sm font-bold text-text-primary-light dark:text-text-primary-dark">{{ c.user.pseudo || c.user.name }}</p>
-                    <p class="text-xs text-text-secondary-light dark:text-text-secondary-dark">{{ timeAgo(c.created_at) }}</p>
-                  </div>
-                  <p class="text-sm text-text-primary-light dark:text-text-primary-dark">{{ c.content }}</p>
+          <!-- Suggestion Card -->
+          <article
+            v-for="suggestion in suggestions"
+            :key="suggestion.id"
+            class="bg-white border border-gray-200 rounded-2xl shadow-md hover:shadow-xl transition-all"
+          >
+            <div class="p-6">
+
+              <!-- User info -->
+              <div class="flex items-center gap-3">
+                <div
+                  class="w-12 h-12 rounded-full bg-cover bg-center shadow"
+                  :style="`background-image: url('${suggestion.user.avatar ?? defaultAvatar}')`"
+                ></div>
+
+                <div>
+                  <p class="font-bold text-gray-800">
+                    {{ suggestion.user.pseudo || suggestion.user.name || 'Unknown' }}
+                  </p>
+                  <p class="text-sm text-gray-500">
+                    {{ timeAgo(suggestion.created_at) }}
+                  </p>
+                </div>
+
+                <!-- Actions -->
+                <div class="ml-auto flex items-center gap-3 text-gray-500">
+                  <button v-if="isAdmin" @click="confirmDelete(suggestion.id)">
+                    <i class="fas fa-trash-alt"></i>
+                  </button>
+                  <button @click="toggleExpand(suggestion.id)">
+                    <i class="fas fa-ellipsis-v"></i>
+                  </button>
                 </div>
               </div>
+
+              <!-- Content -->
+              <div class="mt-5">
+                <h2 class="text-xl font-bold text-gray-900">{{ suggestion.title }}</h2>
+                <p class="text-gray-600 mt-2 leading-relaxed">
+                  {{ suggestion.content }}
+                </p>
+              </div>
             </div>
 
-            <!-- Add comment form -->
-            <form @submit.prevent="submitComment(suggestion.id)" class="mt-2">
-              <div class="flex gap-2">
-                <input
-                  v-model="commentInputs[suggestion.id]"
-                  type="text"
-                  placeholder="Write a comment..."
-                  class="flex-1 rounded-lg border px-3 py-2 text-sm bg-white dark:bg-card-dark"
-                />
-                <button class="px-3 py-2 rounded-lg bg-primary text-white" :disabled="!commentInputs[suggestion.id]">Comment</button>
-              </div>
-            </form>
-          </div>
-        </article>
-      </div>
-    </div>
+            <!-- Reaction bar -->
+            <div class="flex items-center gap-6 px-6 py-3 border-t border-gray-200 bg-gray-50">
 
-    <!-- New Suggestion Modal -->
-    <div v-if="showNew" class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
-      <div class="w-full max-w-2xl rounded-lg bg-white dark:bg-card-dark p-6 shadow-lg">
-        <div class="flex items-center justify-between mb-4">
-          <h3 class="text-lg font-bold">New Suggestion</h3>
-          <button @click="closeNew" class="text-text-secondary-light dark:text-text-secondary-dark">
-            <i class="fas fa-times"></i>
-          </button>
+              <!-- Like -->
+              <button
+                @click="react(suggestion.id, 'like')"
+                :class="[
+                  'flex items-center gap-2 px-3 py-2 rounded-lg transition',
+                  userReacted(suggestion, 'like')
+                    ? 'bg-blue-100 text-blue-700'
+                    : 'hover:bg-gray-200 text-gray-600'
+                ]"
+              >
+                <i class="fas fa-thumbs-up"></i>
+                <span>{{ countReactions(suggestion, 'like') }}</span>
+              </button>
+
+              <!-- Dislike -->
+              <button
+                @click="react(suggestion.id, 'dislike')"
+                :class="[
+                  'flex items-center gap-2 px-3 py-2 rounded-lg transition',
+                  userReacted(suggestion, 'dislike')
+                    ? 'bg-red-100 text-red-700'
+                    : 'hover:bg-gray-200 text-gray-600'
+                ]"
+              >
+                <i class="fas fa-thumbs-down"></i>
+                <span>{{ countReactions(suggestion, 'dislike') }}</span>
+              </button>
+
+              <!-- Comments -->
+              <button
+                @click="toggleComments(suggestion.id)"
+                class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-200 text-gray-600 transition"
+              >
+                <i class="fas fa-comment"></i>
+                <span>{{ suggestion.comments?.length || 0 }}</span>
+              </button>
+
+            </div>
+
+            <!-- Comment Section -->
+            <div
+              v-if="expanded[suggestion.id]"
+              class="border-t border-gray-200 bg-gray-50 p-6 space-y-5"
+            >
+
+              <!-- Existing comments -->
+              <div  v-for="c in suggestion.comments"
+              :key="c.id"
+              class="flex gap-4 rounded-xl border border-gray-200 bg-white p-4 shadow-sm hover:shadow-md transition duration-300"
+              >
+              <!-- Avatar -->
+              <div
+              class="w-12 h-12 rounded-full bg-cover bg-center ring-2 ring-gray-200"
+              :style="`background-image: url('${c.user.avatar ?? defaultAvatar}')`"></div>
+
+              <!-- Content Card -->
+              <div class="flex-1">
+
+                <!-- Header -->
+                <div class="flex items-center gap-2">
+                  <p class="font-semibold text-gray-900 text-sm">
+                    {{ c.user.pseudo || c.user.name }}
+                  </p>
+                  <span class="text-xs text-gray-400">
+                    {{ timeAgo(c.created_at) }}
+                  </span>
+                </div>
+
+                <!-- Comment bubble -->
+                <div class="mt-2 rounded-lg bg-gray-100 px-4 py-3 text-gray-700 text-sm leading-relaxed">
+                  {{ c.content }}
+                </div>
+
+                <!-- Action buttons -->
+                <div
+                  v-if="c.user_id === $page.props.auth.user.id"
+                  class="flex gap-3 mt-3"
+                >
+                  <button
+                    @click="editComment(c)"
+                    class="flex items-center gap-1 text-blue-600 text-xs font-semibold hover:text-blue-800 transition"
+                  >
+                    <i class="fas fa-edit"></i>
+                    Modifier
+                  </button>
+
+                  <button
+                    @click="deleteComment(c.id)"
+                    class="flex items-center gap-1 text-red-600 text-xs font-semibold hover:text-red-800 transition"
+                  >
+                    <i class="fas fa-trash-alt"></i>
+                    Supprimer
+                  </button>
+                </div>
+            </div>
         </div>
 
-        <form @submit.prevent="submitSuggestion" class="space-y-4">
-          <input
-            v-model="newSuggestion.title"
-            type="text"
-            placeholder="Title"
-            class="w-full rounded-lg border px-3 py-2"
-            required
-          />
-          <textarea
-            v-model="newSuggestion.content"
-            placeholder="Describe your idea..."
-            class="w-full rounded-lg border px-3 py-2"
-            rows="6"
-            required
-          ></textarea>
 
-          <div class="flex justify-end gap-3">
-            <button type="button" @click="closeNew" class="px-4 py-2 rounded bg-gray-200">Cancel</button>
-            <button :disabled="creating" class="px-4 py-2 rounded bg-blue-500 text-white">
-              {{ creating ? 'Posting...' : 'Post Suggestion' }}
+              <!-- Add comment -->
+              <form @submit.prevent="submitComment(suggestion.id)">
+                <div class="flex gap-2">
+                  <input
+                    v-model="commentInputs[suggestion.id]"
+                    type="text"
+                    placeholder="Write a comment..."
+                    class="flex-1 rounded-lg border border-gray-300 px-3 py-2 bg-white"
+                  />
+                  <button
+                    class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+                    :disabled="!commentInputs[suggestion.id]"
+                  >
+                    Comment
+                  </button>
+                </div>
+              </form>
+
+            </div>
+          </article>
+        </div>
+      </div>
+
+
+      <!-- NEW SUGGESTION MODAL -->
+      <div v-if="showNew" class="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+
+        <div class="bg-white rounded-2xl shadow-xl p-6 max-w-2xl w-full">
+          <div class="flex justify-between items-center mb-4">
+            <h3 class="text-xl font-bold text-gray-900">New Suggestion</h3>
+            <button @click="closeNew" class="text-gray-500 hover:text-gray-700">
+              <i class="fas fa-times"></i>
             </button>
           </div>
-        </form>
+
+          <form @submit.prevent="submitSuggestion" class="space-y-4">
+
+            <input
+              v-model="newSuggestion.title"
+              type="text"
+              placeholder="Title"
+              class="w-full border border-gray-300 rounded-lg px-3 py-2"
+              required
+            />
+
+            <textarea
+              v-model="newSuggestion.content"
+              placeholder="Describe your idea..."
+              class="w-full border border-gray-300 rounded-lg px-3 py-2"
+              rows="6"
+              required
+            ></textarea>
+
+            <div class="flex justify-end gap-3">
+              <button type="button" @click="closeNew" class="px-4 py-2 bg-gray-200 rounded-lg">
+                Cancel
+              </button>
+              <button class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+                {{ creating ? "Posting..." : "Post Suggestion" }}
+              </button>
+            </div>
+
+          </form>
+        </div>
+
       </div>
-    </div>
-  </main>
 
+      <!-- EDIT COMMENT MODAL -->
+<div v-if="showEdit" class="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+  <div class="bg-white rounded-2xl shadow-xl p-6 max-w-xl w-full">
+    <div class="flex justify-between items-center mb-4">
+      <h3 class="text-xl font-bold text-gray-900">Modifier le commentaire</h3>
+      <button @click="showEdit = false" class="text-gray-500 hover:text-gray-700">
+        <i class="fas fa-times"></i>
+      </button>
     </div>
 
-  
+    <form @submit.prevent="updateComment" class="space-y-4">
+      <textarea
+        v-model="editingComment.content"
+        placeholder="Modifier votre commentaire..."
+        class="w-full border border-gray-300 rounded-lg px-3 py-2"
+        rows="4"
+        required
+      ></textarea>
+
+      <div class="flex justify-end gap-3">
+        <button type="button" @click="showEdit = false" class="px-4 py-2 bg-gray-200 rounded-lg">
+          Annuler
+        </button>
+        <button :disabled="updating" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+          {{ updating ? 'Modification...' : 'Modifier' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+    </main>
+
+  </div>
 </template>
 
 <script setup>
@@ -182,6 +289,7 @@ import { router } from '@inertiajs/vue3'
 import AdminsideBar from "@/Components/AdminsideBar.vue";
 
 // Props from controller (ensure controller sends these)
+
 const props = defineProps({
   suggestions: { type: Array, default: () => [] },
   authUser: { type: Object, default: () => null },
@@ -287,6 +395,47 @@ function closeNew() {
   newSuggestion.title = ''
   newSuggestion.content = ''
 }
+
+// Modal edit comment
+const showEdit = ref(false)
+const editingComment = reactive({ id: null, content: '' })
+const updating = ref(false)
+
+//  Modifier un commentaire
+function editComment(c) {
+    editingComment.id = c.id
+  editingComment.content = c.content
+  showEdit.value = true
+}
+//Pour soumettre la modification du commentaire 
+async function updateComment() {
+  if (!editingComment.content.trim()) return
+
+  updating.value = true
+  try {
+    await router.put(`/comments/${editingComment.id}`, {
+      content: editingComment.content
+    })
+    // fermer le modal après update
+    showEdit.value = false
+    editingComment.id = null
+    editingComment.content = ''
+  } catch (err) {
+    console.error(err)
+  } finally {
+    updating.value = false
+  }
+}
+
+//  Supprimer un commentaire
+function deleteComment(commentId) {
+  if (!confirm("Voulez-vous supprimer ce commentaire ?")) return
+
+  router.delete(`/comments/${commentId}`, {
+    onError: (err) => console.error(err)
+  })
+}
+
 </script>
 
 <style scoped>

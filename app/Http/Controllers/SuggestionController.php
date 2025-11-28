@@ -3,12 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\Suggestion;
+use App\Models\SuggestionComment;
 use App\Models\SuggestionReaction;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class SuggestionController extends Controller
 {
+    
     public function index()
     {
         return Inertia::render("SuggestionPage", [
@@ -37,9 +39,22 @@ class SuggestionController extends Controller
         return back();
     }
 
+    //Pour les commentaires
+    public function update(Request $request, SuggestionComment $suggestionComment){
+        if ($suggestionComment->user_id !== auth()->id()) {
+            abort(403, "Vous ne pouvez pas modifier ce commentaire.");
+        }
+        $suggestionComment->update([
+            'content' => $request->content
+        ]);
+
+        return back();
+    }
+
+
     public function react(Suggestion $suggestion, Request $request)
     {
-     
+
         $request->validate(['type' => 'required|in:like,dislike']);
 
         $userId = auth()->id();
@@ -54,7 +69,7 @@ class SuggestionController extends Controller
             $existing->delete();
             return back();
         }
-        
+
         // ✔ 2 — Si l'user a une réaction mais d’un type différent → switch
         if ($existing) {
             $existing->update(['type' => $request->type]);

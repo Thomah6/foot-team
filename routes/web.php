@@ -17,6 +17,7 @@ use Inertia\Inertia;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\PlayerOfTheMonthController;
 use App\Http\Controllers\Auth\GoogleAuthController;
+use App\Http\Controllers\CommentsSuggestionContoller;
 
 // Routes d'authentification Google
 Route::get('/auth/google', [GoogleAuthController::class, 'redirect'])->name('google.login');
@@ -26,7 +27,7 @@ Route::get('/auth/google/callback', [GoogleAuthController::class, 'callback']);
 //     if (auth()->check()) {
 //         return redirect()->route('dashboard');
 //     }
-    
+
 //     return Inertia::render('Welcome', [
 //         'canLogin' => Route::has('login'),
 //         'canRegister' => Route::has('register'),
@@ -36,7 +37,7 @@ Route::get('/auth/google/callback', [GoogleAuthController::class, 'callback']);
 // });
 
 Route::get('/', function () {
-    return auth()->check() 
+    return auth()->check()
         ? redirect()->route('dashboard')
         : redirect()->route('login');
 });
@@ -59,11 +60,11 @@ Route::prefix('admin')->middleware('role:admin')->group(function () {
 
     Route::get('/settings', [AdminController::class, 'settings'])->name('admin.settings');
 
-  
+
 
     // Members management routes - Admin only
     Route::middleware('role:admin')->group(function () {
-        
+
         Route::get('/members', [MemberController::class, 'index'])->name('members.index');
         Route::get('/members/create', [MemberController::class, 'create'])->name('members.create');
         Route::post('/members', [MemberController::class, 'store'])->name('members.store');
@@ -77,7 +78,7 @@ Route::prefix('admin')->middleware('role:admin')->group(function () {
 
         Route::get('/stats', [StatController::class,'index'])->name('admin.stats.index');
         Route::get('/stats/pending',[StatController::class,'pending'])->name('admin.stats.pending');
-        
+
         //Routes pour les stats d'équipes
         Route::get('/team-stats',[TeamStatController::class,'index'])->name('admin.team-stats.index');
         Route::get('/team-stats/create',[TeamStatController::class,'create'])->name('admin.team-stats.create');
@@ -118,7 +119,7 @@ Route::prefix('reflections')->group(function () {
 Route::get('/stats', [StatController::class, 'publicIndex'])->name('stats.public.index');
 
 
- 
+
 
 
 Route::get('/admin', [AdminController::class,'index'])->name('Admin.AdminLayout');
@@ -190,10 +191,7 @@ Route::middleware(['auth', 'is.active'])
 
 //Routes pour la creation de team et mercato par l'admin
 // Route::middleware(['auth', 'admin'])->group(function () {
-//     Route::resource('teams', TeamController::class);
-
-//     Route::post('/teams/assign-members', [TeamController::class, 'assignMembers']);
-//     Route::post('/teams/mercato', [TeamController::class, 'mercato']);
+//
 // });
 Route::get('/teams', [TeamController::class, 'vue'])->name('admin.teams');
 Route::get('/teams/index', [TeamController::class, 'index'])->name('admin.teams.index');
@@ -207,7 +205,7 @@ Route::get('/teams/{team}/affect', [TeamController::class, 'affectPage'])
 Route::post('/teams/{team}/affect/save', [TeamController::class, 'saveAffect'])->name('teams.affect.save');
 Route::get('/teams/{team}', [TeamController::class, 'show'])->name('teams.show');
 
-//Route pour les suggestions 
+//Route pour les suggestions
 Route::middleware(['auth'])->group(function () {
     Route::get('/suggestions', [SuggestionController::class, 'index'])->name('suggestions');
 
@@ -216,6 +214,9 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/suggestions/{suggestion}/comment', [SuggestionController::class, 'comment']);
     Route::delete('/suggestions/{suggestion}', [SuggestionController::class, 'destroy']);
 });
+//Routes poour les commentaires les suggestions
+Route::put('/comments/{comment}', [CommentsSuggestionContoller::class, 'update']);
+Route::delete('/comments/{comment}', [CommentsSuggestionContoller::class, 'destroy']);
 
 
 Route::prefix('bureau/stats')->middleware('role:bureau')->group(function () {
@@ -228,7 +229,7 @@ Route::prefix('bureau/stats')->middleware('role:bureau')->group(function () {
     Route::get('/leaderboards/assists', [BureauStatController::class, 'assistLeaders'])->name('bureau.stats.leaderboards.assists');
 
     Route::get('/leaderboards/goalkeepers', [BureauStatController::class, 'goalkeeperLeaders'])->name('bureau.stats.leaderboards.goalkeepers');
-    
+
     Route::get('/members/{user}/stats', [BureauStatController::class, 'memberStats'])->name('bureau.stats.member');
 });
 

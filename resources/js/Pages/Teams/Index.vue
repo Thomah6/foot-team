@@ -67,17 +67,27 @@ function affect(teamId) {
 </script>
 
 <template>
-    <section> <AdminsideBar /> </section>
-  <div class="p-6">
-    <h1 class="text-2xl font-bold mb-6">Gestion des sous-équipes</h1>
+  <section>
+    <AdminsideBar />
+  </section>
+
+  <div class="p-6 bg-gray-50 min-h-screen">
+    <h1 class="text-3xl font-extrabold mb-8 text-gray-800">Gestion des sous-équipes</h1>
 
     <!-- Create team -->
-    <form @submit.prevent="createTeam" class="mb-8 flex gap-2">
-      <input v-model="createForm.name" class="border p-2" placeholder="Nom" />
-      <input v-model="createForm.description" class="border p-2" placeholder="Description" />
-
+    <form @submit.prevent="createTeam" class="mb-10 flex flex-wrap gap-3 items-center">
+      <input
+        v-model="createForm.name"
+        class="border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+        placeholder="Nom"
+      />
+      <input
+        v-model="createForm.description"
+        class="border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+        placeholder="Description"
+      />
       <button
-        class="bg-blue-600 text-white px-4 py-2 rounded disabled:opacity-50"
+        class="bg-blue-600 text-white px-5 py-2 rounded-lg shadow hover:bg-blue-700 transition disabled:opacity-50"
         :disabled="createForm.processing"
       >
         {{ createForm.processing ? 'Création...' : 'Créer' }}
@@ -85,29 +95,29 @@ function affect(teamId) {
     </form>
 
     <!-- Teams list -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       <div
         v-for="team in props.teams"
         :key="team.id"
-        class="p-4 border rounded shadow"
+        class="bg-white p-6 rounded-2xl shadow hover:shadow-lg border border-gray-200 transition"
       >
         <!-- Mode édition -->
         <div v-if="editingTeam && editingTeam.id === team.id">
           <input
             v-model="editForm.name"
-            class="border p-2 w-full mb-2"
+            class="border border-gray-300 rounded-lg px-3 py-2 w-full mb-3 focus:outline-none focus:ring-2 focus:ring-green-400"
             placeholder="Nom"
           />
           <input
             v-model="editForm.description"
-            class="border p-2 w-full mb-2"
+            class="border border-gray-300 rounded-lg px-3 py-2 w-full mb-3 focus:outline-none focus:ring-2 focus:ring-green-400"
             placeholder="Description"
           />
 
-          <div class="flex gap-2">
+          <div class="flex gap-3">
             <button
               @click.prevent="submitEdit"
-              class="bg-green-600 text-white px-4 py-2 rounded"
+              class="bg-green-600 text-white px-4 py-2 rounded-lg shadow hover:bg-green-700 transition"
               :disabled="editForm.processing"
             >
               Sauvegarder
@@ -115,7 +125,7 @@ function affect(teamId) {
 
             <button
               @click="editingTeam = null"
-              class="bg-gray-400 text-white px-4 py-2 rounded"
+              class="bg-gray-400 text-white px-4 py-2 rounded-lg hover:bg-gray-500 transition"
             >
               Annuler
             </button>
@@ -124,18 +134,18 @@ function affect(teamId) {
 
         <!-- Mode normal -->
         <div v-else>
-          <h2 class="font-semibold text-xl mb-2">{{ team.name }}</h2>
+          <h2 class="font-bold text-xl mb-2 text-gray-900">{{ team.name }}</h2>
           <p class="text-gray-600 mb-4">{{ team.description }}</p>
 
-          <h3 class="font-semibold">Membres :{{ team.users.length }}</h3>
-          <ul class="list-disc ml-4 text-sm mb-4">
+          <h3 class="font-semibold text-gray-700 mb-2">Membres : {{ team.users.length }}</h3>
+          <ul class="list-disc ml-5 text-sm mb-4 text-gray-600">
             <li v-for="m in team.members" :key="m.id">{{ m.name }}</li>
           </ul>
 
-          <div class="flex gap-2">
+          <div class="flex flex-wrap gap-2">
             <!-- Edit -->
             <button
-              class="bg-yellow-500 text-white px-3 py-1 rounded"
+              class="bg-yellow-500 text-white px-4 py-1 rounded-lg shadow hover:bg-yellow-600 transition"
               @click="() => {
                 editForm.id = team.id
                 editForm.name = team.name
@@ -148,13 +158,15 @@ function affect(teamId) {
 
             <!-- Delete -->
             <button
-              class="bg-red-600 text-white px-3 py-1 rounded"
+              class="bg-red-600 text-white px-4 py-1 rounded-lg shadow hover:bg-red-700 transition"
               @click="deleteTeam(team.id)"
             >
               Supprimer
             </button>
+
+            <!-- Affect -->
             <button
-              class="bg-green-600 text-white px-3 py-1 rounded"
+              class="bg-green-600 text-white px-4 py-1 rounded-lg shadow hover:bg-green-700 transition"
               @click="affect(team.id)"
             >
               Affecter
@@ -163,7 +175,16 @@ function affect(teamId) {
         </div>
       </div>
     </div>
-    <ConfirmModal v-model="showDeleteModal" title="Supprimer l'équipe" message="Voulez-vous vraiment supprimer cette équipe ?" confirm-text="Supprimer" cancel-text="Annuler" variant="danger" @confirm="confirmDeleteTeam" />
+
+    <ConfirmModal
+      v-model="showDeleteModal"
+      title="Supprimer l'équipe"
+      message="Voulez-vous vraiment supprimer cette équipe ?"
+      confirm-text="Supprimer"
+      cancel-text="Annuler"
+      variant="danger"
+      @confirm="confirmDeleteTeam"
+    />
   </div>
 </template>
 

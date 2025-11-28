@@ -10,11 +10,17 @@ class SuggestionComment extends Model
         'user_id',
         'content',
     ];
-    public function user(){
+    public function user()
+    {
         return $this->belongsTo(User::class);
     }
 
-    public function reation(){
+    public function suggestion()
+    {
+        return $this->belongsTo(Suggestion::class);
+    }
+    public function reation()
+    {
         return $this->belongsTo(SuggestionReaction::class);
     }
 }

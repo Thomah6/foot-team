@@ -1,90 +1,131 @@
 <template>
-    <div>
-        <section> <AdminsideBar /> </section>
-    </div>
-  <main class="flex-1 p-8">
-    <div class="max-w-7xl mx-auto">
+  <div class="flex">
 
-      <!-- Page heading -->
-      <div class="flex flex-wrap justify-between items-center gap-4 mb-8">
-        <h1 class="text-4xl font-black tracking-[-0.033em]">Club Members</h1>
-        <button class="flex items-center gap-2 bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary/90">
-          <span class="material-symbols-outlined">add</span>
-          <span>Add Member</span>
-        </button>
-      </div>
+    <!-- Sidebar -->
+    <section class="hidden md:block">
+      <AdminsideBar />
+    </section>
 
-      <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+    <!-- Main content -->
+    <main class="flex-1 p-6 md:p-10 bg-gray-50 min-h-screen">
+      <div class="max-w-7xl mx-auto ml-4">
 
-        <!-- Sidebar filters -->
-        <aside class="lg:col-span-1">
-          <div class="bg-card-light dark:bg-card-dark p-6 rounded-xl shadow-sm border border-border-light dark:border-border-dark">
+        <!-- TOP BAR -->
+        <div class="flex flex-wrap justify-between items-center ml-4 mb-10 ml-4 gap-4">
+          <h1 class="text-4xl font-extrabold tracking-tight text-gray-900">
+            Club Members
+          </h1>
 
-            <h2 class="text-lg font-bold mb-6">Filters</h2>
+          <button class="flex items-center gap-2 bg-blue-600 text-white px-5 py-3 rounded-xl shadow-lg hover:bg-blue-700 hover:shadow-xl transition-all duration-200">
+            <i class="fas fa-user-plus text-lg"></i>
+            <span class="font-semibold">Add Member</span>
+          </button>
+        </div>
 
-            <!-- Search -->
-            <div class="mb-6">
-              <input
-                v-model="filters.search"
-                type="text"
-                placeholder="Search by name or email..."
-                class="form-input w-full bg-transparent px-2 text-sm border border-border-light dark:border-border-dark rounded-lg h-12"
-              />
-            </div>
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
 
-            <!-- Role -->
-            <label class="flex flex-col mb-4">
-              <span class="text-sm font-medium mb-2">Role</span>
-              <select v-model="filters.role" class="form-select rounded-lg h-12 px-3 border border-border-light dark:border-border-dark bg-input-light dark:bg-input-dark">
-                <option value="">All Roles</option>
-                <option value="admin">Admin</option>
-                <option value="bureau">Bureau</option>
-                <option value="simple">Simple Member</option>
-              </select>
-            </label>
+          <!-- FILTER SIDEBAR -->
+          <aside class="lg:col-span-1">
+            <div class="bg-white p-6 rounded-2xl shadow-xl border border-gray-200">
 
-            <!-- Goalkeeper -->
-            <label class="flex flex-col mb-4">
-              <span class="text-sm font-medium mb-2">Goalkeeper Status</span>
-              <select v-model="filters.goalkeeper" class="form-select rounded-lg h-12 px-3 border border-border-light dark:border-border-dark bg-input-light dark:bg-input-dark">
-                <option value="">Any</option>
-                <option value="yes">Yes</option>
-                <option value="no">No</option>
-              </select>
-            </label>
+              <h2 class="text-xl font-bold text-gray-800 mb-6 flex items-center gap-2">
+                <i class="fas fa-filter text-gray-500 "></i> Filters
+              </h2>
 
-            <!-- Buttons -->
-            <div class="flex flex-col gap-3 mt-6">
-              <button @click="resetFilters" class="w-full h-10 rounded-lg bg-border-light dark:bg-border-dark text-text-secondary-light dark:text-text-secondary-dark font-bold hover:bg-border-light/80 dark:hover:bg-border-dark/80">
-                Reset
+              <!-- Search -->
+              <div class="mb-6">
+                <div class="relative">
+                  <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                  <input
+                    v-model="filters.search"
+                    type="text"
+                    placeholder="Search member..."
+                    class="w-full bg-gray-100 border border-gray-300 rounded-xl h-12 pl-10 px-3 text-sm focus:ring-2 focus:ring-blue-300 focus:bg-white transition"
+                  />
+                </div>
+              </div>
+
+              <!-- Role -->
+              <label class="flex flex-col mb-5">
+                <span class="text-sm font-semibold text-gray-700 mb-2">Role</span>
+                <div class="relative">
+                  <i class="fas fa-user-tag  absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                  <select
+                    v-model="filters.role"
+                    class="w-full bg-gray-100 border border-gray-300 rounded-xl h-12 pl-10 pr-3 text-sm focus:ring-2 focus:ring-blue-300"
+                  >
+                    <option value="">All Roles</option>
+                    <option value="admin">Admin</option>
+                    <option value="bureau">Bureau</option>
+                    <option value="simple">Simple Member</option>
+                  </select>
+                </div>
+              </label>
+
+              <!-- Goalkeeper -->
+              <label class="flex flex-col mb-5">
+                <span class="text-sm font-semibold text-gray-700 mb-2">Goalkeeper</span>
+                <div class="relative">
+                  <i class="fas fa-shield-alt absolute  left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                  <select
+                    v-model="filters.goalkeeper"
+                    class="w-full bg-gray-100 border border-gray-300 rounded-xl h-12 pl-10 pr-3 text-sm focus:ring-2 focus:ring-blue-300"
+                  >
+                    <option value="">Any</option>
+                    <option value="yes">Yes</option>
+                    <option value="no">No</option>
+                  </select>
+                </div>
+              </label>
+
+              <!-- RESET BUTTON -->
+              <button
+                @click="resetFilters"
+                class="w-full h-11 mt-4 font-semibold bg-gray-200 text-gray-700 rounded-xl hover:bg-gray-300 transition"
+              >
+                Reset Filters
               </button>
-            </div>
-          </div>
-        </aside>
 
-        <!-- Members list -->
-        <div class="lg:col-span-3 grid grid-cols-1 gap-4">
-          <div
-            v-for="member in filteredMembers"
-            :key="member.id"
-            class="flex items-center gap-4 bg-card-light dark:bg-card-dark p-4 rounded-xl shadow-sm border hover:shadow-md hover:border-primary/50 transition-all cursor-pointer"
-          >
-          <!-- {{ member }} -->
-            <div class="bg-center bg-cover rounded-full w-12 h-12" :style="{ backgroundImage: `url(${member.avatar})` }"></div>
-            <div class="flex-grow">
-              <p class="font-bold text-base">{{ member.name }} <span class="">({{ member.pseudo }})</span></p>
-              <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark">{{ member.role }}</p>
             </div>
-            <div class="flex-shrink-0">
-              <span class="inline-block px-3 py-1 text-xs font-semibold rounded-full bg-accent-teal/10 text-accent-teal capitalize ">{{ member.position }}</span>
+          </aside>
+          <!-- MEMBERS LIST -->
+          <div class="lg:col-span-3 grid grid-cols-1 gap-5">
+              <div
+              v-for="member in filteredMembers"
+              :key="member.id"
+              class="flex items-center gap-5 bg-white p-5 rounded-2xl border border-gray-200 shadow-md hover:shadow-xl hover:border-blue-400 transition-all cursor-pointer"
+              >
+              
+              <!-- Avatar -->
+              <div
+                class="w-14 h-14 rounded-full bg-cover bg-center shadow-md"
+                :style="{ backgroundImage: `url(${member.avatar})` }"
+              ></div>
+
+              <!-- Info -->
+              <div class="flex-1">
+                <p class="text-lg font-bold text-gray-800">
+                  {{ member.name }}
+                  <span class="text-gray-500">({{ member.pseudo }})</span>
+                </p>
+                <p class="text-sm text-gray-500">{{ member.role }}</p>
+              </div>
+
+              <!-- Position tag -->
+              <span class="px-4 py-2 rounded-full bg-blue-100 text-blue-700 text-xs font-semibold capitalize">
+                {{ member.position }}
+              </span>
             </div>
           </div>
+
         </div>
 
       </div>
-    </div>
-  </main>
+    </main>
+
+  </div>
 </template>
+
 
 <script setup>
 import { reactive, computed } from 'vue'
