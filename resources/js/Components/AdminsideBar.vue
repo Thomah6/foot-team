@@ -14,6 +14,9 @@ const menu = [
     { label: "Profile", icon: "fas fa-user", link: route('profile.edit'), active: route().current('profile.edit') },
      {label: "Stats des membres", icon: "fas fa-users", link: route('bureau.stats.index'), active: route().current('bureau.stats.index.*') },
   { label: "Finances", icon: "fas fa-wallet", link: route('finances.index'), active: route().current('finances.*') },
+  { label: "Dashboard", icon: "fas fa-tachometer-alt", link: route('dashboard'), active: route().current('dashboard') },
+  { label: "Profile", icon: "fas fa-user", link: route('profile.edit'), active: route().current('profile.edit') },
+  { label: "Présences", icon: "fas fa-calendar-check", link: route('presence.index'), active: route().current('presence.*') },
 ]
 
 const bottomMenu = [
@@ -94,6 +97,12 @@ const handleImageError = (event) => {
         <i :class="item.icon" class="text-lg w-5 text-center"></i>
         <p class="text-sm font-medium">{{ item.label }}</p>
       </Link>
+
+        <Link :href="menu[2].link" class="flex items-center gap-3 px-3 py-2 rounded-md transition-colors"
+          :class="menu[2].active ? 'bg-blue-500/20 text-blue-600' : 'hover:bg-blue-500/10 text-text-primary-light dark:text-text-primary-dark'">
+        <i :class="menu[2].icon" class="text-lg"></i>
+        <p class="text-sm font-medium">{{ menu[2].label }}</p>
+        </Link>
 
       </nav>
 
