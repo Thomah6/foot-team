@@ -29,6 +29,8 @@ const props = defineProps({
     soldeTotal: [Number, String],
     totalAttente: [Number, String],
     nbAttente: [Number, String],
+    pendingDepensesTotal: [Number, String],
+    pendingDepensesCount: [Number, String],
 });
 
 const filteredfinances = ref(props.finances);
@@ -95,15 +97,19 @@ function handleFiltre({ selectedUser, dateFrom, dateTo, selectedType }) {
 }
 
 const showConfirmAll = ref(false);
+const showConfirmAllType = ref('cotisation');
+const showConfirmAllLoading = ref(false);
 
-function askValiderTous() {
+function askValiderTous(type = 'cotisation') {
+    showConfirmAllType.value = type;
     showConfirmAll.value = true;
 }
 
 function confirmValiderTous() {
+    showConfirmAllLoading.value = true;
     router.post(
         route("finances.validerTous"),
-        {},
+        { type: showConfirmAllType.value },
         {
             onSuccess: (page) => {
                 showConfirmAll.value = false;
@@ -118,9 +124,15 @@ function confirmValiderTous() {
                 if (page.props && page.props.flash && page.props.flash.error) {
                     showToast(page.props.flash.error, "error");
                 }
-                // Instead of navigating away (which hides toasts), refresh current table
+                // Refresh the table in-place
                 refreshTable()
             },
+            onFinish: () => {
+                showConfirmAllLoading.value = false;
+            },
+            onError: () => {
+                showConfirmAllLoading.value = false;
+            }
         }
     );
 }
@@ -209,6 +221,8 @@ const isBureau = role === "bureau";
                     :nb-attente="Number(props.nbAttente)"
                     :solde-cotisations="Number(props.soldeCotisations)"
                     :solde-depenses="Number(props.soldeDepenses)"
+                    :pending-depenses-total="Number(props.pendingDepensesTotal)"
+                    :pending-depenses-count="Number(props.pendingDepensesCount)"
                 />
 
                 <!-- FinanceCreateDepot & FinanceAdminActions - Side by side on desktop, stacked on mobile -->
@@ -226,8 +240,9 @@ const isBureau = role === "bureau";
 
                 <ConfirmModalFinance
                     :show="showConfirmAll"
-                    title="Valider tous les dépôts"
-                    message="Voulez-vous valider tous les dépôts en attente ?"
+                    :loading="showConfirmAllLoading"
+                    :title="showConfirmAllType === 'dépense' ? 'Valider toutes les dépenses' : 'Valider tous les dépôts'"
+                    :message="showConfirmAllType === 'dépense' ? 'Voulez-vous valider toutes les dépenses en attente ?' : 'Voulez-vous valider tous les dépôts en attente ?'"
                     @confirm="confirmValiderTous"
                     @cancel="cancelValiderTous"
                 />

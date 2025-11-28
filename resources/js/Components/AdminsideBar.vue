@@ -132,11 +132,7 @@ const handleImageError = (event) => {
       <p class="text-sm font-medium">{{ item.label }}</p>
       </Link>
 
-        <Link :href="menu[2].link" class="flex items-center gap-3 px-3 py-2 rounded-md transition-colors"
-          :class="menu[2].active ? 'bg-blue-500/20 text-blue-600' : 'hover:bg-blue-500/10 text-text-primary-light dark:text-text-primary-dark'">
-        <i :class="menu[2].icon" class="text-lg"></i>
-        <p class="text-sm font-medium">{{ menu[2].label }}</p>
-        </Link>
+       
 
       </nav>
 

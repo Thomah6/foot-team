@@ -8,6 +8,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue'
 const montant = ref(0)
 const description = ref('')
 const showConfirm = ref(false)
+const showConfirmLoading = ref(false)
 
 // Toast
 const toastVisible = ref(false)
@@ -25,6 +26,7 @@ function openConfirm() {
 }
 
 function sendDepense() {
+  showConfirmLoading.value = true
   router.post(route('finances.storeDepense'), {
     montant: montant.value,
     description: description.value,
@@ -44,11 +46,15 @@ function sendDepense() {
         }, 800)
       }
     },
+    onFinish: () => {
+      showConfirmLoading.value = false
+    },
     onError: () => {
       showConfirm.value = false
       toastMessage.value = 'Une erreur est survenue lors de l’enregistrement.'
       toastType.value = 'error'
       toastVisible.value = true
+      showConfirmLoading.value = false
     }
   })
 }
@@ -89,6 +95,7 @@ function cancelDepense() {
 
     <ConfirmModalFinance
       :show="showConfirm"
+      :loading="showConfirmLoading"
       title="Confirmer la dépense"
       message="Voulez-vous vraiment enregistrer cette dépense ?"
       @confirm="sendDepense"

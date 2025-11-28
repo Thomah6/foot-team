@@ -10,6 +10,7 @@ const sens = ref('credit')
 const description = ref('')
 
 const showConfirm = ref(false)
+const showConfirmLoading = ref(false)
 
 // Toast
 const page = usePage()
@@ -49,6 +50,7 @@ function openConfirm() {
 
 // ConfirmModal: confirmer => envoyer la requête
 function confirmSubmit() {
+  showConfirmLoading.value = true
   router.post(
     route('finances.storeAjustement'),
     {
@@ -71,8 +73,12 @@ function confirmSubmit() {
           router.visit(route('finances.index'))
         }, 800)
       },
+      onFinish: () => {
+        showConfirmLoading.value = false
+      },
       onError: () => {
         showConfirm.value = false
+        showConfirmLoading.value = false
       },
     }
   )
@@ -147,6 +153,7 @@ function cancelSubmit() {
 
     <ConfirmModalFinance
       :show="showConfirm"
+      :loading="showConfirmLoading"
       title="Confirmer l’ajustement"
       :message="`Confirmer cet ajustement de ${montant} F CFA en ${sens === 'credit' ? 'crédit (+)' : 'débit (-)'} ?`"
       @confirm="confirmSubmit"

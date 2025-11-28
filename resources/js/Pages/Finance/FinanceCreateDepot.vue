@@ -8,13 +8,14 @@ const emit = defineEmits(['refresh-table'])
 const montant = ref(100)
 const description = ref('')
 const showConfirmModal = ref(false)
+const showConfirmModalLoading = ref(false)
 
 function askConfirmation() {
   showConfirmModal.value = true
 }
 
 function confirmDepot() {
-  showConfirmModal.value = false
+  showConfirmModalLoading.value = true
   // Post to server and ask parent to refresh table on success
   // We avoid client-side navigation so Toasts can be seen
   const data = {
@@ -22,14 +23,20 @@ function confirmDepot() {
     description: description.value,
   }
 
-  // Use Inertia global router via window (already available in app), keep minimal imports
-  // eslint-disable-next-line no-undef
   router.post(route('finances.storeDepot'), data, {
     onSuccess: () => {
       montant.value = 100
       description.value = ''
       emit('refresh-table')
+      showConfirmModal.value = false
     },
+    onFinish: () => {
+      showConfirmModalLoading.value = false
+    },
+    onError: () => {
+      showConfirmModalLoading.value = false
+      showConfirmModal.value = false
+    }
   })
 }
 
@@ -62,6 +69,7 @@ function cancelDepot() {
 
     <ConfirmModalFinance
       :show="showConfirmModal"
+      :loading="showConfirmModalLoading"
       title="Confirmer le dépôt"
       :message="`Voulez-vous déclarer un dépôt de ${montant} F CFA ?`"
       @confirm="confirmDepot"

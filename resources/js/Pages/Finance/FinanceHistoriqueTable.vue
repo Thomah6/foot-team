@@ -67,31 +67,41 @@ function montantClass(finance) {
 }
 
 const showConfirm = ref(false);
-const toValidateId = ref(null);
+const showConfirmLoading = ref(false);
+const toValidateFinance = ref(null);
 
-function askConfirm(id) {
-    toValidateId.value = id;
+function askConfirm(finance) {
+    toValidateFinance.value = finance;
     showConfirm.value = true;
 }
 
 function confirmValider() {
-    if (!toValidateId.value) return;
+    if (!toValidateFinance.value) return;
+    showConfirmLoading.value = true;
     router.post(
-        route("finances.valider", toValidateId.value),
+        route("finances.valider", toValidateFinance.value.id),
         {},
         {
             onSuccess: () => {
                 showConfirm.value = false;
-                toValidateId.value = null;
+                toValidateFinance.value = null;
                 // Ask parent to refresh table so toast can display
                 emit("refresh-table");
+            },
+            onFinish: () => {
+                showConfirmLoading.value = false;
+            },
+            onError: () => {
+                showConfirmLoading.value = false;
             },
         }
     );
 }
+
 function cancelValider() {
     showConfirm.value = false;
-    toValidateId.value = null;
+    toValidateFinance.value = null;
+    showConfirmLoading.value = false;
 }
 </script>
 <template>
@@ -158,11 +168,8 @@ function cancelValider() {
                         class="px-6 py-4 whitespace-nowrap text-sm"
                     >
                         <button
-                            v-if="
-                                !finance.statut_valide &&
-                                finance.type === 'cotisation'
-                            "
-                            @click="askConfirm(finance.id)"
+                            v-if="!finance.statut_valide && (finance.type === 'cotisation' || finance.type === 'dépense')"
+                            @click="askConfirm(finance)"
                             class="text-green-600 hover:text-green-900 font-semibold"
                         >
                             Valider
@@ -240,8 +247,9 @@ function cancelValider() {
         <!-- Modal -->
         <ConfirmModalFinance
             :show="showConfirm"
-            title="Valider le dépôt"
-            message="Voulez-vous valider ce dépôt ?"
+            :title="toValidateFinance ? (toValidateFinance.type === 'dépense' ? `Valider la dépense de ${toValidateFinance.user_name}` : `Valider le dépôt de ${toValidateFinance.user_name}`) : 'Valider'"
+            :message="toValidateFinance ? (toValidateFinance.type === 'dépense' ? `Voulez-vous valider cette dépense de ${toValidateFinance.montant} F CFA ? Elle sera déduite du solde.` : `Voulez-vous valider ce dépôt de ${toValidateFinance.montant} F CFA ? Il sera ajouté au solde.`) : 'Voulez-vous continuer ?'"
+            :loading="showConfirmLoading"
             @confirm="confirmValider"
             @cancel="cancelValider"
         />

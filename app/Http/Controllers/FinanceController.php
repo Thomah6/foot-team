@@ -73,6 +73,15 @@ class FinanceController extends Controller
         ->where('type', 'cotisation')
         ->count();
 
+    // Dépenses en attente (pour admin)
+    $pending_depenses_total = Finance::where('statut_valide', false)
+        ->where('type', 'dépense')
+        ->sum('montant');
+
+    $pending_depenses_count = Finance::where('statut_valide', false)
+        ->where('type', 'dépense')
+        ->count();
+
     // Récupérer la liste des utilisateurs pour le filtre
     $users = User::orderBy('name')->get(['id', 'name']);
 
@@ -92,6 +101,8 @@ class FinanceController extends Controller
         'soldeTotal' => (int)$solde_total,
         'totalAttente' => (int)$total_attente,
         'nbAttente' => (int)$nb_attente,
+        'pendingDepensesTotal' => (int)$pending_depenses_total,
+        'pendingDepensesCount' => (int)$pending_depenses_count,
         'users' => $users,
         'filters' => [
             'member_id' => $request->member_id,
@@ -144,20 +155,23 @@ class FinanceController extends Controller
         return back()->with('success', 'Dépôt validé.');
     }
 
-    // Validation en masse des dépôts (admin)
-    public function validerTous()
+    // Validation en masse des éléments en attente (admin)
+    public function validerTous(Request $request)
     {
-        $pending = Finance::where('statut_valide', false)
-            ->where('type', 'cotisation');
+        $type = $request->input('type', 'cotisation');
 
         $this->authorize('validerTous', Finance::class);
+
+        $pending = Finance::where('statut_valide', false)
+            ->where('type', $type);
 
         $count = $pending->count();
         if ($count > 0) {
             $pending->update(['statut_valide' => true]);
         }
 
-        return redirect()->route('finances.index')->with('success', "{$count} dépôt(s) validé(s).");
+        $label = $type === 'dépense' ? 'dépense(s)' : 'dépôt(s)';
+        return back()->with('success', "{$count} {$label} validé(s).");
     }
 
     public function createDepense()
@@ -189,7 +203,7 @@ class FinanceController extends Controller
             ? 'Dépense ajoutée et validée.'
             : 'Dépense ajoutée. En attente de validation par l\administrateur.';
 
-        return back()->with('success', $message);
+        return redirect()->route('finances.index')->with('success', $message);
     }
 
     public function createAjustement()
