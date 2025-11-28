@@ -67,9 +67,10 @@ function affect(teamId) {
 </script>
 
 <template>
-  <section>
-    <AdminsideBar />
-  </section>
+    <section class="flex justify-between">
+        <section>
+            <AdminsideBar />
+        </section>
 
   <div class="p-6 bg-gray-50 min-h-screen">
     <h1 class="text-3xl font-extrabold mb-8 text-gray-800">Gestion des sous-équipes</h1>
@@ -186,5 +187,6 @@ function affect(teamId) {
       @confirm="confirmDeleteTeam"
     />
   </div>
+    </section>
 </template>
 

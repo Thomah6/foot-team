@@ -1,9 +1,11 @@
 <template>
-    <section> <AdminsideBar /> </section>
-  <div class="p-6">
-    <h1 class="text-2xl font-bold mb-4">
-      Affectation des joueurs — {{ team.name }}
-    </h1>
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <section class="flex gap-12">
+        <section> <AdminsideBar /> </section>
+        <div class="p-6">
+            <h1 class="text-2xl font-bold mb-4">
+              Affectation des joueurs — {{ team.name }}
+            </h1>
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
@@ -30,6 +32,7 @@
             draggable="true"
             @dragstart="dragStart(player, 'available')"
           >
+            <i class="fa-solid fa-futbol"></i>
             {{ player.name }}
           </div>
         </div>
@@ -37,7 +40,7 @@
 
       <!-- JOUEURS AFFECTÉS -->
       <div
-        class="bg-white rounded-xl shadow p-4 min-h-[400px]"
+        class="bg-white rounded-xl shadow p-4 min-h-[400px] terrain"
         @dragover.prevent
         @drop="dropToAssigned"
       >
@@ -47,11 +50,14 @@
           <div
             v-for="player in assignedPlayers"
             :key="player.id"
-            class="p-3 bg-green-100 rounded-lg border cursor-move transform transition-all duration-200 hover:scale-[1.02]"
+            class="p-2 rounded-lg cursor-move transform transition-all duration-200 hover:scale-[1.02]"
             draggable="true"
             @dragstart="dragStart(player, 'assigned')"
           >
-            {{ player.name }}
+          <div class="flex flex-col items-center">
+            <i class="fa-solid fa-futbol"></i>
+            <p class="text-white">{{ player.name }}</p>
+          </div>
           </div>
         </div>
       </div>
@@ -87,6 +93,7 @@
     </div>
 
   </div>
+    </section>
 </template>
 
 <script setup>
@@ -170,3 +177,38 @@ function doMercato(){
 }
 
 </script>
+<style>
+/* .terrain{
+    background-image: url('@/../../../public/terrain.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    width: 125%;
+} */
+ .terrain {
+    position: relative;
+    background-image: url('@/../../../public/terrain.jpg');
+    background-size: 100%;       /* affiche toute l’image sans couper */
+    background-repeat: no-repeat;   /* pas de répétition */
+    /* background-position: center;    bien centré */
+    width: 128%;                    /* full width en mobile */
+    min-height: 300px;              /* donne une vraie zone à l’image */
+    /* display: block; */
+}
+/* TABLETTE */
+@media (min-width: 768px) {
+    .terrain {
+        background-size: cover;     /* maintenant on peut couvrir */
+
+        min-height: 400px;
+    }
+}
+
+
+/* DESKTOP */
+@media (min-width: 1024px) {
+    .terrain {
+        width: 125%;                /* ton ancien style, mais seulement en desktop */
+        min-height: 500px;
+    }
+}
+</style>

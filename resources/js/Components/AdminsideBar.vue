@@ -3,6 +3,7 @@ import { ref } from 'vue'
 import { Link, usePage } from '@inertiajs/vue3'
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue'
 
+
 const isOpen = ref(false)
 const page = usePage()
 const user = page.props.auth.user
