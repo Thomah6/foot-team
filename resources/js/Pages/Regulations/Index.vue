@@ -89,7 +89,6 @@ onUnmounted(stop)
 
     <div class=" flex-1 min-w-0">
       <div class="p-6  sm:p-3 max-w-5xl mx-auto">
-
         <!-- Header -->
         <div class="flex justify-between items-center mb-6 ">
           <h1 class="text-xl font-bold ">Liste des règlements</h1>
@@ -187,7 +186,6 @@ onUnmounted(stop)
             />
           </div>
         </div>
-
       </div>
     </div>
   </div>
