@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use App\Models\Reflection;
 use App\Models\Vote;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class VoteController extends Controller
