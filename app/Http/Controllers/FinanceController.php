@@ -91,7 +91,7 @@ class FinanceController extends Controller
             ? 'Dépôt effectué et validé automatiquement.'
             : 'Dépôt effectué avec succès ! Attente validation admin.';
         
-        return back()->with('success', $message);
+        return redirect()->route('finances.index')->with('success', $message);
     }
 
     // Validation par admin
@@ -116,7 +116,7 @@ class FinanceController extends Controller
             $pending->update(['statut_valide' => true]);
         }
 
-        return back()->with('success', "{$count} dépôt(s) validé(s).");
+        return redirect()->route('finances.index')->with('success', "{$count} dépôt(s) validé(s).");
     }
 
     public function createDepense()
