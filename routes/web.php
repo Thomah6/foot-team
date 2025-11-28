@@ -302,6 +302,11 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/galleries/{gallery}/unlike', [GalleryController::class, 'unlike'])->name('galleries.unlike');
 });
 
+
+/**
+ * 🟢 Stats publiques (consultation libre)
+ */
+Route::get('/stats', [StatController::class, 'publicIndex'])->name('stats.public.index');
 // Finances
 Route::prefix('finances')->group(function () {
     Route::get('/', [FinanceController::class, 'index'])->name('finances.index');
