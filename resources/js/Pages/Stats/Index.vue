@@ -1,9 +1,10 @@
 <script setup>
+import { ref } from 'vue';
 import { Link } from '@inertiajs/vue3'
 import { useForm } from '@inertiajs/vue3'
 import AdminsideBar from '@/Components/AdminsideBar.vue';
 import ConfirmModal from '@/Components/ConfirmModal.vue';
-
+import { ref } from 'vue';
 const props = defineProps({
     pendingCount: Number,
     validatedCount: Number,
@@ -44,7 +45,7 @@ const confirmReject = () => {
          <div>
                <AdminsideBar />
          </div>
-    
+
     <div class="relative min-h-screen w-full bg-background-light text-zinc-800 font-display">
         <div class="px-4 sm:px-8 md:px-16 lg:px-24 xl:px-40 py-5 flex justify-center">
             <div class="max-w-[960px] w-full">
@@ -145,7 +146,7 @@ const confirmReject = () => {
                                 <i class="fas fa-check mr-1"></i>
                                 Valider
                             </button>
-                            
+
                             <button @click="rejectStat(item.id)"
                                     :disabled="form.processing"
                                     class="px-3 py-1 bg-red-100 text-red-600 text-xs rounded hover:bg-red-200 transition disabled:opacity-50">
