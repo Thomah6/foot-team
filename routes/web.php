@@ -260,7 +260,7 @@ Route::middleware(['auth', 'is.active'])->group(function () {
         Route::post('/valider/{id}', [FinanceController::class, 'valider'])->name('finances.valider');
         Route::post('/valider-tous', [FinanceController::class, 'validerTous'])->name('finances.validerTous');
     });
-});
+
 
 // Routes pour les règlements
 // Route::middleware(['auth', 'is.active'])->group(function () {
