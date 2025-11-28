@@ -16,23 +16,38 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\PlayerOfTheMonthController;
+use App\Http\Controllers\Auth\GoogleAuthController;
+
+// Routes d'authentification Google
+Route::get('/auth/google', [GoogleAuthController::class, 'redirect'])->name('google.login');
+Route::get('/auth/google/callback', [GoogleAuthController::class, 'callback']);
+
+// Route::get('/', function () {
+//     if (auth()->check()) {
+//         return redirect()->route('dashboard');
+//     }
+    
+//     return Inertia::render('Welcome', [
+//         'canLogin' => Route::has('login'),
+//         'canRegister' => Route::has('register'),
+//         'laravelVersion' => Application::VERSION,
+//         'phpVersion' => PHP_VERSION,
+//     ]);
+// });
 
 Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
+    return auth()->check() 
+        ? redirect()->route('dashboard')
+        : redirect()->route('login');
 });
 
 Route::get('/dashboard', [DashboardController::class, 'index'])
-    ->middleware(['auth', 'verified'])
+    ->middleware(['auth', 'is.active'])
     ->name('dashboard');
 
 
 
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'is.active'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
@@ -70,9 +85,57 @@ Route::prefix('reflections')->group(function () {
 Route::get('/stats', [StatController::class, 'index'])
     ->name('stats.index');
 
-Route::middleware(['auth', 'role:admin']) // 👉 Accès réservé aux Admins
-    ->prefix('admin')                    // 👉 URL commence par /admin
-    ->name('admin.')                     // 👉 Nom des routes commence par admin.
+// Route::middleware(['auth', 'role:admin']) // 👉 Accès réservé aux Admins
+//     ->prefix('admin')                    // 👉 URL commence par /admin
+//     ->name('admin.')                     // 👉 Nom des routes commence par admin.
+ 
+
+
+Route::get('/admin', [AdminController::class,'index'])->name('Admin.AdminLayout');
+
+
+Route::get('/admin/create', [StatController::class,'create'])->name('Admin.CreateStats');
+/**
+ * 📊 Stats admin (accès authentifié)
+ */
+Route::get('/admin/stats', [StatController::class, 'index'])
+    ->middleware(['auth', 'is.active'])
+    ->name('admin.stats.index');
+
+/**
+ * 🏆 Joueur du Mois (public)
+ */
+Route::get('/joueur-du-mois', [StatController::class, 'currentPlayerOfMonth'])
+    ->name('player.month.current');
+
+Route::get('/joueur-du-mois/historique', [StatController::class, 'historyPlayerOfMonth'])
+    ->name('player.month.history');
+
+Route::get('/joueur-du-mois/{month}/stats', [StatController::class, 'monthlyStats'])
+    ->name('player.month.stats');
+
+/**
+ * 📊 Classements publics
+ */
+Route::get('/classements', [StatController::class, 'classementsIndex'])
+    ->name('stats.classements.index');
+
+Route::get('/classements/general', [StatController::class, 'classementGeneral'])
+    ->name('stats.classement.general');
+
+Route::get('/classements/buteurs', [StatController::class, 'classementsGoals'])
+    ->name('stats.classement.buteurs');
+
+Route::get('/classements/passeurs', [StatController::class, 'classementsAssists'])
+    ->name('stats.classement.passeurs');
+
+Route::get('/classements/gardiens', [StatController::class, 'classementsGardiens'])
+    ->name('stats.classement.gardiens');
+
+// Routes admin avec authentification
+Route::middleware(['auth', 'is.active'])
+    ->prefix('admin')
+    ->name('admin.')
     ->group(function () {
 
         /**
