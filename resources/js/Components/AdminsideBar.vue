@@ -45,6 +45,13 @@ const menu = computed(() => {
       active: route().current('bureau.members.index')
     });
 
+    items.push({
+      label:'Stats des membres',
+      icon:'fas fa-chart-bar',
+      link: route('bureau.stats.index'),
+      active: route().current('bureau.stats.index.*')
+    });
+
   }
 
 
