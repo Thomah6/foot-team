@@ -13,12 +13,12 @@ use App\Models\Comment;
 use App\Models\Stat;
 use App\Models\Presence;
 use App\Models\Finance;
-use Spatie\Permission\Traits\HasRoles;
+ use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
     use HasFactory, Notifiable;
-    use HasRoles;
+     use HasRoles;
 
     protected $fillable = [
         'name',
@@ -99,13 +99,24 @@ class User extends Authenticatable
     {
         return $this->hasMany(PlayerOfTheMonth::class);
     }
-    public function commentActivity()
-    {
-        return $this->belongsToMany(comment::class, 'comment_user_activity')
-            ->withPivot(['event', '']) // Expose les colonnes supplémentaires
-            ->withTimestamps();
-    }
     public function commentlikes(){
         return $this->hasMany(Commentlike::class);
+    }
+    /**
+     * Helpers for role checks
+     */
+    public function isAdmin(): bool
+    {
+        return $this->role === 'admin';
+    }
+
+    public function isBureau(): bool
+    {
+        return $this->role === 'bureau';
+    }
+
+    public function isSimple(): bool
+    {
+        return $this->role === 'simple';
     }
 }

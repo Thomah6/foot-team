@@ -9,9 +9,12 @@ use Inertia\Inertia;
 use App\Http\Controllers\VoteController;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\CommentController;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class ReflectionController extends Controller
 {
+    use AuthorizesRequests;
+    
     /**
      * Affiche la page publique avec le formulaire et la liste des réflexions.
      */
@@ -19,7 +22,7 @@ class ReflectionController extends Controller
     {
         // 1. Listing réflexions (filtrées par activation et durée)
         $reflections = Reflection::query()
-            ->with('user') // Relation avec User
+            ->with('user')
             ->with('votes') // Relation avec vote
             // ->where('created_at', '>', now()->subDays(7)) // Durée limitée (ex: 7 jours)
             // ->latest()
@@ -44,10 +47,8 @@ class ReflectionController extends Controller
 
         $voteController = new VoteController;
         $returnVote = $voteController->index($reflection->id);
-
         $isVoteEnded = now()->greaterThanOrEqualTo($reflection->date_fin_vote);
         $isAdmin = Auth::user()->role === 'admin';
-        
         return Inertia::render('Reflections/Show', [
             'reflection' => $reflection,
             'comments'=>$comments,
@@ -62,31 +63,21 @@ class ReflectionController extends Controller
      */
     public function store(Request $request)
     {
-
-        // dd($request->all());
-        // Validation du formulaire soumission réflexion
-        $request->validate([
-            'titre'=>'required',
-            'contenu' => 'required|string|max:500',
+        $validated = $request->validate([
+            'titre' => 'required|string|max:255',
+            'contenu' => 'required|string|max:2000',
+            'date_fin_vote' => 'nullable|date|after:now',
         ]);
 
-        if(Auth::user()->role==="admin"){// je mets automatiquement le statut sur ouvert directement puisqu'li n'a pas beasoi d'être valider par quelqu'un d'autre
-            // Création et Relation avec User en mettant les statut sur ouvert
-            $request->statut="ouvert";
-            $request->user_id=Auth::user();
-            Auth::user()->reflections()->create([
-                'titre' => $request->input('titre'),
-                'contenu' => $request->input('contenu'),
-                'statut' => "ouvert",
-            ]);
-        }else{
-            // Création et Relation avec User en mettant les statut sur ouvert
-            Auth::user()->reflections()->create([
-                'content' => $request->input('content'),
-                'statut' => "ferme",
-            ]);
-
-        }
+        $isAdmin = Auth::user()->role === 'admin';
+        
+        $reflection = Auth::user()->reflections()->create([
+            'titre' => $validated['titre'],
+            'contenu' => $validated['contenu'],
+            'statut' => $isAdmin ? 'ouvert' : 'en_attente',
+            'is_active' => $isAdmin, // Active directement si admin
+            'date_fin_vote' => $validated['date_fin_vote'] ?? now()->addWeek(),
+        ]);
 
         return redirect()->back()
             ->with('success', 'Votre réflexion a été soumise avec succès !');
@@ -118,14 +109,31 @@ class ReflectionController extends Controller
      */
     public function toggleActivation(Reflection $reflection)
     {
-        $this->authorize('update', $reflection); // Vérification d'autorisation
-
+        $this->authorize('update', $reflection);
+        
         $reflection->update([
             'is_active' => !$reflection->is_active,
+            'statut' => $reflection->is_active ? 'ferme' : 'ouvert'
         ]);
 
         return redirect()->back()
             ->with('success', 'Le statut de la réflexion a été mis à jour.');
+    }
+    
+    /**
+     * Valide une réflexion (Admin)
+     */
+    public function validateReflection(Reflection $reflection)
+    {
+        $this->authorize('update', $reflection);
+        
+        $reflection->update([
+            'statut' => 'valide',
+            'is_active' => true
+        ]);
+
+        return redirect()->back()
+            ->with('success', 'La réflexion a été validée avec succès.');
     }
 
     /**
