@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue'
 import { router, usePage } from '@inertiajs/vue3'
-import ConfirmModal from '@/Components/ConfirmModal.vue'
+import ConfirmModalFinance from '@/Components/ConfirmModalFinance.vue'
 
 const montant = ref(100)
 const description = ref('')
@@ -52,7 +52,7 @@ function cancelDepot() {
       </button>
     </div>
 
-    <ConfirmModal
+    <ConfirmModalFinance
       :show="showConfirmModal"
       title="Confirmer le dépôt"
       :message="`Voulez-vous déclarer un dépôt de ${montant} F CFA ?`"

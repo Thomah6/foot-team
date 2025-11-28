@@ -1,6 +1,6 @@
 <script setup>
 import { router } from '@inertiajs/vue3'
-import ConfirmModal from '@/Components/ConfirmModal.vue'
+import ConfirmModalFinance from '@/Components/ConfirmModalFinance.vue'
 import { ref } from 'vue'
 
 const props = defineProps({
@@ -80,7 +80,7 @@ function cancelValider() {
         </tr>
       </tbody>
     </table>
-    <ConfirmModal
+    <ConfirmModalFinance
       :show="showConfirm"
       title="Valider le dépôt"
       message="Voulez-vous valider ce dépôt ?"

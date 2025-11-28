@@ -6,7 +6,7 @@ import FinanceFilter from "@/Pages/Finance/FinanceFilter.vue";
 import FinanceHistoriqueTable from "@/Pages/Finance/FinanceHistoriqueTable.vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import Toast from "@/Shared/Toast.vue";
-import ConfirmModal from "@/Components/ConfirmModal.vue";
+import ConfirmModalFinance from "@/Components/ConfirmModalFinance.vue";
 
 import { ref, watch, onMounted } from "vue";
 import { router, usePage } from "@inertiajs/vue3";
@@ -148,7 +148,7 @@ function handleAjustement() {
                         @ajustement="handleAjustement"
                     />
 
-                    <ConfirmModal
+                    <ConfirmModalFinance
                         :show="showConfirmAll"
                         title="Valider tous les dépôts"
                         message="Voulez-vous valider tous les dépôts en attente ?"
