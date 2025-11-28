@@ -10,7 +10,7 @@ const props = defineProps({
 </script>
 
 <template>
-    <Link :href="route('admin.news.index')">
+    <Link :href="route('news.index')">
         <section class="p-4 bg-white shadow rounded cursor-pointer hover:bg-gray-50 transition">
             <h2 class="text-xl font-bold mb-2">À la une</h2>
             <div v-if="featured && featured.title" class="space-y-2">

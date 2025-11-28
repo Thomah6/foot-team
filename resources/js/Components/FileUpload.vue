@@ -156,6 +156,7 @@
                 v-model="form.description"
                 placeholder="Description (optionnelle)"
                 class="mt-6 w-full border rounded p-2 text-black"
+                cols="30" rows="10"
             ></textarea>
 
             <!-- Bouton submit -->
@@ -208,7 +209,7 @@ export default {
             }),
         };
     },
-   /* mounted() {
+    /* mounted() {
         // Charger les fichiers existants dans this.files
         this.files = this.galleries.map((g) => ({
             id: g.id,
