@@ -10,7 +10,7 @@ use Inertia\Inertia;
 
 class SuggestionController extends Controller
 {
-    
+
     public function index()
     {
         return Inertia::render("SuggestionPage", [

@@ -9,12 +9,17 @@ use Symfony\Component\HttpFoundation\Response;
 
 class CheckUserStatus
 {
-    public function handle(Request $request, Closure $next): Response
+    public function handle(Request $request, Closure $next, ...$guards): Response
     {
-        if (Auth::check() && !Auth::user()->is_active) {
-            $user = Auth::user();
+        if (!Auth::check()) {
+            return $next($request);
+        }
+
+        $user = Auth::user();
+        
+        // Vérifier si l'utilisateur est actif
+        if (property_exists($user, 'is_active') && !$user->is_active) {
             Auth::logout();
-            
             $request->session()->invalidate();
             $request->session()->regenerateToken();
             

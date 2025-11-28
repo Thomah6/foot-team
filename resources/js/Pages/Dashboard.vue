@@ -1,11 +1,13 @@
 <script setup>
+import { Head, Link } from '@inertiajs/vue3';
+import { usePage } from '@inertiajs/vue3';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head, usePage, Link } from '@inertiajs/vue3';
-import BannerPlayerMonth from '@/Pages/Admin/News/BannerPlayerMonth.vue'
-import ALaUne from '@/Pages/Admin/News/ALaUne.vue'
-import AdminsideBar from '@/Components/AdminsideBar.vue';
+import BannerPlayerMonth from '@/Pages/Admin/News/BannerPlayerMonth.vue';
+import ALaUne from '@/Pages/Admin/News/ALaUne.vue';
 
+// Props passées par le contrôleur
 const page = usePage();
+const user = page.props.auth.user;
 
 function handleImageError() {
     document.getElementById('screenshot-container')?.classList.add('!hidden');
@@ -22,15 +24,11 @@ function handleImageError() {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     
     <AuthenticatedLayout>
-        <div class="relative flex min-h-screen w-full flex-col font-display bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
-            <!-- Sidebar Admin -->
-            <AdminsideBar />
-            
+        <div class="relative min-h-screen w-full font-display bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
             <!-- Contenu principal -->
-            <div class="lg:ml-64">
+            <div>
                 <!-- Padding pour mobile pour ne pas être sous le hamburger -->
                 <div class="pt-16 lg:pt-0">
-                    <!-- Main Content -->
                     <main class="flex-1 overflow-y-auto">
                         <div class="p-8">
                             <!-- Hero Section -->

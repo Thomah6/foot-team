@@ -1,16 +1,21 @@
 <script setup>
 import { ref } from 'vue'
-import { Link } from '@inertiajs/vue3'
+import { Link, usePage } from '@inertiajs/vue3'
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue'
 
 const isOpen = ref(false)
+const page = usePage()
+const user = page.props.auth.user
 
 const menu = [
     { label: "Dashboard", icon: "fas fa-tachometer-alt", link: route('dashboard'), active: route().current('dashboard') },
-    { label: "Stats", icon: "fas fa-chart-bar", link: route('admin.stats.index'), active: route().current('admin.stats.*') },
-    { label: "Voir classements", icon: "fas fa-trophy", link: route('stats.classements.index'), active: route().current('stats.classements.*') },
+    // { label: "Stats", icon: "fas fa-chart-bar", link: route('admin.stats.index'), active: route().current('admin.stats.*') },
+    // { label: "Voir classements", icon: "fas fa-trophy", link: route('stats.classements.index'), active: route().current('stats.classements.*') },
     { label: "Profile", icon: "fas fa-user", link: route('profile.edit'), active: route().current('profile.edit') },
     { label: "Teams", icon: "fas fa-people-group", link: route('admin.teams'), active: route().current('admin.teams')},
-    { label: "SuggestionBox", icon: "fas fa-lightbulb", link: route('suggestions'), active: route().current('suggestions')}
+    { label: "SuggestionBox", icon: "fas fa-lightbulb", link: route('suggestions'), active: route().current('suggestions')},
+         {label: "Stats des membres", icon: "fas fa-users", link: route('bureau.stats.index'), active: route().current('bureau.stats.index.*') },
+  { label: "Finances", icon: "fas fa-wallet", link: route('finances.index'), active: route().current('finances.*') },
 ]
 
 const bottomMenu = [
@@ -24,20 +29,25 @@ const toggleMenu = () => {
 const closeMenu = () => {
     isOpen.value = false
 }
+
+const handleImageError = (event) => {
+    // Si l'image ne charge pas, utiliser l'avatar par défaut
+    event.target.src = `https://ui-avatars.com/api/?name=${user.name}&color=7F9CF5&background=EBF4FF&size=40`
+}
 </script>
 
 <template>
   <!-- Font Awesome CDN -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-  
+
   <!-- Menu hamburger pour mobile -->
-  <button v-if="!isOpen" @click="toggleMenu" 
+  <button v-if="!isOpen" @click="toggleMenu"
           class="lg:hidden fixed top-4 left-4 z-40 p-3 bg-white rounded-lg shadow-lg border hover:bg-gray-50 transition">
     <i class="fas fa-bars text-gray-700"></i>
   </button>
 
   <!-- Overlay pour mobile -->
-  <div v-if="isOpen" 
+  <div v-if="isOpen"
        @click="closeMenu"
        class="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-30">
   </div>
@@ -53,17 +63,23 @@ const closeMenu = () => {
     <!-- Logo -->
     <div class="flex items-center justify-between px-2 py-2">
       <div class="flex items-center gap-3">
-        <div class="bg-center bg-cover rounded-lg size-10"
-          style="background-image:url('https://lh3.googleusercontent.com/aida-public/AB6AXuBjeJUorb03AmubZfs-dGdxk-uIlSOG-IS4USL9V2y1gzr1QEN3a82Lf5Rflk_gAbyxL3atcRzZQ7fd84B5-oumbQU5rQl1mMGaRcd7JBprWoz447_FLP_r-0Kz8LpZSuIJYv4rjniixzQvbHNbgAKnlcpO-4tyXzzFwGg8RDU1ypjO6vHqdZK6LzDTAWEK0JAzHi4MNyupBCwRWsOvJ9NCQ9EPPjLa3BUrWsihxtKPBa7qGiDAVBC_e7pQRrYct0CwiraW1SQEdg');">
+        <div class="relative">
+          <img
+            :src="user.avatar && user.avatar !== '' ? '/storage/' + user.avatar : `https://ui-avatars.com/api/?name=${user.name}&color=7F9CF5&background=EBF4FF&size=40`"
+            :alt="user.name"
+            class="w-10 h-10 rounded-lg object-cover border-2 border-white dark:border-gray-700 shadow-sm"
+            @error="handleImageError"
+          >
+          <div class="absolute -bottom-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-white dark:border-gray-700"></div>
         </div>
         <div>
-          <h1 class="text-base font-bold text-text-primary-light dark:text-text-primary-dark">Lumina Club</h1>
-          <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark">Admin Panel</p>
+          <h1 class="text-base font-bold text-text-primary-light dark:text-text-primary-dark">{{ user.name }}</h1>
+          <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark">{{ user.role || 'Member' }}</p>
         </div>
       </div>
-      
+
       <!-- Bouton close pour mobile -->
-      <button @click="closeMenu" 
+      <button @click="closeMenu"
               class="lg:hidden p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition">
         <i class="fas fa-times text-gray-600 dark:text-gray-300"></i>
       </button>
@@ -151,7 +167,7 @@ aside {
     box-shadow: 0 0 40px rgba(0, 0, 0, 0.15);
     background-color: rgba(255, 255, 255, 1);
   }
-  
+
   .dark aside {
     background-color: rgba(17, 24, 39, 1);
   }
