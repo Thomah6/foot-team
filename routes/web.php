@@ -19,7 +19,7 @@ use App\Http\Controllers\ReflectionController;
 use App\Http\Controllers\TeamController;
 use App\Http\Controllers\VoteController;
 use App\Http\Controllers\SuggestionController;
-// use App\Http\Controllers\RegulationControler;
+use App\Http\Controllers\RegulationControler;
 use App\Http\Controllers\CommentsSuggestionController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Auth;
@@ -319,6 +319,11 @@ Route::prefix('finances')->group(function () {
 });
 
 
+// Routes pour les règlements
+Route::middleware(['auth', 'is.active'])->group(function () {
+    Route::resource('regulations', RegulationControler::class);
+    Route::post('/regulations/content', [RegulationControler::class, 'storeContent'])->name('regulations.storeContent');
+});
 
 // Routes pour les ajustements financiers
 Route::prefix('finances')->group(function () {
