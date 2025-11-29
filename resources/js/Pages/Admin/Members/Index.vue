@@ -121,8 +121,8 @@ const getRoleLabel = (role) => {
 
 // Statuts
 const getStatusColor = (isActive) => {
-  return isActive 
-    ? 'bg-green-50 text-green-700 border-green-200' 
+  return isActive
+    ? 'bg-green-50 text-green-700 border-green-200'
     : 'bg-red-50 text-red-700 border-red-200'
 }
 </script>
@@ -130,19 +130,16 @@ const getStatusColor = (isActive) => {
 <style>
 /* Boutons globaux cohérents */
 .btn-primary {
-  @apply rounded-lg bg-green-600 px-4 py-2.5 text-sm font-semibold text-white 
-         hover:bg-green-700 transition shadow-sm;
+  @apply rounded-lg bg-green-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-green-700 transition shadow-sm;
 }
 
 .btn-secondary {
-  @apply rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm 
-         font-medium text-gray-700 hover:bg-gray-50 transition;
+  @apply rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 transition;
 }
 
 /* Champs */
 .input-select {
-  @apply w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm
-         focus:ring-green-600 focus:border-green-600;
+  @apply w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm focus:ring-green-600 focus:border-green-600;
 }
 </style>
 
@@ -158,10 +155,7 @@ const getStatusColor = (isActive) => {
             <p class="text-sm text-gray-600">Administration de l'effectif</p>
           </div>
 
-          <Link 
-            :href="route('members.create')"
-            class="btn-primary inline-flex items-center gap-2"
-          >
+          <Link :href="route('members.create')" class="btn-primary inline-flex items-center gap-2">
           Ajouter un nouveau membre
           </Link>
         </div>
@@ -180,17 +174,12 @@ const getStatusColor = (isActive) => {
           <div class="mb-5">
             <label class="text-sm font-medium text-gray-700 mb-1 block">Recherche</label>
             <div class="relative">
-              <input 
-                v-model="searchQuery"
-                type="text"
-                class="w-full rounded-lg border border-gray-300 px-3 py-2.5 pl-10 text-sm
-                       focus:ring-green-600 focus:border-green-600"
-                placeholder="Rechercher un joueur..."
-              />
-              <svg class="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" 
-                fill="none" stroke="currentColor">
+              <input v-model="searchQuery" type="text" class="w-full rounded-lg border border-gray-300 px-3 py-2.5 pl-10 text-sm
+                       focus:ring-green-600 focus:border-green-600" placeholder="Rechercher un joueur..." />
+              <svg class="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" fill="none"
+                stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
             </div>
           </div>
@@ -237,14 +226,15 @@ const getStatusColor = (isActive) => {
       </div>
 
       <!-- TABLEAU -->
+      <h1 class="text-4xl font-extrabold tracking-tight text-gray-900 dark:text-white text-center underline mb-5">
+        Membres
+      </h1>
+
       <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div class="rounded-xl bg-white border border-gray-200 shadow-sm overflow-hidden">
-
           <!-- MOBILE -->
           <div class="block sm:hidden divide-y divide-gray-200">
-            <div v-for="member in members.data" 
-                 :key="member.id" 
-                 class="p-5 hover:bg-gray-50">
+            <div v-for="member in members.data" :key="member.id" class="p-5 hover:bg-gray-50">
 
               <div class="flex items-start justify-between mb-4">
                 <div class="flex items-center gap-3">
@@ -259,7 +249,8 @@ const getStatusColor = (isActive) => {
                   </div>
                 </div>
 
-                <span :class="['inline-flex items-center rounded-full border px-2 py-1 text-xs font-medium', getRoleColor(member.role)]">
+                <span
+                  :class="['inline-flex items-center rounded-full border px-2 py-1 text-xs font-medium', getRoleColor(member.role)]">
                   {{ getRoleLabel(member.role) }}
                 </span>
               </div>
@@ -272,7 +263,8 @@ const getStatusColor = (isActive) => {
 
                 <div class="flex justify-between">
                   <span class="text-gray-500">Statut</span>
-                  <span :class="['inline-flex items-center rounded-full border px-2 py-1 text-xs font-medium', getStatusColor(member.is_active)]">
+                  <span
+                    :class="['inline-flex items-center rounded-full border px-2 py-1 text-xs font-medium', getStatusColor(member.is_active)]">
                     {{ member.is_active ? 'Actif' : 'Inactif' }}
                   </span>
                 </div>
@@ -281,18 +273,15 @@ const getStatusColor = (isActive) => {
               <div class="flex gap-2 pt-3 border-t border-gray-200">
                 <button @click="openRoleModal(member)" class="btn-secondary flex-1">Rôle</button>
 
-                <button 
-                  @click="toggleStatus(member)" 
-                  class="flex-1 rounded-lg px-3 py-2.5 text-sm font-medium border transition"
-                  :class="member.is_active 
-                    ? 'bg-yellow-50 text-yellow-700 border-yellow-200 hover:bg-yellow-100' 
-                    : 'bg-green-50 text-green-700 border-green-200 hover:bg-green-100'"
-                >
+                <button @click="toggleStatus(member)"
+                  class="flex-1 rounded-lg px-3 py-2.5 text-sm font-medium border transition" :class="member.is_active
+                    ? 'bg-yellow-50 text-yellow-700 border-yellow-200 hover:bg-yellow-100'
+                    : 'bg-green-50 text-green-700 border-green-200 hover:bg-green-100'">
                   {{ member.is_active ? 'Désactiver' : 'Activer' }}
                 </button>
 
                 <Link :href="route('members.edit', member.id)" class="btn-secondary flex-1 text-center">
-                  Éditer
+                Éditer
                 </Link>
 
                 <button @click="deleteMember(member)" class="btn-secondary flex-1 border-red-300 text-red-700">
@@ -317,11 +306,7 @@ const getStatusColor = (isActive) => {
               </thead>
 
               <tbody class="divide-y divide-gray-200">
-                <tr 
-                  v-for="member in members.data" 
-                  :key="member.id"
-                  class="hover:bg-gray-50"
-                >
+                <tr v-for="member in members.data" :key="member.id" class="hover:bg-gray-50">
                   <td class="px-6 py-4">
                     <div class="flex items-center gap-3">
                       <div class="h-10 w-10 rounded-full bg-green-100 flex items-center justify-center">
@@ -337,13 +322,15 @@ const getStatusColor = (isActive) => {
                   <td class="px-6 py-4 text-sm text-gray-900">{{ member.position || '-' }}</td>
 
                   <td class="px-6 py-4">
-                    <span :class="['inline-flex items-center rounded-full border px-3 py-1 text-xs font-medium', getRoleColor(member.role)]">
+                    <span
+                      :class="['inline-flex items-center rounded-full border px-3 py-1 text-xs font-medium', getRoleColor(member.role)]">
                       {{ getRoleLabel(member.role) }}
                     </span>
                   </td>
 
                   <td class="px-6 py-4">
-                    <span :class="['inline-flex items-center rounded-full border px-3 py-1 text-xs font-medium', getStatusColor(member.is_active)]">
+                    <span
+                      :class="['inline-flex items-center rounded-full border px-3 py-1 text-xs font-medium', getStatusColor(member.is_active)]">
                       {{ member.is_active ? 'Actif' : 'Inactif' }}
                     </span>
                   </td>
@@ -352,18 +339,15 @@ const getStatusColor = (isActive) => {
                     <div class="flex gap-2">
                       <button @click="openRoleModal(member)" class="btn-secondary">Rôle</button>
 
-                      <button 
-                        @click="toggleStatus(member)"
-                        class="rounded-lg px-3 py-2 text-sm font-medium border"
-                        :class="member.is_active 
+                      <button @click="toggleStatus(member)" class="rounded-lg px-3 py-2 text-sm font-medium border"
+                        :class="member.is_active
                           ? 'bg-yellow-50 text-yellow-700 border-yellow-200 hover:bg-yellow-100'
-                          : 'bg-green-50 text-green-700 border-green-200 hover:bg-green-100'"
-                      >
+                          : 'bg-green-50 text-green-700 border-green-200 hover:bg-green-100'">
                         {{ member.is_active ? 'Désactiver' : 'Activer' }}
                       </button>
 
                       <Link :href="route('members.edit', member.id)" class="btn-secondary">
-                        Éditer
+                      Éditer
                       </Link>
 
                       <button @click="deleteMember(member)" class="btn-secondary border-red-300 text-red-700">
@@ -379,21 +363,17 @@ const getStatusColor = (isActive) => {
           <!-- PAGINATION -->
           <div class="border-t border-gray-200 bg-gray-50 px-6 py-4">
             <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-              
+
               <div class="text-sm text-gray-700">
-                Affichage de 
-                <span class="font-semibold">{{ members.from }}</span> à 
-                <span class="font-semibold">{{ members.to }}</span> sur 
+                Affichage de
+                <span class="font-semibold">{{ members.from }}</span> à
+                <span class="font-semibold">{{ members.to }}</span> sur
                 <span class="font-semibold">{{ members.total }}</span> joueurs
               </div>
 
               <div class="flex items-center gap-2">
 
-                <Link 
-                  v-if="members.prev_page_url" 
-                  :href="members.prev_page_url"
-                  class="btn-secondary"
-                >Précédent</Link>
+                <Link v-if="members.prev_page_url" :href="members.prev_page_url" class="btn-secondary">Précédent</Link>
 
                 <span v-else class="btn-secondary text-gray-400 border-gray-200">Précédent</span>
 
@@ -401,11 +381,7 @@ const getStatusColor = (isActive) => {
                   Page {{ members.current_page }} / {{ members.last_page }}
                 </span>
 
-                <Link 
-                  v-if="members.next_page_url" 
-                  :href="members.next_page_url"
-                  class="btn-secondary"
-                >Suivant</Link>
+                <Link v-if="members.next_page_url" :href="members.next_page_url" class="btn-secondary">Suivant</Link>
 
                 <span v-else class="btn-secondary text-gray-400 border-gray-200">Suivant</span>
 
@@ -417,10 +393,7 @@ const getStatusColor = (isActive) => {
       </div>
 
       <!-- MODAL ROLE -->
-      <div 
-        v-if="showRoleModal" 
-        class="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center p-4"
-      >
+      <div v-if="showRoleModal" class="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center p-4">
         <div class="bg-white w-full max-w-sm rounded-xl p-6 border shadow">
 
           <h3 class="text-lg font-semibold text-gray-900 mb-2">Modifier le rôle</h3>
@@ -444,15 +417,13 @@ const getStatusColor = (isActive) => {
       </div>
 
       <!-- MODAL SUPPRESSION -->
-      <div 
-        v-if="showDeleteModal" 
-        class="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center p-4"
-      >
+      <div v-if="showDeleteModal"
+        class="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center p-4">
         <div class="bg-white w-full max-w-sm rounded-xl p-6 border shadow">
 
           <h3 class="text-lg font-semibold text-gray-900 mb-2">Confirmer la suppression</h3>
           <p class="text-sm text-gray-600 mb-6">
-            Êtes-vous sûr de vouloir supprimer 
+            Êtes-vous sûr de vouloir supprimer
             <span class="font-medium">{{ selectedMember?.pseudo }}</span> ?
             Cette action est irréversible.
           </p>

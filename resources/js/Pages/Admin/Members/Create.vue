@@ -104,7 +104,7 @@ const submit = () => {
 
             <!-- Buttons -->
             <div class="flex gap-3 pt-6 border-t">
-              <a href="/members" class="flex-1 border rounded-lg py-2 text-center hover:bg-gray-50">
+              <a href="/admin/members" class="flex-1 border rounded-lg py-2 text-center hover:bg-gray-50">
                 Annuler
               </a>
 
