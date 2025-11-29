@@ -199,7 +199,13 @@ Route::prefix('admin')->middleware('role:admin')->group(function () {
         Route::get('/create', [StatController::class, 'create'])->name('CreateStats');
 
         // Identity management
-        Route::get('/identity', [IdentityController::class, 'index'])->name('identity');
+        Route::get('/identity', [IdentityController::class, 'index'])->name('admin.identity');
+ 
+ 
+Route::get('/admin/identity', [IdentityController::class, 'index']);
+ 
+Route::post('/admin/identity/update', [IdentityController::class, 'update'])
+    ->name('admin.identity.update');
 
         // Gestion des statistiques
         Route::prefix('stats')->group(function () {
@@ -383,7 +389,13 @@ Route::get('/admin/identity', [IdentityController::class, 'index']);
  
 Route::post('/admin/identity/update', [IdentityController::class, 'update'])
     ->name('admin.identity.update');
- 
+    
+Route::post('/admin/identity/delete-identity', [IdentityController::class, 'deleteIdentity'])
+     ->name('admin.identity.delete-identity');
+
+
+
+
 
 // Routes d'authentification
 require __DIR__ . '/auth.php';
