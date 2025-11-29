@@ -9,13 +9,15 @@ use Inertia\Inertia;
 
 class TeamController extends Controller
 {
-    public function vue()
+    public function index()
     {
+        // $members = Team::
         return Inertia::render("Teams/Vue", [
             'teams' => Team::with('users')->get()
+
         ]);
     }
-    public function index()
+    public function create()
     {
         return Inertia::render("Teams/Index", [
             'teams' => Team::with('users')->get()
@@ -29,7 +31,7 @@ class TeamController extends Controller
             'description' => 'nullable',
         ]);
         Team::create($validated);
-        return redirect()->route('admin.teams')->with('success', '');
+        return redirect()->route('admin.teams.index')->with('success', '');
     }
 
     public function update(Request $request, Team $team)
@@ -53,7 +55,7 @@ class TeamController extends Controller
     {
         $all = User::all();
         $assigned = $team->users;
-        $availlable = $all->whereNotIn('id', $assigned->pluck('id'));
+        $availlable = $all->whereNotIn('id', $assigned->pluck('id'))->values()->all();
 
         return inertia('Teams/AffectPage', [
             'team' => $team,
@@ -66,14 +68,22 @@ class TeamController extends Controller
     //Pour sauvegarder l'affectation
     public function saveAffect(Request $request, Team $team)
     {
-        $request->validate([
-            'players' => 'array'
-        ]);
-          $ids = array_map('intval', $request->input('players', []));
-        // Detach tous les anciens joueurs
-        $team->users()->sync($ids);
-      
 
-        return back()->with('success', 'Affectation mise à jour');
+        $request->validate([
+            'members' => 'array'
+        ]);
+
+        $team->users()->sync($request->members);
+
+         return redirect()->route('admin.teams')->with('success', 'Affectation mise à jour');
     }
+
+    public function show(Team $team){
+        //Charges les membre liés a l'équipe
+        $team->load('users');
+        return inertia('Teams/Show', [
+            'team' => $team
+        ]);
+    }
+
 }

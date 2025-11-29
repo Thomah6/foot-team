@@ -9,7 +9,7 @@ use Illuminate\Auth\Access\HandlesAuthorization;
 class FinancePolicy
 {
     use HandlesAuthorization;
-    
+
     /**
      * Determine whether the user can view any finances (list).
      */
@@ -41,6 +41,23 @@ class FinancePolicy
     public function validerTous(User $user): bool
     {
         return $user->isAdmin();
+    }
+
+    public function ajustement(User $user): bool
+    {
+        return $user->isAdmin();
+    }
+
+    // Peut créer une dépense (admin ou bureau)
+    public function createDepense(User $user)
+    {
+        return in_array($user->role, ['admin', 'bureau']);
+    }
+
+    // Validation auto: uniquement admin
+    public function autoValideDepense(User $user)
+    {
+        return $user->role === 'admin';
     }
 
 }

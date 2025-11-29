@@ -9,5 +9,14 @@ class Regulation extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['content', 'version'];
+    /**
+     * Les champs autorisés en ...
+     */
+    protected $fillable = [
+        'title',
+        'content',
+    ];
+
+
+
 }

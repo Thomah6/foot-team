@@ -169,7 +169,8 @@ const submit = () => {
             <div class="flex items-center gap-3">
               <input
                 id="is_active"
-                v-model="form.is_active"
+                :checked="form.is_active"
+                @change="form.is_active = $event.target.checked"
                 type="checkbox"
                 class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-2 focus:ring-blue-500"
               />

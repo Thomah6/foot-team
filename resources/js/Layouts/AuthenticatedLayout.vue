@@ -17,6 +17,11 @@ const handleImageError = (event) => {
     // Si l'image ne charge pas, utiliser l'avatar par défaut
     event.target.src = `https://ui-avatars.com/api/?name=${page.props.auth.user.name}&color=7F9CF5&background=EBF4FF&size=24`
 }
+
+defineProps({
+    votes: Array,
+    reflections: Array,
+});
 </script>
 
 <template>
@@ -36,7 +41,7 @@ const handleImageError = (event) => {
 
                             <!-- Navigation Links -->
                             <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                                <NavLink :href="route('dashboard')" :active="route().current('dashboard')">
+                                <!-- <NavLink :href="route('dashboard')" :active="route().current('dashboard')">
                                     Dashboard
                                 </NavLink>
                                 <NavLink v-if="isAdmin()" :href="route('members.index')"
@@ -51,7 +56,10 @@ const handleImageError = (event) => {
                                     :active="route().current('reflections.*')">
                                     Reflexions
                                 </NavLink>
-                              
+                                <NavLink v-if="isBureau()" :href="route('bureau.members.index')"
+                                    :active="route().current('bureau.members.*')">
+                                    Members
+                                </NavLink> -->
                             </div>
                         </div>
 
@@ -65,7 +73,7 @@ const handleImageError = (event) => {
                                                 type="button"
                                                 class="inline-flex items-center rounded-md border border-transparent bg-white px-3 py-2 text-sm font-medium leading-4 text-gray-500 transition duration-150 ease-in-out hover:text-gray-700 focus:outline-none"
                                             >
-                                                <img 
+                                                <img
                                                     v-if="$page.props.auth.user.avatar && $page.props.auth.user.avatar !== ''"
                                                     :src="'/storage/' + $page.props.auth.user.avatar"
                                                     :alt="$page.props.auth.user.name"
@@ -157,7 +165,7 @@ const handleImageError = (event) => {
                         class="border-t border-gray-200 pb-1 pt-4"
                     >
                         <div class="px-4 flex items-center gap-3">
-                            <img 
+                            <img
                                 :src="$page.props.auth.user.avatar ? '/storage/' + $page.props.auth.user.avatar : `https://ui-avatars.com/api/?name=${$page.props.auth.user.name}&color=7F9CF5&background=EBF4FF`"
                                 :alt="$page.props.auth.user.name"
                                 class="w-10 h-10 rounded-full object-cover"
@@ -198,10 +206,13 @@ const handleImageError = (event) => {
 
             <!-- Page Content -->
             <main class="flex h-full border">
-                <div class="min-h-full sticky top-0">
-                    <AdminsideBar />
+                <div class="min-h-full sticky top-0 z-50">
+                    <AdminsideBar 
+                    :votes="votes"
+                    :reflections="reflections"
+                    />
                 </div>
-                <div class="h-[calc(100vh-4rem)] overflow-y-scroll w-full ">
+                <div class="h-[calc(100vh-4rem)] overflow-y-scroll w-full">
                     <slot />
                 </div>
 

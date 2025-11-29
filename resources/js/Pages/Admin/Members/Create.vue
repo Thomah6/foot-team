@@ -94,7 +94,11 @@ const submit = () => {
 
             <!-- Active Status -->
             <div class="flex items-center gap-3">
-              <input v-model="form.is_active" type="checkbox" class="h-4 w-4 rounded border-gray-300" />
+              <input 
+                :checked="form.is_active" 
+                @change="form.is_active = $event.target.checked"
+                type="checkbox" 
+                class="h-4 w-4 rounded border-gray-300" />
               <label class="text-sm font-medium text-gray-700">Compte Actif</label>
             </div>
 
