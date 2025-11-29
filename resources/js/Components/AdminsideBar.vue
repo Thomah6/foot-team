@@ -219,16 +219,20 @@ const handleImageError = (event) => {
             <p class="text-sm font-medium">{{ menu[2].label }}</p>
             </Link>
         </nav>
+       
 
-        <!-- Bottom -->
-        <div class="mt-auto flex flex-col gap-2 border-t border-gray-200 dark:border-gray-700 pt-4">
-            <Link v-for="(item, index) in bottomMenu" :key="`bottom-${index}`" :href="item.link" @click="closeMenu"
-                class="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-blue-500/10 transition-colors text-text-primary-light dark:text-text-primary-dark">
-            <i :class="item.icon" class="text-lg w-5 text-center"></i>
-            <p class="text-sm font-medium">{{ item.label }}</p>
-            </Link>
-        </div>
-    </aside>
+
+
+    <!-- Bottom -->
+    <div class="mt-auto flex flex-col gap-2 border-t border-gray-200 dark:border-gray-700 pt-4">
+      <Link v-for="(item, index) in bottomMenu" :key="`bottom-${index}`" :href="item.link" @click="closeMenu"
+        class="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-blue-500/10 transition-colors text-text-primary-light dark:text-text-primary-dark">
+      <i :class="item.icon" class="text-lg w-5 text-center"></i>
+      <p class="text-sm font-medium">{{ item.label }}</p>
+      </Link>
+    </div>
+
+  </aside>
 </template>
 
 <style scoped>
