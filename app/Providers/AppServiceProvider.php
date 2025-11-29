@@ -15,16 +15,19 @@ class AppServiceProvider extends ServiceProvider
     /**
      * The policies that are defined for the application.
      */
+    /**
+     * The policies that are defined for the application.
+     *
+     * @var array<class-string, class-string>
+     */
     protected $policies = [
         Finance::class => FinancePolicy::class,
+        Regulation::class => \App\Policies\RegulationPolicy::class,
     ];
 
     /**
      * Register any application services.
      */
-    protected $policies = [
-    Regulation::class => \App\Policies\RegulationPolicy::class,
-];
 
 
     public function register(): void
