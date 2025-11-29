@@ -80,10 +80,9 @@ class VoteController extends Controller
 
     public function history()
     {
-        $votes = Vote::with('reflection')
+        $votes = Vote::with('reflection:titre,id')
             ->where('user_id', Auth::id())
             ->get(['id', 'reflection_id', 'value', 'created_at']);
-            dd($votes);
             return Inertia::render('VoteHistory', [
                 'votes' => $votes,
             ]);
@@ -111,7 +110,7 @@ class VoteController extends Controller
 
             return [
                 'id' => $reflection->id,
-                'title' => $reflection->title,
+                'titre' => $reflection->titre,
                 'pourPercentage' => $total ? round(($pourCount / $total) * 100, 2) : 0,
                 'contrePercentage' => $total ? round(($contreCount / $total) * 100, 2) : 0,
                 'winner' => $pourCount > $contreCount ? 'POUR' : 'CONTRE',
@@ -119,7 +118,7 @@ class VoteController extends Controller
                     return [
                         'id' => $vote->id,
                         'value' => $vote->value,
-                        'is_bureau' => in_array($vote->user->role, ['admin', 'bureau']),
+                        'is_bureau' => in_array($vote->user->role, ['bureau']),
                     ];
                 }),
             ];

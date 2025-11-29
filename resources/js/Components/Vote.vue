@@ -1,30 +1,32 @@
 <template>
     <div class="vote-component p-4">
         <h2 class="text-lg font-bold mb-4 text-center">Cast Your Vote</h2>
-        <div v-for="option in options" :key="option.id" class="vote-option">
-            <label
-                @click="submitVote(option)"
-                :class="{
-                    'bg-green-400 border-green-500':
-                        selectedOption === option.id &&
-                        option.option === 'POUR',
-                    'bg-red-400 border-red-500':
-                        selectedOption === option.id &&
-                        option.option === 'CONTRE',
-                    'bg-gray-100 border-gray-500': selectedOption !== option.id,
-                }"
-                class="block border rounded-lg p-4 mb-4 cursor-pointer transition-all"
-            >
-                <input
-                    type="radio"
-                    :value="option.id"
-                    v-model="selectedOption"
-                    class="hidden"
-                />
-                <div class="font-bold text-sm md:text-base">
-                    {{ option.option }}
-                </div>
-            </label>
+        <div v-if="!isVoteEnded">
+            <div v-for="option in options" :key="option.id" class="vote-option">
+                <label
+                    @click="submitVote(option)"
+                    :class="{
+                        'bg-green-400 border-green-500':
+                            selectedOption === option.id &&
+                            option.option === 'POUR',
+                        'bg-red-400 border-red-500':
+                            selectedOption === option.id &&
+                            option.option === 'CONTRE',
+                        'bg-gray-100 border-gray-500': selectedOption !== option.id,
+                    }"
+                    class="block border rounded-lg p-4 mb-4 cursor-pointer transition-all"
+                >
+                    <input
+                        type="radio"
+                        :value="option.id"
+                        v-model="selectedOption"
+                        class="hidden"
+                    />
+                    <div class="font-bold text-sm md:text-base">
+                        {{ option.option }}
+                    </div>
+                </label>
+            </div>
         </div>
         <!-- Bouton de validation visible uniquement pour l'admin et après la date limite -->
         <button
