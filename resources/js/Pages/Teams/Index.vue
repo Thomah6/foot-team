@@ -15,7 +15,7 @@ const createForm = useForm({
 })
 
 function createTeam() {
-  createForm.post('teams/create', {
+  createForm.post(route('admin.teams.store'), {
     onSuccess: () => createForm.reset()
   })
 }

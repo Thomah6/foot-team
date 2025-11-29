@@ -356,10 +356,10 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/suggestions/{suggestion}', [SuggestionController::class, 'destroy']);
 });
 // Gestion des équipes
-Route::get('/teams', [TeamController::class, 'vue'])->name('admin.teams');
+
 Route::get('/teams/index', [TeamController::class, 'index'])->name('admin.teams.index');
 Route::get('/teams/create', [TeamController::class, 'create'])->name('admin.teams.create');
-Route::post('/teams', [TeamController::class, 'store'])->name('admin.teams.store');
+Route::post('/teams/create', [TeamController::class, 'store'])->name('admin.teams.store');
 Route::get('/teams/{id}/edit', [TeamController::class, 'edit'])->name('admin.teams.edit');
 Route::put('/teams/{team}', [TeamController::class, 'update'])->name('admin.teams.update');
 Route::delete('/teams/{id}', [TeamController::class, 'destroy'])->name('admin.teams.destroy');

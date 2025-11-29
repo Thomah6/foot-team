@@ -67,7 +67,7 @@ const menu = computed(() => {
         {
             label: "Teams",
             icon: "fas fa-people-group",
-            link: route("admin.teams"),
+            link: route("admin.teams.index"),
             active: route().current("admin.teams"),
         },
         {

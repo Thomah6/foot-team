@@ -75,7 +75,7 @@ class TeamController extends Controller
 
         $team->users()->sync($request->members);
 
-         return redirect()->route('admin.teams')->with('success', 'Affectation mise à jour');
+         return redirect()->route('admin.teams.index')->with('success', 'Affectation mise à jour');
     }
 
     public function show(Team $team){
