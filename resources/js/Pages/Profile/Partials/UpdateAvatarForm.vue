@@ -17,6 +17,7 @@ const posterForm = useForm({
 
 const avatarPreview = ref(user.avatar ? '/storage/' + user.avatar : null);
 const posterPreview = ref(user.poster ? '/storage/' + user.poster : null);
+console.log(posterPreview.value);
 
 const handleAvatarChange = (e) => {
     const file = e.target.files[0];
@@ -78,11 +79,11 @@ const updatePoster = () => {
 <template>
     <section>
         <!-- Message de succès -->
-        <div v-if="$page.props.flash && $page.props.flash.success" 
+        <div v-if="$page.props.flash && $page.props.flash.success"
              class="mb-4 p-4 bg-green-50 border border-green-200 rounded-lg">
             <p class="text-sm text-green-800">{{ $page.props.flash.success }}</p>
         </div>
-        
+
         <header>
             <h2 class="text-lg font-medium text-gray-900">
                 Avatar et Poster
@@ -97,11 +98,11 @@ const updatePoster = () => {
             <!-- Avatar Section -->
             <div class="space-y-4">
                 <h3 class="text-md font-medium text-gray-800">Avatar</h3>
-                
+
                 <div class="flex items-center space-x-6">
                     <!-- Avatar Preview -->
                     <div class="shrink-0">
-                        <img 
+                        <img
                             :src="avatarPreview || 'https://ui-avatars.com/api/?name=' + user.name + '&color=7F9CF5&background=EBF4FF'"
                             :alt="user.name"
                             class="h-20 w-20 rounded-full object-cover border-4 border-gray-200"
@@ -119,7 +120,7 @@ const updatePoster = () => {
                             accept="image/*"
                         />
                         <InputError class="mt-2" :message="avatarForm.errors.avatar" />
-                        
+
                         <p class="mt-1 text-xs text-gray-500">
                             Formats acceptés: JPG, PNG, GIF. Taille max: 2MB.
                         </p>
@@ -127,8 +128,8 @@ const updatePoster = () => {
                 </div>
 
                 <div class="flex items-center gap-4">
-                    <PrimaryButton 
-                        @click="updateAvatar" 
+                    <PrimaryButton
+                        @click="updateAvatar"
                         :disabled="!avatarForm.avatar || avatarForm.processing"
                     >
                         Mettre à jour l'avatar
@@ -153,17 +154,17 @@ const updatePoster = () => {
             <!-- Poster Section -->
             <div class="space-y-4">
                 <h3 class="text-md font-medium text-gray-800">Poster de profil</h3>
-                
+
                 <div class="space-y-4">
                     <!-- Poster Preview -->
                     <div class="rounded-lg overflow-hidden border-2 border-gray-200">
-                        <img 
+                        <img
                             v-if="posterPreview"
                             :src="posterPreview"
                             :alt="user.name + ' poster'"
                             class="w-full h-48 object-cover"
                         >
-                        <div 
+                        <div
                             v-else
                             class="w-full h-48 bg-gradient-to-br from-green-400 to-blue-500 flex items-center justify-center"
                         >
@@ -182,7 +183,7 @@ const updatePoster = () => {
                             accept="image/*"
                         />
                         <InputError class="mt-2" :message="posterForm.errors.poster" />
-                        
+
                         <p class="mt-1 text-xs text-gray-500">
                             Formats acceptés: JPG, PNG. Recommandé: 1200x400px. Taille max: 5MB.
                         </p>
@@ -190,8 +191,8 @@ const updatePoster = () => {
                 </div>
 
                 <div class="flex items-center gap-4">
-                    <PrimaryButton 
-                        @click="updatePoster" 
+                    <PrimaryButton
+                        @click="updatePoster"
                         :disabled="!posterForm.poster || posterForm.processing"
                     >
                         Mettre à jour le poster

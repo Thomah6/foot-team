@@ -2,74 +2,109 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Inertia\Inertia;
 use App\Models\Suggestion;
 use App\Models\SuggestionComment;
-use Illuminate\Support\Facades\Auth;
+use App\Models\SuggestionReaction;
+use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class SuggestionController extends Controller
 {
+
     public function index()
     {
-        $suggestions = Suggestion::with(['user', 'comments.user', 'reactions'])
-            ->latest()
-            ->get();
-
-        return Inertia::render('Suggestions/Index', [
-            'suggestions' => $suggestions
+        return Inertia::render("SuggestionPage", [
+            'suggestions' => Suggestion::with([
+                'user',
+                'comments.user',
+                'reactions'
+            ])->latest()->get(),
+            'authUser' => auth()->user(),
         ]);
     }
 
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'content' => 'required|string|max:1000',
+        $request->validate([
+            'title' => 'required|min:3',
+            'content' => 'required|min:5'
         ]);
 
-        $suggestion = Auth::user()->suggestions()->create($validated);
+        Suggestion::create([
+            'user_id' => auth()->id(),
+            'title' => $request->title,
+            'content' => $request->content,
+        ]);
 
-        return back()->with('success', 'Suggestion ajoutée avec succès.');
+        return back();
     }
+
+    //Pour les commentaires
+    public function update(Request $request, SuggestionComment $suggestionComment){
+        if ($suggestionComment->user_id !== auth()->id()) {
+            abort(403, "Vous ne pouvez pas modifier ce commentaire.");
+        }
+        $suggestionComment->update([
+            'content' => $request->content
+        ]);
+
+        return back();
+    }
+
 
     public function react(Suggestion $suggestion, Request $request)
     {
-        $validated = $request->validate([
-            'type' => 'required|in:like,dislike',
-        ]);
 
-        $reaction = $suggestion->reactions()
-            ->updateOrCreate(
-                ['user_id' => Auth::id()],
-                ['type' => $validated['type']]
-            );
+        $request->validate(['type' => 'required|in:like,dislike']);
 
-        return response()->json([
-            'success' => true,
-            'reaction' => $reaction
+        $userId = auth()->id();
+
+        $existing = SuggestionReaction::where([
+            'suggestion_id' => $suggestion->id,
+            'user_id' => $userId,
+        ])->first();
+
+        // ✔ 1 — Si la même réaction → supprimer
+        if ($existing && $existing->type === $request->type) {
+            $existing->delete();
+            return back();
+        }
+
+        // ✔ 2 — Si l'user a une réaction mais d’un type différent → switch
+        if ($existing) {
+            $existing->update(['type' => $request->type]);
+            return back();
+        }
+        // dd($existing);
+        SuggestionReaction::updateOrCreate([
+            'suggestion_id' => $suggestion->id,
+             'user_id' => auth()->id(),
+            'type' => $request->type,
         ]);
+        return back();
     }
 
+    // ✔ 3 — Pas de réaction → créer
     public function comment(Suggestion $suggestion, Request $request)
     {
-        $validated = $request->validate([
-            'content' => 'required|string|max:1000',
+        $request->validate(['content' => 'required']);
+
+        $suggestion->comments()->create([
+            'user_id' => auth()->id(),
+            'content' => $request->content,
         ]);
 
-        $comment = $suggestion->comments()->create([
-            'user_id' => Auth::id(),
-            'content' => $validated['content']
-        ]);
-
-        return back()->with('success', 'Commentaire ajouté avec succès.');
+        return back();
     }
 
     public function destroy(Suggestion $suggestion)
     {
-        $this->authorize('delete', $suggestion);
-        
+        if (!auth()->user()->isAdmin) {
+        abort(403);
+        }
+
         $suggestion->delete();
-        
-        return back()->with('success', 'Suggestion supprimée avec succès.');
+
+        return back();
     }
 }
