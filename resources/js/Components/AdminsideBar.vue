@@ -51,12 +51,6 @@ const menu = computed(() => {
             active: route().current("bureau.stats.index.*"),
         },
         {
-            label: "Profile",
-            icon: "fas fa-user",
-            link: route("profile.edit"),
-            active: route().current("profile.edit"),
-        },
-        {
             label: "Présences",
             icon: "fas fa-calendar-check",
             link: route("presence.index"),
@@ -79,7 +73,7 @@ const menu = computed(() => {
     ];
 
     // 👉 Ajouter l’item "membres" *seulement si admin ou bureau*
-    if (isAdmin()) {
+    if (isAdmin() || isBureau()) {
         items.push(
             {
                 label: "Membres",
@@ -94,22 +88,14 @@ const menu = computed(() => {
                 active: route().current("admin.team-stats.index"),
             }
         );
-    }
-    if (isBureau()) {
-        items.push({
-            label: "Membres",
-            icon: "fas fa-user-friends",
-            link: route("bureau.members.index"),
-            active: route().current("bureau.members.index"),
-        });
-    }
+        }
 
-    items.push({
-        label: "Membres",
-        icon: "fas fa-user-friends",
-        link: route('bureau.members.index'),
-        active: route().current('bureau.members.index')
-    });
+    // items.push({
+    //     label: "Membres",
+    //     icon: "fas fa-user-friends",
+    //     link: route('bureau.members.index'),
+    //     active: route().current('bureau.members.index')
+    // });
 
     items.push({
         label: 'Stats des membres',

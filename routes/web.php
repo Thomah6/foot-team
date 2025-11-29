@@ -235,24 +235,7 @@ Route::prefix('admin')->middleware('role:admin')->group(function () {
         Route::post('/teams/assign-members', [TeamController::class, 'assignMembers'])->name('assign-members');
         Route::post('/teams/mercato', [TeamController::class, 'mercato'])->name('mercato');
 
-        // Gestion des actualités (Admin)
-        Route::prefix('news')->name('news.')->group(function () {
-
-            Route::get('/create', [NewsController::class, 'create'])->name('create');
-            Route::post('/', [NewsController::class, 'store'])->name('store');
-            Route::get('/{id}/edit', [NewsController::class, 'edit'])->name('edit');
-            Route::put('/{id}', [NewsController::class, 'update'])->name('update');
-            Route::delete('/{id}', [NewsController::class, 'destroy'])->name('destroy');
-            Route::get('/showReglement', [NewsController::class, 'showReglement'])->name('showReglement');
-            Route::patch('/{id}/toggle-banner', [NewsController::class, 'toggleBanner'])->name('toggle-banner');
-
-            // Bannière du joueur du mois
-            Route::prefix('bannerplayermonth')->name('bannerplayermonth.')->group(function () {
-                Route::get('/', [PlayerOfTheMonthController::class, 'index'])->name('index');
-                Route::put('/', [PlayerOfTheMonthController::class, 'update'])->name('update');
-                Route::delete('/', [PlayerOfTheMonthController::class, 'destroy'])->name('destroy');
-            });
-        });
+        
 
         // Gestion des statistiques d'équipe
         Route::prefix('team-stats')->name('team-stats.')->group(function () {
@@ -267,6 +250,25 @@ Route::prefix('admin')->middleware('role:admin')->group(function () {
             Route::post('/bulk-validate', [TeamStatController::class, 'bulkValidate'])->name('bulk-validate');
         });
         // Les routes d'administration des actualités sont déjà définies plus haut
+    });
+
+    // Gestion des actualités (Admin)
+    Route::prefix('news')->name('news.')->group(function () {
+
+        Route::get('/create', [NewsController::class, 'create'])->name('create');
+        Route::post('/', [NewsController::class, 'store'])->name('store');
+        Route::get('/{id}/edit', [NewsController::class, 'edit'])->name('edit');
+        Route::put('/{id}', [NewsController::class, 'update'])->name('update');
+        Route::delete('/{id}', [NewsController::class, 'destroy'])->name('destroy');
+        Route::get('/showReglement', [NewsController::class, 'showReglement'])->name('showReglement');
+        Route::patch('/{id}/toggle-banner', [NewsController::class, 'toggleBanner'])->name('toggle-banner');
+
+        // Bannière du joueur du mois
+        Route::prefix('bannerplayermonth')->name('bannerplayermonth.')->group(function () {
+            Route::get('/', [PlayerOfTheMonthController::class, 'index'])->name('index');
+            Route::put('/', [PlayerOfTheMonthController::class, 'update'])->name('update');
+            Route::delete('/', [PlayerOfTheMonthController::class, 'destroy'])->name('destroy');
+        });
     });
 });
 
@@ -321,9 +323,24 @@ Route::prefix('finances')->group(function () {
 
 // Routes pour les règlements
 Route::middleware(['auth', 'is.active'])->group(function () {
+
+    // Resource pour titres + contenus
     Route::resource('regulations', RegulationControler::class);
-    Route::post('/regulations/content', [RegulationControler::class, 'storeContent'])->name('regulations.storeContent');
+
+    // Routes spécifiques pour les contenus liés
+
+    Route::post('/regulations/fusion', [RegulationControler::class, 'fusion'])->name('regulations.fusion');
+
+    Route::get('/regulations/content/{content}/edit', [RegulationControler::class, 'editContent'])
+    ->name('regulations.content.edit');
+
+    Route::put('/regulations/content/{content}', [RegulationControler::class, 'updateContent'])
+        ->name('regulations.content.update');
+
+    Route::delete('/regulations/content/{content}', [RegulationControler::class, 'destroyContent'])
+        ->name('regulations.content.destroy');
 });
+
 
 // Routes pour les ajustements financiers
 Route::prefix('finances')->group(function () {
