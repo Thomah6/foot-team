@@ -2,7 +2,7 @@
     <div class="vote-component">
         <h2 class="text-lg font-bold text-center">Cast Your Vote</h2>
         <div class="grid grid-cols-2 gap-4 w-full">
-            <div v-for="option in options" :key="option.id" class="vote-option">
+            <div v-for="option in props.options" :key="option.id" class="vote-option">
                 <label
                     @click="submitVote(option)"
                     :class="{
@@ -40,7 +40,7 @@
 </template>
 
 <script setup>
-import { ref, defineProps } from "vue";
+import { ref, defineProps, onMounted } from "vue";
 import { router } from "@inertiajs/vue3";
 
 const props = defineProps({
@@ -61,6 +61,9 @@ const props = defineProps({
         default: null,
     },
     reflection: Object,
+});
+onMounted(() => {
+  console.log(props.existingVote);
 });
 
 const selectedOption = ref(null);

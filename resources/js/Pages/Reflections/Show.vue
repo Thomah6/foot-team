@@ -113,7 +113,7 @@
 </template>
 
 <script setup>
-import { defineProps } from 'vue';
+import { defineProps, onMounted } from 'vue';
 import { router } from '@inertiajs/vue3';
 import Dropdown from '@/Components/Dropdown.vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
@@ -126,6 +126,11 @@ import Vote from "@/Components/Vote.vue";
 defineProps({
   reflection: Object,
   comments:Array,
+  options:Array,
+  isVoteEnded:Boolean,
+  isAdmin:Boolean,
+  existingVote:Number,
+
 });
 
 
