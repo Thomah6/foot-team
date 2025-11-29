@@ -14,7 +14,7 @@ Membre Simple
 🔵 3.1. Espace Membre du Bureau
 3.1.1. Gestion des membres
 CRUD sur les membres
-Recherche par nom, email, rôle
+Recherche par nom, email, rôleâ
 Filtrage :
 
 par date d’inscription
@@ -415,18 +415,9 @@ avatar, poster de lui  etc etc
 
 
 
-
-
-# 🚀 **PLANNING URGENT - 3 JOURS - Finition Projet Football**
-
-## 🎯 **OBJECTIF : Admin fini aujourd'hui à 18h (3h de travail)**
-
-### **⏰ AUJOURD'HUI - 15h à 18h - FOCUS ADMIN SEULEMENT**
-
----
-
+ 
 ## 🔥 **TÂCHES IMMÉDIATES - 15h-18h**
-
+ 
 ### **1. ALEXIO - Dashboard Admin Complet**
 ```
 ✅ CRUD membres avec recherche/filtres
@@ -434,7 +425,7 @@ avatar, poster de lui  etc etc
 ✅ Activation/désactivation comptes
 ✅ Tableau membres avec pagination
 ```
-
+ 
 ### **2. FRANCIS - Gestion Sous-équipes Admin**
 ```
 ✅ CRUD équipes (créer/modifier/supprimer)
@@ -442,7 +433,7 @@ avatar, poster de lui  etc etc
 ✅ Système mercato (transferts entre équipes)
 ✅ Visualisation équipes et leurs membres
 ```
-
+ 
 ### **3. MATHIEU - Gestion Réflexions Admin**
 ```
 ✅ CRUD réflexions complet
@@ -450,7 +441,7 @@ avatar, poster de lui  etc etc
 ✅ Validation réflexions après délai
 ✅ Interface modération réflexions
 ```
-
+ 
 ### **4. PRINCE - Système Votes Admin**
 ```
 ✅ Panel monitoring votes en cours
@@ -458,7 +449,7 @@ avatar, poster de lui  etc etc
 ✅ Validation résultats automatique
 ✅ Historique votes
 ```
-
+ 
 ### **5. NADEGE - Stats & Performances Admin**
 ```
 ✅ Interface validation stats membres
@@ -466,15 +457,14 @@ avatar, poster de lui  etc etc
 ✅ Calcul classements (buteurs, passeurs, gardiens)
 ✅ Seuils minimaux (2 buts, etc.)
 ```
-
+ 
 ### **6. RAOUL - Présences Admin**
 ```
-✅ Validation présences mensuelles
-✅ Interface calendrier présences
-✅ Calcul points participation
+✅ Validation des présences des membres
+ 
 ✅ Historique présences
 ```
-
+ 
 ### **7. MANU JR - Finances Admin**
 ```
 ✅ Dashboard financier complet
@@ -482,14 +472,14 @@ avatar, poster de lui  etc etc
 ✅ Définition dépenses/déductions
 ✅ Solde global et historiques
 ```
-
+ 
 ### **8. KARIM - Galerie Admin**
 ```
 ✅ Upload/suppression photos
 ✅ Modération galerie
 ✅ Gestion médias (avatars/posters)
 ```
-
+ 
 ### **9. FADEL - "À la Une" Admin**
 ```
 ✅ Rédaction contenu "À la une"
@@ -497,14 +487,14 @@ avatar, poster de lui  etc etc
 ✅ Gestion bannière joueur du mois
 ✅ Slider règlement intérieur
 ```
-
+ 
 ### **10. WARISS - Règlement Admin**
 ```
 ✅ Édition règlement intérieur
 ✅ Interface slider/scroll
 ✅ Versioning documents
 ```
-
+ 
 ### **11. SERGIO - Joueur du Mois Admin**
 ```
 ✅ Sélection joueur du mois
@@ -512,19 +502,101 @@ avatar, poster de lui  etc etc
 ✅ Durée limitée (1 semaine)
 ✅ Historique joueurs du mois
 ```
-
-### **12. PERSONNE 12 - Navigation & Layout Admin**
+ 
+### **12. Thamas - Navigation & Layout Admin**
 ```
 ✅ Sidebar/header admin
 ✅ Dashboard agrégé admin
 ✅ Navigation avec permissions
 ✅ Design system admin
 ```
+ 
 
-### **13. PERSONNE 13 - Authentification & Rôles**
-```
-✅ Finalisation middleware rôles
-✅ Protection routes admin
-✅ Vérification permissions
-✅ Logout/switch compte
-```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Vous voulez rendre publiques les routes des classements. Je vais déplacer ces routes dans la section publique :
+
+Maintenant je vais supprimer les anciennes routes admin pour les classements qui sont maintenant publiques :
+
+Je vais continuer à supprimer les anciennes routes admin des classements :
+
+Je vais corriger les routes qui restent dans la section admin :
+
+Je vais remettre les routes de validation dans la section admin :
+
+## ✅ **Routes Publiques des Classements - Terminé !**
+
+Parfait ! J'ai déplacé toutes les routes des classements dans la section publique. Voici le résumé :
+
+### 🌐 **Routes Publiques (sans authentification)**
+
+| Route | URL | Fonction |
+|-------|-----|----------|
+| **Liste classements** | `/classements` | Vue d'ensemble des 4 classements |
+| **Classement général** | `/classements/general` | Joueur du mois |
+| **Classement buteurs** | `/classements/buteurs` | Top buteurs (2+ buts) |
+| **Classement passeurs** | `/classements/passeurs` | Top passeurs (2+ passes) |
+| **Classement gardiens** | `/classements/gardiens** | Gardiens (moins encaissés) |
+| **Joueur du mois** | `/joueur-du-mois` | Joueur du mois actuel |
+| **Historique joueurs** | `/joueur-du-mois/historique` | Tous les joueurs du mois |
+| **Stats joueur mois** | `/joueur-du-mois/{month}/stats` | Stats détaillées |
+
+### 🔒 **Routes Admin (avec authentification)**
+
+| Route | URL | Fonction |
+|-------|-----|----------|
+| **Dashboard stats** | `/admin/stats` | Vue d'ensemble admin |
+| **Validation** | `/admin/stats/pending` | Valider/rejeter stats |
+| **Actions** | `POST/DELETE` | Valider/rejeter individuel |
+
+### 🎯 **Avantages :**
+
+1. **Accès public** aux classements pour tous les visiteurs
+2. **URLs simples** sans préfixe `/admin`
+3. **Consultation libre** des performances
+4. **Actions admin** protégées par authentification
+
+### 📱 **Nouvelles URLs à utiliser :**
+
+- **Visiteurs** : `/classements` pour voir tous les classements
+- **Admins** : `/admin/stats/pending` pour valider les stats
+
+Les classements sont maintenant **publiquement accessibles** pour tout le monde ! 🎉

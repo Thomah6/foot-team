@@ -9,7 +9,12 @@ class PlayerOfTheMonth extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['user_id', 'month', 'reason', 'is_active'];
+    protected $fillable = ['user_id', 'month', 'reason', 'is_active', 'image'];
+
+    protected $casts = [
+        'month' => 'date',
+        'is_active' => 'boolean',
+    ];
 
     public function user()
     {

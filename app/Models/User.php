@@ -6,20 +6,30 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use App\Models\Team;
+use App\Models\Reflection;
+use App\Models\Vote;
+use App\Models\Comment;
+use App\Models\Stat;
+use App\Models\Presence;
+use App\Models\Finance;
+ use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
     use HasFactory, Notifiable;
+     use HasRoles;
 
     protected $fillable = [
+        'name',
         'pseudo',
         'email',
         'password',
+        'google_id',
         'avatar',
         'poster',
         'role',
         'position',
-        'is_active',
     ];
 
     protected $hidden = [
@@ -32,6 +42,11 @@ class User extends Authenticatable
     ];
 
     // Relations
+
+    public function stats()
+    {
+        return $this->hasMany(Stat::class);
+    }
 
     public function teams()
     {
@@ -53,11 +68,6 @@ class User extends Authenticatable
     public function comments()
     {
         return $this->hasMany(Comment::class);
-    }
-
-    public function stats()
-    {
-        return $this->hasMany(Stat::class);
     }
 
     public function presences()
@@ -88,5 +98,23 @@ class User extends Authenticatable
     public function playerOfTheMonths()
     {
         return $this->hasMany(PlayerOfTheMonth::class);
+    }
+
+    /**
+     * Helpers for role checks
+     */
+    public function isAdmin(): bool
+    {
+        return $this->role === 'admin';
+    }
+
+    public function isBureau(): bool
+    {
+        return $this->role === 'bureau';
+    }
+
+    public function isSimple(): bool
+    {
+        return $this->role === 'simple';
     }
 }
