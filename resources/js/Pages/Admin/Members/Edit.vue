@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue';
-import { useForm } from '@inertiajs/vue3';
+import { useForm,Link } from '@inertiajs/vue3';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 
 const props = defineProps({
@@ -28,11 +28,21 @@ const submit = () => {
 
 <template>
   <AuthenticatedLayout>
-    <template #header>
-      <h2 class="text-xl font-semibold leading-tight text-gray-800">
-        Editer le Membre: {{ member.pseudo }}
-      </h2>
-    </template>
+    <div class="max-w-2xl mx-auto p-4">
+      <!-- Header -->
+      <div class="mb-6 bg-white rounded-lg shadow p-4 flex items-center justify-between">
+        <div>
+          <h2 class="text-2xl font-extrabold text-sky-900">
+            Editer le membre {{ member.pseudo }}
+          </h2>
+
+          <Link :href="route('members.index')"
+            class="inline-flex items-center gap-2 px-3 py-2 bg-sky-50 text-sky-800 rounded">
+          ← Retour
+          </Link>
+        </div>
+      </div>
+    </div>
 
     <div class="py-6">
       <div class="mx-auto max-w-2xl px-4 sm:px-6 lg:px-8">

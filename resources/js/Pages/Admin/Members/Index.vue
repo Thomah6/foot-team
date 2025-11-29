@@ -114,7 +114,7 @@ const getRoleLabel = (role) => {
   const labels = {
     admin: 'Administrateur',
     bureau: 'Bureau',
-    simple: 'Joueur',
+    simple: 'Simple',
   }
   return labels[role] || role
 }
@@ -403,7 +403,7 @@ const getStatusColor = (isActive) => {
 
           <label class="text-sm font-medium text-gray-700 mb-2 block">Rôle</label>
           <select v-model="selectedRole" class="input-select mb-6">
-            <option value="simple">Joueur</option>
+            <option value="simple">Simple</option>
             <option value="bureau">Bureau</option>
             <option value="admin">Administrateur</option>
           </select>
