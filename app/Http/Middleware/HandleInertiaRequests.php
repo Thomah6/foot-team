@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Identity;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -23,6 +24,7 @@ public function share(Request $request): array
 
     return array_merge(parent::share($request), [
         'auth' => [
+            'identity' => Identity::first(),
             'user' => $user ? [
                 'id'    => $user->id,
                 'name'  => $user->name,
