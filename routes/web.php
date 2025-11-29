@@ -161,34 +161,34 @@ Route::prefix('admin')->middleware('role:admin')->group(function () {
     });
 
     // Réflexions
-    Route::prefix('reflections')->group(function () {
-        Route::get('/', [ReflectionController::class, 'index'])->name('reflections.index');
-        Route::get('/{reflection}', [ReflectionController::class, 'show'])->name('reflections.show');
-        Route::get('/create', [ReflectionController::class, 'create'])->name('reflections.create');
-        Route::post('/', [ReflectionController::class, 'store'])->name('reflections.store');
-        Route::get('/{reflection}', [ReflectionController::class, 'show'])->name('reflections.show');
-        Route::get('/{reflection}/edit', [ReflectionController::class, 'edit'])->name('reflections.edit');
-        Route::put('/{reflection}', [ReflectionController::class, 'update'])->name('reflections.update');
-        Route::delete('/{reflection}', [ReflectionController::class, 'destroy'])->name('reflections.destroy');
-        Route::patch('/{reflection}/toggle', [ReflectionController::class, 'toggle'])->name('reflections.toggle');
-        Route::post('/{reflection}/validate', [ReflectionController::class, 'validateReflection'])->name('reflections.validate');
+    // Route::prefix('reflections')->group(function () {
+    //     Route::get('/', [ReflectionController::class, 'index'])->name('reflections.index');
+    //     Route::get('/{reflection}', [ReflectionController::class, 'show'])->name('reflections.show');
+    //     Route::get('/create', [ReflectionController::class, 'create'])->name('reflections.create');
+    //     Route::post('/', [ReflectionController::class, 'store'])->name('reflections.store');
+    //     Route::get('/{reflection}', [ReflectionController::class, 'show'])->name('reflections.show');
+    //     Route::get('/{reflection}/edit', [ReflectionController::class, 'edit'])->name('reflections.edit');
+    //     Route::put('/{reflection}', [ReflectionController::class, 'update'])->name('reflections.update');
+    //     Route::delete('/{reflection}', [ReflectionController::class, 'destroy'])->name('reflections.destroy');
+    //     Route::patch('/{reflection}/toggle', [ReflectionController::class, 'toggle'])->name('reflections.toggle');
+    //     Route::post('/{reflection}/validate', [ReflectionController::class, 'validateReflection'])->name('reflections.validate');
 
-        // Routes spécifiques pour l'administration des réflexions
-        Route::middleware('role:admin')->group(function () {
-            Route::get('/{id}/validate', [ReflectionController::class, 'validateReflection'])->name('admin.reflections.validate');
-        });
-        Route::get('/{id}/edit', [ReflectionController::class, 'edit'])->name('reflections.edit');
-        Route::get('/{id}/validate', [ReflectionController::class, 'validate'])->name('reflections.validate');
-        Route::put('/{id}', [ReflectionController::class, 'update'])->name('reflections.update');
-        Route::delete('/{id}', [ReflectionController::class, 'destroy'])->name('reflections.destroy');
-        Route::patch('/{id}/toggle', [ReflectionController::class, 'toggle'])->name('reflections.toggle');
+    //     // Routes spécifiques pour l'administration des réflexions
+    //     Route::middleware('role:admin')->group(function () {
+    //         Route::get('/{id}/validate', [ReflectionController::class, 'validateReflection'])->name('admin.reflections.validate');
+    //     });
+    //     Route::get('/{id}/edit', [ReflectionController::class, 'edit'])->name('reflections.edit');
+    //     Route::get('/{id}/validate', [ReflectionController::class, 'validate'])->name('reflections.validate');
+    //     Route::put('/{id}', [ReflectionController::class, 'update'])->name('reflections.update');
+    //     Route::delete('/{id}', [ReflectionController::class, 'destroy'])->name('reflections.destroy');
+    //     Route::patch('/{id}/toggle', [ReflectionController::class, 'toggle'])->name('reflections.toggle');
 
-        // Validation par l'administrateur
-        Route::post('/{id}/validate', [ReflectionController::class, 'validateAfterDelay'])->name('admin.reflections.validate');
+    //     // Validation par l'administrateur
+    //     Route::post('/{id}/validate', [ReflectionController::class, 'validateAfterDelay'])->name('admin.reflections.validate');
 
-        // Commentaires sur les réflexions
-        Route::post('/comments', [CommentController::class, 'store'])->name('comments.store');
-    });
+    //     // Commentaires sur les réflexions
+    //     Route::post('/comments', [CommentController::class, 'store'])->name('comments.store');
+    // });
 
     // Administration
     Route::prefix('admin')->name('admin.')->middleware('role:admin')->group(function () {
@@ -278,7 +278,7 @@ Route::prefix('reflections')->group(function () {
     Route::get('/create', [ReflectionController::class, 'create'])->name('reflections.create');
     Route::post('/', [ReflectionController::class, 'store'])->name('reflections.store');
     Route::get('/{id}/edit', [ReflectionController::class, 'edit'])->name('reflections.edit');
-    Route::get('/{id}/validate', [ReflectionController::class, 'validate'])->name('reflections.validate');
+    Route::get('/{reflection}/validate', [ReflectionController::class, 'validateReflection'])->name('reflections.validate');
     Route::put('/{id}', [ReflectionController::class, 'update'])->name('reflections.update');
     Route::delete('/{id}', [ReflectionController::class, 'destroy'])->name('reflections.destroy');
     Route::patch('/{id}/toggle', [ReflectionController::class, 'toggle'])->name('reflections.toggle'); // activation/desactivationRoute::post('/{id}/validate', [ReflectionController::class, 'validateAfterDelay'])->name('admin.reflections.validate');

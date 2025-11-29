@@ -1,7 +1,13 @@
 <script setup>
 import { ref, computed } from "vue";
 import { Link, usePage } from "@inertiajs/vue3";
-
+defineProps({
+    Notification: {
+        type: Number,
+        default: 0,
+        required: false,
+    },
+});
 const page = usePage();
 const user = page.props.auth.user;
 const isAdmin = () => page.props.auth.user.role === "admin";
@@ -79,6 +85,12 @@ const menu = computed(() => {
             link: route("suggestions"),
             active: route().current("suggestions"),
         },
+        {
+            label: "Reflections",
+            icon: "fas fa-comments",
+            link: route("reflections.index"),
+            active: route().current("reflections.*"),
+        },
     ];
 
     // 👉 Ajouter l’item "membres" *seulement si admin ou bureau*
@@ -120,6 +132,7 @@ const menu = computed(() => {
         link: route('bureau.stats.index'),
         active: route().current('bureau.stats.index.*')
     });
+   
 
 
 
@@ -204,7 +217,7 @@ const handleImageError = (event) => {
                         : 'hover:bg-blue-500/10 text-text-primary-light dark:text-text-primary-dark'
                     ">
             <i :class="item.icon" class="text-lg w-5 text-center"></i>
-            <p class="text-sm font-medium">{{ item.label }}</p>
+            <p class="text-sm font-medium">{{ item.label }}</p><span v-if="item.label=== 'Reflections'">{{ Notification }}</span>
             </Link>
 
             <Link :href="menu[2].link" class="flex items-center gap-3 px-3 py-2 rounded-md transition-colors" :class="menu[2].active

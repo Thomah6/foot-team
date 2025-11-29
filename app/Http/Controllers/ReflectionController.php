@@ -31,13 +31,13 @@ class ReflectionController extends Controller
         $isAdmin = Auth::user()->role === 'admin';
         if($isAdmin)
         {
-            return Inertia::render('Reflections/Index', [
+            return Inertia::render('Reflections/AdminIndex', [
             'reflections' => $reflections,
             'success' => $request->session()->get('success'),
             ]);
 
         }else{
-            return Inertia::render('Reflections/AdminIndex', [
+            return Inertia::render('Reflections/Index', [
             'reflections' => $reflections,
             'success' => $request->session()->get('success'),
             ]);
@@ -45,6 +45,36 @@ class ReflectionController extends Controller
         }
         
     }
+
+
+
+    public function update(Request $request, $id)
+{
+    // dd($request->all());
+    // 1️⃣ Récupérer la réflexion
+    $reflection = Reflection::findOrFail($id);
+
+    // 2️⃣ Vérifier que l'utilisateur connecté est bien le propriétaire
+    if ($reflection->user_id !== auth()->id()) {
+        abort(403, "Vous n'êtes pas autorisé à modifier cette réflexion.");
+    }
+
+    // 3️⃣ Validation des données envoyées depuis le formulaire
+    $validated = $request->validate([
+        'titre' => 'required|string|max:255',
+        'contenu' => 'required|string',
+    ]);
+
+    // 4️⃣ Mise à jour dans la base de données
+    $reflection->update($validated);
+
+    // 5️⃣ Retour Inertia
+    return back()->with('success', 'Réflexion mise à jour avec succès.');
+}
+
+
+
+
     public function show(Reflection $reflection){
 
 
@@ -150,11 +180,18 @@ class ReflectionController extends Controller
      */
     public function validateReflection(Reflection $reflection)
     {
-        $this->authorize('update', $reflection);
+        // $this->authorize('update', $reflection);
         
         $reflection->update([
             'statut' => 'valide',
-            'is_active' => true
+        ]);
+
+        return redirect()->back()
+            ->with('success', 'La réflexion a été validée avec succès.');
+    }
+    public function openVote($reflection){
+         $reflection->update([
+            'statut' => 'ouvert',
         ]);
 
         return redirect()->back()

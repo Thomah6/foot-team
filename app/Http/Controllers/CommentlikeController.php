@@ -3,89 +3,79 @@
 namespace App\Http\Controllers;
 
 use App\Models\Comment;
-use App\Models\Commentlike;
-use App\Http\Requests\StoreCommentlikeRequest;
-use App\Http\Requests\UpdateCommentlikeRequest;
+use App\Models\CommentLike;
 use Illuminate\Support\Facades\Auth;
 
-class CommentlikeController extends Controller
+class CommentLikeController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function like(Comment $comment){
-        // dd($comment->toArray());
-        $commentliked = CommentLike::where("user_id", Auth::user()->id)->where("comment_id", $comment->id)->first();
-        if (!$commentliked) {
-            $commentlike = CommentLike::create([
-            "user_id"=> Auth::user()->id,
-            "comment_id"=>$comment->id,
-            "like"=> 1,
-        ]);
-            if ($commentlike) {
-                return back();
+    public function like(Comment $comment)
+    {
+        $userId = Auth::id();
+
+        // Vérifier si l'utilisateur a déjà une interaction
+        $interaction = CommentLike::where('user_id', $userId)
+                                  ->where('comment_id', $comment->id)
+                                  ->first();
+
+        if (!$interaction) {
+            // Aucun like/dislike → créer un like
+            CommentLike::create([
+                'user_id' => $userId,
+                'comment_id' => $comment->id,
+                'like' => 1,
+            ]);
+        } else {
+            // Si déjà LIKE → remettre à NULL (retirer like)
+            if ($interaction->like === 1) {
+                $interaction->update(['like' => null]);
             }
-        }else{
-            $comment->update(['like'=>null]);
+
+            // Si DISLIKE → changer en LIKE
+            elseif ($interaction->like === -1) {
+                $interaction->update(['like' => 1]);
+            }
+
+            // Si NULL → mettre LIKE
+            else {
+                $interaction->update(['like' => 1]);
+            }
         }
+
+        return back();
     }
-    /**
-     * Show the form for creating a new resource.
-     */
+
     public function dislike(Comment $comment)
     {
-        $commentliked = CommentLike::where("user_id", Auth::user()->id)->where("comment_id", $comment->id)->first();
-        if (!$commentliked) {
-            $commentlike = CommentLike::create([
-            "user_id"=> Auth::user()->id,
-            "comment_id"=>$comment->id,
-            "like"=> -1,
-        ]);
-            if ($commentlike) {
-                return back();
+        $userId = Auth::id();
+
+        $interaction = CommentLike::where('user_id', $userId)
+                                  ->where('comment_id', $comment->id)
+                                  ->first();
+
+        if (!$interaction) {
+            // Aucun like/dislike → créer un dislike
+            CommentLike::create([
+                'user_id' => $userId,
+                'comment_id' => $comment->id,
+                'like' => -1,
+            ]);
+        } else {
+            // Si déjà DISLIKE → remettre à NULL (retirer dislike)
+            if ($interaction->like === -1) {
+                $interaction->update(['like' => null]);
             }
-        }else{
-            $comment->update(['like'=>null]);
+
+            // Si LIKE → changer en DISLIKE
+            elseif ($interaction->like === 1) {
+                $interaction->update(['like' => -1]);
+            }
+
+            // Si NULL → mettre DISLIKE
+            else {
+                $interaction->update(['like' => -1]);
+            }
         }
-    }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreCommentlikeRequest $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Commentlike $commentlike)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Commentlike $commentlike)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateCommentlikeRequest $request, Commentlike $commentlike)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Commentlike $commentlike)
-    {
-        //
+        return back();
     }
 }
