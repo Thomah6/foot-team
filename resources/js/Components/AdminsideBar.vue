@@ -56,12 +56,6 @@ const menu = computed(() => {
             active: route().current("bureau.stats.index.*"),
         },
         {
-            label: "Finances",
-            icon: "fas fa-wallet",
-            link: route("finances.index"),
-            active: route().current("finances.*"),
-        },
-        {
             label: "Profile",
             icon: "fas fa-user",
             link: route("profile.edit"),
@@ -73,6 +67,8 @@ const menu = computed(() => {
             link: route("presence.index"),
             active: route().current("presence.*"),
         },
+        { label: "Regulations", icon: "fas fa-user", link: route('regulations.index'), active: route().current('regulations.index') },
+
         {
             label: "Teams",
             icon: "fas fa-people-group",
@@ -137,8 +133,9 @@ const menu = computed(() => {
 
 
 
-  return items;
+    return items;
 });
+
 
 const bottomMenu = [
     { label: "Settings", icon: "fas fa-cog", link: route("profile.edit") },
@@ -183,8 +180,8 @@ const handleImageError = (event) => {
             <div class="flex items-center gap-3">
                 <div class="relative">
                     <img :src="user.avatar && user.avatar !== ''
-                            ? '/storage/' + user.avatar
-                            : `https://ui-avatars.com/api/?name=${user.name}&color=7F9CF5&background=EBF4FF&size=40`
+                        ? '/storage/' + user.avatar
+                        : `https://ui-avatars.com/api/?name=${user.name}&color=7F9CF5&background=EBF4FF&size=40`
                         " :alt="user.name"
                         class="w-10 h-10 rounded-lg object-cover border-2 border-white dark:border-gray-700 shadow-sm"
                         @error="handleImageError" />
@@ -213,31 +210,35 @@ const handleImageError = (event) => {
         <nav class="flex flex-col gap-2 mt-4 flex-1 overflow-y-auto">
             <Link v-for="(item, index) in menu" :key="index" :href="item.link" @click="closeMenu"
                 class="flex items-center gap-3 px-3 py-2 rounded-md transition-colors" :class="item.active
-                        ? 'bg-blue-500/20 text-blue-600'
-                        : 'hover:bg-blue-500/10 text-text-primary-light dark:text-text-primary-dark'
+                    ? 'bg-blue-500/20 text-blue-600'
+                    : 'hover:bg-blue-500/10 text-text-primary-light dark:text-text-primary-dark'
                     ">
             <i :class="item.icon" class="text-lg w-5 text-center"></i>
             <p class="text-sm font-medium">{{ item.label }}</p><span v-if="item.label=== 'Reflections'">{{ Notification }}</span>
             </Link>
 
-            <Link :href="menu[2].link" class="flex items-center gap-3 px-3 py-2 rounded-md transition-colors" :class="menu[2].active
-                    ? 'bg-blue-500/20 text-blue-600'
-                    : 'hover:bg-blue-500/10 text-text-primary-light dark:text-text-primary-dark'
+            <!-- <Link :href="menu[2].link" class="flex items-center gap-3 px-3 py-2 rounded-md transition-colors" :class="menu[2].active
+                ? 'bg-blue-500/20 text-blue-600'
+                : 'hover:bg-blue-500/10 text-text-primary-light dark:text-text-primary-dark'
                 ">
             <i :class="menu[2].icon" class="text-lg"></i>
             <p class="text-sm font-medium">{{ menu[2].label }}</p>
-            </Link>
+            </Link> -->
         </nav>
+       
 
-        <!-- Bottom -->
-        <div class="mt-auto flex flex-col gap-2 border-t border-gray-200 dark:border-gray-700 pt-4">
-            <Link v-for="(item, index) in bottomMenu" :key="`bottom-${index}`" :href="item.link" @click="closeMenu"
-                class="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-blue-500/10 transition-colors text-text-primary-light dark:text-text-primary-dark">
-            <i :class="item.icon" class="text-lg w-5 text-center"></i>
-            <p class="text-sm font-medium">{{ item.label }}</p>
-            </Link>
-        </div>
-    </aside>
+
+
+    <!-- Bottom -->
+    <div class="mt-auto flex flex-col gap-2 border-t border-gray-200 dark:border-gray-700 pt-4">
+      <Link v-for="(item, index) in bottomMenu" :key="`bottom-${index}`" :href="item.link" @click="closeMenu"
+        class="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-blue-500/10 transition-colors text-text-primary-light dark:text-text-primary-dark">
+      <i :class="item.icon" class="text-lg w-5 text-center"></i>
+      <p class="text-sm font-medium">{{ item.label }}</p>
+      </Link>
+    </div>
+
+  </aside>
 </template>
 
 <style scoped>

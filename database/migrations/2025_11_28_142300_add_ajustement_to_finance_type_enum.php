@@ -11,12 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('regulations', function (Blueprint $table) {
-            $table->id();
-            $table->string('title');      // Titre du règlement ou section
-            $table->text('content')->nullable();      // Contenu du règlement
-            $table->timestamps();
- });
+        Schema::table('finances', function (Blueprint $table) {
+            $table->enum('type', ['cotisation', 'dépense', 'autre', 'ajustement'])->change();
+        });
     }
 
     /**
@@ -24,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('regulations');
+        Schema::table('finances', function (Blueprint $table) {
+            $table->enum('type', ['cotisation', 'dépense', 'autre'])->change();
+        });
     }
 };
