@@ -149,16 +149,6 @@ Route::prefix('admin')->middleware('role:admin')->group(function () {
         });
     });
 
-    // Espace bureau - Statistiques
-    Route::prefix('bureau/stats')->middleware('role:bureau')->group(function () {
-        Route::get('/', [BureauStatController::class, 'index'])->name('bureau.stats.index');
-        Route::get('/leaderboards', [BureauStatController::class, 'leaderboards'])->name('bureau.stats.leaderboards');
-        Route::get('/leaderboards/goals', [BureauStatController::class, 'goalLeaders'])->name('bureau.stats.leaderboards.goals');
-        Route::get('/leaderboards/assists', [BureauStatController::class, 'assistLeaders'])->name('bureau.stats.leaderboards.assists');
-        Route::get('/leaderboards/goalkeepers', [BureauStatController::class, 'goalkeeperLeaders'])->name('bureau.stats.leaderboards.goalkeepers');
-        Route::get('/members/{user}/stats', [BureauStatController::class, 'memberStats'])->name('bureau.stats.member');
-    });
-
     // Réflexions
     // Route::prefix('reflections')->group(function () {
     //     Route::get('/', [ReflectionController::class, 'index'])->name('reflections.index');
