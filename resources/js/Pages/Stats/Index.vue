@@ -1,10 +1,9 @@
 <script setup>
-import { ref } from 'vue';
+import { ref,defineProps } from 'vue';
 import { Link } from '@inertiajs/vue3'
 import { useForm } from '@inertiajs/vue3'
 import AdminsideBar from '@/Components/AdminsideBar.vue';
 import ConfirmModal from '@/Components/ConfirmModal.vue';
-import { ref } from 'vue'
 
 const props = defineProps({
     pendingCount: Number,

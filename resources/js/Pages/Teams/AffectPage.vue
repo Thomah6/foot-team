@@ -179,19 +179,19 @@ function doMercato(){
 </script>
 <style>
 /* .terrain{
-    background-image: url('@/../../../public/terrain.jpg');
+    background-image: url('/terrain.jpg');
     background-size: cover;
     background-repeat: no-repeat;
     width: 125%;
 } */
  .terrain {
     position: relative;
-    background-image: url('@/../../../public/terrain.jpg');
-    background-size: 100%;       /* affiche toute l’image sans couper */
+    background-image: url('/terrain.jpg');
+    background-size: 100%;       /* affiche toute l'image sans couper */
     background-repeat: no-repeat;   /* pas de répétition */
     /* background-position: center;    bien centré */
     width: 128%;                    /* full width en mobile */
-    min-height: 300px;              /* donne une vraie zone à l’image */
+    min-height: 300px;              /* donne une vraie zone à l'image */
     /* display: block; */
 }
 /* TABLETTE */
