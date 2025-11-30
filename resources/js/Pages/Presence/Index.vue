@@ -49,10 +49,53 @@ const loadMonthFromInput = () => {
   }
 }
 
-const declarPresence = (date) => {
-  const form = useForm({
-    date: date,
-  })
+const declarPresence = async (date) => {
+  // If admin, post via fetch to get JSON response and update UI immediately
+  if (props.isAdmin) {
+    try {
+      const res = await fetch(route('presence.store'), {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'X-Requested-With': 'XMLHttpRequest',
+        },
+        body: JSON.stringify({ date }),
+        credentials: 'include',
+      })
+
+      if (!res.ok) throw new Error('Erreur serveur')
+
+      const data = await res.json()
+
+      // Mettre à jour la table locale
+      const presenceObj = data.presence
+      const row = filteredPresenceData.value.find((r) => r.id === presenceObj.user_id)
+      if (row) {
+        // Build new row object with updated presences so Vue detects change
+        const newPresences = {
+          ...row.presences,
+          [date]: {
+            id: presenceObj.id,
+            present: presenceObj.present,
+            validated: presenceObj.validated,
+          },
+        }
+        const newRow = { ...row, presences: newPresences }
+        filteredPresenceData.value = filteredPresenceData.value.map((r) => (r.id === newRow.id ? newRow : r))
+      }
+
+      showDeclarePresenceModal.value = false
+      return
+    } catch (e) {
+      // Fallback: reload to reflect server state
+      showDeclarePresenceModal.value = false
+      window.location.reload()
+    }
+  }
+
+  // Non-admin: keep existing Inertia flow (reload on success)
+  const form = useForm({ date: date })
   form.post(route('presence.store'), {
     onSuccess: () => {
       showDeclarePresenceModal.value = false
@@ -71,14 +114,22 @@ const updatePresence = (presenceId, data) => {
         const presenceToUpdate = filteredPresenceData.value.find((row) => {
           return Object.values(row.presences).some((p) => p && p.id === presenceId)
         })
-        
+
         if (presenceToUpdate) {
           // Trouver la date de cette présence et la mettre à jour
           for (const [date, presence] of Object.entries(presenceToUpdate.presences)) {
             if (presence && presence.id === presenceId) {
-              // Mettre à jour les propriétés de la présence
-              presence.present = data.present
-              presence.validated_by_admin = data.validated_by_admin
+              const updatedEntry = {
+                ...presence,
+                present: data.present,
+                validated: data.validated_by_admin,
+              }
+              const newPresences = {
+                ...presenceToUpdate.presences,
+                [date]: updatedEntry,
+              }
+              const newRow = { ...presenceToUpdate, presences: newPresences }
+              filteredPresenceData.value = filteredPresenceData.value.map((r) => (r.id === newRow.id ? newRow : r))
               break
             }
           }
@@ -144,9 +195,8 @@ handleSearch()
             </div>
           </label>
 
-          <!-- Declare Presence Button -->
+          <!-- Declare Presence Button (visible to all roles including admin) -->
           <button
-            v-if="!isAdmin"
             @click="showDeclarePresenceModal = true"
             class="flex w-full md:w-auto max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 bg-blue-600 dark:bg-blue-700 text-white gap-2 text-sm font-bold leading-normal tracking-[0.015em] min-w-0 px-4 shadow-sm hover:bg-blue-700 dark:hover:bg-blue-600"
           >

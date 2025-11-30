@@ -4,7 +4,7 @@
     <div v-else-if="isAdmin" class="relative group">
       <!-- Status Icon with Tooltip -->
       <button
-        @click="toggleMenu"
+        @click="toggleMenu($event)"
         class="flex items-center justify-center cursor-pointer hover:opacity-75 transition"
       >
         <span
@@ -84,10 +84,10 @@ const showMenu = ref(false)
 const menuTop = ref(0)
 const menuLeft = ref(0)
 
-const toggleMenu = () => {
+const toggleMenu = (e) => {
   if (!showMenu.value) {
     // Calculate position
-    const button = event.target.closest('button')
+    const button = e.target.closest('button')
     if (button) {
       const rect = button.getBoundingClientRect()
       menuTop.value = rect.bottom + 8 // 8px below button

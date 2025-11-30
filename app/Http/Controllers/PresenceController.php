@@ -121,14 +121,29 @@ class PresenceController extends Controller
             return back()->with('error', 'Vous avez déjà déclaré votre présence pour ce jour.');
         }
 
-        Presence::create([
+        $isAdmin = auth()->user()->role === 'admin';
+
+        $presence = Presence::create([
             'user_id' => auth()->id(),
             'date' => $date,
             'present' => true,
-            'validated_by_admin' => false,
+            'validated_by_admin' => $isAdmin, // auto-validate si admin
         ]);
 
-        return back()->with('success', 'Présence déclarée avec succès. En attente de validation admin.');
+        if ($request->wantsJson()) {
+            return response()->json([
+                'message' => $isAdmin ? 'Présence déclarée et validée automatiquement.' : 'Présence déclarée avec succès. En attente de validation admin.',
+                'presence' => [
+                    'id' => $presence->id,
+                    'user_id' => $presence->user_id,
+                    'date' => $presence->date->toDateString(),
+                    'present' => $presence->present,
+                    'validated' => $presence->validated_by_admin,
+                ],
+            ], 201);
+        }
+
+        return back()->with('success', $isAdmin ? 'Présence déclarée et validée automatiquement.' : 'Présence déclarée avec succès. En attente de validation admin.');
     }
 
     /**
@@ -148,6 +163,16 @@ class PresenceController extends Controller
             'validated_by_admin' => $validated['validated'],
         ]);
 
+        if ($request->wantsJson()) {
+            return response()->json([
+                'message' => 'Présence mise à jour avec succès.',
+                'presence' => [
+                    'id' => $presence->id,
+                    'validated' => $presence->validated_by_admin,
+                ],
+            ]);
+        }
+
         return back()->with('success', 'Présence mise à jour avec succès.');
     }
 
@@ -166,6 +191,17 @@ class PresenceController extends Controller
         ]);
 
         $presence->update($validated);
+
+        if ($request->wantsJson()) {
+            return response()->json([
+                'message' => 'Présence mise à jour avec succès.',
+                'presence' => [
+                    'id' => $presence->id,
+                    'present' => $presence->present,
+                    'validated' => $presence->validated_by_admin,
+                ],
+            ]);
+        }
 
         return back()->with('success', 'Présence mise à jour avec succès.');
     }

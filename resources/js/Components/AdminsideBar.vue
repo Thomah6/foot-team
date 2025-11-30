@@ -14,7 +14,7 @@ const menu = [
     { label: "Profile", icon: "fas fa-user", link: route('profile.edit'), active: route().current('profile.edit') },
      {label: "Stats des membres", icon: "fas fa-users", link: route('bureau.stats.index'), active: route().current('bureau.stats.index.*') },
   { label: "Finances", icon: "fas fa-wallet", link: route('finances.index'), active: route().current('finances.*') },
-  { label: "Dashboard", icon: "fas fa-tachometer-alt", link: route('dashboard'), active: route().current('dashboard') },
+  // { label: "Dashboard", icon: "fas fa-tachometer-alt", link: route('dashboard'), active: route().current('dashboard') },
   { label: "Profile", icon: "fas fa-user", link: route('profile.edit'), active: route().current('profile.edit') },
   { label: "Présences", icon: "fas fa-calendar-check", link: route('presence.index'), active: route().current('presence.*') },
 ]
