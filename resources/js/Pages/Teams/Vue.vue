@@ -1,47 +1,39 @@
 <script setup>
-import { ref } from "vue"
+import { computed, ref } from "vue"
 import { router, useForm } from "@inertiajs/vue3"
-
+import AdminsideBar from "@/Components/AdminsideBar.vue";
 // Props venant du backend
 const props = defineProps({
   teams: Array,
-  search: String,
-  pagination: Object
 })
 
-// STATE
-const search = ref(props.search || " ")
+const search = ref("");
 
-// Recherche
-function searchTeams() {
-  router.get("/teams", { search: search.value }, { preserveState: true })
-}
+const filteredTeams = computed(()=>{
+    if(!search.value) return props.teams;
 
-// Formulaire création dans modal
-const createForm = useForm({
-  name: "",
-  description: ""
+    return props.teams.filter(team => team.name.toLowerCase().includes(search.value.toLocaleLowerCase()))
 })
 
-function createTeam() {
-  createForm.post("/teams", {
-    onSuccess: () => {
-      createForm.reset()
-      showCreateModal.value = false
-    }
-  })
-}
-
-// Modal control
-const showCreateModal = ref(false)
 </script>
 
 <template>
-  <div class="p-8">
+  <article class="flex justify-between bg-gray-50 min-h-screen">
 
-    <!-- Header -->
-    <div class="flex justify-between items-center mb-8">
-      <h1 class="text-3xl font-bold text-gray-800">Teams</h1>
+    <!-- Sidebar -->
+    <section>
+      <AdminsideBar />
+    </section>
+
+    <!-- PAGE CONTENT -->
+    <section class="flex-1 p-10 ml-4">
+
+      <!-- HEADER -->
+      <div class="flex justify-between items-center mb-10 ml-4">
+        <h1 class="ml-4 text-4xl font-extrabold text-gray-800 tracking-tight flex items-center gap-3">
+          <i class="fas fa-people-group text-blue-600"></i>
+          Teams Management
+        </h1>
 
       <div class="flex gap-3">
         <a href="/teams/index">
@@ -53,108 +45,62 @@ const showCreateModal = ref(false)
 
         </a>
 
-        <button
-          class="flex items-center gap-2 border px-4 py-2 rounded-lg shadow-sm hover:bg-gray-100"
-        >
-          ⚙ Filter
-        </button>
-      </div>
-    </div>
-
-    <!-- Search -->
-    <div class="flex justify-center mb-10">
-      <input
-        v-model="search"
-        @keyup.enter="searchTeams"
-        class="w-full max-w-xl px-5 py-3 rounded-full border shadow-sm focus:ring-2 focus:ring-blue-400"
-        type="text"
-        placeholder="Search by team name..."
-      />
-    </div>
-
-    <!-- Teams grid -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-      <div
-        v-for="team in props.teams"
-        :key="team.id"
-        class="bg-white p-6 rounded-2xl shadow hover:shadow-lg transition"
-      >
-        <h2 class="text-xl font-semibold text-gray-800 mb-2">
-          {{ team.name }}
-        </h2>
-
-        <p class="flex items-center text-gray-600 mb-6">
-          👥 {{ team.members?.length || 0 }} Players
-        </p>
-
-        <button @click="showTeam"
-          class="w-full text-center bg-blue-50 text-blue-700 py-2 rounded-lg hover:bg-blue-100 transition"
-        >
-          View Details →
-        </button>
-      </div>
-    </div>
-
-    <!-- Pagination -->
-    <!-- <div class="flex justify-center items-center gap-3 mt-10">
-      <button class="px-3 py-1 text-gray-500">&lt;</button>
-
-      <div class="flex gap-2">
-        <span
-          class="px-4 py-2 rounded-full bg-blue-600 text-white"
-        >
-          1
-        </span>
-
-        <span class="px-4 py-2 text-gray-600">2</span>
-        <span class="px-4 py-2 text-gray-500">3</span>
-        <span class="px-4 py-2">...</span>
-        <span class="px-4 py-2">10</span>
+          <!-- Filter -->
+          <!-- <button
+            class="flex items-center gap-3 px-5 py-3 rounded-xl border border-gray-300 shadow-sm hover:bg-gray-100 transition font-semibold"
+          >
+            <i class="fas fa-filter text-gray-600"></i>
+            Filter
+          </button> -->
+        </div>
       </div>
 
-      <button class="px-3 py-1 text-gray-500">&gt;</button>
-    </div> -->
-
-    <!-- Create Modal -->
-    <!-- <div
-      v-if="showCreateModal"
-      class="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center"
-    >
-      <div class="bg-white p-6 rounded-xl shadow-lg w-full max-w-md">
-        <h2 class="text-xl font-bold mb-4">Add New Team</h2>
-
-        <form @submit.prevent="createTeam" class="space-y-4">
+      <!-- SEARCH BAR -->
+      <div class="flex justify-center mb-12">
+        <div class="relative w-full max-w-2xl">
+          <i class="fas fa-search absolute left-4 top-3.5 text-gray-400"></i>
           <input
-            v-model="createForm.name"
-            class="w-full border p-3 rounded"
-            placeholder="Team name"
+            v-model="search"
+            class="w-full pl-12 pr-4 py-3 rounded-full border shadow-sm focus:ring-2 focus:ring-blue-400 transition"
+            type="text"
+            placeholder="Search by team name..."
           />
-
-          <textarea
-            v-model="createForm.description"
-            class="w-full border p-3 rounded"
-            placeholder="Description"
-          ></textarea>
-
-          <div class="flex justify-end gap-3">
-            <button
-              type="button"
-              class="px-4 py-2 rounded bg-gray-200"
-              @click="showCreateModal = false"
-            >
-              Cancel
-            </button>
-
-            <button
-              class="px-4 py-2 rounded bg-blue-600 text-white"
-              :disabled="createForm.processing"
-            >
-              {{ createForm.processing ? "Saving..." : "Save" }}
-            </button>
-          </div>
-        </form>
+        </div>
       </div>
-    </div> -->
 
-  </div>
+      <!-- TEAMS GRID -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+
+        <div
+          v-for="team in filteredTeams"
+          :key="team.id"
+          class="bg-white p-6 rounded-2xl shadow group hover:shadow-xl transition overflow-hidden border border-gray-100"
+        >
+
+          <!-- Team Name -->
+          <h2 class="text-2xl font-bold text-gray-900 mb-3">
+            {{ team.name }}
+          </h2>
+
+          <!-- Players Count -->
+          <p class="flex items-center text-gray-600 mb-6 text-sm font-medium">
+            <i class="fas fa-users text-blue-500 mr-2"></i>
+            {{ team.users?.length || 0 }} Players
+          </p>
+
+          <!-- Button -->
+          <button
+            @click="router.get(`/teams/${team.id}`)"
+            class="w-full flex items-center justify-center gap-2 bg-blue-50 text-blue-700 py-2.5 rounded-lg hover:bg-blue-100 transition font-medium"
+          >
+            <i class="fas fa-eye"></i>
+            View Details
+          </button>
+
+        </div>
+
+      </div>
+
+    </section>
+  </article>
 </template>

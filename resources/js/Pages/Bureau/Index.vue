@@ -59,7 +59,7 @@ const search = ref('')
 
                   </div>
                   <div>
-                    <Link :href="`/bureau/stats/members/${s.user.id}/stats`" class="text-xs px-4 py-1  text-primary rounded-full font-semibold bg-blue-500/10">Voir joueur</Link>
+                    <Link :href="`/bureau/stats/members/${s.user.id}/stats`" class="text-xs p-2 text-primary rounded-full font-semibold bg-blue-500/10">Voir joueur</Link>
                   </div>
                 </div>
               </div>

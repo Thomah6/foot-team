@@ -10,6 +10,7 @@ use App\Http\Controllers\Bureau\BureauStatController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FinanceController;
 use App\Http\Controllers\GalleryController;
+use App\Http\Controllers\IdentityController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\PlayerOfTheMonthController;
 use App\Http\Controllers\ProfileController;
@@ -18,7 +19,7 @@ use App\Http\Controllers\ReflectionController;
 use App\Http\Controllers\TeamController;
 use App\Http\Controllers\VoteController;
 use App\Http\Controllers\SuggestionController;
-// use App\Http\Controllers\RegulationControler;
+use App\Http\Controllers\RegulationControler;
 use App\Http\Controllers\CommentsSuggestionController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Auth;
@@ -30,6 +31,19 @@ use Inertia\Inertia;
 // Routes d'authentification Google
 Route::get('/auth/google', [GoogleAuthController::class, 'redirect'])->name('google.login');
 Route::get('/auth/google/callback', [GoogleAuthController::class, 'callback']);
+
+// Route::get('/', function () {
+//     if (auth()->check()) {
+//         return redirect()->route('dashboard');
+//     }
+
+//     return Inertia::render('Welcome', [
+//         'canLogin' => Route::has('login'),
+//         'canRegister' => Route::has('register'),
+//         'laravelVersion' => Application::VERSION,
+//         'phpVersion' => PHP_VERSION,
+//     ]);
+// });
 
 // Page d'accueil
 
@@ -83,9 +97,19 @@ Route::middleware(['auth', 'is.active'])->group(function () {
     Route::post('/profile/avatar', [ProfileController::class, 'updateAvatar'])->name('profile.avatar.update');
     Route::post('/profile/poster', [ProfileController::class, 'updatePoster'])->name('profile.poster.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+Route::prefix('admin')->middleware('role:admin')->group(function () {
+
+    Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+
+    Route::get('/settings', [AdminController::class, 'settings'])->name('admin.settings');
+
+
 
     // Gestion des membres (Admin uniquement)
     Route::middleware('role:admin')->group(function () {
+
         Route::get('/members', [MemberController::class, 'index'])->name('members.index');
         Route::get('/members/create', [MemberController::class, 'create'])->name('members.create');
         Route::post('/members', [MemberController::class, 'store'])->name('members.store');
@@ -112,6 +136,16 @@ Route::middleware(['auth', 'is.active'])->group(function () {
     // Espace bureau - Gestion des membres
     Route::prefix('bureau')->middleware('role:bureau')->group(function () {
         Route::get('/members', [BureauMemberController::class, 'index'])->name('bureau.members.index');
+
+        // Statistiques du bureau
+        Route::prefix('stats')->group(function () {
+            Route::get('/', [BureauStatController::class, 'index'])->name('bureau.stats.index');
+            Route::get('/leaderboards', [BureauStatController::class, 'leaderboards'])->name('bureau.stats.leaderboards');
+            Route::get('/leaderboards/goals', [BureauStatController::class, 'goalLeaders'])->name('bureau.stats.leaderboards.goals');
+            Route::get('/leaderboards/assists', [BureauStatController::class, 'assistLeaders'])->name('bureau.stats.leaderboards.assists');
+            Route::get('/leaderboards/goalkeepers', [BureauStatController::class, 'goalkeeperLeaders'])->name('bureau.stats.leaderboards.goalkeepers');
+            Route::get('/members/{user}/stats', [BureauStatController::class, 'memberStats'])->name('bureau.stats.member');
+        });
     });
 
     // Espace bureau - Statistiques
@@ -130,15 +164,26 @@ Route::middleware(['auth', 'is.active'])->group(function () {
         Route::get('/{reflection}', [ReflectionController::class, 'show'])->name('reflections.show');
         Route::get('/create', [ReflectionController::class, 'create'])->name('reflections.create');
         Route::post('/', [ReflectionController::class, 'store'])->name('reflections.store');
+        Route::get('/{reflection}', [ReflectionController::class, 'show'])->name('reflections.show');
+        Route::get('/{reflection}/edit', [ReflectionController::class, 'edit'])->name('reflections.edit');
+        Route::put('/{reflection}', [ReflectionController::class, 'update'])->name('reflections.update');
+        Route::delete('/{reflection}', [ReflectionController::class, 'destroy'])->name('reflections.destroy');
+        Route::patch('/{reflection}/toggle', [ReflectionController::class, 'toggle'])->name('reflections.toggle');
+        Route::post('/{reflection}/validate', [ReflectionController::class, 'validateReflection'])->name('reflections.validate');
+
+        // Routes spécifiques pour l'administration des réflexions
+        Route::middleware('role:admin')->group(function () {
+            Route::get('/{id}/validate', [ReflectionController::class, 'validateReflection'])->name('admin.reflections.validate');
+        });
         Route::get('/{id}/edit', [ReflectionController::class, 'edit'])->name('reflections.edit');
         Route::get('/{id}/validate', [ReflectionController::class, 'validate'])->name('reflections.validate');
         Route::put('/{id}', [ReflectionController::class, 'update'])->name('reflections.update');
         Route::delete('/{id}', [ReflectionController::class, 'destroy'])->name('reflections.destroy');
         Route::patch('/{id}/toggle', [ReflectionController::class, 'toggle'])->name('reflections.toggle');
-        
+
         // Validation par l'administrateur
         Route::post('/{id}/validate', [ReflectionController::class, 'validateAfterDelay'])->name('admin.reflections.validate');
-        
+
         // Commentaires sur les réflexions
         Route::post('/comments', [CommentController::class, 'store'])->name('comments.store');
     });
@@ -148,12 +193,13 @@ Route::middleware(['auth', 'is.active'])->group(function () {
         // Admin dashboard routes
         Route::get('/', [AdminController::class, 'index'])->name('AdminLayout');
         Route::get('/settings', [AdminController::class, 'settings'])->name('settings');
-        
+
+
         // Stats management
         Route::get('/create', [StatController::class, 'create'])->name('CreateStats');
-        
+
         // Identity management
-        // Route::get('/identity', [IdentityController::class, 'index'])->name('identity');
+        Route::get('/identity', [IdentityController::class, 'index'])->name('identity');
 
         // Gestion des statistiques
         Route::prefix('stats')->group(function () {
@@ -185,25 +231,12 @@ Route::middleware(['auth', 'is.active'])->group(function () {
             Route::get('/gardiens', [StatController::class, 'classementsGardiens'])->name('gardiens');
         });
 
-        // Gestion des équipes
-        Route::get('/teams', [TeamController::class, 'vue'])->name('admin.teams');
-        Route::get('/teams/index', [TeamController::class, 'index'])->name('admin.teams.index');
-        Route::get('/teams/create', [TeamController::class, 'create'])->name('admin.teams.create');
-        Route::post('/teams', [TeamController::class, 'store'])->name('admin.teams.store');
-        Route::get('/teams/{id}/edit', [TeamController::class, 'edit'])->name('admin.teams.edit');
-        Route::put('/teams/{team}', [TeamController::class, 'update'])->name('admin.teams.update');
-        Route::delete('/teams/{id}', [TeamController::class, 'destroy'])->name('admin.teams.destroy');
-        Route::get('/teams/{team}/affect', [TeamController::class, 'affectPage'])->name('teams.affect');
-        Route::post('/teams/{team}/affect/save', [TeamController::class, 'saveAffect'])->name('teams.affect.save');
-        Route::get('/teams/{team}', [TeamController::class, 'show'])->name('teams.show');
-
         // Mercato
         Route::post('/teams/assign-members', [TeamController::class, 'assignMembers'])->name('assign-members');
         Route::post('/teams/mercato', [TeamController::class, 'mercato'])->name('mercato');
 
         // Gestion des actualités (Admin)
         Route::prefix('news')->name('news.')->group(function () {
-            Route::get('/', [NewsController::class, 'index'])->name('index');
             Route::get('/create', [NewsController::class, 'create'])->name('create');
             Route::post('/', [NewsController::class, 'store'])->name('store');
             Route::get('/{id}/edit', [NewsController::class, 'edit'])->name('edit');
@@ -268,6 +301,11 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/galleries/{gallery}/unlike', [GalleryController::class, 'unlike'])->name('galleries.unlike');
 });
 
+
+/**
+ * 🟢 Stats publiques (consultation libre)
+ */
+Route::get('/stats', [StatController::class, 'publicIndex'])->name('stats.public.index');
 // Finances
 Route::prefix('finances')->group(function () {
     Route::get('/', [FinanceController::class, 'index'])->name('finances.index');
@@ -279,11 +317,12 @@ Route::prefix('finances')->group(function () {
     Route::post('/valider-tous', [FinanceController::class, 'validerTous'])->name('finances.validerTous');
 });
 
+
 // Routes pour les règlements
-// Route::middleware(['auth', 'is.active'])->group(function () {
-//     Route::resource('regulations', RegulationControler::class);
-//     Route::post('/regulations/content', [RegulationControler::class, 'storeContent'])->name('regulations.storeContent');
-// });
+Route::middleware(['auth', 'is.active'])->group(function () {
+    Route::resource('regulations', RegulationControler::class);
+    Route::post('/regulations/content', [RegulationControler::class, 'storeContent'])->name('regulations.storeContent');
+});
 
 // Routes pour les ajustements financiers
 Route::prefix('finances')->group(function () {
@@ -292,6 +331,22 @@ Route::prefix('finances')->group(function () {
 });
 
 // Routes pour les suggestions
+Route::middleware(['auth', 'is.active'])->group(function () {
+    // Suggestions
+    Route::prefix('suggestions')->group(function () {
+        Route::get('/', [SuggestionController::class, 'index'])->name('suggestions.index');
+        Route::post('/', [SuggestionController::class, 'store'])->name('suggestions.store');
+        Route::post('/{suggestion}/react', [SuggestionController::class, 'react'])->name('suggestions.react');
+        Route::delete('/{suggestion}', [SuggestionController::class, 'destroy'])->name('suggestions.destroy');
+
+        // Commentaires sur les suggestions
+        Route::post('/{suggestion}/comment', [SuggestionController::class, 'comment'])->name('suggestions.comment');
+        Route::put('/comments/{comment}', [CommentsSuggestionController::class, 'update'])->name('suggestions.comments.update');
+        Route::delete('/comments/{comment}', [CommentsSuggestionController::class, 'destroy'])->name('suggestions.comments.destroy');
+    });
+});
+
+
 Route::middleware(['auth'])->group(function () {
     Route::get('/suggestions', [SuggestionController::class, 'index'])->name('suggestions');
     Route::post('/suggestions', [SuggestionController::class, 'store']);
@@ -299,10 +354,35 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/suggestions/{suggestion}/comment', [SuggestionController::class, 'comment']);
     Route::delete('/suggestions/{suggestion}', [SuggestionController::class, 'destroy']);
 });
-
+// Gestion des équipes
+Route::get('/teams', [TeamController::class, 'vue'])->name('admin.teams');
+Route::get('/teams/index', [TeamController::class, 'index'])->name('admin.teams.index');
+Route::get('/teams/create', [TeamController::class, 'create'])->name('admin.teams.create');
+Route::post('/teams', [TeamController::class, 'store'])->name('admin.teams.store');
+Route::get('/teams/{id}/edit', [TeamController::class, 'edit'])->name('admin.teams.edit');
+Route::put('/teams/{team}', [TeamController::class, 'update'])->name('admin.teams.update');
+Route::delete('/teams/{id}', [TeamController::class, 'destroy'])->name('admin.teams.destroy');
+Route::get('/teams/{team}/affect', [TeamController::class, 'affectPage'])->name('teams.affect');
+Route::post('/teams/{team}/affect/save', [TeamController::class, 'saveAffect'])->name('teams.affect.save');
+Route::get('/teams/{team}', [TeamController::class, 'show'])->name('teams.show');
 // Routes pour les commentaires des suggestions
 Route::put('/comments/{comment}', [CommentsSuggestionController::class, 'update']);
 Route::delete('/comments/{comment}', [CommentsSuggestionController::class, 'destroy']);
+
+
+Route::get('/admin', [AdminController::class,'index'])->name('Admin.AdminLayout');
+ 
+ 
+Route::get('/admin/create', [StatController::class,'create'])->name('Admin.CreateStats');
+ 
+Route::get('/identity', [IdentityController::class, 'index'])->name('admin.identity');
+ 
+ 
+Route::get('/admin/identity', [IdentityController::class, 'index']);
+ 
+Route::post('/admin/identity/update', [IdentityController::class, 'update'])
+    ->name('admin.identity.update');
+ 
 
 // Routes d'authentification
 require __DIR__ . '/auth.php';
