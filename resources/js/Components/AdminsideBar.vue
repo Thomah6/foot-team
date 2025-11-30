@@ -48,6 +48,7 @@ const menu = computed(() => {
             link: route('presence.index'),
             active: route().current('presence.*') || route().current('presence.index'),
         },
+        
         {
             label: "Gallery",
             icon: "fa-solid fa-photo-film",
@@ -91,6 +92,7 @@ const menu = computed(() => {
             active: route().current("vote.list.admin"),
         },
     ];
+
 
     // Items conditionnels
     if (isBureau()) {

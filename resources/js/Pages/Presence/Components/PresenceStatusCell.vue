@@ -1,73 +1,86 @@
 <template>
   <div class="flex justify-center items-center">
-    <div v-if="!presence" class="text-slate-400">-</div>
+    <div v-if="!presence" class="text-slate-300 dark:text-slate-600">
+      <span class="material-symbols-outlined text-lg opacity-50">remove</span>
+    </div>
     <div v-else-if="isAdmin" class="relative group">
-      <!-- Status Icon with Tooltip -->
+      <!-- Status Icon Button -->
       <button
-        ref="buttonRef"
         @click="toggleMenu($event)"
-        class="flex items-center justify-center cursor-pointer hover:opacity-75 transition"
+        class="flex items-center justify-center cursor-pointer hover:scale-110 transition-transform duration-200 p-1 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700"
+        :title="`${presence.present ? 'Présent' : 'Absent'} ${presence.validated ? '✓' : '⏳'}`"
       >
         <span
-          v-if="presence.present && presence.validated_by_admin"
-          class="material-symbols-outlined fill text-green-500"
+          v-if="presence.present && presence.validated"
+          class="material-symbols-outlined fill text-green-500 text-2xl"
         >
           check_circle
         </span>
         <span
-          v-else-if="presence.present && !presence.validated_by_admin"
-          class="material-symbols-outlined fill text-yellow-500"
+          v-else-if="presence.present && !presence.validated"
+          class="material-symbols-outlined fill text-amber-500 text-2xl"
         >
           schedule
         </span>
-        <span v-else class="material-symbols-outlined fill text-red-500"> cancel </span>
+        <span v-else class="material-symbols-outlined fill text-red-500 text-2xl">
+          cancel
+        </span>
       </button>
 
       <!-- Dropdown Menu -->
       <div
         ref="menuRef"
         v-if="showMenu"
-        class="fixed bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-600 rounded-lg shadow-lg z-50 min-w-[150px]"
+        class="fixed bg-white dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-600 rounded-xl shadow-2xl z-50 min-w-[180px] overflow-hidden"
         :style="{ top: menuTop + 'px', left: menuLeft + 'px' }"
       >
         <button
           @click="updateStatus(true, true)"
-          class="w-full text-left px-4 py-2 hover:bg-green-50 dark:hover:bg-green-900/30 flex items-center gap-2 text-green-600 text-sm"
+          class="w-full text-left px-4 py-3 hover:bg-green-50 dark:hover:bg-green-900/30 flex items-center gap-3 text-green-600 dark:text-green-300 text-sm font-semibold border-b border-slate-200 dark:border-slate-600 transition"
         >
-          <span class="material-symbols-outlined fill text-sm">check_circle</span>
-          Présent validé
+          <span class="material-symbols-outlined fill text-lg">check_circle</span>
+          <span>✓ Présent validé</span>
         </button>
         <button
           @click="updateStatus(true, false)"
-          class="w-full text-left px-4 py-2 hover:bg-yellow-50 dark:hover:bg-yellow-900/30 flex items-center gap-2 text-yellow-600 text-sm border-t border-slate-200 dark:border-slate-600"
+          class="w-full text-left px-4 py-3 hover:bg-amber-50 dark:hover:bg-amber-900/30 flex items-center gap-3 text-amber-600 dark:text-amber-300 text-sm font-semibold border-b border-slate-200 dark:border-slate-600 transition"
         >
-          <span class="material-symbols-outlined fill text-sm">schedule</span>
-          Présent en attente
+          <span class="material-symbols-outlined fill text-lg">schedule</span>
+          <span>⏳ Attente</span>
         </button>
         <button
           @click="updateStatus(false, false)"
-          class="w-full text-left px-4 py-2 hover:bg-red-50 dark:hover:bg-red-900/30 flex items-center gap-2 text-red-600 text-sm border-t border-slate-200 dark:border-slate-600"
+          class="w-full text-left px-4 py-3 hover:bg-red-50 dark:hover:bg-red-900/30 flex items-center gap-3 text-red-600 dark:text-red-300 text-sm font-semibold transition"
         >
-          <span class="material-symbols-outlined fill text-sm">cancel</span>
-          Absent
+          <span class="material-symbols-outlined fill text-lg">cancel</span>
+          <span>✗ Absent</span>
         </button>
       </div>
+      <!-- Declarant badge -->
+      <div v-if="presence && presence.declared_by_user_name" class="mt-1 text-[0.65rem] text-slate-500 dark:text-slate-400 text-center">
+        Déclaré par <span class="font-semibold text-slate-700 dark:text-white">{{ presence.declared_by_user_name }}</span>
+      </div>
     </div>
-    <div v-else>
+    <div v-else class="flex items-center justify-center">
       <!-- Non-admin view -->
       <span
-        v-if="presence.present && presence.validated_by_admin"
-        class="material-symbols-outlined fill text-green-500"
+        v-if="presence.present && presence.validated"
+        class="material-symbols-outlined fill text-green-500 text-2xl"
       >
         check_circle
       </span>
       <span
-        v-else-if="presence.present && !presence.validated_by_admin"
-        class="material-symbols-outlined fill text-yellow-500"
+        v-else-if="presence.present && !presence.validated"
+        class="material-symbols-outlined fill text-amber-500 text-2xl"
       >
         schedule
       </span>
-      <span v-else class="material-symbols-outlined fill text-red-500"> cancel </span>
+      <span v-else class="material-symbols-outlined fill text-red-500 text-2xl">
+        cancel
+      </span>
+      <div v-if="presence && presence.declared_by_user_name" class="ml-2 text-[0.65rem] text-slate-500 dark:text-slate-400">
+        Déclaré par <span class="font-semibold text-slate-700 dark:text-white">{{ presence.declared_by_user_name }}</span>
+      </div>
     </div>
   </div>
 </template>
@@ -88,14 +101,14 @@ const menuLeft = ref(0)
 const menuRef = ref(null)
 const buttonRef = ref(null)
 
-const toggleMenu = (event) => {
+const toggleMenu = (e) => {
   if (!showMenu.value) {
     // Calculate position
-    const button = event.currentTarget
+    const button = e.target.closest('button')
     if (button) {
       const rect = button.getBoundingClientRect()
-      menuTop.value = rect.bottom + 8 // 8px below button
-      menuLeft.value = rect.left + rect.width / 2 - 75 // Center (150/2 = 75)
+      menuTop.value = rect.bottom + 12 // 12px below button
+      menuLeft.value = rect.left + rect.width / 2 - 90 // Center (180/2 = 90)
     }
   }
   showMenu.value = !showMenu.value

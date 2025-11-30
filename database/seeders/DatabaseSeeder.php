@@ -39,6 +39,34 @@ class DatabaseSeeder extends Seeder
         //     'name' => 'Jean Dupont',
         //     'email' => 'jean@example.com',
         // ]);
+        // Créer 5 utilisateurs fixes (admin, bureau, 3 joueurs) pour dev rapide
+        User::factory()->create([
+            'name' => 'Admin Super',
+            'email' => 'admin@test.com',
+            'role' => 'admin',
+            'password' => bcrypt('password'),
+        ]);
+
+        User::factory()->create([
+            'name' => 'Bureau Team',
+            'email' => 'bureau@test.com',
+            'role' => 'bureau',
+            'password' => bcrypt('password'),
+        ]);
+
+        User::factory()->create([
+            'name' => 'Jean Dupont',
+            'email' => 'jean.dupont@test.com',
+            'role' => 'simple',
+            'password' => bcrypt('password'),
+        ]);
+
+        User::factory()->create([
+            'name' => 'Alice Martin',
+            'email' => 'alice.martin@test.com',
+            'role' => 'simple',
+            'password' => bcrypt('password'),
+        ]);
 
         User::factory(10)->create([]);
         Reflection::factory(40)->create([]);
@@ -98,5 +126,9 @@ class DatabaseSeeder extends Seeder
         // $this->call([
         //     StatSeeder::class,
         // ]);
+         $this->call([
+            StatSeeder::class,
+            PresenceSeeder::class,
+        ]);
     }
 }
