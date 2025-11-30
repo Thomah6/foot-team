@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Comment;
+use App\Models\Commentlike;
 use App\Models\Reflection;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -30,30 +31,36 @@ class DatabaseSeeder extends Seeder
             'email' => 'test@example.com',
         ]);
 
-        // Créer des utilisateurs supplémentaires pour les stats
-        User::factory()->create([
-            'name' => 'Jean Dupont',
-            'email' => 'jean@example.com',
-        ]);
+        // // Créer les utilisateurs de base d'abord
+        // User::factory()->create([
+        //     'name' => 'Test User',
+        //     'email' => 'test@example.com',
+        // ]);
 
-        User::factory()->create([
-            'name' => 'Marie Martin',
-            'email' => 'marie@example.com',
-        ]);
+        // // Créer des utilisateurs supplémentaires pour les stats
+        // User::factory()->create([
+        //     'name' => 'Jean Dupont',
+        //     'email' => 'jean@example.com',
+        // ]);
+
+        User::factory(10)->create([]);
+        Reflection::factory(40)->create([]);
+        Comment::factory(100)->create([]);
+        Commentlike::factory(500)->create([]);
 
         // Images spécifiques pour les joueurs du mois (validées et fonctionnelles)
-        $playerImages = [
-            'https://picsum.photos/seed/player1/400/500.jpg',
-            'https://picsum.photos/seed/player2/400/500.jpg', 
-            'https://picsum.photos/seed/player3/400/500.jpg'
-        ];
+        // $playerImages = [
+        //     'https://picsum.photos/seed/player1/400/500.jpg',
+        //     'https://picsum.photos/seed/player2/400/500.jpg', 
+        //     'https://picsum.photos/seed/player3/400/500.jpg'
+        // ];
 
         // Mois actuels pour éviter les erreurs
-        $months = [
-            Carbon::now()->startOfMonth(),
-            Carbon::now()->subMonth()->startOfMonth(),
-            Carbon::now()->subMonths(2)->startOfMonth(),
-        ];
+        // $months = [
+        //     Carbon::now()->startOfMonth(),
+        //     Carbon::now()->subMonth()->startOfMonth(),
+        //     Carbon::now()->subMonths(2)->startOfMonth(),
+        // ];
 
         // foreach ($months as $index => $month) {
         //     $user = $users->random();
@@ -77,19 +84,19 @@ class DatabaseSeeder extends Seeder
         //         ->create();
         // }
 
-        echo "\n Database seeded successfully !\n";
+        // echo "\n Database seeded successfully !\n";
         // Reflection::factory(40)->create();
         // Comment::factory(200)->create();
 
         // User::factory(10)->create();
-        User::factory()->create([
-            'name' => 'Pierre Durand',
-            'email' => 'pierre@example.com',
-        ]);
+        // User::factory()->create([
+        //     'name' => 'Pierre Durand',
+        //     'email' => 'pierre@example.com',
+        // ]);
 
         // Ensuite créer les stats (maintenant il y a des utilisateurs)
-        $this->call([
-            StatSeeder::class,
-        ]);
+        // $this->call([
+        //     StatSeeder::class,
+        // ]);
     }
 }

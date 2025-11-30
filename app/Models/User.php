@@ -100,7 +100,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(PlayerOfTheMonth::class);
     }
-
+    public function commentlikes(){
+        return $this->hasMany(Commentlike::class);
+    }
     /**
      * Helpers for role checks
      */

@@ -22,41 +22,95 @@ class ReflectionController extends Controller
     {
         // 1. Listing réflexions (filtrées par activation et durée)
         $reflections = Reflection::query()
-            ->with('user') // Relation avec User
-            ->where('is_active', true)
-            ->where('created_at', '>', now()->subDays(7)) // Durée limitée (7 jours)
-            ->latest()
+            ->with('user')
+            ->with('votes') // Relation avec vote
+            // ->where('created_at', '>', now()->subDays(7)) // Durée limitée (ex: 7 jours)
+            // ->latest()
             ->get();
-
-        return Inertia::render('Reflections/Index', [
+        // dd($reflections->toArray());
+        $isAdmin = Auth::user()->role === 'admin';
+        if($isAdmin)
+        {
+            return Inertia::render('Reflections/AdminIndex', [
             'reflections' => $reflections,
             'success' => $request->session()->get('success'),
-        ]);
-    }
-    public function show(Reflection $reflection)
-    {
-        if (!$reflection->is_active && (!Auth::check() || Auth::user()->role !== 'admin')) {
-            abort(404);
-        }
+            ]);
 
-        $comments = CommentController::index($reflection);
+        }else{
+            return Inertia::render('Reflections/Index', [
+            'reflections' => $reflections,
+            'success' => $request->session()->get('success'),
+            ]);
+
+        }
         
-        // Chargement des relations nécessaires
-        $reflection->load(['user', 'comments.user']);
+    }
+
+
+
+    public function update(Request $request, $id)
+{
+    // dd($request->all());
+    // 1️⃣ Récupérer la réflexion
+    $reflection = Reflection::findOrFail($id);
+
+    // 2️⃣ Vérifier que l'utilisateur connecté est bien le propriétaire
+    if ($reflection->user_id !== auth()->id()) {
+        abort(403, "Vous n'êtes pas autorisé à modifier cette réflexion.");
+    }
+
+    // 3️⃣ Validation des données envoyées depuis le formulaire
+    $validated = $request->validate([
+        'titre' => 'required|string|max:255',
+        'contenu' => 'required|string',
+    ]);
+
+    // 4️⃣ Mise à jour dans la base de données
+    $reflection->update($validated);
+
+    // 5️⃣ Retour Inertia
+    return back()->with('success', 'Réflexion mise à jour avec succès.');
+}
+
+
+
+
+    public function show(Reflection $reflection){
+
+
+        
+
+        $comments=CommentController::ravel($reflection);
+
+        $reflection->load('user', 'comments');
+        // dd($comments);
+        // je charge manuellement les relations 'user' et 'comments'
+        // avant de passer l'objet à la vue.
 
         $voteController = new VoteController;
         $returnVote = $voteController->index($reflection->id);
-
-        $isVoteEnded = $reflection->date_fin_vote ? now()->greaterThanOrEqualTo($reflection->date_fin_vote) : false;
-        $isAdmin = Auth::check() && Auth::user()->role === 'admin';
-
-        return Inertia::render('Reflections/Show', [
-            'reflection' => $reflection,
-            'comments'=>$comments,
-            'isVoteEnded' => $isVoteEnded,
-            'isAdmin' => $isAdmin,
-            ...$returnVote,
-        ]);
+        // dd($returnVote);
+        $isVoteEnded = now()->greaterThanOrEqualTo($reflection->date_fin_vote);
+        $isAdmin = Auth::user()->role === 'admin';
+        if($isAdmin)
+        {
+            return Inertia::render('Reflections/Show', [
+                'reflection' => $reflection,
+                'comments'=>$comments,
+                'isVoteEnded' => $isVoteEnded,
+                'isAdmin' => $isAdmin,
+                ...$returnVote,
+            ]);
+        }else{
+            return Inertia::render('Reflections/Show', [
+                'reflection' => $reflection,
+                'comments'=>$comments,
+                'isVoteEnded' => $isVoteEnded,
+                'isAdmin' => $isAdmin,
+                ...$returnVote,
+            ]);
+        }
+        
     }
 
     /**
@@ -126,11 +180,18 @@ class ReflectionController extends Controller
      */
     public function validateReflection(Reflection $reflection)
     {
-        $this->authorize('update', $reflection);
+        // $this->authorize('update', $reflection);
         
         $reflection->update([
             'statut' => 'valide',
-            'is_active' => true
+        ]);
+
+        return redirect()->back()
+            ->with('success', 'La réflexion a été validée avec succès.');
+    }
+    public function openVote($reflection){
+         $reflection->update([
+            'statut' => 'ouvert',
         ]);
 
         return redirect()->back()
