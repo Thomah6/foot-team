@@ -1,5 +1,8 @@
 <script setup>
 import { ref } from 'vue'
+import InputLabel from '@/Components/InputLabel.vue'
+import TextInput from '@/Components/TextInput.vue'
+import PrimaryButton from '@/Components/PrimaryButton.vue'
 
 const props = defineProps({
   users: Array
@@ -16,28 +19,28 @@ function applyFilter() {
 <template>
   <div class="flex flex-wrap gap-4 items-end">
     <div class="flex-1 min-w-[200px]">
-      <label class="block text-sm font-medium mb-1">Filtrer par membre</label>
-      <select v-model="selectedUser" class="block w-full rounded border border-neutral-200">
+      <InputLabel>Filtrer par membre</InputLabel>
+      <select v-model="selectedUser" class="block w-full rounded border border-neutral-200 form-input">
         <option value="">Tous les membres</option>
         <option v-for="user in users" :value="user.id">{{ user.name }}</option>
       </select>
     </div>
     <div class="flex-1 min-w-[150px]">
-      <label class="block text-sm font-medium mb-1">Du</label>
-      <input type="date" v-model="dateFrom" class="block w-full rounded border border-neutral-200" />
+      <InputLabel>Du</InputLabel>
+      <TextInput type="date" v-model="dateFrom" />
     </div>
     <div class="flex-1 min-w-[150px]">
-      <label class="block text-sm font-medium mb-1">Au</label>
-      <input type="date" v-model="dateTo" class="block w-full rounded border border-neutral-200" />
+      <InputLabel>Au</InputLabel>
+      <TextInput type="date" v-model="dateTo" />
     </div>
     <div class="flex-1 min-w-[150px]">
-      <label class="block text-sm font-medium mb-1">Type</label>
-      <select v-model="selectedType" class="block w-full rounded border border-neutral-200">
+      <InputLabel>Type</InputLabel>
+      <select v-model="selectedType" class="block w-full rounded border border-neutral-200 form-input">
         <option value="">Tous les types</option>
         <option value="cotisation">Cotisation</option>
         <option value="dépense">Dépense</option>
       </select>
     </div>
-    <button @click="applyFilter" class="h-10 px-4 border border-primary text-primary font-bold rounded-lg ml-1">Filtrer</button>
+    <PrimaryButton @click="applyFilter" class="ml-1">Filtrer</PrimaryButton>
   </div>
 </template>

@@ -93,114 +93,123 @@ handleSearch()
 
 <template>
 <AuthenticatedLayout>
-  <main class="flex-1 p-8">
-    <div class="w-full max-w-7xl mx-auto flex flex-col gap-6">
-      <!-- PageHeading -->
-      <div class="flex flex-wrap items-start justify-between gap-4">
-        <div class="flex flex-col gap-2">
-          <p class="text-[#111318] dark:text-white text-3xl font-bold leading-tight tracking-tight">
+  <div class="page-container">
+    <div class="page-wrapper">
+      <!-- Page Header -->
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">
+            <i class="fas fa-calendar-check text-primary-600 mr-3"></i>
             Calendrier des Présences
-          </p>
-          <p class="text-[#636f88] dark:text-slate-400 text-base font-normal leading-normal">
-            Suivez et gérez la présence des membres aux événements footballistiques.
+          </h1>
+          <p class="page-subtitle">
+            Gérez la présence des membres aux événements footballistiques
           </p>
         </div>
         <Link
           :href="route('presence.history')"
-          class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-blue-600 dark:bg-blue-700 text-white text-sm font-bold leading-normal tracking-[0.015em] border border-blue-600 dark:border-blue-700 shadow-sm hover:bg-blue-700 dark:hover:bg-blue-600"
+          class="inline-flex items-center gap-2 px-6 py-3 rounded-button bg-accent-600 text-white font-semibold hover:bg-accent-700 transition-colors shadow-button"
         >
-          <span class="truncate">Voir l'historique</span>
+          <i class="fas fa-history"></i>
+          Historique
         </Link>
       </div>
 
       <!-- Toolbar -->
-      <div class="flex flex-col md:flex-row items-center justify-between gap-4 p-3 bg-white dark:bg-background-dark border border-slate-200 dark:border-white/10 rounded-xl">
-        <!-- Calendar Navigation -->
-        <div class="flex w-full md:w-auto items-center gap-2">
-          <!-- Native month picker (visible) to match History.vue -->
-          <input
-            v-model="monthInput"
-            @change="loadMonthFromInput"
-            type="month"
-            class="px-3 py-2 border border-slate-200 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-[#111318] dark:text-white focus:outline-0"
-            title="Sélectionner le mois"
-          />
-        </div>
+      <div class="card mb-6">
+        <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+          <!-- Month Picker -->
+          <div class="flex items-center gap-3 w-full md:w-auto">
+            <label for="month" class="text-sm font-semibold text-gray-700 dark:text-gray-300">Mois:</label>
+            <input
+              id="month"
+              v-model="monthInput"
+              @change="loadMonthFromInput"
+              type="month"
+              class="form-input w-full md:w-48"
+            />
+          </div>
 
-        <!-- Search and Actions -->
-        <div class="flex w-full md:w-auto items-center gap-4">
-          <!-- SearchBar -->
-          <label class="flex flex-col h-10 w-full md:w-64">
-            <div class="flex w-full flex-1 items-stretch rounded-lg h-full">
-              <div class="text-[#636f88] dark:text-slate-400 flex bg-background-light dark:bg-slate-700 items-center justify-center pl-3 rounded-l-lg border-y border-l border-slate-200 dark:border-slate-600">
-                <span class="material-symbols-outlined text-base">search</span>
-              </div>
+          <!-- Search -->
+          <div class="flex-1 md:flex-initial">
+            <div class="relative">
+              <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
               <input
                 v-model="searchQuery"
                 @input="handleSearch"
-                class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-r-lg text-[#111318] dark:text-white focus:outline-0 focus:ring-0 border-y border-r border-slate-200 dark:border-slate-600 bg-background-light dark:bg-slate-700 h-full placeholder:text-[#636f88] dark:placeholder:text-slate-400 px-2 text-sm font-normal leading-normal"
-                placeholder="Filtrer les membres..."
+                type="text"
+                placeholder="Rechercher un membre..."
+                class="form-input pl-10 w-full"
               />
             </div>
-          </label>
+          </div>
 
           <!-- Declare Presence Button -->
           <button
             v-if="!isAdmin"
             @click="showDeclarePresenceModal = true"
-            class="flex w-full md:w-auto max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 bg-blue-600 dark:bg-blue-700 text-white gap-2 text-sm font-bold leading-normal tracking-[0.015em] min-w-0 px-4 shadow-sm hover:bg-blue-700 dark:hover:bg-blue-600"
+            class="inline-flex items-center gap-2 px-6 py-3 rounded-button bg-primary-600 text-white font-semibold hover:bg-primary-700 transition-colors shadow-button whitespace-nowrap"
           >
-            <span class="material-symbols-outlined fill text-base">add_circle</span>
-            <span class="truncate">Déclarer ma présence</span>
+            <i class="fas fa-plus"></i>
+            Déclarer ma présence
           </button>
         </div>
       </div>
 
-      <!-- Table -->
-      <div class="w-full @container">
-        <div class="flex rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-background-dark shadow-sm overflow-x-auto">
-          <table class="w-full">
-            <thead class="border-b border-slate-200 dark:border-white/10">
-              <tr class="bg-white dark:bg-background-dark">
-                <th class="table-col-1 px-4 py-3 text-left text-[#111318] dark:text-white w-[250px] text-sm font-semibold sticky left-0 bg-white dark:bg-background-dark z-10">
-                  Membre
-                </th>
-                <th
-                  v-for="date in monthDates"
-                  :key="date"
-                  class="table-col px-4 py-3 text-center text-[#636f88] dark:text-slate-400 text-sm font-medium whitespace-nowrap"
-                >
-                  {{ formatDateHeader(date) }}
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr
-                v-for="(row, index) in filteredPresenceData"
-                :key="row.id"
-                :class="[
-                  'border-t border-slate-200/80 dark:border-white/10',
-                  index % 2 === 1 ? 'bg-black/5 dark:bg-white/5' : '',
-                ]"
+      <!-- Table Container -->
+      <div class="table-container">
+        <table class="table-responsive">
+          <thead>
+            <tr>
+              <th class="w-[250px] sticky left-0 z-10 bg-gray-50 dark:bg-gray-800">
+                <div class="flex items-center gap-2">
+                  <i class="fas fa-users text-primary-600"></i>
+                  <span>Membre</span>
+                </div>
+              </th>
+              <th
+                v-for="date in monthDates"
+                :key="date"
+                class="text-center whitespace-nowrap text-sm"
+                :title="new Date(date).toLocaleDateString('fr-FR', { weekday: 'long', month: 'long', day: 'numeric' })"
               >
-                <td class="table-col-1 px-4 py-3 w-[250px] text-[#111318] dark:text-white text-sm font-medium sticky left-0 z-10" :class="[index % 2 === 1 ? 'bg-black/5 dark:bg-white/5' : 'bg-white dark:bg-background-dark']">
-                  {{ row.name }}
-                </td>
-                <td
-                  v-for="date in monthDates"
-                  :key="`${row.id}-${date}`"
-                  class="table-col px-4 py-3 text-center"
-                >
-                  <PresenceStatusCell
-                    :presence="row.presences[date]"
-                    :is-admin="isAdmin"
-                    @update="updatePresence"
-                  />
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+                {{ formatDateHeader(date) }}
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-if="filteredPresenceData.length === 0">
+              <td :colspan="monthDates.length + 1" class="text-center py-8 text-gray-500">
+                <i class="fas fa-inbox text-3xl mb-2 block text-gray-300"></i>
+                Aucun membre trouvé
+              </td>
+            </tr>
+            <tr
+              v-for="row in filteredPresenceData"
+              :key="row.id"
+            >
+              <td class="sticky left-0 z-10 bg-white dark:bg-gray-800 w-[250px] font-semibold">
+                <div class="flex items-center gap-3">
+                  <div class="w-8 h-8 rounded-full bg-primary-100 dark:bg-primary-900 flex items-center justify-center text-primary-600 text-xs font-bold">
+                    {{ row.name.charAt(0) }}
+                  </div>
+                  <span>{{ row.name }}</span>
+                </div>
+              </td>
+              <td
+                v-for="date in monthDates"
+                :key="`${row.id}-${date}`"
+                class="text-center"
+              >
+                <PresenceStatusCell
+                  :presence="row.presences[date]"
+                  :is-admin="isAdmin"
+                  @update="updatePresence"
+                />
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
 
@@ -210,39 +219,6 @@ handleSearch()
       @close="showDeclarePresenceModal = false"
       @submit="declarPresence"
     />
-  </main>
+  </div>
 </AuthenticatedLayout>
 </template>
-
-<style scoped>
-.table-col-1 {
-  position: sticky;
-  left: 0;
-  z-index: 10;
-}
-@container (max-width: 840px) {
-  .table-col:nth-child(n + 8) {
-    display: none;
-  }
-}
-@container (max-width: 720px) {
-  .table-col:nth-child(n + 7) {
-    display: none;
-  }
-}
-@container (max-width: 600px) {
-  .table-col:nth-child(n + 6) {
-    display: none;
-  }
-}
-@container (max-width: 480px) {
-  .table-col:nth-child(n + 5) {
-    display: none;
-  }
-}
-@container (max-width: 360px) {
-  .table-col:nth-child(n + 4) {
-    display: none;
-  }
-}
-</style>

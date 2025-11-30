@@ -11,6 +11,235 @@
 /* Material Symbols Outlined (backup) */
 @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap');
 
+/* ====== GLOBAL STYLES ====== */
+
+/* Base Styles */
+@layer base {
+  body {
+    @apply bg-white dark:bg-gray-900 text-text-light dark:text-text-dark antialiased;
+  }
+
+  h1 {
+    @apply text-heading-1 font-bold text-text-light dark:text-text-dark;
+  }
+
+  h2 {
+    @apply text-heading-2 font-bold text-text-light dark:text-text-dark;
+  }
+
+  h3 {
+    @apply text-heading-3 font-semibold text-text-light dark:text-text-dark;
+  }
+
+  h4 {
+    @apply text-heading-4 font-semibold text-text-light dark:text-text-dark;
+  }
+
+  p {
+    @apply text-body text-text-light dark:text-text-dark;
+  }
+}
+
+/* ====== COMPONENT STYLES ====== */
+@layer components {
+  /* Page Container */
+  .page-container {
+    @apply min-h-screen bg-white dark:bg-gray-900;
+  }
+
+  .page-wrapper {
+    @apply w-full max-w-7xl mx-auto px-4 sm:px-6 md:px-8 py-6 md:py-8;
+  }
+
+  /* Page Header */
+  .page-header {
+    @apply flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8;
+  }
+
+  .page-title {
+    @apply text-heading-2 md:text-heading-1 font-bold text-text-light dark:text-text-dark;
+  }
+
+  .page-subtitle {
+    @apply text-subtext-light dark:text-subtext-dark text-base mt-2;
+  }
+
+  /* Cards */
+  .card {
+    @apply bg-surface-light dark:bg-surface-dark rounded-card shadow-card border border-gray-200 dark:border-gray-700 p-4 sm:p-6 transition-shadow hover:shadow-card-hover;
+  }
+
+  .card-header {
+    @apply flex justify-between items-center mb-4;
+  }
+
+  .card-title {
+    @apply text-heading-3 font-semibold text-text-light dark:text-text-dark;
+  }
+
+  .card-subtitle {
+    @apply text-subtext-light dark:text-subtext-dark text-sm;
+  }
+
+  .card-content {
+    @apply flex flex-col gap-4;
+  }
+
+  .card-footer {
+    @apply flex justify-end gap-2 mt-6 pt-4 border-t border-gray-200 dark:border-gray-700;
+  }
+
+  /* Grids */
+  .grid-responsive {
+    @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6;
+  }
+
+  .grid-responsive-4 {
+    @apply grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6;
+  }
+
+  /* Sections */
+  .section {
+    @apply mb-8 md:mb-12;
+  }
+
+  .section-title {
+    @apply text-heading-2 font-bold text-text-light dark:text-text-dark mb-4;
+  }
+
+  .section-content {
+    @apply space-y-4 md:space-y-6;
+  }
+
+  /* Tables */
+  .table-container {
+    @apply overflow-x-auto rounded-card border border-gray-200 dark:border-gray-700;
+  }
+
+  .table-responsive {
+    @apply w-full text-sm;
+  }
+
+  .table-responsive thead {
+    @apply bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700;
+  }
+
+  .table-responsive th {
+    @apply px-4 py-3 text-left font-semibold text-text-light dark:text-text-dark;
+  }
+
+  .table-responsive td {
+    @apply px-4 py-3 border-b border-gray-200 dark:border-gray-700 text-text-light dark:text-text-dark;
+  }
+
+  .table-responsive tbody tr {
+    @apply hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors;
+  }
+
+  /* Form Controls */
+  .form-group {
+    @apply flex flex-col gap-2 mb-4;
+  }
+
+  .form-label {
+    @apply text-sm font-semibold text-text-light dark:text-text-dark;
+  }
+
+  .form-input,
+  .form-textarea,
+  .form-select {
+    @apply w-full px-3 py-2 rounded-input border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-text-light dark:text-text-dark placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all;
+  }
+
+  .form-input[disabled],
+  .form-textarea[disabled],
+  .form-select[disabled] {
+    @apply opacity-50 cursor-not-allowed;
+  }
+
+  /* Badges & Status */
+  .badge {
+    @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold;
+  }
+
+  .badge-primary {
+    @apply bg-primary-100 text-primary-700 dark:bg-primary-900 dark:text-primary-100;
+  }
+
+  .badge-success {
+    @apply bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-100;
+  }
+
+  .badge-warning {
+    @apply bg-yellow-100 text-yellow-700 dark:bg-yellow-900 dark:text-yellow-100;
+  }
+
+  .badge-error {
+    @apply bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-100;
+  }
+
+  /* Alerts */
+  .alert {
+    @apply flex gap-3 p-4 rounded-card border mb-4;
+  }
+
+  .alert-success {
+    @apply bg-green-50 border-green-200 text-green-700 dark:bg-green-900/20 dark:border-green-800 dark:text-green-100;
+  }
+
+  .alert-error {
+    @apply bg-red-50 border-red-200 text-red-700 dark:bg-red-900/20 dark:border-red-800 dark:text-red-100;
+  }
+
+  .alert-info {
+    @apply bg-blue-50 border-blue-200 text-blue-700 dark:bg-blue-900/20 dark:border-blue-800 dark:text-blue-100;
+  }
+
+  .alert-warning {
+    @apply bg-yellow-50 border-yellow-200 text-yellow-700 dark:bg-yellow-900/20 dark:border-yellow-800 dark:text-yellow-100;
+  }
+
+  /* Loading State */
+  .loading {
+    @apply opacity-50 pointer-events-none;
+  }
+
+  /* Divider */
+  .divider {
+    @apply border-t border-gray-200 dark:border-gray-700 my-4 md:my-6;
+  }
+
+  /* Transitions */
+  .transition-fast {
+    @apply transition duration-150 ease-in-out;
+  }
+
+  .transition-smooth {
+    @apply transition duration-300 ease-in-out;
+  }
+
+  .transition-slow {
+    @apply transition duration-500 ease-in-out;
+  }
+}
+
+/* ====== UTILITIES ====== */
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-gray-100 dark:bg-gray-800;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-gray-300 dark:bg-gray-600 rounded-full hover:bg-gray-400 dark:hover:bg-gray-500;
+}
+
+/* Material Symbols */
 .material-symbols-outlined {
   font-variation-settings:
     'FILL' 0,
@@ -22,4 +251,27 @@
 
 .material-symbols-outlined.fill {
   font-variation-settings: 'FILL' 1;
+}
+
+/* Safe area support for notched devices */
+@supports (padding: max(0px)) {
+  .safe-viewport {
+    padding-left: max(1rem, env(safe-area-inset-left));
+    padding-right: max(1rem, env(safe-area-inset-right));
+    padding-top: max(1rem, env(safe-area-inset-top));
+    padding-bottom: max(1rem, env(safe-area-inset-bottom));
+  }
+}
+
+/* Mobile-first utility classes */
+@media (max-width: 640px) {
+  .hide-on-mobile {
+    @apply hidden;
+  }
+}
+
+@media (min-width: 641px) {
+  .show-on-mobile {
+    @apply hidden;
+  }
 }

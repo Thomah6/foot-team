@@ -5,103 +5,126 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import BannerPlayerMonth from '@/Pages/Admin/News/BannerPlayerMonth.vue';
 import ALaUne from '@/Pages/Admin/News/ALaUne.vue';
 
-// Props passées par le contrôleur
 const page = usePage();
 const user = page.props.auth.user;
-
-function handleImageError() {
-    document.getElementById('screenshot-container')?.classList.add('!hidden');
-    document.getElementById('docs-card')?.classList.add('!row-span-1');
-    document.getElementById('docs-card-content')?.classList.add('!flex-row');
-    document.getElementById('background')?.classList.add('!hidden');
-}
 </script>
 
 <template>
-    <Head title="Dashboard - FC Dynamo" />
+    <Head title="Tableau de bord - FC Dynamo" />
     
-    <!-- Font Awesome CDN -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     
     <AuthenticatedLayout>
-        <div class="relative min-h-screen w-full font-display bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
-            <!-- Contenu principal -->
-            <div>
-                <!-- Padding pour mobile pour ne pas être sous le hamburger -->
-                <div class="pt-16 lg:pt-0">
-                    <main class="flex-1 overflow-y-auto">
-                        <div class="p-8">
-                            <!-- Hero Section -->
-                            <div class="relative w-full rounded-xl overflow-hidden bg-white dark:bg-gray-800 shadow-lg dark:shadow-none mb-8">
-                                <div class="absolute inset-0 bg-cover bg-center" 
-                                     style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCq5SmIFwaqOxatQv-MMr6vmBY_JeCcxPb3rbasK4fR6vxUq8RhLoZj4U-HGbvTJ8EALKaDPfgZw0WJC9B5MU4YVTxgNrbb66g0F_9nkDl5NSh75LFTiWvXeZ8v-Xt3NftWiLKgmAH7Uho9PPKEPpZodFfuZ9hOt91WtwSJnO6B1c6dXf_Xy1-CIMJq8LmYvmI6qgipl_udXDpjf54bUIKBNoWOFQLJd4BkdarIHGqeyXCaEckHvoxKfNzq3fTFALJVJX4eRtUcA'); opacity: 0.1;">
-                                </div>
-                                <div class="relative flex flex-col md:flex-row items-center justify-between p-8 md:p-12 gap-8">
-                                    <div class="flex flex-col gap-4 max-w-2xl text-center md:text-left">
-                                        <h2 class="text-3xl md:text-4xl font-extrabold leading-tight tracking-tighter text-gray-900 dark:text-gray-100">
-                                            Bienvenue au FC Dynamo !
-                                        </h2>
-                                        <p class="text-lg text-gray-600 dark:text-gray-300">
-                                            Le centre névralgique de votre club de football. Suivez les dernières actualités, consultez les statistiques des joueurs et accompagnez-nous tout au long de cette saison exceptionnelle. Nous sommes ravis de vous compter parmi nous !
-                                        </p>
-                                    </div>
-                                    <div class="flex-shrink-0">
-                                        <Link href="/joueur-du-mois"
-                                              class="flex items-center gap-2 min-w-[84px] cursor-pointer justify-center overflow-hidden rounded-lg h-12 px-6 bg-green-500 text-white text-base font-bold leading-normal tracking-[0.015em] hover:bg-green-600 transition-opacity">
-                                            <span class="truncate">Joueur du mois</span>
-                                            <i class="fas fa-arrow-right"></i>
-                                        </Link>
-                                    </div>
+        <div class="page-container">
+            <div class="page-wrapper">
+                <!-- Hero Section -->
+                <section class="section mb-12">
+                    <div class="rounded-lg overflow-hidden bg-gradient-to-r from-primary-600 to-primary-800 shadow-elevation">
+                        <div class="relative flex flex-col md:flex-row items-center justify-between p-6 md:p-12 gap-8">
+                            <!-- Content -->
+                            <div class="flex flex-col gap-4 max-w-2xl flex-1">
+                                <h1 class="text-3xl md:text-4xl font-bold text-white leading-tight">
+                                    Bienvenue, {{ user.name }}! ⚽
+                                </h1>
+                                <p class="text-lg text-primary-100 leading-relaxed">
+                                    Bienvenue au FC Dynamo! C'est le centre névralgique de votre club. Suivez les actualités, les statistiques et accompagnez-nous tout au long de cette saison exceptionnelle.
+                                </p>
+                            </div>
+                            
+                            <!-- CTA Button -->
+                            <div class="flex gap-3 flex-wrap md:flex-nowrap">
+                                <Link href="/joueur-du-mois" class="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-button bg-white text-primary-600 font-bold hover:bg-gray-100 transition-all duration-200 shadow-lg hover:shadow-elevation">
+                                    <i class="fas fa-star"></i>
+                                    Joueur du mois
+                                </Link>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Main Content Grid -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <!-- Left Column - Main Content (2/3) -->
+                    <div class="lg:col-span-2 space-y-8">
+                        <!-- Player of Month Section -->
+                        <section class="section">
+                            <h2 class="section-title mb-6">
+                                <i class="fas fa-medal text-yellow-500 mr-3"></i>
+                                Joueur du mois
+                            </h2>
+                            <div class="overflow-x-auto">
+                                <div class="flex gap-6 pb-4">
+                                    <BannerPlayerMonth 
+                                        :player="page.props.player" 
+                                        :stats="page.props.stats"
+                                        :previousPlayers="page.props.previousPlayers" 
+                                    />
                                 </div>
                             </div>
+                        </section>
 
-                            <!-- Grid Layout -->
-                            <div class="grid grid-cols-12 gap-8">
-                                <!-- Left Column -->
-                                <div class="col-span-12 lg:col-span-8 flex flex-col gap-8">
-                                    <!-- Joueur du mois Section -->
-                                    <div>
-                                        <h2 class="text-2xl font-bold leading-tight tracking-tight px-0 pb-4">Joueur du mois</h2>
-                                        <div class="flex overflow-x-auto [-ms-scrollbar-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden -mx-8 px-4">
-                                            <div class="flex items-stretch p-4 gap-6">
-                                                <!-- BannerPlayerMonth Component -->
-                                                <BannerPlayerMonth 
-                                                    :player="page.props.player" 
-                                                    :stats="page.props.stats"
-                                                    :previousPlayers="page.props.previousPlayers" 
-                                                />
-                                            </div>
-                                        </div>
-                                    </div>
+                        <!-- Featured News Section -->
+                        <section class="section">
+                            <h2 class="section-title mb-6">
+                                <i class="fas fa-newspaper text-blue-500 mr-3"></i>
+                                À la une
+                            </h2>
+                            <div class="rounded-card shadow-elevation bg-white dark:bg-gray-800 overflow-hidden">
+                                <ALaUne :featured="page.props.featured" />
+                            </div>
+                        </section>
+                    </div>
 
-                                    <!-- À la une Section -->
-                                    <div>
-                                        <h2 class="text-2xl font-bold leading-tight tracking-tight pb-4">À la une</h2>
-                                        <div class="group/card @container overflow-hidden rounded-xl shadow-lg dark:shadow-none bg-white dark:bg-gray-800">
-                                            <ALaUne :featured="page.props.featured" />
-                                        </div>
-                                    </div>
+                    <!-- Right Column - Sidebar (1/3) -->
+                    <div class="space-y-6">
+                        <!-- Quick Stats Card -->
+                        <div class="card">
+                            <div class="card-header mb-4">
+                                <h3 class="card-title">
+                                    <i class="fas fa-chart-bar text-primary-600 mr-2"></i>
+                                    Statistiques rapides
+                                </h3>
+                            </div>
+                            <div class="space-y-4">
+                                <div class="flex justify-between items-center p-3 rounded-lg bg-gray-50 dark:bg-gray-700">
+                                    <span class="text-sm font-medium text-gray-600 dark:text-gray-300">Membres actifs</span>
+                                    <span class="text-2xl font-bold text-primary-600">{{ page.props.stats?.active_members || 0 }}</span>
                                 </div>
-
-                                <!-- Right Column -->
-                                <div class="col-span-12 lg:col-span-4 flex flex-col gap-8">
+                                <div class="flex justify-between items-center p-3 rounded-lg bg-gray-50 dark:bg-gray-700">
+                                    <span class="text-sm font-medium text-gray-600 dark:text-gray-300">Matchs joués</span>
+                                    <span class="text-2xl font-bold text-accent-500">{{ page.props.stats?.matches_played || 0 }}</span>
+                                </div>
+                                <div class="flex justify-between items-center p-3 rounded-lg bg-gray-50 dark:bg-gray-700">
+                                    <span class="text-sm font-medium text-gray-600 dark:text-gray-300">Victoires</span>
+                                    <span class="text-2xl font-bold text-green-500">{{ page.props.stats?.wins || 0 }}</span>
                                 </div>
                             </div>
                         </div>
-                    </main>
+
+                        <!-- Useful Links Card -->
+                        <div class="card">
+                            <h3 class="card-title mb-4">
+                                <i class="fas fa-link text-purple-600 mr-2"></i>
+                                Accès rapide
+                            </h3>
+                            <div class="space-y-2">
+                                <Link href="/presence" class="block p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-sm font-medium text-primary-600 hover:text-primary-700 transition-colors">
+                                    <i class="fas fa-check-circle mr-2"></i> Présences
+                                </Link>
+                                <Link href="/stats/create" class="block p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-sm font-medium text-primary-600 hover:text-primary-700 transition-colors">
+                                    <i class="fas fa-chart-line mr-2"></i> Ajouter stats
+                                </Link>
+                                <Link href="/galleries" class="block p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-sm font-medium text-primary-600 hover:text-primary-700 transition-colors">
+                                    <i class="fas fa-images mr-2"></i> Galerie photo
+                                </Link>
+                                <Link href="/finances" class="block p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-sm font-medium text-primary-600 hover:text-primary-700 transition-colors">
+                                    <i class="fas fa-money-bill mr-2"></i> Finances
+                                </Link>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </AuthenticatedLayout>
 </template>
-
-<style>
-.material-symbols-outlined {
-    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-    font-size: 24px;
-}
-
-.material-symbols-outlined.fill {
-    font-variation-settings: 'FILL' 1;
-}
-</style>
