@@ -152,8 +152,8 @@ const calculateValidated = () => {
                     </div>
                     <Link :href="route('presence.index')"
                         class="flex w-full md:w-auto min-w-[160px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-11 px-4 bg-gradient-to-r from-blue-600 to-blue-700 dark:from-blue-700 dark:to-blue-800 text-white text-sm font-bold leading-normal tracking-[0.015em] border border-blue-600 dark:border-blue-700 shadow-md hover:shadow-lg hover:from-blue-700 hover:to-blue-800 dark:hover:from-blue-600 dark:hover:to-blue-700 transition-all gap-2">
-                        <span class="material-symbols-outlined text-base">calendar_month</span>
-                        <span class="truncate">Calendrier</span>
+                        <span class="material-symbols-outlined text-base">arrow_back</span>
+                        <span class="truncate">Retour</span>
                     </Link>
                 </div>
 
@@ -162,13 +162,10 @@ const calculateValidated = () => {
                     class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 p-4 md:p-5 bg-gradient-to-br from-white to-gray-50 dark:from-background-dark dark:to-slate-800 border border-slate-200 dark:border-white/10 rounded-xl shadow-sm">
                     <!-- Month Selector -->
                     <div class="flex w-full md:w-auto items-center gap-3">
-                        <span class="material-symbols-outlined text-slate-600 dark:text-slate-400 text-xl">calendar_month</span>
+                        
                         <input v-model="selectedMonth" @change="loadMonth" type="month"
                             class="px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-[#111318] dark:text-white focus:outline-0 focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 font-medium" />
-                        <!-- Display formatted month/year -->
-                        <span class="text-sm font-semibold text-[#111318] dark:text-white hidden sm:inline">
-                            {{ formatMonthDisplay(selectedMonth) }}
-                        </span>
+                        
                     </div>
 
                     <!-- User Selector (Admin only) -->
