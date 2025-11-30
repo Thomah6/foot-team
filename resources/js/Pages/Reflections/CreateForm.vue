@@ -1,13 +1,18 @@
 <template>
   <div class="bg-white p-6 rounded-2xl shadow-xl border border-indigo-100 transform hover:shadow-2xl transition duration-300">
-    <h3 class="text-2xl font-extrabold text-indigo-700 mb-5 border-b pb-3">Partagez votre lumière 💡</h3>
+    <div class="flex justify-between">
+        <h3 class="text-2xl font-extrabold text-indigo-700 mb-5 border-b pb-3">Partagez votre Inspi ⚽</h3>
+        <button @click="closeForm" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
+            X
+        </button>
+    </div>
 
     <form @submit.prevent="submit">
 
         <input type="text"
             name="titre"
             v-model="form.titre"
-            class="w-full p-4 border-2 border-gray-300 rounded-xl focus:ring-indigo-500 focus:border-indigo-500 transition duration-200 resize-none text-gray-700 placeholder-gray-400 font-medium"
+            class="cursor-custom-icon w-full my-6 p-4 border-2 border-gray-300 rounded-xl focus:ring-indigo-500 focus:border-indigo-500 transition duration-200 resize-none text-gray-700 placeholder-gray-400 font-medium"
             placeholder="Choisissez un titre percutant"
         />
         <div v-if="form.errors.titre" class="text-red-500 text-sm mt-2">
@@ -19,7 +24,7 @@
         name="contenu"
         v-model="form.contenu"
         rows="5"
-        class="w-full p-4 border-2 border-gray-300 rounded-xl focus:ring-indigo-500 focus:border-indigo-500 transition duration-200 resize-none text-gray-700 placeholder-gray-400 font-medium"
+        class="cursor-custom-icon w-full p-4 border-2 border-gray-300 rounded-xl focus:ring-indigo-500 focus:border-indigo-500 transition duration-200 resize-none text-gray-700 placeholder-gray-400 font-medium"
         placeholder="Écrivez ce qui vous vient à l'esprit... (500 caractères max)"
         maxlength="500"
       ></textarea>
@@ -50,6 +55,12 @@
 
 <script setup>
 import { useForm } from '@inertiajs/vue3';
+import { defineEmits } from 'vue';
+
+const emit = defineEmits(['close']);
+function closeForm() {
+    emit('close');
+}
 
 // 1. Initialisation du formulaire Inertia
 const form = useForm({
@@ -63,3 +74,10 @@ function submit(){
     });
 }
 </script>
+<style scoped>
+.cursor-custom-icon:hover {
+    /* Utilisez votre propre chemin vers l'image PNG, SVG ou ICO */
+    /* Le 'auto' est une valeur de repli si l'image ne se charge pas */
+    cursor: url('/pngegg.png'), auto; 
+}
+</style>

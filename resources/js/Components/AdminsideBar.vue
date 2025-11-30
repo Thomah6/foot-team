@@ -1,6 +1,17 @@
 <script setup>
-import { ref, computed } from "vue";
-import { usePage, router } from "@inertiajs/vue3";
+import { ref, computed, defineProps } from "vue";
+import { Link, usePage, router } from "@inertiajs/vue3";
+defineProps({
+    Notification: {
+        type: Number,
+        default: 0,
+        required: false,
+    },
+    votes: Array,
+    reflections: Array,
+});
+// import VoteHistory from "../Pages/VoteHistory.vue";
+// import VoteListAdmin from "../Pages/VoteListAdmin.vue";
 
 const page = usePage();
 const user = page.props.auth.user;
@@ -8,7 +19,6 @@ const isAdmin = () => page.props.auth.user.role === "admin";
 const isBureau = () => page.props.auth.user.role === "bureau";
 
 const isOpen = ref(false);
-
 const menu = computed(() => {
     // Menu de base (unique, sans doublons)
     const items = [
@@ -21,7 +31,7 @@ const menu = computed(() => {
         {
             label: "Stats des membres",
             icon: "fas fa-table",
-            link: route("bureau.stats.index"),
+            link: route("bureau.stats.index", [], false), // false pour forcer le chemin absolu
             active: route().current("bureau.stats.index.*"),
         },
         {
@@ -30,11 +40,11 @@ const menu = computed(() => {
             link: route("finances.index"),
             active: route().current("finances.*"),
         },
+        // { label: "Stats", icon: "fas fa-chart-bar", link: route('admin.stats.index'), active: route().current('admin.stats.*') },
+        { label: "Classement", icon: "fas fa-trophy", link: route('stats.classements.index'), active: route().current('stats.classements.*') },
         {
             label: "Présences",
             icon: "fas fa-calendar-check",
-            link: route("presence.index"),
-            active: route().current("presence.*"),
         },
         {
             label: "Gallery",
@@ -59,6 +69,24 @@ const menu = computed(() => {
             icon: "fas fa-lightbulb",
             link: route("suggestions"),
             active: route().current("suggestions"),
+        },
+        {
+            label: "Reflections",
+            icon: "fas fa-comments",
+            link: route("reflections.index"),
+            active: route().current("reflections.*"),
+        },
+        {
+            label: "Historique des Votes Personnels",
+            icon: "fas fa-archive",
+            link: route("vote.history"),
+            active: route().current("vote.history"),
+        },
+        {
+            label: "Historique général des Votes",
+            icon: "fas fa-archive",
+            link: route("vote.list.admin"),
+            active: route().current("vote.list.admin"),
         },
     ];
 
@@ -88,14 +116,28 @@ const menu = computed(() => {
             }
         );
     }
+    if (isBureau()) {
+        items.push({
+            label: "Membres",
+            icon: "fas fa-user-friends",
+            link: route("bureau.members.index"),
+            active: route().current("bureau.members.index"),
+        });
 
+        items.push({
+            label: 'Stats des membres',
+            icon: 'fas fa-chart-bar',
+            link: route('bureau.stats.index', [], false),
+            active: route().current('bureau.stats.index.*')
+        });
+    }
+    // Correction principale : toujours retourner le menu
     return items;
-});
+}
+);
 
 
-const bottomMenu = [
-    { label: "Profile", icon: "fas fa-user", link: route("profile.edit") },
-];
+
 
 const handleLinkClick = () => {
     // Ne fermer le menu que si la sidebar mobile est ouverte
@@ -181,41 +223,38 @@ const handleImageError = (event) => {
 
         <!-- Navigation Items -->
         <nav class="flex flex-col gap-2 mt-4 flex-1 overflow-y-auto">
-            <template v-for="(item, index) in menu" :key="index">
-                <a href="#" @click.prevent="navigate(item.link)"
-                    class="flex items-center gap-3 px-3 py-2 rounded-md transition-colors" :class="item.active
-                        ? 'bg-blue-500/20 text-blue-600'
-                        : 'hover:bg-blue-500/10 text-text-primary-light dark:text-text-primary-dark'
-                        ">
-                    <i :class="item.icon" class="text-lg w-5 text-center"></i>
-                    <p class="text-sm font-medium">{{ item.label }}</p>
-                </a>
-            </template>
+            <Link v-for="(item, index) in menu" :key="index" :href="item.link"
+                class="flex items-center gap-3 px-3 py-2 rounded-md transition-colors" :class="item.active
+                    ? 'bg-blue-500/20 text-blue-600'
+                    : 'hover:bg-blue-500/10 text-text-primary-light dark:text-text-primary-dark'
+                    ">
+            <i :class="item.icon" class="text-lg w-5 text-center"></i>
+            <p class="text-sm font-medium">{{ item.label }}</p><span v-if="item.label === 'Reflections'">{{ Notification
+                }}</span>
+            </Link>
 
-            <!-- <Link :href="menu[2].link" class="flex items-center gap-3 px-3 py-2 rounded-md transition-colors" :class="menu[2].active
+            {/* <!-- <Link :href="menu[2].link" class="flex items-center gap-3 px-3 py-2 rounded-md transition-colors" :class="menu[2].active
                 ? 'bg-blue-500/20 text-blue-600'
                 : 'hover:bg-blue-500/10 text-text-primary-light dark:text-text-primary-dark'
                 ">
             <i :class="menu[2].icon" class="text-lg"></i>
             <p class="text-sm font-medium">{{ menu[2].label }}</p>
-            </Link> -->
+            </Link> --> */}
         </nav>
-       
 
 
 
-    <!-- Bottom -->
-    <div class="mt-auto flex flex-col gap-2 border-t border-gray-200 dark:border-gray-700 pt-4">
-                    <template v-for="(item, index) in bottomMenu" :key="`bottom-${index}`">
-                        <a href="#" @click.prevent="navigate(item.link)"
-                            class="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-blue-500/10 transition-colors text-text-primary-light dark:text-text-primary-dark">
-                            <i :class="item.icon" class="text-lg w-5 text-center"></i>
-                            <p class="text-sm font-medium">{{ item.label }}</p>
-                        </a>
-                    </template>
-    </div>
 
-  </aside>
+
+        <div class="mt-auto flex flex-col gap-2 border-t border-gray-200 dark:border-gray-700 pt-4">
+            <Link v-for="(item, index) in bottomMenu" :key="`bottom-${index}`" :href="item.link"
+                class="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-blue-500/10 transition-colors text-text-primary-light dark:text-text-primary-dark">
+            <i :class="item.icon" class="text-lg w-5 text-center"></i>
+            <p class="text-sm font-medium">{{ item.label }}</p>
+            </Link>
+        </div>
+
+    </aside>
 </template>
 
 <style scoped>

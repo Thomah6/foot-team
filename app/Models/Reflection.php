@@ -15,7 +15,6 @@ class Reflection extends Model
     protected $fillable = [
         'user_id', 'titre', 'contenu', 'statut', 'date_fin_vote'
     ];
-
     public function user()
     {
         return $this->belongsTo(User::class);
