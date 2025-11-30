@@ -245,7 +245,6 @@ Route::post('/admin/identity/update', [IdentityController::class, 'update'])
 
         // Gestion des actualités (Admin)
         Route::prefix('news')->name('news.')->group(function () {
-
             Route::get('/create', [NewsController::class, 'create'])->name('create');
             Route::post('/', [NewsController::class, 'store'])->name('store');
             Route::get('/{id}/edit', [NewsController::class, 'edit'])->name('edit');
