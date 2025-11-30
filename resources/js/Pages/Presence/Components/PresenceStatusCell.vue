@@ -55,6 +55,10 @@
           <span>✗ Absent</span>
         </button>
       </div>
+      <!-- Declarant badge -->
+      <div v-if="presence && presence.declared_by_user_name" class="mt-1 text-[0.65rem] text-slate-500 dark:text-slate-400 text-center">
+        Déclaré par <span class="font-semibold text-slate-700 dark:text-white">{{ presence.declared_by_user_name }}</span>
+      </div>
     </div>
     <div v-else class="flex items-center justify-center">
       <!-- Non-admin view -->
@@ -73,6 +77,9 @@
       <span v-else class="material-symbols-outlined fill text-red-500 text-2xl">
         cancel
       </span>
+      <div v-if="presence && presence.declared_by_user_name" class="ml-2 text-[0.65rem] text-slate-500 dark:text-slate-400">
+        Déclaré par <span class="font-semibold text-slate-700 dark:text-white">{{ presence.declared_by_user_name }}</span>
+      </div>
     </div>
   </div>
 </template>

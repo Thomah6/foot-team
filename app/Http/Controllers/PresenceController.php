@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class PresenceController extends Controller
 {
@@ -16,7 +17,9 @@ class PresenceController extends Controller
      */
     public function index(Request $request)
     {
-        $isAdmin = auth()->user()->role === 'admin';
+        $user = auth()->user();
+        $isAdmin = $user->role === 'admin';
+        $isBureau = $user->role === 'bureau';
         $selectedDate = $request->query('date') ? Carbon::parse($request->query('date')) : Carbon::now();
         $searchQuery = $request->query('search', '');
         $month = $request->query('month') ? Carbon::parse($request->query('month')) : Carbon::now();
@@ -35,7 +38,8 @@ class PresenceController extends Controller
         $startOfMonth = $month->clone()->startOfMonth();
         $endOfMonth = $month->clone()->endOfMonth();
 
-        $presences = Presence::whereBetween('date', [$startOfMonth, $endOfMonth])
+        $presences = Presence::with('declaredByUser')
+            ->whereBetween('date', [$startOfMonth, $endOfMonth])
             ->get()
             ->groupBy(function ($presence) {
                 return $presence->date;
@@ -43,7 +47,7 @@ class PresenceController extends Controller
 
         // Récupérer les présences du jour sélectionné (pour le filtre calendrier)
         $dayPresences = Presence::whereDate('date', $selectedDate)
-            ->with('user')
+            ->with(['user', 'declaredByUser'])
             ->get();
 
         // Données pour le tableau
@@ -56,6 +60,9 @@ class PresenceController extends Controller
             'month' => $month->toDateString(),
             'searchQuery' => $searchQuery,
             'isAdmin' => $isAdmin,
+            'isBureau' => $isBureau,
+            'currentUserId' => $user->id,
+            'users' => $isBureau ? $users : [], // Bureau voit la liste des joueurs pour déclarer
             'monthDates' => $this->getPresenceDatesInMonth($month),
         ]);
     }
@@ -75,7 +82,7 @@ class PresenceController extends Controller
         if ($isAdmin) {
             // Construire la requête de base
             $query = Presence::whereBetween('date', [$startOfMonth, $endOfMonth])
-                ->with('user')
+                ->with(['user', 'declaredByUser'])
                 ->orderBy('date', 'desc');
 
             // Si un utilisateur spécifique est sélectionné, le filtrer
@@ -99,6 +106,7 @@ class PresenceController extends Controller
             // L'utilisateur voit son propre historique
             $presenceHistory = Presence::where('user_id', auth()->id())
                 ->whereBetween('date', [$startOfMonth, $endOfMonth])
+                ->with('declaredByUser')
                 ->orderBy('date', 'desc')
                 ->get();
 
@@ -114,33 +122,64 @@ class PresenceController extends Controller
     }
 
     /**
-     * Déclarer sa présence (membre simple)
+     * Déclarer sa présence (ou celle d'un autre si bureau)
      */
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'date' => 'required|date',
-        ]);
+        $user = auth()->user();
+        $isBureau = $user->role === 'bureau';
+        $isAdmin = $user->role === 'admin';
+
+        // Debug log to help trace bureau submissions
+        if ($isBureau) {
+            Log::info('Presence store called by bureau', [
+                'user_id' => $user->id,
+                'request_all' => $request->all(),
+                'headers' => [
+                    'accept' => $request->header('Accept'),
+                    'x-requested-with' => $request->header('X-Requested-With'),
+                ],
+            ]);
+        }
+
+        // Validation
+        if ($isBureau) {
+            $validated = $request->validate([
+                'date' => 'required|date',
+                'user_id' => 'required|exists:users,id', // Bureau doit spécifier pour qui
+            ]);
+            $targetUserId = $validated['user_id'];
+        } else {
+            $validated = $request->validate([
+                'date' => 'required|date',
+            ]);
+            $targetUserId = $user->id;
+        }
 
         $date = Carbon::parse($validated['date'])->startOfDay();
 
-        // Vérifier si une présence existe déjà pour ce jour
-        $existingPresence = Presence::where('user_id', auth()->id())
-            ->whereDate('date', $date)
+        // Vérifier si une présence existe déjà pour ce jour (comparer via date string)
+        $existingPresence = Presence::where('user_id', $targetUserId)
+            ->where('date', $date->toDateString())
             ->first();
 
         if ($existingPresence) {
-            return back()->with('error', 'Vous avez déjà déclaré votre présence pour ce jour.');
+            $message = $isBureau ? 'Cette personne a déjà une déclaration pour ce jour.' : 'Vous avez déjà déclaré votre présence pour ce jour.';
+            return back()->with('error', $message);
         }
 
-        $isAdmin = auth()->user()->role === 'admin';
-
+        // Créer la présence
         $presence = Presence::create([
-            'user_id' => auth()->id(),
-            'date' => $date,
+            'user_id' => $targetUserId,
+            'date' => $date->toDateString(),
             'present' => true,
             'validated_by_admin' => $isAdmin, // auto-validate si admin
+            'declared_by_user_id' => $isBureau ? $user->id : null, // Tracer qui a déclaré si bureau
         ]);
+
+        if ($isBureau) {
+            Log::info('Presence created by bureau', ['presence_id' => $presence->id, 'declared_by' => $presence->declared_by_user_id]);
+        }
 
         if ($request->wantsJson()) {
             return response()->json([
@@ -148,9 +187,11 @@ class PresenceController extends Controller
                 'presence' => [
                     'id' => $presence->id,
                     'user_id' => $presence->user_id,
-                    'date' => $presence->date->toDateString(),
+                    'date' => $presence->date,
                     'present' => $presence->present,
                     'validated' => $presence->validated_by_admin,
+                    'declared_by_user_id' => $presence->declared_by_user_id,
+                    'declared_by_user_name' => $presence->declaredByUser ? $presence->declaredByUser->name : null,
                 ],
             ], 201);
         }
@@ -310,6 +351,8 @@ class PresenceController extends Controller
                     'id' => $userPresence->id,
                     'present' => $userPresence->present,
                     'validated' => $userPresence->validated_by_admin,
+                    'declared_by_user_id' => $userPresence->declared_by_user_id,
+                    'declared_by_user_name' => $userPresence->declaredByUser ? $userPresence->declaredByUser->name : null,
                 ] : null;
             }
 

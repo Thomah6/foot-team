@@ -13,6 +13,9 @@ const props = defineProps({
   month: String,
   searchQuery: String,
   isAdmin: Boolean,
+  isBureau: Boolean,
+  users: Array,
+  currentUserId: [String, Number],
   monthDates: Array,
 })
 
@@ -57,8 +60,59 @@ const loadMonthFromInput = () => {
   }
 }
 
-const declarPresence = async (date) => {
-  // If admin, post via fetch to get JSON response and update UI immediately
+const declarPresence = async (date, userId = null) => {
+  // Si bureau, post via fetch avec user_id
+  if (props.isBureau && userId) {
+    try {
+      const res = await fetch(route('presence.store'), {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'X-Requested-With': 'XMLHttpRequest',
+          'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
+        },
+        body: JSON.stringify({ date, user_id: parseInt(userId) }),
+        credentials: 'include',
+      })
+
+      if (!res.ok) {
+        const text = await res.text()
+        console.error('Presence (bureau) failed', res.status, text)
+        alert('Erreur lors de la déclaration (bureau): ' + res.status)
+        showDeclarePresenceModal.value = false
+        return
+      }
+
+      const data = await res.json()
+
+      // Mettre à jour la table locale
+      const presenceObj = data.presence
+      const row = filteredPresenceData.value.find((r) => r.id === presenceObj.user_id)
+      if (row) {
+        const newPresences = {
+          ...row.presences,
+          [date]: {
+            id: presenceObj.id,
+            present: presenceObj.present,
+            validated: presenceObj.validated,
+            declared_by_user_id: presenceObj.declared_by_user_id || null,
+            declared_by_user_name: presenceObj.declared_by_user_name || null,
+          },
+        }
+        const newRow = { ...row, presences: newPresences }
+        filteredPresenceData.value = filteredPresenceData.value.map((r) => (r.id === newRow.id ? newRow : r))
+      }
+
+      showDeclarePresenceModal.value = false
+      return
+    } catch (e) {
+      showDeclarePresenceModal.value = false
+      window.location.reload()
+    }
+  }
+
+  // Si admin, post via fetch to get JSON response and update UI immediately
   if (props.isAdmin) {
     try {
       const res = await fetch(route('presence.store'), {
@@ -67,12 +121,19 @@ const declarPresence = async (date) => {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
           'X-Requested-With': 'XMLHttpRequest',
+          'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
         },
         body: JSON.stringify({ date }),
         credentials: 'include',
       })
 
-      if (!res.ok) throw new Error('Erreur serveur')
+      if (!res.ok) {
+        const text = await res.text()
+        console.error('Presence (admin) failed', res.status, text)
+        alert('Erreur lors de la déclaration (admin): ' + res.status)
+        showDeclarePresenceModal.value = false
+        return
+      }
 
       const data = await res.json()
 
@@ -87,6 +148,8 @@ const declarPresence = async (date) => {
             id: presenceObj.id,
             present: presenceObj.present,
             validated: presenceObj.validated,
+            declared_by_user_id: presenceObj.declared_by_user_id || null,
+            declared_by_user_name: presenceObj.declared_by_user_name || null,
           },
         }
         const newRow = { ...row, presences: newPresences }
@@ -279,6 +342,10 @@ handleSearch()
     <!-- Modal: Déclarer sa présence -->
     <DeclarePresenceModal
       v-if="showDeclarePresenceModal"
+      :is-bureau="isBureau"
+      :users="isBureau ? users : []"
+      :current-user-id="currentUserId"
+      :current-user-name="$page.props.auth?.user?.name || 'Vous'"
       @close="showDeclarePresenceModal = false"
       @submit="declarPresence"
     />

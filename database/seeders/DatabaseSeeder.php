@@ -20,10 +20,44 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        User::factory(10)->create();
-        // Stat::factory(10)->create();
-        // Team::factory(5)->create();
-        // TeamStat::factory(15)->create();
+        // Créer 5 utilisateurs fixes (admin, bureau, 3 joueurs) pour dev rapide
+        User::factory()->create([
+            'name' => 'Admin Super',
+            'email' => 'admin@test.com',
+            'role' => 'admin',
+            'password' => bcrypt('password'),
+        ]);
+
+        User::factory()->create([
+            'name' => 'Bureau Team',
+            'email' => 'bureau@test.com',
+            'role' => 'bureau',
+            'password' => bcrypt('password'),
+        ]);
+
+        User::factory()->create([
+            'name' => 'Jean Dupont',
+            'email' => 'jean.dupont@test.com',
+            'role' => 'simple',
+            'password' => bcrypt('password'),
+        ]);
+
+        User::factory()->create([
+            'name' => 'Alice Martin',
+            'email' => 'alice.martin@test.com',
+            'role' => 'simple',
+            'password' => bcrypt('password'),
+        ]);
+
+        User::factory()->create([
+            'name' => 'Bob Leroy',
+            'email' => 'bob.leroy@test.com',
+            'role' => 'simple',
+            'password' => bcrypt('password'),
+        ]);
+
+        // Créer quelques utilisateurs factices supplémentaires
+        User::factory(8)->create();
     
         // Images spécifiques pour les joueurs du mois (validées et fonctionnelles)
         $playerImages = [
@@ -41,18 +75,11 @@ class DatabaseSeeder extends Seeder
 
 
         echo "\n Database seeded successfully !\n";
-        // Reflection::factory(40)->create();
-        // Comment::factory(200)->create();
 
-        // User::factory(10)->create();
-        User::factory()->create([
-            'name' => 'Pierre Durand',
-            'email' => 'pierre@example.com',
-        ]);
-
-        // Ensuite créer les stats (maintenant il y a des utilisateurs)
+        // Appeler les seeders dépendants
         $this->call([
             StatSeeder::class,
+            PresenceSeeder::class,
         ]);
     }
 }
