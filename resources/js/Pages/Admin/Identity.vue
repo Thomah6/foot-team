@@ -30,6 +30,19 @@ const submit = () => {
         }
     });
 };
+
+// ⚡ Bouton pour supprimer logo + preview + nom
+const deleteIdentity = () => {
+    form.post('/admin/identity/delete-identity', {
+        onSuccess: () => {
+            form.name = "";      // vider le nom côté formulaire
+            form.logo = null;    // vider le fichier côté formulaire
+            preview.value = null; // retirer la preview
+        }
+    });
+};
+
+
 </script>
 
 <template>
@@ -94,6 +107,13 @@ const submit = () => {
       >
         Enregistrer
       </button>
+<button
+  @click="deleteIdentity"
+  type="button"
+  class="w-full py-2 px-4 bg-red-600 text-white font-semibold rounded-lg shadow hover:bg-red-700 transition-colors"
+>
+  Supprimer logo et nom
+</button>
 
     </div>
   </div>
