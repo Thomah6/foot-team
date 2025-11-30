@@ -73,14 +73,26 @@ class PresenceController extends Controller
         $endOfMonth = $month->clone()->endOfMonth();
 
         if ($isAdmin) {
-            // L'admin voit tous les historiques
-            $presenceHistory = Presence::whereBetween('date', [$startOfMonth, $endOfMonth])
+            // Construire la requête de base
+            $query = Presence::whereBetween('date', [$startOfMonth, $endOfMonth])
                 ->with('user')
-                ->orderBy('date', 'desc')
-                ->get()
-                ->groupBy(function ($presence) {
+                ->orderBy('date', 'desc');
+
+            // Si un utilisateur spécifique est sélectionné, le filtrer
+            if ($userId) {
+                $query->where('user_id', $userId);
+            }
+
+            $presences = $query->get();
+
+            // Grouper par nom d'utilisateur uniquement si tous les utilisateurs sont affichés
+            if ($userId) {
+                $presenceHistory = $presences;
+            } else {
+                $presenceHistory = $presences->groupBy(function ($presence) {
                     return $presence->user->name;
                 });
+            }
 
             $users = User::all();
         } else {

@@ -28,6 +28,14 @@ const formatDateHeader = (date) => {
   return `${dayName} ${dayNum}/${month}`
 }
 
+const formatMonthDisplay = (dateStr) => {
+  const d = new Date(dateStr + '-01')
+  return d.toLocaleDateString('fr-FR', {
+    month: 'long',
+    year: 'numeric',
+  })
+}
+
 const handleSearch = () => {
   if (!searchQuery.value) {
     filteredPresenceData.value = props.presenceData
@@ -176,6 +184,10 @@ handleSearch()
             class="px-3 py-2 border border-slate-200 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-[#111318] dark:text-white focus:outline-0"
             title="Sélectionner le mois"
           />
+          <!-- Display current month/year -->
+          <span class="text-sm font-medium text-[#111318] dark:text-white">
+            {{ formatMonthDisplay(monthInput) }}
+          </span>
         </div>
 
         <!-- Search and Actions -->
