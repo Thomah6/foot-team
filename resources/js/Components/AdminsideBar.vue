@@ -45,6 +45,8 @@ const menu = computed(() => {
         {
             label: "Présences",
             icon: "fas fa-calendar-check",
+            link: route('presence.index'),
+            active: route().current('presence.*') || route().current('presence.index'),
         },
         {
             label: "Gallery",
@@ -135,6 +137,9 @@ const menu = computed(() => {
     return items;
 }
 );
+
+// Bottom menu (profil, paramètres, déconnexion...) - keep empty by default to avoid undefined in template
+const bottomMenu = [];
 
 
 

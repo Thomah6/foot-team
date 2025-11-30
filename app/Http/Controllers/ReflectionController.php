@@ -87,7 +87,11 @@ class ReflectionController extends Controller
         $voteController = new VoteController;
         $returnVote = $voteController->index($reflection->id);
         // dd($returnVote);
-        $isVoteEnded = now()->greaterThanOrEqualTo($reflection->date_fin_vote);
+        // Guard: some reflections may not have a "date_fin_vote" set.
+        // Avoid passing null to Carbon comparison which would throw a TypeError.
+        $isVoteEnded = $reflection->date_fin_vote
+            ? now()->greaterThanOrEqualTo($reflection->date_fin_vote)
+            : false;
         $isAdmin = Auth::user()->role === 'admin';
         if($isAdmin)
         {

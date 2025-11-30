@@ -38,7 +38,8 @@ class PresenceController extends Controller
         $presences = Presence::whereBetween('date', [$startOfMonth, $endOfMonth])
             ->get()
             ->groupBy(function ($presence) {
-                return $presence->date;
+                // $presence->date est déjà une string (YYYY-MM-DD)
+                return is_string($presence->date) ? $presence->date : $presence->date->toDateString();
             });
 
         // Récupérer les présences du jour sélectionné (pour le filtre calendrier)
@@ -261,7 +262,7 @@ class PresenceController extends Controller
                 $row['presences'][$date] = $userPresence ? [
                     'id' => $userPresence->id,
                     'present' => $userPresence->present,
-                    'validated' => $userPresence->validated_by_admin,
+                    'validated_by_admin' => $userPresence->validated_by_admin,
                 ] : null;
             }
 

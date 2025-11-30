@@ -4,17 +4,18 @@
     <div v-else-if="isAdmin" class="relative group">
       <!-- Status Icon with Tooltip -->
       <button
-        @click="toggleMenu"
+        ref="buttonRef"
+        @click="toggleMenu($event)"
         class="flex items-center justify-center cursor-pointer hover:opacity-75 transition"
       >
         <span
-          v-if="presence.present && presence.validated"
+          v-if="presence.present && presence.validated_by_admin"
           class="material-symbols-outlined fill text-green-500"
         >
           check_circle
         </span>
         <span
-          v-else-if="presence.present && !presence.validated"
+          v-else-if="presence.present && !presence.validated_by_admin"
           class="material-symbols-outlined fill text-yellow-500"
         >
           schedule
@@ -24,6 +25,7 @@
 
       <!-- Dropdown Menu -->
       <div
+        ref="menuRef"
         v-if="showMenu"
         class="fixed bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-600 rounded-lg shadow-lg z-50 min-w-[150px]"
         :style="{ top: menuTop + 'px', left: menuLeft + 'px' }"
@@ -54,13 +56,13 @@
     <div v-else>
       <!-- Non-admin view -->
       <span
-        v-if="presence.present && presence.validated"
+        v-if="presence.present && presence.validated_by_admin"
         class="material-symbols-outlined fill text-green-500"
       >
         check_circle
       </span>
       <span
-        v-else-if="presence.present && !presence.validated"
+        v-else-if="presence.present && !presence.validated_by_admin"
         class="material-symbols-outlined fill text-yellow-500"
       >
         schedule
@@ -83,11 +85,13 @@ const emit = defineEmits(['update'])
 const showMenu = ref(false)
 const menuTop = ref(0)
 const menuLeft = ref(0)
+const menuRef = ref(null)
+const buttonRef = ref(null)
 
-const toggleMenu = () => {
+const toggleMenu = (event) => {
   if (!showMenu.value) {
     // Calculate position
-    const button = event.target.closest('button')
+    const button = event.currentTarget
     if (button) {
       const rect = button.getBoundingClientRect()
       menuTop.value = rect.bottom + 8 // 8px below button
@@ -104,4 +108,13 @@ const updateStatus = (present, validated) => {
   })
   showMenu.value = false
 }
+
+// Close menu when clicking outside
+onMounted(() => {
+  document.addEventListener('click', (event) => {
+    if (menuRef.value && buttonRef.value && !menuRef.value.contains(event.target) && !buttonRef.value.contains(event.target)) {
+      showMenu.value = false
+    }
+  })
+})
 </script>

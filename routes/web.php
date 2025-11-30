@@ -101,6 +101,14 @@ Route::middleware(['auth', 'is.active'])->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+// Présences: accessible to authenticated users (declaration and viewing)
+Route::middleware(['auth', 'is.active'])->group(function () {
+    Route::get('/presence', [PresenceController::class, 'index'])->name('presence.index');
+    Route::get('/presence/history', [PresenceController::class, 'history'])->name('presence.history');
+    Route::post('/presence', [PresenceController::class, 'store'])->name('presence.store');
+    Route::get('/presence/day', [PresenceController::class, 'getByDate'])->name('presence.getByDate');
+});
+
 Route::prefix('admin')->middleware('role:admin')->group(function () {
 
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
@@ -123,17 +131,8 @@ Route::prefix('admin')->middleware('role:admin')->group(function () {
     });
 
     // ===== ROUTES PRÉSENCES =====
-    Route::get('/presence', [PresenceController::class, 'index'])->name('presence.index');
-    Route::get('/presence/history', [PresenceController::class, 'history'])->name('presence.history');
-    Route::post('/presence', [PresenceController::class, 'store'])->name('presence.store');
-    Route::get('/presence/day', [PresenceController::class, 'getByDate'])->name('presence.getByDate');
-
-    // Routes administrateur pour la gestion des présences
-    Route::middleware('role:admin')->group(function () {
-        Route::patch('/presence/{presence}/validate', [PresenceController::class, 'validate'])->name('presence.validate');
-        Route::patch('/presence/{presence}', [PresenceController::class, 'update'])->name('presence.update');
-        Route::get('/presence/monthly-report', [PresenceController::class, 'monthlyReport'])->name('presence.monthlyReport');
-    });
+    // Note: presence listing and declaration are available to authenticated users (not only admins).
+    // Admin-only management routes are defined later in admin-only groups.
 
     // Espace bureau - Gestion des membres
     Route::prefix('bureau')->middleware('role:bureau')->group(function () {
@@ -419,6 +418,13 @@ Route::post('/admin/identity/update', [IdentityController::class, 'update'])
     
 Route::post('/admin/identity/delete-identity', [IdentityController::class, 'deleteIdentity'])
      ->name('admin.identity.delete-identity');
+
+// Admin-only management routes for presences
+Route::middleware(['auth', 'is.active', 'role:admin'])->group(function () {
+    Route::patch('/admin/presence/{presence}/validate', [PresenceController::class, 'validate'])->name('presence.validate');
+    Route::patch('/admin/presence/{presence}', [PresenceController::class, 'update'])->name('presence.update');
+    Route::get('/admin/presence/monthly-report', [PresenceController::class, 'monthlyReport'])->name('presence.monthlyReport');
+});
 
 
 
