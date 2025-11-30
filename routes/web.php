@@ -355,17 +355,26 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/suggestions/{suggestion}/comment', [SuggestionController::class, 'comment']);
     Route::delete('/suggestions/{suggestion}', [SuggestionController::class, 'destroy']);
 });
-// Gestion des équipes
+// ===== ROUTES ÉQUIPES =====
 
-Route::get('/teams/index', [TeamController::class, 'index'])->name('admin.teams.index');
-Route::get('/teams/create', [TeamController::class, 'create'])->name('admin.teams.create');
-Route::post('/teams/create', [TeamController::class, 'store'])->name('admin.teams.store');
-Route::get('/teams/{id}/edit', [TeamController::class, 'edit'])->name('admin.teams.edit');
-Route::put('/teams/{team}', [TeamController::class, 'update'])->name('admin.teams.update');
-Route::delete('/teams/{id}', [TeamController::class, 'destroy'])->name('admin.teams.destroy');
-Route::get('/teams/{team}/affect', [TeamController::class, 'affectPage'])->name('teams.affect');
-Route::post('/teams/{team}/affect/save', [TeamController::class, 'saveAffect'])->name('teams.affect.save');
-Route::get('/teams/{team}', [TeamController::class, 'show'])->name('teams.show');
+// Routes publiques (accessible à tout utilisateur authentifié)
+Route::middleware(['auth', 'is.active'])->group(function () {
+    // Vue simple des équipes et détails
+    Route::get('/teams/index', [TeamController::class, 'index'])->name('admin.teams.index');
+    Route::get('/teams/{team}', [TeamController::class, 'show'])->name('teams.show');
+});
+
+// Routes admin seulement (CRUD complet)
+Route::middleware(['auth', 'is.active', 'role:admin'])->group(function () {
+    Route::get('/teams/create', [TeamController::class, 'create'])->name('admin.teams.create');
+    Route::post('/teams/create', [TeamController::class, 'store'])->name('admin.teams.store');
+    Route::get('/teams/{id}/edit', [TeamController::class, 'edit'])->name('admin.teams.edit');
+    Route::put('/teams/{team}', [TeamController::class, 'update'])->name('admin.teams.update');
+    Route::delete('/teams/{id}', [TeamController::class, 'destroy'])->name('admin.teams.destroy');
+    Route::get('/teams/{team}/affect', [TeamController::class, 'affectPage'])->name('teams.affect');
+    Route::post('/teams/{team}/affect/save', [TeamController::class, 'saveAffect'])->name('teams.affect.save');
+});
+
 // Routes pour les commentaires des suggestions
 Route::put('/comments/{comment}', [CommentsSuggestionController::class, 'update']);
 Route::delete('/comments/{comment}', [CommentsSuggestionController::class, 'destroy']);
