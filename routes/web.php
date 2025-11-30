@@ -415,6 +415,25 @@ Route::post('/admin/identity/delete-identity', [IdentityController::class, 'dele
 
 
 
+ 
+// Routes pour les réflexions
+Route::prefix('reflections')->group(function () {
+    Route::get('/', [ReflectionController::class, 'index'])->name('reflections.index');
+    Route::get('/{reflection}', [ReflectionController::class, 'show'])->name('reflections.show');
+    Route::get('/create', [ReflectionController::class, 'create'])->name('reflections.create');
+    Route::post('/', [ReflectionController::class, 'store'])->name('reflections.store');
+    Route::get('/{id}/edit', [ReflectionController::class, 'edit'])->name('reflections.edit');
+    Route::get('/{id}/validate', [ReflectionController::class, 'validate'])->name('reflections.validate');
+    Route::put('/{id}', [ReflectionController::class, 'update'])->name('reflections.update');
+    Route::delete('/{id}', [ReflectionController::class, 'destroy'])->name('reflections.destroy');
+    Route::patch('/{id}/toggle', [ReflectionController::class, 'toggle'])->name('reflections.toggle'); // activation/desactivationRoute::post('/{id}/validate', [ReflectionController::class, 'validateAfterDelay'])->name('admin.reflections.validate');
+    //Routes concernant les commentaires sur les reflexions
+    Route::post('/comments',[CommentController::class,'store'])->name('comments.store');
+ 
+    //Routes pour les likes des commentaires
+    // Route::get('/comments/like/{comment}',[CommentlikeController::class,'like'])->name('likeComment');
+    // Route::get('/comments/dislike/{comment}',[CommentlikeController::class,'dislike'])->name('dislikeComment');
+});
 
 // Routes d'authentification
 require __DIR__ . '/auth.php';

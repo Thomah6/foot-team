@@ -10,7 +10,7 @@
         >
           "{{ reflection.contenu }}"
         </blockquote>
-
+ 
         <div class="flex justify-between items-center text-gray-500 text-sm">
           <p class="font-semibold text-indigo-700">
             Publié par {{ reflection.user.name }}
@@ -56,7 +56,6 @@
                 Le {{ formatCommentDate(reflection.created_at) }}
             </p>
         </div>
-
         <div>
           <Vote
             :options="options"
@@ -72,7 +71,7 @@
           <p v-if="!$page.props.auth.user" class="text-sm text-red-500">Connectez-vous pour voter.</p>
         </div>
       </div>
-
+ 
       <CommentForm :reflection="reflection"/>
       <!-- <CreateForm/> -->
     </div>
@@ -111,7 +110,7 @@
     </Layout>
   </AuthenticatedLayout>
 </template>
-
+ 
 <script setup>
 import { defineProps, onMounted } from 'vue';
 import { router } from '@inertiajs/vue3';
@@ -147,15 +146,15 @@ function dislike(id){
 const formatCommentDate = (dateString) => {
   const date = new Date(dateString);
   return date.toLocaleDateString("fr-FR");
-};
-
+}
+ 
 function deleteRef(id) {
   router.get(route("reflections.destroy", id));
 }
-
+ 
 function activeRef(id) {
   router.get(route("reflections.validate", id));
 }
 </script>
-
+ 
 <style scoped></style>

@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, defineProps } from "vue";
 import { Link, usePage } from "@inertiajs/vue3";
 defineProps({
     Notification: {
@@ -8,6 +8,9 @@ defineProps({
         required: false,
     },
 });
+// import VoteHistory from "../Pages/VoteHistory.vue";
+// import VoteListAdmin from "../Pages/VoteListAdmin.vue";
+
 const page = usePage();
 const user = page.props.auth.user;
 const isAdmin = () => page.props.auth.user.role === "admin";
@@ -86,6 +89,16 @@ const menu = computed(() => {
             icon: "fas fa-comments",
             link: route("reflections.index"),
             active: route().current("reflections.*"),
+            label: "Historique des Votes Personnels",
+            icon: "fas fa-archive",
+            link: route("vote.history"),
+            active: route().current("vote.history"),
+        },
+        {
+            label: "Historique général des Votes",
+            icon: "fas fa-archive",
+            link: route("vote.list.admin"),
+            active: route().current("vote.list.admin"),
         },
     ];
 
@@ -153,6 +166,11 @@ const handleImageError = (event) => {
     // Si l'image ne charge pas, utiliser l'avatar par défaut
     event.target.src = `https://ui-avatars.com/api/?name=${user.name}&color=7F9CF5&background=EBF4FF&size=40`;
 };
+
+defineProps({
+    votes: Array,
+    reflections: Array,
+});
 </script>
 
 <template>

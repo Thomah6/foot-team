@@ -26,6 +26,11 @@ function updateNotifCount(count) {
     // S'assure que 'count' est un nombre
     notifications.value = (typeof count === 'number' && count >= 0) ? count : 0;
 }
+
+defineProps({
+    votes: Array,
+    reflections: Array,
+});
 </script>
 
 <template>
@@ -213,8 +218,12 @@ function updateNotifCount(count) {
 
             <!-- Page Content -->
             <main class="flex h-full border">
-                <div class="max-h-[calc(100vh-4rem)] sticky top-0 z-50">
-                    <AdminsideBar :Notification="notifications"/>
+                <div class="min-h-full max-h-[calc(100vh-4rem)] sticky top-0 z-50">
+                    <AdminsideBar 
+                    :votes="votes"
+                    :reflections="reflections"
+                    :Notification="notifications"
+                    />
                 </div>
                 <div class="h-[calc(100vh-4rem)] overflow-y-scroll w-full">
                     <slot :updateNotifications="updateNotifCount()" /> 
