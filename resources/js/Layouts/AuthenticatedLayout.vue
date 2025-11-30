@@ -1,5 +1,6 @@
 <script setup>
 import { ref } from 'vue';
+import { defineEmits } from 'vue';
 import ApplicationLogo from '@/Components/ApplicationLogo.vue';
 import Dropdown from '@/Components/Dropdown.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
@@ -17,6 +18,19 @@ const handleImageError = (event) => {
     // Si l'image ne charge pas, utiliser l'avatar par défaut
     event.target.src = `https://ui-avatars.com/api/?name=${page.props.auth.user.name}&color=7F9CF5&background=EBF4FF&size=24`
 }
+const notifications = ref(0); // L'état des notifications
+
+// La fonction que nous exposons au slot pour que l'enfant puisse DEFINIR la valeur
+function updateNotifCount(count) {
+    console.log("Mise à jour des notifications à :", count);
+    // S'assure que 'count' est un nombre
+    notifications.value = (typeof count === 'number' && count >= 0) ? count : 0;
+}
+
+defineProps({
+    votes: Array,
+    reflections: Array,
+});
 </script>
 
 <template>
@@ -46,12 +60,17 @@ const handleImageError = (event) => {
                                 <NavLink v-if="isAdmin()" :href="route('admin.team-stats.index')"
                                     :active="route().current('admin.team-stats.*')">
                                     Statistiques des équipes
-                                </NavLink>
+                                </NavLink> -->
                                 <NavLink v-if="isAdmin()" :href="route('reflections.index')"
                                     :active="route().current('reflections.*')">
-                                    Reflexions
+                                    Reflexions 
+                                    <span v-if="notifications > 0" 
+                                        class="ms-2 inline-flex items-center justify-center h-5 min-w-[20px] 
+                                                px-1.5 rounded-full text-xs font-bold text-white bg-red-500">
+                                        {{ notifications }}
+                                    </span>
                                 </NavLink>
-                                <NavLink v-if="isBureau()" :href="route('bureau.members.index')"
+                                <!-- <NavLink v-if="isBureau()" :href="route('bureau.members.index')"
                                     :active="route().current('bureau.members.*')">
                                     Members
                                 </NavLink> -->
@@ -148,11 +167,9 @@ const handleImageError = (event) => {
                         </ResponsiveNavLink>
                         <ResponsiveNavLink v-if="isAdmin()" :href="route('reflections.index')"
                             :active="route().current('reflections.*')">
-                            Reflexions
+                            Reflexions <span class="badge">{{ notifications }}</span>
                         </ResponsiveNavLink>
-                        <Link :href="route('reflections.index')">
-                        Voir les Réflexions
-                        </Link>
+                        
                     </div>
 
                     <!-- Responsive Settings Options -->
@@ -201,11 +218,15 @@ const handleImageError = (event) => {
 
             <!-- Page Content -->
             <main class="flex h-full border">
-                <div class="min-h-full sticky top-0 z-50">
-                    <AdminsideBar />
+                <div class="min-h-full max-h-[calc(100vh-4rem)] sticky top-0 z-50">
+                    <AdminsideBar 
+                    :votes="votes"
+                    :reflections="reflections"
+                    :Notification="notifications"
+                    />
                 </div>
                 <div class="h-[calc(100vh-4rem)] overflow-y-scroll w-full">
-                    <slot />
+                    <slot :updateNotifications="updateNotifCount()" /> 
                 </div>
 
             </main>

@@ -1,4 +1,4 @@
-<template>
+<template >
     <AuthenticatedLayout>
         <Layout>
             <div class="max-w-full  mx-auto py-10 px-4 sm:px-6 lg:px-8">
@@ -8,7 +8,7 @@
                     <div class="max-w-2xs max-h-[95vh] mx-auto md:mx-0 flex flex-col">
                         <CreateForm/>
                         <h1 class="mt-6">Mes reflexions</h1>
-                        <div v-for="reflection in reflections.filter(reflection => reflection.user_id === $page.props.auth.user?.id)" class="scroller mt-6 max-h-90 overflow-y-auto w-full" :key="reflection.id">
+                       <div v-for="reflection in reflections.filter(reflection => reflection.user_id === $page.props.auth.user?.id)" class="scroller mt-6 max-h-90 overflow-y-auto" :key="reflection.id">
                             <UserReflection 
                             :reflection="reflection" 
                             @edit="openEditModal"
@@ -28,7 +28,7 @@
                             </div>
 
                             <ReflectionCard 
-                                v-for="reflection in sortedReflections" 
+                                v-for="reflection in reflections" 
                                 :key="reflection.id"
                                 :reflection="reflection" 
                             />
@@ -49,11 +49,10 @@
 
         <h2 class="text-xl font-semibold mb-4">Modifier la réflexion</h2>
         
-        <label class="block text-sm mb-1">Titre</label>
+        <label class="block text-sm mb-1">Statut :</label>
         <input type="text"
             name="titre"
             v-model="form.titre"
-
             class="cursor-custom-icon w-full my-6 p-4 border-2 border-gray-300 rounded-xl focus:ring-indigo-500 focus:border-indigo-500 transition duration-200 resize-none text-gray-700 placeholder-gray-400 font-medium"
             placeholder="Choisissez un titre percutant"
         />

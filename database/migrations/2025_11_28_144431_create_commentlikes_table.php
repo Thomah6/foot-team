@@ -11,13 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('reflections', function (Blueprint $table) {
+        Schema::create('commentlikes', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
-            $table->string('titre');
-            $table->text('contenu');
-            $table->enum('statut', ['ouvert', 'ferme', 'valide'])->default('ouvert');
-            $table->dateTime('date_fin_vote');
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('comment_id')->constrained()->onDelete('cascade');
+            $table->tinyInteger('like')->nullable();
             $table->timestamps();
         });
     }
@@ -27,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('reflections');
+        Schema::dropIfExists('commentlikes');
     }
 };

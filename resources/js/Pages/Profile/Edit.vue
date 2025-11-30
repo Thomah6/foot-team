@@ -15,10 +15,9 @@ defineProps({
     },
 });
 </script>
-
 <template>
-    <AuthenticatedLayout>
-        <Head title="Profile" />
+<AuthenticatedLayout>
+    <Head title="Profile" />
 
         <div class="py-6 px-4 md:px-10">
             <div class="max-w-4xl mx-auto space-y-6">
@@ -57,5 +56,6 @@ defineProps({
                 </div>
             </div>
         </div>
+    
     </AuthenticatedLayout>
 </template>
