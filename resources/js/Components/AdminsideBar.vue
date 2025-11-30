@@ -7,6 +7,8 @@ defineProps({
         default: 0,
         required: false,
     },
+    votes: Array,
+    reflections: Array,
 });
 // import VoteHistory from "../Pages/VoteHistory.vue";
 // import VoteListAdmin from "../Pages/VoteListAdmin.vue";
@@ -166,11 +168,6 @@ const handleImageError = (event) => {
     // Si l'image ne charge pas, utiliser l'avatar par défaut
     event.target.src = `https://ui-avatars.com/api/?name=${user.name}&color=7F9CF5&background=EBF4FF&size=40`;
 };
-
-defineProps({
-    votes: Array,
-    reflections: Array,
-});
 </script>
 
 <template>
