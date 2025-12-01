@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, defineProps } from "vue";
+import { ref, computed, defineProps, onMounted, onUnmounted } from "vue";
 import { Link, usePage, router } from "@inertiajs/vue3";
 defineProps({
     Notification: {
@@ -32,8 +32,8 @@ const menu = computed(() => {
         {
             label: "Stats des membres",
             icon: "fas fa-table",
-            link: route("bureau.stats.index", [], false), // false pour forcer le chemin absolu
-            active: route().current("bureau.stats.index.*"),
+            link: route("admin.bureau.stats.index", [], false), // false pour forcer le chemin absolu
+            active: route().current("admin.bureau.stats.index.*"),
         },
         {
             label: "Finances",
@@ -41,7 +41,7 @@ const menu = computed(() => {
             link: route("finances.index"),
             active: route().current("finances.*"),
         },
-        // { label: "Stats", icon: "fas fa-chart-bar", link: route('admin.stats.index'), active: route().current('admin.stats.*') },
+        { label: "Stats", icon: "fas fa-chart-bar", link: route('admin.stats.index'), active: route().current('admin.stats.*') },
         { label: "Classement", icon: "fas fa-trophy", link: route('stats.classements.index'), active: route().current('stats.classements.*') },
         {
             label: "Présences",
@@ -101,8 +101,8 @@ const menu = computed(() => {
         items.push({
             label: "Membres (Bureau)",
             icon: "fas fa-user-friends",
-            link: route("bureau.members.index"),
-            active: route().current("bureau.members.index"),
+            link: route("admin.bureau.members.index"),
+            active: route().current("admin.bureau.members.index"),
         });
     }
 
@@ -111,8 +111,8 @@ const menu = computed(() => {
             {
                 label: "Membres",
                 icon: "fas fa-user-friends",
-                link: route("members.index"),
-                active: route().current("members.index"),
+                link: route("admin.members.index"),
+                active: route().current("admin.members.index"),
             },
             {
                 label: "Statistiques équipes",
@@ -126,15 +126,15 @@ const menu = computed(() => {
         items.push({
             label: "Membres",
             icon: "fas fa-user-friends",
-            link: route("bureau.members.index"),
-            active: route().current("bureau.members.index"),
+            link: route("admin.bureau.members.index"),
+            active: route().current("admin.bureau.members.index"),
         });
 
         items.push({
             label: 'Stats des membres',
             icon: 'fas fa-chart-bar',
-            link: route('bureau.stats.index', [], false),
-            active: route().current('bureau.stats.index.*')
+            link: route('admin.bureau.stats.index', [], false),
+            active: route().current('admin.bureau.stats.index.*')
         });
     }
     // Correction principale : toujours retourner le menu
@@ -170,6 +170,26 @@ const closeMenu = () => isOpen.value = false;
 
 const handleImageError = (event) => {
     event.target.src = `https://ui-avatars.com/api/?name=${user.name}&color=7F9CF5&background=EBF4FF&size=40`;
+};
+
+// Gestionnaire d'événement pour le toggle global
+const handleToggleSidebar = () => {
+    isOpen.value = !isOpen.value;
+};
+
+// Ajouter l'écouteur d'événement au montage du composant
+onMounted(() => {
+    window.addEventListener('toggle-sidebar', handleToggleSidebar);
+});
+
+// Nettoyer l'écouteur d'événement au démontage
+onUnmounted(() => {
+    window.removeEventListener('toggle-sidebar', handleToggleSidebar);
+});
+
+// Fonction pour gérer la déconnexion
+const handleLogout = () => {
+    router.post('/logout');
 };
 </script>
 
@@ -232,6 +252,13 @@ const handleImageError = (event) => {
             <i :class="item.icon" class="text-lg w-5 text-center"></i>
             <p class="text-sm font-medium">{{ item.label }}</p>
             </Link>
+
+            <!-- Bouton logout -->
+            <button @click="handleLogout"
+                class="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-red-500/10 transition-colors text-red-600 dark:text-red-400 w-full">
+                <i class="fas fa-sign-out-alt text-lg w-5 text-center"></i>
+                <p class="text-sm font-medium">Déconnexion</p>
+            </button>
         </div>
 
     </aside>
