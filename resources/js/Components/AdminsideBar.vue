@@ -214,7 +214,7 @@ const handleImageError = (event) => {
             <Link v-for="(item, index) in menu" :key="index" :href="item.link"
                 class="flex items-center gap-3 px-3 py-2 rounded-md transition-colors" :class="item.active
                     ? 'bg-blue-500/20 text-blue-600'
-                    : 'hover:bg-blue-500/10 text-text-primary-light dark:text-text-primary-dark'
+                    : 'hover:bg-blue-500/10 text-white dark:text-text-primary-dark'
                     ">
             <i :class="item.icon" class="text-lg w-5 text-center"></i>
             <p class="text-sm font-medium">{{ item.label }}</p><span v-if="item.label === 'Reflections'">{{ Notification

@@ -181,10 +181,10 @@ Route::prefix('admin')->middleware('role:admin')->group(function () {
         Route::get('/identity', [IdentityController::class, 'index'])->name('admin.identity');
 
 
-Route::get('/admin/identity', [IdentityController::class, 'index']);
+        Route::get('/admin/identity', [IdentityController::class, 'index']);
 
-Route::post('/admin/identity/update', [IdentityController::class, 'update'])
-    ->name('admin.identity.update');
+        Route::post('/admin/identity/update', [IdentityController::class, 'update'])
+            ->name('admin.identity.update');
 
         // Gestion des statistiques
         Route::prefix('stats')->group(function () {
@@ -275,18 +275,18 @@ Route::post('/admin/identity/update', [IdentityController::class, 'update'])
 
 
 Route::prefix('bureau')->middleware('role:bureau')->group(function () {
-        Route::get('/members', [BureauMemberController::class, 'index'])->name('bureau.members.index');
+    Route::get('/members', [BureauMemberController::class, 'index'])->name('bureau.members.index');
 
-        // Statistiques du bureau
-        Route::prefix('stats')->group(function () {
-            Route::get('/', [BureauStatController::class, 'index'])->name('bureau.stats.index');
-            Route::get('/leaderboards', [BureauStatController::class, 'leaderboards'])->name('bureau.stats.leaderboards');
-            Route::get('/leaderboards/goals', [BureauStatController::class, 'goalLeaders'])->name('bureau.stats.leaderboards.goals');
-            Route::get('/leaderboards/assists', [BureauStatController::class, 'assistLeaders'])->name('bureau.stats.leaderboards.assists');
-            Route::get('/leaderboards/goalkeepers', [BureauStatController::class, 'goalkeeperLeaders'])->name('bureau.stats.leaderboards.goalkeepers');
-            Route::get('/members/{user}/stats', [BureauStatController::class, 'memberStats'])->name('bureau.stats.member');
-        });
+    // Statistiques du bureau
+    Route::prefix('stats')->group(function () {
+        Route::get('/', [BureauStatController::class, 'index'])->name('bureau.stats.index');
+        Route::get('/leaderboards', [BureauStatController::class, 'leaderboards'])->name('bureau.stats.leaderboards');
+        Route::get('/leaderboards/goals', [BureauStatController::class, 'goalLeaders'])->name('bureau.stats.leaderboards.goals');
+        Route::get('/leaderboards/assists', [BureauStatController::class, 'assistLeaders'])->name('bureau.stats.leaderboards.assists');
+        Route::get('/leaderboards/goalkeepers', [BureauStatController::class, 'goalkeeperLeaders'])->name('bureau.stats.leaderboards.goalkeepers');
+        Route::get('/members/{user}/stats', [BureauStatController::class, 'memberStats'])->name('bureau.stats.member');
     });
+});
 
 Route::prefix('reflections')->group(function () {
     Route::get('/', [ReflectionController::class, 'index'])->name('reflections.index');
@@ -299,11 +299,11 @@ Route::prefix('reflections')->group(function () {
     Route::delete('/{reflection}', [ReflectionController::class, 'destroy'])->name('reflections.destroy');
     Route::patch('/{id}/toggle', [ReflectionController::class, 'toggle'])->name('reflections.toggle'); // activation/desactivationRoute::post('/{id}/validate', [ReflectionController::class, 'validateAfterDelay'])->name('admin.reflections.validate');
     //Routes concernant les commentaires sur les reflexions
-    Route::post('/comments',[CommentController::class,'store'])->name('comments.store');
+    Route::post('/comments', [CommentController::class, 'store'])->name('comments.store');
 
     //Routes pour les likes des commentaires
-    Route::get('/comments/like/{comment}',[CommentlikeController::class,'like'])->name('likeComment');
-    Route::get('/comments/dislike/{comment}',[CommentlikeController::class,'dislike'])->name('dislikeComment');
+    Route::get('/comments/like/{comment}', [CommentlikeController::class, 'like'])->name('likeComment');
+    Route::get('/comments/dislike/{comment}', [CommentlikeController::class, 'dislike'])->name('dislikeComment');
 });
 // Les routes du bureau sont maintenant définies dans la section authentifiée
 
@@ -365,7 +365,7 @@ Route::middleware(['auth', 'is.active'])->group(function () {
     Route::post('/regulations/fusion', [RegulationControler::class, 'fusion'])->name('regulations.fusion');
 
     Route::get('/regulations/content/{content}/edit', [RegulationControler::class, 'editContent'])
-    ->name('regulations.content.edit');
+        ->name('regulations.content.edit');
 
     Route::put('/regulations/content/{content}', [RegulationControler::class, 'updateContent'])
         ->name('regulations.content.update');
@@ -430,10 +430,10 @@ Route::put('/comments/{comment}', [CommentsSuggestionController::class, 'update'
 Route::delete('/comments/{comment}', [CommentsSuggestionController::class, 'destroy']);
 
 
-Route::get('/admin', [AdminController::class,'index'])->name('Admin.AdminLayout');
+Route::get('/admin', [AdminController::class, 'index'])->name('Admin.AdminLayout');
 
 
-Route::get('/admin/create', [StatController::class,'create'])->name('Admin.CreateStats');
+Route::get('/admin/create', [StatController::class, 'create'])->name('Admin.CreateStats');
 
 Route::get('/identity', [IdentityController::class, 'index'])->name('admin.identity');
 
@@ -444,7 +444,7 @@ Route::post('/admin/identity/update', [IdentityController::class, 'update'])
     ->name('admin.identity.update');
 
 Route::post('/admin/identity/delete-identity', [IdentityController::class, 'deleteIdentity'])
-     ->name('admin.identity.delete-identity');
+    ->name('admin.identity.delete-identity');
 
 // Admin-only management routes for presences
 Route::middleware(['auth', 'is.active', 'role:admin'])->group(function () {
@@ -469,7 +469,7 @@ Route::prefix('reflections')->group(function () {
     Route::delete('/{id}', [ReflectionController::class, 'destroy'])->name('reflections.destroy');
     Route::patch('/{id}/toggle', [ReflectionController::class, 'toggle'])->name('reflections.toggle'); // activation/desactivationRoute::post('/{id}/validate', [ReflectionController::class, 'validateAfterDelay'])->name('admin.reflections.validate');
     //Routes concernant les commentaires sur les reflexions
-    Route::post('/comments',[CommentController::class,'store'])->name('comments.store');
+    Route::post('/comments', [CommentController::class, 'store'])->name('comments.store');
 
     //Routes pour les likes des commentaires
     // Route::get('/comments/like/{comment}',[CommentlikeController::class,'like'])->name('likeComment');
