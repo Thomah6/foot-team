@@ -1,7 +1,7 @@
 <template>
     <div class="vote-component p-4">
         <h2 class="text-lg font-bold mb-4 text-center">Cast Your Vote</h2>
-        <div v-if="!isVoteEnded">
+        <div v-if="!isVoteEnded" class="grid grid-cols-2 gap-4 w-full">
             <div v-for="option in options" :key="option.id" class="vote-option">
                 <label
                     @click="submitVote(option)"

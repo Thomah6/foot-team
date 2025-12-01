@@ -48,7 +48,7 @@ const menu = computed(() => {
             link: route('presence.index'),
             active: route().current('presence.*') || route().current('presence.index'),
         },
-        
+
         {
             label: "Gallery",
             icon: "fa-solid fa-photo-film",
@@ -62,6 +62,7 @@ const menu = computed(() => {
             active: route().current('regulations.index'),
         },
         {
+
             label: "Teams",
             icon: "fas fa-people-group",
             link: route("admin.teams.index"),
@@ -190,6 +191,11 @@ onMounted(() => {
 onUnmounted(() => {
     window.removeEventListener('toggle-sidebar', handleToggleSidebar);
 });
+
+// Fonction pour gérer la déconnexion
+const handleLogout = () => {
+    router.post('/logout');
+};
 </script>
 
 <template>
@@ -255,13 +261,13 @@ onUnmounted(() => {
                 }}</span>
             </Link>
 
-            {/* <!-- <Link :href="menu[2].link" class="flex items-center gap-3 px-3 py-2 rounded-md transition-colors" :class="menu[2].active
+            <!-- <Link :href="menu[2].link" class="flex items-center gap-3 px-3 py-2 rounded-md transition-colors" :class="menu[2].active
                 ? 'bg-blue-500/20 text-blue-600'
                 : 'hover:bg-blue-500/10 text-text-primary-light dark:text-text-primary-dark'
                 ">
             <i :class="menu[2].icon" class="text-lg"></i>
             <p class="text-sm font-medium">{{ menu[2].label }}</p>
-            </Link> --> */}
+            </Link> -->
         </nav>
 
 
@@ -274,6 +280,13 @@ onUnmounted(() => {
             <i :class="item.icon" class="text-lg w-5 text-center"></i>
             <p class="text-sm font-medium">{{ item.label }}</p>
             </Link>
+            
+            <!-- Bouton logout -->
+            <button @click="handleLogout"
+                class="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-red-500/10 transition-colors text-red-600 dark:text-red-400 w-full">
+                <i class="fas fa-sign-out-alt text-lg w-5 text-center"></i>
+                <p class="text-sm font-medium">Déconnexion</p>
+            </button>
         </div>
 
     </aside>

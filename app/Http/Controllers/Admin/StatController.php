@@ -228,7 +228,11 @@ public function currentPlayerOfMonth()
         ->where('month', $currentMonthDate)
         ->first();
         
-   
+        $stats = Stat::where('user_id', $player->user_id)
+        ->whereMonth('date', date('m'))
+        ->whereYear('date', date('Y'))
+        ->where('validated_by_admin', true)
+        ->get();
         
     // Si pas encore généré ce mois-ci, prendre le mois précédent
     if (!$player) {
@@ -243,7 +247,8 @@ public function currentPlayerOfMonth()
     }
         
     return Inertia::render('PlayerOfMonth/Current', [
-        'player' => $player
+        'player' => $player,
+        'stats'=>$stats
     ]);
 }
 
