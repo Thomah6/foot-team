@@ -16,7 +16,7 @@ const form = useForm({
 });
 
 const submit = () => {
-  form.post(route('members.store'));
+  form.post(route('admin.members.store'));
 };
 </script>
 

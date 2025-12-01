@@ -119,6 +119,12 @@ const menu = computed(() => {
                 icon: "fas fa-chart-line",
                 link: route("admin.team-stats.index"),
                 active: route().current("admin.team-stats.*"),
+            },
+            {
+                label: "Identité visuelle",
+                icon: "fas fa-chart-pie",
+                link: route("admin.identity"),
+                active: route().current("admin.identity*"),
             }
         );
     }
@@ -136,9 +142,24 @@ const menu = computed(() => {
             link: route('admin.bureau.stats.index', [], false),
             active: route().current('admin.bureau.stats.index.*')
         });
+
+
     }
+
+        items.push({
+            label: 'Stats des joueurs',
+            icon: 'fas fa-signal',
+            link: route('Admin.CreateStats', [], false),
+            active: route().current('Admin.CreateStats*')
+        });
     // Correction principale : toujours retourner le menu
+
+
+
+
     return items;
+
+
 }
 );
 
