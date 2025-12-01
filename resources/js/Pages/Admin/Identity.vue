@@ -101,7 +101,7 @@ const deleteIdentity = () => {
       </div>
 
       <!-- Bouton -->
-      <Link :href="route('dashboard')">
+
       <button
         @click="submit"
         :disabled="form.processing"
@@ -109,7 +109,7 @@ const deleteIdentity = () => {
       >
         Enregistrer
       </button>
-<<<<<<< HEAD
+
 <button
   @click="deleteIdentity"
   type="button"
@@ -118,9 +118,7 @@ const deleteIdentity = () => {
   Supprimer logo et nom
 </button>
 
-=======
-      </Link>
->>>>>>> 3dee3a5bef77a34b39d2b3cd26556643038ba0d4
+
     </div>
   </div>
 </template>
