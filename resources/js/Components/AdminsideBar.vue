@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, defineProps } from "vue";
+import { ref, computed, defineProps, onMounted, onUnmounted } from "vue";
 import { Link, usePage, router } from "@inertiajs/vue3";
 defineProps({
     Notification: {
@@ -29,19 +29,19 @@ const menu = computed(() => {
             link: route("dashboard"),
             active: route().current("dashboard"),
         },
-        {
-            label: "Stats des membres",
-            icon: "fas fa-table",
-            link: route("bureau.stats.index", [], false), // false pour forcer le chemin absolu
-            active: route().current("bureau.stats.index.*"),
-        },
+        // {
+        //     label: "Stats des membres",
+        //     icon: "fas fa-table",
+        //     link: route("bureau.stats.index", [], false), // false pour forcer le chemin absolu
+        //     active: route().current("bureau.stats.index.*"),
+        // },
         {
             label: "Finances",
             icon: "fas fa-wallet",
             link: route("finances.index"),
             active: route().current("finances.*"),
         },
-        // { label: "Stats", icon: "fas fa-chart-bar", link: route('admin.stats.index'), active: route().current('admin.stats.*') },
+        { label: "Stats", icon: "fas fa-chart-bar", link: route('admin.stats.index'), active: route().current('admin.stats.*') },
         { label: "Classement", icon: "fas fa-trophy", link: route('stats.classements.index'), active: route().current('stats.classements.*') },
         {
             label: "Présences",
@@ -97,28 +97,34 @@ const menu = computed(() => {
 
 
     // Items conditionnels
-    if (isBureau()) {
-        items.push({
-            label: "Membres (Bureau)",
-            icon: "fas fa-user-friends",
-            link: route("bureau.members.index"),
-            active: route().current("bureau.members.index"),
-        });
-    }
+
 
     if (isAdmin()) {
         items.push(
             {
                 label: "Membres",
                 icon: "fas fa-user-friends",
-                link: route("members.index"),
-                active: route().current("members.index"),
+                link: route("admin.members.index"),
+                active: route().current("admin.members.index"),
             },
+            
+        {
+            label: 'Stats des membres',
+            icon: 'fas fa-chart-bar',
+            link: route('admin.bureau.stats.index', [], false),
+            active: route().current('admin.bureau.stats.index.*')
+        },
             {
                 label: "Statistiques équipes",
                 icon: "fas fa-chart-line",
                 link: route("admin.team-stats.index"),
                 active: route().current("admin.team-stats.*"),
+            },
+            {
+                label: "Identité visuelle",
+                icon: "fas fa-chart-pie",
+                link: route("admin.identity"),
+                active: route().current("admin.identity*"),
             }
         );
     }
@@ -126,8 +132,8 @@ const menu = computed(() => {
         items.push({
             label: "Membres",
             icon: "fas fa-user-friends",
-            link: route("bureau.members.index"),
-            active: route().current("bureau.members.index"),
+            link: route("admin.bureau.members.index"),
+            active: route().current("admin.bureau.members.index"),
         });
 
         items.push({
@@ -136,9 +142,24 @@ const menu = computed(() => {
             link: route('bureau.stats.index', [], false),
             active: route().current('bureau.stats.index.*')
         });
+
+
     }
+
+        items.push({
+            label: 'Stats des joueurs',
+            icon: 'fas fa-signal',
+            link: route('Admin.CreateStats', [], false),
+            active: route().current('Admin.CreateStats*')
+        });
     // Correction principale : toujours retourner le menu
+
+
+
+
     return items;
+
+
 }
 );
 
@@ -171,9 +192,32 @@ const closeMenu = () => isOpen.value = false;
 const handleImageError = (event) => {
     event.target.src = `https://ui-avatars.com/api/?name=${user.name}&color=7F9CF5&background=EBF4FF&size=40`;
 };
+
+// Gestionnaire d'événement pour le toggle global
+const handleToggleSidebar = () => {
+    isOpen.value = !isOpen.value;
+};
+
+// Ajouter l'écouteur d'événement au montage du composant
+onMounted(() => {
+    window.addEventListener('toggle-sidebar', handleToggleSidebar);
+});
+
+// Nettoyer l'écouteur d'événement au démontage
+onUnmounted(() => {
+    window.removeEventListener('toggle-sidebar', handleToggleSidebar);
+});
+
+// Fonction pour gérer la déconnexion
+const handleLogout = () => {
+    router.post('/logout');
+};
 </script>
 
 <template>
+    <!-- Font Awesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    
     <!-- Hamburger pour mobile -->
     <button v-if="!isOpen" @click="toggleMenu"
         class="lg:hidden fixed top-4 left-4 z-50 p-3 bg-white dark:bg-gray-800 rounded-lg shadow hover:bg-gray-100 dark:hover:bg-gray-700 transition">
@@ -217,8 +261,13 @@ const handleImageError = (event) => {
                     : 'hover:bg-blue-500/10 text-white dark:text-text-primary-dark'
                     ">
             <i :class="item.icon" class="text-lg w-5 text-center"></i>
-            <p class="text-sm font-medium">{{ item.label }}</p><span v-if="item.label === 'Reflections'">{{ Notification
-                }}</span>
+            <p class="text-sm font-medium dark:text-gray-100">{{ item.label }}</p>
+            <span v-if="item.label === 'Reflections' && Notification > 0" class="ml-2 inline-flex items-center justify-center h-5 min-w-[20px] px-1.5 rounded-full text-xs font-bold text-white bg-red-500">
+                {{ Notification }}
+            </span>
+            <span v-if="item.label === 'Membres' && $page.props.inactiveUsersCount > 0" class="ml-2 inline-flex items-center justify-center h-5 min-w-[20px] px-1.5 rounded-full text-xs font-bold text-white bg-amber-500">
+                {{ $page.props.inactiveUsersCount }}
+            </span>
             </Link>
         </nav>
 
@@ -232,6 +281,13 @@ const handleImageError = (event) => {
             <i :class="item.icon" class="text-lg w-5 text-center"></i>
             <p class="text-sm font-medium">{{ item.label }}</p>
             </Link>
+
+            <!-- Bouton logout -->
+            <button @click="handleLogout"
+                class="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-red-500/10 transition-colors text-red-600 dark:text-red-400 w-full">
+                <i class="fas fa-sign-out-alt text-lg w-5 text-center"></i>
+                <p class="text-sm font-medium">Déconnexion</p>
+            </button>
         </div>
 
     </aside>

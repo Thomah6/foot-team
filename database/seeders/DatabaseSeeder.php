@@ -39,12 +39,12 @@ class DatabaseSeeder extends Seeder
         //     'email' => 'jean@example.com',
         // ]);
         // Créer 5 utilisateurs fixes (admin, bureau, 3 joueurs) pour dev rapide
-        // User::factory()->create([
-        //     'name' => 'Admin Super',
-        //     'email' => 'admin@test.com',
-        //     'role' => 'admin',
-        //     'password' => bcrypt('password'),
-        // ]);
+        User::factory()->create([
+            'name' => 'Admin Super',
+            'email' => 'admin@test.com',
+            'role' => 'admin',
+            'password' => bcrypt('password'),
+        ]);
 
         User::factory()->create([
             'name' => 'Bureau Team',

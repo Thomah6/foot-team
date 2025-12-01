@@ -83,7 +83,7 @@ class VoteController extends Controller
         $votes = Vote::with('reflection:titre,id')
             ->where('user_id', Auth::id())
             ->get(['id', 'reflection_id', 'value', 'created_at']);
-            return Inertia::render('VoteHistory', [
+            return Inertia::render('Votes/VoteHistory', [
                 'votes' => $votes,
             ]);
     }
@@ -123,7 +123,7 @@ class VoteController extends Controller
                 }),
             ];
         });
-        return Inertia::render('VoteListAdmin', [
+        return Inertia::render('Votes/VoteListAdmin', [
             'reflections' => $data,
         ]);
     
