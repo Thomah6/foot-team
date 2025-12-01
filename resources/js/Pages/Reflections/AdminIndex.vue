@@ -9,17 +9,17 @@
                         <CreateForm/>
                         <h1 class="mt-6">Mes reflexions</h1>
                        <div v-for="reflection in reflections.filter(reflection => reflection.user_id === $page.props.auth.user?.id)" class="scroller mt-6 max-h-90 overflow-y-auto" :key="reflection.id">
-                            <UserReflection 
-                            :reflection="reflection" 
+                            <UserReflection
+                            :reflection="reflection"
                             @edit="openEditModal"
                             @delete="confirmDelete"
                             />
                         </div>
-                        
+
                     </div>
                     <div class="scroller overflow-y-scroll">
 
-                        <div class=" scroller space-y-6 max-h-[900px] overflow-y-auto">
+                        <div class="scroller space-y-6 max-h-[900px] overflow-y-auto">
                             <div v-if="reflections.length === 0"
                                 class="text-center p-8 bg-gray-50 rounded-xl border border-gray-200">
                                 <p class="text-gray-500 italic text-lg">
@@ -27,10 +27,10 @@
                                 </p>
                             </div>
 
-                            <ReflectionCard 
-                                v-for="reflection in reflections" 
+                            <ReflectionCard
+                                v-for="reflection in reflections"
                                 :key="reflection.id"
-                                :reflection="reflection" 
+                                :reflection="reflection"
                             />
                         </div>
                     </div>
@@ -41,14 +41,14 @@
 
 
         <!-- ================== MODAL D'ÉDITION ================== -->
-<div 
-    v-if="editModalOpen" 
+<div
+    v-if="editModalOpen"
     class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50"
 >
     <div class="bg-white rounded-lg p-6 w-[400px] shadow-xl">
 
         <h2 class="text-xl font-semibold mb-4">Modifier la réflexion</h2>
-        
+
         <label class="block text-sm mb-1">Statut :</label>
         <input type="text"
             name="titre"
@@ -58,7 +58,7 @@
         />
 
         <label class="block text-sm mb-1">Contenu :</label>
-        <textarea 
+        <textarea
             name="contenu"
             v-model="form.contenu"
             class="w-full border rounded p-2 mb-4"
@@ -67,14 +67,14 @@
 
 
         <div class="flex justify-end gap-2">
-            <button 
+            <button
                 @click="editModalOpen = false"
                 class="px-4 py-2 bg-gray-500 text-white rounded"
             >
                 Annuler
             </button>
 
-            <button 
+            <button
                 @click="saveReflection"
                 class="px-4 py-2 bg-blue-600 text-white rounded"
             >
