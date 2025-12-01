@@ -29,12 +29,12 @@ const menu = computed(() => {
             link: route("dashboard"),
             active: route().current("dashboard"),
         },
-        {
-            label: "Stats des membres",
-            icon: "fas fa-table",
-            link: route("bureau.stats.index", [], false), // false pour forcer le chemin absolu
-            active: route().current("bureau.stats.index.*"),
-        },
+        // {
+        //     label: "Stats des membres",
+        //     icon: "fas fa-table",
+        //     link: route("bureau.stats.index", [], false), // false pour forcer le chemin absolu
+        //     active: route().current("bureau.stats.index.*"),
+        // },
         {
             label: "Finances",
             icon: "fas fa-wallet",
@@ -107,6 +107,13 @@ const menu = computed(() => {
                 link: route("admin.members.index"),
                 active: route().current("admin.members.index"),
             },
+            
+        {
+            label: 'Stats des membres',
+            icon: 'fas fa-chart-bar',
+            link: route('admin.bureau.stats.index', [], false),
+            active: route().current('admin.bureau.stats.index.*')
+        },
             {
                 label: "Statistiques équipes",
                 icon: "fas fa-chart-line",

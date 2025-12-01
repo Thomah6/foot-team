@@ -1,7 +1,8 @@
 <script setup>
 import { Link } from '@inertiajs/vue3'
 import { ref } from 'vue'
-import AdminsideBar from '@/Components/AdminsideBar.vue'
+
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue'
 
 const props = defineProps({
   totalStats: Number,
@@ -14,11 +15,10 @@ const search = ref('')
 </script>
 
 <template>
+<AuthenticatedLayout>
   <div class="flex flex-col lg:flex-row min-h-screen">
     <!-- Sidebar -->
-    <div class="lg:w-64">
-      <AdminsideBar />
-    </div>
+ 
 
     <!-- Main Content -->
     <div class="flex-1 bg-gradient-to-br from-gray-50 to-white px-4 sm:px-6 lg:px-8 py-6 lg:py-8">
@@ -198,4 +198,5 @@ const search = ref('')
       </div>
     </div>
   </div>
+</AuthenticatedLayout>
 </template>
