@@ -31,12 +31,19 @@ function submit() {
 
 <template>
   <AuthenticatedLayout>
-    <div class="min-h-screen flex items-center justify-center bg-gray-100 px-4">
-      <div class="w-full max-w-3xl bg-white rounded-xl shadow-lg p-6 sm:p-8">
-        <h1 class="text-2xl font-bold mb-6 text-green-600 text-center">Ajouter un règlement</h1>
+    <div 
+      class="relative min-h-screen flex items-center justify-center px-4 bg-cover bg-center"
+      style="background-image: url('https://media.istockphoto.com/id/1662909784/fr/photo/ar%C3%A8ne-de-football-am%C3%A9ricain-avec-poteau-de-but-jaune-terrain-en-herbe-et-fans-flous-%C3%A0-la-vue.jpg?s=612x612&w=0&k=20&c=E3i9ztZldA3O4mmyoKaGAc8uxWWrJADfh_LnfNayMFc=');"
+      v-if="$page.props.auth.user.role === 'admin'"
+    >
+      <!-- Overlay blanc translucide avec blur -->
+      <div class="absolute inset-0 bg-white/40 backdrop-blur-sm"></div>
+
+      <!-- Bloc avec effet glassmorphism -->
+      <div class="relative w-full max-w-3xl bg-white/80  border border-white/40 rounded-xl shadow-lg p-6 sm:p-8">
+        <h1 class="text-2xl font-bold mb-6 text-black text-center">Ajouter un règlement</h1>
 
         <form @submit.prevent="submit" class="space-y-4">
-
           <!-- Titre -->
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">Titre</label>
@@ -46,7 +53,8 @@ function submit() {
           </div>
 
           <!-- Sous-points dynamiques -->
-          <div v-for="(content, index) in form.contents" :key="index" class="border p-4 rounded space-y-2 bg-gray-50">
+          <div v-for="(content, index) in form.contents" :key="index" 
+               class="border p-4 rounded space-y-2 bg-white/50 backdrop-blur-sm">
             <div class="flex justify-between items-center">
               <span class="font-semibold">Sous-point {{ index + 1 }}</span>
               <button type="button" class="text-red-500 hover:underline" @click="removeContent(index)">
@@ -59,9 +67,6 @@ function submit() {
               <label class="block text-sm font-medium text-gray-700 mb-1">Sous-numéro</label>
               <input v-model="content.sub_number" type="text"
                 class="w-full rounded-lg border border-gray-300 p-2 focus:ring-2 focus:ring-green-500" />
-              <p v-if="form.errors[`contents.${index}.sub_number`]" class="text-red-500 text-sm mt-1">
-                {{ form.errors[`contents.${index}.sub_number`] }}
-              </p>
             </div>
 
             <!-- Contenu -->
@@ -69,9 +74,6 @@ function submit() {
               <label class="block text-sm font-medium text-gray-700 mb-1">Contenu</label>
               <textarea v-model="content.content" rows="4"
                 class="w-full rounded-lg border border-gray-300 p-2 focus:ring-2 focus:ring-green-500 resize-none"></textarea>
-              <p v-if="form.errors[`contents.${index}.content`]" class="text-red-500 text-sm mt-1">
-                {{ form.errors[`contents.${index}.content`] }}
-              </p>
             </div>
 
             <!-- Ordre -->
@@ -79,27 +81,30 @@ function submit() {
               <label class="block text-sm font-medium text-gray-700 mb-1">Ordre (optionnel)</label>
               <input v-model="content.order" type="number"
                 class="w-full rounded-lg border border-gray-300 p-2 focus:ring-2 focus:ring-green-500" />
-              <p v-if="form.errors[`contents.${index}.order`]" class="text-red-500 text-sm mt-1">
-                {{ form.errors[`contents.${index}.order`] }}
-              </p>
             </div>
           </div>
 
           <!-- Ajouter un sous-point -->
           <div>
-            <button type="button" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+            <button type="button" class="w-full bg-cyan-600 text-white px-4 py-2 rounded hover:bg-cyan-700"
                     @click="addContent">
               Ajouter un sous-point
             </button>
           </div>
 
-          <!-- Bouton soumettre -->
-          <button type="submit" class="w-full bg-green-500 text-white py-2 rounded-lg shadow-md">
-            Ajouter le règlement
-          </button>
-
+          <div class="flex justify-between gap-5 w-full">
+            <button type="submit" class="bg-cyan-600 text-white py-2 px-5 rounded-lg shadow-md hover:bg-cyan-700">
+              Ajouter le règlement
+            </button>
+            <button type="button" class="bg-gray-700 text-white py-2 px-5 rounded-lg shadow-md hover:bg-gray-800"
+                    @click="$inertia.visit('/regulations')">
+              Annuler
+            </button>
+          </div>
         </form>
       </div>
     </div>
   </AuthenticatedLayout>
 </template>
+
+

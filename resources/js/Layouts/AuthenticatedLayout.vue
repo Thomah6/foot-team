@@ -225,7 +225,7 @@ defineProps({
                     :Notification="notifications"
                     />
                 </div>
-                <div class="h-[calc(100vh-4rem)] overflow-y-scroll w-full">
+                <div class=" scroller h-[calc(100vh-4rem)] overflow-y-scroll w-full">
                     <slot :updateNotifications="updateNotifCount()" /> 
                 </div>
 
@@ -233,3 +233,10 @@ defineProps({
         </div>
     </div>
 </template>
+
+<style scoped>
+.scroller{
+    scrollbar-width: none;
+    scrollbar-color: #a0aec0 transparent;
+}
+</style>
