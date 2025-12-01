@@ -124,7 +124,7 @@ Route::prefix('admin')->name('admin.')->middleware('role:admin')->group(function
 
 
         // Identity management
-        Route::get('/identity', [IdentityController::class, 'index'])->name('admin.identity');
+        Route::get('/identity', [IdentityController::class, 'index'])->name('identity');
 
         // Gestion des membres (Admin uniquement)
         Route::middleware('role:admin')->group(function () {
