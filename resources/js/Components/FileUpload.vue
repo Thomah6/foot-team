@@ -183,7 +183,7 @@
                         <span class="button-icon" v-if="!form.processing">🚀</span>
                         <span class="button-icon loading" v-else>⏳</span>
                         <span class="button-text">
-                            {{ form.processing ? 'Uploading to Server...' : 'Send to Laravel' }}
+                            {{ form.processing ? 'Uploading to Server...' : 'Send' }}
                         </span>
                     </span>
                     <div class="button-shine"></div>

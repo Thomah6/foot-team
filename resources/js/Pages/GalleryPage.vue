@@ -36,7 +36,7 @@ function toggleLike(gallery) {
     >
         <div class="relative flex min-h-screen w-full">
             <AdminsideBar />
-            
+
             <!-- Main Content Area -->
             <div class="flex flex-1 overflow-hidden">
                 <!-- Gallery View -->
