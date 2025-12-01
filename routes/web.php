@@ -34,19 +34,6 @@ use Inertia\Inertia;
 Route::get('/auth/google', [GoogleAuthController::class, 'redirect'])->name('google.login');
 Route::get('/auth/google/callback', [GoogleAuthController::class, 'callback']);
 
-// Route::get('/', function () {
-//     if (auth()->check()) {
-//         return redirect()->route('dashboard');
-//     }
-
-//     return Inertia::render('Welcome', [
-//         'canLogin' => Route::has('login'),
-//         'canRegister' => Route::has('register'),
-//         'laravelVersion' => Application::VERSION,
-//         'phpVersion' => PHP_VERSION,
-//     ]);
-// });
-
 // Page d'accueil
 
 // Redirection racine si authentifié
@@ -191,10 +178,10 @@ Route::prefix('admin')->middleware('role:admin')->group(function () {
 
         // Identity management
         Route::get('/identity', [IdentityController::class, 'index'])->name('admin.identity');
- 
- 
+
+
 Route::get('/admin/identity', [IdentityController::class, 'index']);
- 
+
 Route::post('/admin/identity/update', [IdentityController::class, 'update'])
     ->name('admin.identity.update');
 
@@ -394,18 +381,18 @@ Route::delete('/comments/{comment}', [CommentsSuggestionController::class, 'dest
 
 
 Route::get('/admin', [AdminController::class,'index'])->name('Admin.AdminLayout');
- 
- 
+
+
 Route::get('/admin/create', [StatController::class,'create'])->name('Admin.CreateStats');
- 
+
 Route::get('/identity', [IdentityController::class, 'index'])->name('admin.identity');
- 
- 
+
+
 Route::get('/admin/identity', [IdentityController::class, 'index']);
- 
+
 Route::post('/admin/identity/update', [IdentityController::class, 'update'])
     ->name('admin.identity.update');
-    
+
 Route::post('/admin/identity/delete-identity', [IdentityController::class, 'deleteIdentity'])
      ->name('admin.identity.delete-identity');
 
@@ -419,7 +406,7 @@ Route::middleware(['auth', 'is.active', 'role:admin'])->group(function () {
 
 
 
- 
+
 // Routes pour les réflexions
 Route::prefix('reflections')->group(function () {
     Route::get('/', [ReflectionController::class, 'index'])->name('reflections.index');
@@ -433,7 +420,7 @@ Route::prefix('reflections')->group(function () {
     Route::patch('/{id}/toggle', [ReflectionController::class, 'toggle'])->name('reflections.toggle'); // activation/desactivationRoute::post('/{id}/validate', [ReflectionController::class, 'validateAfterDelay'])->name('admin.reflections.validate');
     //Routes concernant les commentaires sur les reflexions
     Route::post('/comments',[CommentController::class,'store'])->name('comments.store');
- 
+
     //Routes pour les likes des commentaires
     // Route::get('/comments/like/{comment}',[CommentlikeController::class,'like'])->name('likeComment');
     // Route::get('/comments/dislike/{comment}',[CommentlikeController::class,'dislike'])->name('dislikeComment');

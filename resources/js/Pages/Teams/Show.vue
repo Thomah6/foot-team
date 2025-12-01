@@ -1,11 +1,6 @@
 <template>
+<AuthenticatedLayout>
   <div class="flex flex-col md:flex-row min-h-screen bg-gray-50 dark:bg-gray-900">
-
-    <!-- Sidebar -->
-    <section class="hidden md:block dark:bg-gray-900">
-      <AdminsideBar />
-    </section>
-
     <!-- Main content -->
     <main class="flex-1 w-full p-4 md:p-10 bg-gray-50 min-h-screen dark:bg-gray-900 min-h-screen">
       <div class="max-w-6xl mx-auto">
@@ -209,12 +204,14 @@
     </main>
 
   </div>
+</AuthenticatedLayout>
 </template>
 
 
 <script setup>
 import { reactive, computed } from 'vue'
 import AdminsideBar from "@/Components/AdminsideBar.vue";
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 
 const props = defineProps({
   team: Object,
