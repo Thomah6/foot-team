@@ -165,7 +165,7 @@
                 :key="member.id"
                 class="flex items-center gap-4 bg-white p-4 sm:p-5 rounded-xl border border-gray-200 shadow-sm hover:shadow-md hover:border-blue-300 transition-all"
               >
-
+                
                 <!-- Avatar -->
                 <div
                   class="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-cover bg-center shadow-md flex-shrink-0"
