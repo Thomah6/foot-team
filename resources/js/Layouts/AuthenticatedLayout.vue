@@ -219,7 +219,7 @@ defineProps({
             <!-- Page Content -->
             <main class="flex h-full border">
                 <div class="min-h-full max-h-[calc(100vh-4rem)] sticky top-0 z-50">
-                    <AdminsideBar 
+                    <AdminsideBar
                     :votes="votes"
                     :reflections="reflections"
                     :Notification="notifications"
