@@ -101,6 +101,10 @@ function confirmSubmit() {
 function cancelSubmit() {
     showConfirm.value = false;
 }
+
+function goBack() {
+    router.back();
+}
 </script>
 
 
@@ -170,6 +174,14 @@ function cancelSubmit() {
                         />
                     </div>
 
+
+                    <button
+                        @click="goBack"
+                        type="button"
+                        class="mt-4 w-full h-11 bg-neutral-200 dark:bg-slate-800 text-neutral-900 dark:text-white text-sm font-semibold rounded-lg hover:bg-neutral-300 dark:hover:bg-slate-700"
+                    >
+                        Retour
+                    </button>
 
                     <button
                         @click="openConfirm"

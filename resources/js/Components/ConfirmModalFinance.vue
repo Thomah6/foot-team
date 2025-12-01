@@ -1,3 +1,12 @@
+<script setup>
+defineProps({
+  show: Boolean,
+  title: { type: String, default: 'Confirmation' },
+  message: { type: String, default: 'Voulez-vous continuer ?' },
+  loading: { type: Boolean, default: false },
+})
+defineEmits(['confirm', 'cancel'])
+</script>
 <template>
   <div v-if="show" class="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
     <div class="bg-white rounded-lg shadow-lg w-full max-w-sm p-4">
@@ -29,12 +38,3 @@
   </div>
 </template>
 
-<script setup>
-defineProps({
-  show: Boolean,
-  title: { type: String, default: 'Confirmation' },
-  message: { type: String, default: 'Voulez-vous continuer ?' },
-  loading: { type: Boolean, default: false },
-})
-defineEmits(['confirm', 'cancel'])
-</script>

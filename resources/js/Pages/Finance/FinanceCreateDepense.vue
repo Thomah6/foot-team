@@ -68,6 +68,10 @@ function sendDepense() {
 function cancelDepense() {
   showConfirm.value = false
 }
+
+function goBack() {
+  router.back()
+}
 </script>
 
 
@@ -94,6 +98,14 @@ function cancelDepense() {
         placeholder="Description de la dépense"
       />
 
+
+      <button
+        @click="goBack"
+        type="button"
+        class="w-full h-12 px-4 bg-neutral-200 dark:bg-slate-800 text-neutral-900 dark:text-white rounded-lg font-bold mt-4 hover:bg-neutral-300 dark:hover:bg-slate-700"
+      >
+        Retour
+      </button>
 
       <button
         @click="openConfirm"
