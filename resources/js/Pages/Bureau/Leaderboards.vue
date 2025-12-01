@@ -1,7 +1,10 @@
 <script setup>
 import { Link } from "@inertiajs/vue3";
-import AdminsideBar from "@/Components/AdminsideBar.vue";
+
+
 // Charts removed — we'll show card lists only
+
+import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 
 const props = defineProps({
     goals: Array,
@@ -11,11 +14,11 @@ const props = defineProps({
 </script>
 
 <template>
-    <div class="flex min-h-screen bg-gradient-to-br from-gray-50 to-blue-50/30">
+    <AuthenticatedLayout>
+      <div class="flex min-h-screen bg-gradient-to-br from-gray-50 to-blue-50/30">
         <!-- Sidebar -->
-        <div class="lg:w-64">
-            <AdminsideBar />
-        </div>
+      
+        
 
         <!-- Main Content -->
         <div class="flex-1 px-4 sm:px-6 lg:px-8 py-6 lg:py-8 animate-fadeIn">
@@ -491,6 +494,7 @@ const props = defineProps({
             </div>
         </div>
     </div>
+    </AuthenticatedLayout>
 </template>
 
 <style>

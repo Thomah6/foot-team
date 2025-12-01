@@ -1,7 +1,9 @@
 <script setup>
 import { Link, useForm } from '@inertiajs/vue3'
-import AdminsideBar from '@/Components/AdminsideBar.vue'
+
+
 import { ref } from 'vue'
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue'
 
 const props = defineProps({
   user: Object,
@@ -14,10 +16,10 @@ const form = useForm({ month: '', year: '', from: '', to: '' })
 </script>
 
 <template>
-  <div class="flex flex-col md:flex-row">
-    <div class="md:w-auto">
-      <AdminsideBar />
-    </div>
+ <AuthenticatedLayout>
+   <div class="flex flex-col md:flex-row">
+   
+    
 
     <div class="min-h-screen w-full bg-background-light px-4 md:px-8 py-6 md:py-8">
       <div class="max-w-[1100px] mx-auto">
@@ -135,4 +137,5 @@ const form = useForm({ month: '', year: '', from: '', to: '' })
       </div>
     </div>
   </div>
+ </AuthenticatedLayout>  
 </template>
