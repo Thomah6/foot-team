@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('regulations', function (Blueprint $table) {
             $table->id();
-            $table->text('content');
-            $table->string('version')->default('1.0');
+            $table->string('title');      // Titre du règlement ou section
+            $table->text('content')->nullable();      // Contenu du règlement
             $table->timestamps();
-        });
+ });
     }
 
     /**

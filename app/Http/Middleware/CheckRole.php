@@ -22,6 +22,6 @@ class CheckRole
             return $next($request);
         }
 
-        return redirect('/dashboard')->with('error', 'Acces non autorise');
+        return redirect()->back()->with('error', 'Accès non autorisé');
     }
 }

@@ -14,7 +14,7 @@ Membre Simple
 🔵 3.1. Espace Membre du Bureau
 3.1.1. Gestion des membres
 CRUD sur les membres
-Recherche par nom, email, rôle
+Recherche par nom, email, rôleâ
 Filtrage :
 
 par date d’inscription

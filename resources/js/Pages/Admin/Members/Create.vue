@@ -1,5 +1,5 @@
 <script setup>
-import { useForm } from '@inertiajs/vue3';
+import { useForm, Link } from '@inertiajs/vue3';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 
 // Aucun props ici, car on ne reçoit rien pour la création
@@ -22,11 +22,23 @@ const submit = () => {
 
 <template>
   <AuthenticatedLayout>
-    <template #header>
-      <h2 class="text-xl font-semibold leading-tight text-gray-800">
-        Créer un Nouveau Membre
-      </h2>
-    </template>
+
+    <!-- Header + Bouton retour -->
+    <div class="max-w-2xl mx-auto p-4">
+      <!-- Header -->
+      <div class="mb-6 bg-white rounded-lg shadow p-4 flex items-center justify-between">
+        <div>
+          <h2 class="text-2xl font-extrabold text-sky-900">
+            Créer un Nouveau Membre
+          </h2>
+
+          <Link :href="route('members.index')"
+            class="inline-flex items-center gap-2 px-3 py-2 bg-sky-50 text-sky-800 rounded">
+          ← Retour
+          </Link>
+        </div>
+      </div>
+    </div>
 
     <div class="py-6">
       <div class="mx-auto max-w-2xl px-4 sm:px-6 lg:px-8">
@@ -94,13 +106,14 @@ const submit = () => {
 
             <!-- Active Status -->
             <div class="flex items-center gap-3">
-              <input v-model="form.is_active" type="checkbox" class="h-4 w-4 rounded border-gray-300" />
+              <input :checked="form.is_active" @change="form.is_active = $event.target.checked" type="checkbox"
+                class="h-4 w-4 rounded border-gray-300" />
               <label class="text-sm font-medium text-gray-700">Compte Actif</label>
             </div>
 
             <!-- Buttons -->
             <div class="flex gap-3 pt-6 border-t">
-              <a href="/members" class="flex-1 border rounded-lg py-2 text-center hover:bg-gray-50">
+              <a href="/admin/members" class="flex-1 border rounded-lg py-2 text-center hover:bg-gray-50">
                 Annuler
               </a>
 
@@ -114,5 +127,6 @@ const submit = () => {
         </div>
       </div>
     </div>
+
   </AuthenticatedLayout>
 </template>

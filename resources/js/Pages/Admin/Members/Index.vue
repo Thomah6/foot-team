@@ -4,30 +4,22 @@ import { ref, watch, onMounted } from 'vue'
 import { Link, useForm } from '@inertiajs/vue3'
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue'
 
-// Props reçues du contrôleur Laravel
-// members: Objet pagine contenant les données des membres
-// filters: Objet contenant les filtres appliqués actuellement
 defineProps({
   members: Object,
   filters: Object,
 })
 
-// ÉTAT RÉACTIF - Variables pour gérer l'UI
-// Modaux d'affichage
+// ÉTAT
 const showDeleteModal = ref(false)
 const showRoleModal = ref(false)
-
-// Données sélectionnées
 const selectedMember = ref(null)
 const selectedRole = ref('')
 
-// Paramètres de filtrage et recherche
 const searchQuery = ref('')
 const roleFilter = ref('')
 const statusFilter = ref('')
 const perPageValue = ref(10)
 
-// Formulaire pour envoyer les données au serveur
 const form = useForm({
   search: '',
   role: '',
@@ -35,9 +27,6 @@ const form = useForm({
   perPage: 10,
 })
 
-// WATCH - Surveillance automatique des changements de recherche
-// Déclenche automatiquement la requête lors de chaque modification
-// Initialise les champs à partir des filtres fournis par le backend
 onMounted(() => {
   searchQuery.value = (filters && filters.search) || '';
   roleFilter.value = (filters && filters.role) || '';
@@ -45,100 +34,82 @@ onMounted(() => {
   perPageValue.value = (filters && filters.perPage) || 10;
 });
 
-// Recherche en direct (live search) avec debounce manuel
+// Recherche live avec debounce
 let searchTimeout = null;
 watch(searchQuery, (val) => {
   if (searchTimeout) clearTimeout(searchTimeout);
-  // Attendre 300ms après la frappe avant d'envoyer la requête
   searchTimeout = setTimeout(() => {
     form.search = val;
-    // utilise preserveState pour conserver le composant Inertia et éviter un flash
     form.get(route('members.index'), { preserveState: true, preserveScroll: true });
   }, 300);
 });
 
-// Les autres filtres déclenchent la recherche immédiatement
+// Filtres
 watch([roleFilter, statusFilter, perPageValue], () => {
   handleFilter();
 });
 
-// FONCTION: Applique les filtres et effectue la recherche
-// Met à jour le formulaire avec les valeurs actuelles et envoie les données au serveur
 const handleFilter = () => {
   form.search = searchQuery.value
   form.role = roleFilter.value
   form.status = statusFilter.value
   form.perPage = perPageValue.value
-  form.get(route('members.index'), {
-    preserveScroll: true,
-  })
+  form.get(route('members.index'), { preserveScroll: true })
 }
 
-// FONCTION: Réinitialise tous les filtres aux valeurs par défaut
 const resetFilters = () => {
   searchQuery.value = ''
   roleFilter.value = ''
   statusFilter.value = ''
   perPageValue.value = 10
   form.reset()
-  form.get(route('members.index'), {
-    preserveScroll: true,
-  })
+  form.get(route('members.index'), { preserveScroll: true })
 }
 
-// FONCTION: Ouvre le modal pour changer le rôle d'un membre
+// Modaux
 const openRoleModal = (member) => {
   selectedMember.value = member
   selectedRole.value = member.role
   showRoleModal.value = true
 }
 
-// FONCTION: Envoie la requête de changement de rôle au serveur
 const updateRole = () => {
-  const roleForm = useForm({
-    role: selectedRole.value,
-  })
+  const roleForm = useForm({ role: selectedRole.value })
   roleForm.patch(route('members.update-role', selectedMember.value.id), {
-    onSuccess: () => {
-      showRoleModal.value = false
-    },
+    onSuccess: () => showRoleModal.value = false,
   })
 }
 
-// FONCTION: Bascule l'état activation/désactivation d'un membre
 const toggleStatus = (member) => {
   const statusForm = useForm({})
-  statusForm.patch(route('members.toggle-status', member.id))
+  statusForm.patch(route('members.toggle-status', member.id), {
+    preserveScroll: true,
+    preserveState: true,
+  })
 }
 
-// FONCTION: Prépare la suppression d'un membre (ouvre le modal de confirmation)
 const deleteMember = (member) => {
   selectedMember.value = member
   showDeleteModal.value = true
 }
 
-// FONCTION: Confirme et exécute la suppression du membre
 const confirmDelete = () => {
   const deleteForm = useForm({})
   deleteForm.delete(route('members.destroy', selectedMember.value.id), {
-    onSuccess: () => {
-      showDeleteModal.value = false
-    },
+    onSuccess: () => showDeleteModal.value = false,
   })
 }
 
-// FONCTION: Retourne les couleurs Tailwind selon le rôle du membre
-// Utilisée pour styliser les badges de rôles
+// Styles role
 const getRoleColor = (role) => {
   const colors = {
-    admin: 'bg-red-100 text-red-800',
-    bureau: 'bg-blue-100 text-blue-800',
-    simple: 'bg-gray-100 text-gray-800',
+    admin: 'bg-red-50 text-red-700 border-red-200',
+    bureau: 'bg-blue-50 text-blue-700 border-blue-200',
+    simple: 'bg-gray-50 text-gray-700 border-gray-200',
   }
-  return colors[role] || 'bg-gray-100 text-gray-800'
+  return colors[role] || 'bg-gray-50 text-gray-700 border-gray-200'
 }
 
-// FONCTION: Retourne le label traduit d'un rôle
 const getRoleLabel = (role) => {
   const labels = {
     admin: 'Administrateur',
@@ -147,83 +118,97 @@ const getRoleLabel = (role) => {
   }
   return labels[role] || role
 }
+
+// Statuts
+const getStatusColor = (isActive) => {
+  return isActive
+    ? 'bg-green-50 text-green-700 border-green-200'
+    : 'bg-red-50 text-red-700 border-red-200'
+}
 </script>
+
+<style>
+/* Boutons globaux cohérents */
+.btn-primary {
+  @apply rounded-lg bg-green-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-green-700 transition shadow-sm;
+}
+
+.btn-secondary {
+  @apply rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 transition;
+}
+
+/* Champs */
+.input-select {
+  @apply w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm focus:ring-green-600 focus:border-green-600;
+}
+</style>
 
 <template>
   <AuthenticatedLayout>
-    <!-- En-tête de la page avec titre et bouton d'ajout -->
-    <template #header>
-      <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <h2 class="text-xl font-semibold leading-tight text-gray-800">Gestion des Membres</h2>
-        <Link :href="route('members.create')" class="rounded-lg bg-blue-600 px-4 py-2 text-white font-medium hover:bg-blue-700 transition">
-          + Ajouter un Membre
-        </Link>
-      </div>
-    </template>
+    <div class="min-h-screen bg-gray-100 py-6">
 
-    <div class="py-4 sm:py-6">
-      <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <!-- SECTION FILTRES ET RECHERCHE -->
-        <!-- Conteneur avec arrière-plan blanc et ombre pour les filtres -->
-        <div class="mb-6 rounded-lg bg-white p-4 shadow-sm sm:p-6">
-          <h3 class="mb-4 text-lg font-semibold text-gray-800">Filtres et Recherche</h3>
-          
-          <!-- CHAMP RECHERCHE - Recherche en temps réel par nom ou email -->
-          <div class="mb-4">
-            <label class="block text-sm font-medium text-gray-700 mb-2">Rechercher</label>
-            <div class="flex gap-2">
-              <input
-                v-model="searchQuery"
-                type="text"
-                placeholder="Nom ou email..."
-                class="flex-1 rounded-lg border border-gray-300 px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-              <!-- Bouton désormais optionnel car la recherche est automatique -->
-              <button
-                @click="handleFilter"
-                class="rounded-lg bg-blue-600 px-4 py-2 text-white font-medium hover:bg-blue-700 transition"
-              >
-                Rechercher
-              </button>
+      <!-- HEADER -->
+      <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 mb-6">
+        <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <h1 class="text-2xl font-bold text-gray-900">Gestion des Joueurs</h1>
+            <p class="text-sm text-gray-600">Administration de l'effectif</p>
+          </div>
+
+          <Link :href="route('members.create')" class="btn-primary inline-flex items-center gap-2">
+          Ajouter un nouveau membre
+          </Link>
+        </div>
+      </div>
+
+      <!-- FILTRES -->
+      <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 mb-6">
+        <div class="rounded-xl bg-white border border-gray-200 p-5 shadow-sm">
+
+          <h2 class="text-base font-semibold text-gray-900 flex items-center gap-2 mb-5">
+            <span class="w-1 h-5 bg-green-600 rounded-full"></span>
+            Filtres & Recherche
+          </h2>
+
+          <!-- Recherche -->
+          <div class="mb-5">
+            <label class="text-sm font-medium text-gray-700 mb-1 block">Recherche</label>
+            <div class="relative">
+              <input v-model="searchQuery" type="text" class="w-full rounded-lg border border-gray-300 px-3 py-2.5 pl-10 text-sm
+                       focus:ring-green-600 focus:border-green-600" placeholder="Rechercher un joueur..." />
+              <svg class="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" fill="none"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
             </div>
           </div>
 
-          <!-- GRILLE DE FILTRES - Disposition responsive avec 4 colonnes sur desktop -->
+          <!-- Grille filtres -->
           <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            <!-- FILTRE RÔLE - Filtre par rôle (admin, bureau, simple) -->
+
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Role</label>
-              <select
-                v-model="roleFilter"
-                class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                <option value="">Tous les roles</option>
+              <label class="text-sm font-medium text-gray-700 mb-1 block">Rôle</label>
+              <select v-model="roleFilter" class="input-select">
+                <option value="">Tous</option>
                 <option value="admin">Administrateur</option>
                 <option value="bureau">Bureau</option>
-                <option value="simple">Simple</option>
+                <option value="simple">Joueur</option>
               </select>
             </div>
 
-            <!-- FILTRE STATUT - Filtre par activation/désactivation -->
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Statut</label>
-              <select
-                v-model="statusFilter"
-                class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                <option value="">Tous les statuts</option>
+              <label class="text-sm font-medium text-gray-700 mb-1 block">Statut</label>
+              <select v-model="statusFilter" class="input-select">
+                <option value="">Tous</option>
                 <option value="active">Actif</option>
                 <option value="inactive">Inactif</option>
               </select>
             </div>
 
-            <!-- PAGINATION - Sélection du nombre de résultats par page -->
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Par page</label>
-              <select
-                v-model.number="perPageValue"
-                class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
+              <label class="text-sm font-medium text-gray-700 mb-1 block">Par page</label>
+              <select v-model="perPageValue" class="input-select">
                 <option :value="5">5</option>
                 <option :value="10">10</option>
                 <option :value="25">25</option>
@@ -231,264 +216,228 @@ const getRoleLabel = (role) => {
               </select>
             </div>
 
-            <!-- BOUTONS D'ACTION -->
-            <div class="flex gap-2 items-end">
-              <!-- Bouton Appliquer (moins utilisé avec la recherche automatique) -->
-              <button
-                @click="handleFilter"
-                class="flex-1 rounded-lg bg-green-600 px-4 py-2 text-white font-medium hover:bg-green-700 transition text-sm"
-              >
-                Appliquer
-              </button>
-              <!-- Bouton Réinitialiser pour effacer tous les filtres -->
-              <button
-                @click="resetFilters"
-                class="flex-1 rounded-lg bg-gray-300 px-4 py-2 text-gray-800 font-medium hover:bg-gray-400 transition text-sm"
-              >
-                Reinitialiser
-              </button>
+            <div class="flex gap-3 items-end">
+              <button @click="handleFilter" class="btn-primary flex-1">Filtrer</button>
+              <button @click="resetFilters" class="btn-secondary flex-1">Réinitialiser</button>
             </div>
+
           </div>
         </div>
+      </div>
 
-        <!-- TABLEAU MEMBRE - Affichage des données -->
-        <div class="rounded-lg bg-white shadow-sm overflow-hidden">
-          <!-- VUE MOBILE - Cards empilées pour petits écrans -->
-          <div class="block sm:hidden">
-            <div v-for="member in members.data" :key="member.id" class="border-b border-gray-200 p-4">
-              <!-- En-tête de la card: pseudo et rôle -->
-              <div class="flex items-start justify-between mb-3">
-                <div>
-                  <h4 class="font-semibold text-gray-900">{{ member.pseudo }}</h4>
-                  <p class="text-sm text-gray-600">{{ member.email }}</p>
+      <!-- TABLEAU -->
+      <h1 class="text-4xl font-extrabold tracking-tight text-gray-900 dark:text-white text-center underline mb-5">
+        Membres
+      </h1>
+
+      <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div class="rounded-xl bg-white border border-gray-200 shadow-sm overflow-hidden">
+          <!-- MOBILE -->
+          <div class="block sm:hidden divide-y divide-gray-200">
+            <div v-for="member in members.data" :key="member.id" class="p-5 hover:bg-gray-50">
+
+              <div class="flex items-start justify-between mb-4">
+                <div class="flex items-center gap-3">
+                  <div class="h-12 w-12 rounded-full bg-green-100 flex items-center justify-center">
+                    <span class="font-semibold text-green-700">
+                      {{ member.pseudo.charAt(0) }}
+                    </span>
+                  </div>
+                  <div>
+                    <h3 class="font-medium text-gray-900 text-base">{{ member.pseudo }}</h3>
+                    <p class="text-xs text-gray-600">{{ member.email }}</p>
+                  </div>
                 </div>
-                <!-- Badge de rôle coloré -->
-                <span :class="['px-2 py-1 rounded-full text-xs font-medium', getRoleColor(member.role)]">
+
+                <span
+                  :class="['inline-flex items-center rounded-full border px-2 py-1 text-xs font-medium', getRoleColor(member.role)]">
                   {{ getRoleLabel(member.role) }}
                 </span>
               </div>
 
-              <!-- Corps de la card: informations du membre -->
-              <div class="mb-3 space-y-2">
-                <div class="flex justify-between items-center text-sm">
-                  <span class="text-gray-600">Position:</span>
-                  <span class="font-medium">{{ member.position || 'N/A' }}</span>
+              <div class="text-sm space-y-2 mb-4">
+                <div class="flex justify-between">
+                  <span class="text-gray-500">Position</span>
+                  <span class="font-medium text-gray-900">{{ member.position || 'Non définie' }}</span>
                 </div>
-                <div class="flex justify-between items-center text-sm">
-                  <span class="text-gray-600">Statut:</span>
-                  <span :class="member.is_active ? 'text-green-600 font-medium' : 'text-red-600 font-medium'">
+
+                <div class="flex justify-between">
+                  <span class="text-gray-500">Statut</span>
+                  <span
+                    :class="['inline-flex items-center rounded-full border px-2 py-1 text-xs font-medium', getStatusColor(member.is_active)]">
                     {{ member.is_active ? 'Actif' : 'Inactif' }}
                   </span>
                 </div>
               </div>
 
-              <!-- Actions sur la card: boutons pour éditer, changer rôle, etc. -->
-              <div class="flex gap-2">
-                <button
-                  @click="openRoleModal(member)"
-                  class="flex-1 rounded px-2 py-1 text-xs font-medium bg-blue-100 text-blue-700 hover:bg-blue-200 transition"
-                >
-                  Modifier Role
+              <div class="flex gap-2 pt-3 border-t border-gray-200">
+                <button @click="openRoleModal(member)" class="btn-secondary flex-1">Rôle</button>
+
+                <button @click="toggleStatus(member)"
+                  class="flex-1 rounded-lg px-3 py-2.5 text-sm font-medium border transition" :class="member.is_active
+                    ? 'bg-yellow-50 text-yellow-700 border-yellow-200 hover:bg-yellow-100'
+                    : 'bg-green-50 text-green-700 border-green-200 hover:bg-green-100'">
+                  {{ member.is_active ? 'Désactiver' : 'Activer' }}
                 </button>
-                <button
-                  @click="toggleStatus(member)"
-                  :class="member.is_active ? 'bg-yellow-100 text-yellow-700 hover:bg-yellow-200' : 'bg-green-100 text-green-700 hover:bg-green-200'"
-                  class="flex-1 rounded px-2 py-1 text-xs font-medium transition"
-                >
-                  {{ member.is_active ? 'Desactiver' : 'Activer' }}
-                </button>
-                <Link
-                  :href="route('members.edit', member.id)"
-                  class="flex-1 rounded px-2 py-1 text-xs font-medium bg-purple-100 text-purple-700 hover:bg-purple-200 transition text-center"
-                >
-                  Editer
+
+                <Link :href="route('members.edit', member.id)" class="btn-secondary flex-1 text-center">
+                Éditer
                 </Link>
-                <button
-                  @click="deleteMember(member)"
-                  class="flex-1 rounded px-2 py-1 text-xs font-medium bg-red-100 text-red-700 hover:bg-red-200 transition"
-                >
+
+                <button @click="deleteMember(member)" class="btn-secondary flex-1 border-red-300 text-red-700">
                   Supprimer
                 </button>
               </div>
             </div>
           </div>
 
-          <!-- VUE DESKTOP - Tableau classique pour écrans moyens et grands -->
-          <div class="hidden sm:block">
-            <div class="overflow-x-auto">
-              <table class="w-full">
-                <!-- En-tête du tableau avec colonnes -->
-                <thead class="bg-gray-50 border-b border-gray-200">
-                  <tr>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Pseudo</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Email</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Position</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Role</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Statut</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Actions</th>
-                  </tr>
-                </thead>
-                <!-- Corps du tableau avec les données des membres -->
-                <tbody class="divide-y divide-gray-200">
-                  <tr v-for="member in members.data" :key="member.id" class="hover:bg-gray-50 transition">
-                    <td class="px-6 py-4 whitespace-nowrap">
-                      <span class="font-medium text-gray-900">{{ member.pseudo }}</span>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{{ member.email }}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm">{{ member.position || '-' }}</td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                      <span :class="['px-3 py-1 rounded-full text-xs font-medium', getRoleColor(member.role)]">
-                        {{ getRoleLabel(member.role) }}
-                      </span>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                      <span :class="member.is_active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'" class="px-3 py-1 rounded-full text-xs font-medium">
-                        {{ member.is_active ? 'Actif' : 'Inactif' }}
-                      </span>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm">
-                      <div class="flex gap-2">
-                        <button
-                          @click="openRoleModal(member)"
-                          class="px-3 py-1 text-xs font-medium rounded text-blue-700 bg-blue-100 hover:bg-blue-200 transition"
-                        >
-                          Role
-                        </button>
-                        <button
-                          @click="toggleStatus(member)"
-                          :class="member.is_active ? 'text-yellow-700 bg-yellow-100 hover:bg-yellow-200' : 'text-green-700 bg-green-100 hover:bg-green-200'"
-                          class="px-3 py-1 text-xs font-medium rounded transition"
-                        >
-                          {{ member.is_active ? 'Desactiver' : 'Activer' }}
-                        </button>
-                        <Link
-                          :href="route('members.edit', member.id)"
-                          class="px-3 py-1 text-xs font-medium rounded text-purple-700 bg-purple-100 hover:bg-purple-200 transition"
-                        >
-                          Editer
-                        </Link>
-                        <button
-                          @click="deleteMember(member)"
-                          class="px-3 py-1 text-xs font-medium rounded text-red-700 bg-red-100 hover:bg-red-200 transition"
-                        >
-                          Supprimer
-                        </button>
+          <!-- DESKTOP -->
+          <div class="hidden sm:block overflow-x-auto">
+            <table class="w-full">
+              <thead class="bg-gray-50 border-b border-gray-200">
+                <tr>
+                  <th class="px-6 py-4 text-left text-sm font-semibold text-gray-900">Joueur</th>
+                  <th class="px-6 py-4 text-left text-sm font-semibold text-gray-900">Email</th>
+                  <th class="px-6 py-4 text-left text-sm font-semibold text-gray-900">Position</th>
+                  <th class="px-6 py-4 text-left text-sm font-semibold text-gray-900">Rôle</th>
+                  <th class="px-6 py-4 text-left text-sm font-semibold text-gray-900">Statut</th>
+                  <th class="px-6 py-4 text-left text-sm font-semibold text-gray-900">Actions</th>
+                </tr>
+              </thead>
+
+              <tbody class="divide-y divide-gray-200">
+                <tr v-for="member in members.data" :key="member.id" class="hover:bg-gray-50">
+                  <td class="px-6 py-4">
+                    <div class="flex items-center gap-3">
+                      <div class="h-10 w-10 rounded-full bg-green-100 flex items-center justify-center">
+                        <span class="font-semibold text-green-700">
+                          {{ member.pseudo.charAt(0) }}
+                        </span>
                       </div>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+                      <span class="font-medium text-gray-900">{{ member.pseudo }}</span>
+                    </div>
+                  </td>
+
+                  <td class="px-6 py-4 text-sm text-gray-600">{{ member.email }}</td>
+                  <td class="px-6 py-4 text-sm text-gray-900">{{ member.position || '-' }}</td>
+
+                  <td class="px-6 py-4">
+                    <span
+                      :class="['inline-flex items-center rounded-full border px-3 py-1 text-xs font-medium', getRoleColor(member.role)]">
+                      {{ getRoleLabel(member.role) }}
+                    </span>
+                  </td>
+
+                  <td class="px-6 py-4">
+                    <span
+                      :class="['inline-flex items-center rounded-full border px-3 py-1 text-xs font-medium', getStatusColor(member.is_active)]">
+                      {{ member.is_active ? 'Actif' : 'Inactif' }}
+                    </span>
+                  </td>
+
+                  <td class="px-6 py-4">
+                    <div class="flex gap-2">
+                      <button @click="openRoleModal(member)" class="btn-secondary">Rôle</button>
+
+                      <button @click="toggleStatus(member)" class="rounded-lg px-3 py-2 text-sm font-medium border"
+                        :class="member.is_active
+                          ? 'bg-yellow-50 text-yellow-700 border-yellow-200 hover:bg-yellow-100'
+                          : 'bg-green-50 text-green-700 border-green-200 hover:bg-green-100'">
+                        {{ member.is_active ? 'Désactiver' : 'Activer' }}
+                      </button>
+
+                      <Link :href="route('members.edit', member.id)" class="btn-secondary">
+                      Éditer
+                      </Link>
+
+                      <button @click="deleteMember(member)" class="btn-secondary border-red-300 text-red-700">
+                        Supprimer
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- PAGINATION -->
+          <div class="border-t border-gray-200 bg-gray-50 px-6 py-4">
+            <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+
+              <div class="text-sm text-gray-700">
+                Affichage de
+                <span class="font-semibold">{{ members.from }}</span> à
+                <span class="font-semibold">{{ members.to }}</span> sur
+                <span class="font-semibold">{{ members.total }}</span> joueurs
+              </div>
+
+              <div class="flex items-center gap-2">
+
+                <Link v-if="members.prev_page_url" :href="members.prev_page_url" class="btn-secondary">Précédent</Link>
+
+                <span v-else class="btn-secondary text-gray-400 border-gray-200">Précédent</span>
+
+                <span class="px-3 text-sm">
+                  Page {{ members.current_page }} / {{ members.last_page }}
+                </span>
+
+                <Link v-if="members.next_page_url" :href="members.next_page_url" class="btn-secondary">Suivant</Link>
+
+                <span v-else class="btn-secondary text-gray-400 border-gray-200">Suivant</span>
+
+              </div>
             </div>
           </div>
 
-          <!-- PAGINATION - Affichage et navigation entre les pages -->
-          <div class="border-t border-gray-200 bg-gray-50 px-4 py-4 sm:px-6">
-            <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-              <!-- Texte d'information sur les résultats affichés -->
-              <div class="text-sm text-gray-600">
-                Affichage de <span class="font-medium">{{ members.from }}</span> a <span class="font-medium">{{ members.to }}</span> sur <span class="font-medium">{{ members.total }}</span> membres
-              </div>
-              
-              <!-- Boutons de navigation entre les pages -->
-              <div class="flex gap-2 flex-wrap">
-                <!-- Lien vers la page précédente (désactivé si on est à la première page) -->
-                <Link
-                  v-if="members.prev_page_url"
-                  :href="members.prev_page_url"
-                  class="rounded border border-gray-300 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 transition"
-                >
-                  Precedent
-                </Link>
-                <span v-else class="rounded border border-gray-300 px-3 py-2 text-sm font-medium text-gray-400">
-                  Precedent
-                </span>
-
-                <!-- Affichage du numéro de page actuel -->
-                <span class="flex items-center px-3 py-2 text-sm text-gray-600">
-                  Page {{ members.current_page }} sur {{ members.last_page }}
-                </span>
-
-                <!-- Lien vers la page suivante (désactivé si on est à la dernière page) -->
-                <Link
-                  v-if="members.next_page_url"
-                  :href="members.next_page_url"
-                  class="rounded border border-gray-300 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 transition"
-                >
-                  Suivant
-                </Link>
-                <span v-else class="rounded border border-gray-300 px-3 py-2 text-sm font-medium text-gray-400">
-                  Suivant
-                </span>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
-    </div>
 
-    <!-- MODAL CHANGEMENT DE RÔLE -->
-    <!-- Modal pour afficher/modifier le rôle d'un membre sélectionné -->
-    <div v-if="showRoleModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
-      <div class="w-full max-w-sm rounded-lg bg-white p-6 shadow-lg">
-        <h3 class="mb-4 text-lg font-semibold text-gray-900">Modifier le Role</h3>
-        <p class="mb-4 text-sm text-gray-600">Membre: <span class="font-medium">{{ selectedMember?.pseudo }}</span></p>
-        
-        <div class="mb-6">
-          <label class="block text-sm font-medium text-gray-700 mb-2">Role</label>
-          <!-- Select pour choisir le nouveau rôle -->
-          <select
-            v-model="selectedRole"
-            class="w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          >
+      <!-- MODAL ROLE -->
+      <div v-if="showRoleModal" class="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-sm rounded-xl p-6 border shadow">
+
+          <h3 class="text-lg font-semibold text-gray-900 mb-2">Modifier le rôle</h3>
+          <p class="text-sm text-gray-600 mb-4">
+            Joueur : <span class="font-medium">{{ selectedMember?.pseudo }}</span>
+          </p>
+
+          <label class="text-sm font-medium text-gray-700 mb-2 block">Rôle</label>
+          <select v-model="selectedRole" class="input-select mb-6">
             <option value="simple">Simple</option>
             <option value="bureau">Bureau</option>
             <option value="admin">Administrateur</option>
           </select>
-        </div>
 
-        <!-- Boutons d'action du modal -->
-        <div class="flex gap-3">
-          <button
-            @click="showRoleModal = false"
-            class="flex-1 rounded-lg border border-gray-300 px-4 py-2 font-medium text-gray-700 hover:bg-gray-50 transition"
-          >
-            Annuler
-          </button>
-          <button
-            @click="updateRole"
-            class="flex-1 rounded-lg bg-blue-600 px-4 py-2 font-medium text-white hover:bg-blue-700 transition"
-          >
-            Confirmer
-          </button>
+          <div class="flex gap-3">
+            <button @click="showRoleModal = false" class="btn-secondary flex-1">Annuler</button>
+            <button @click="updateRole" class="btn-primary flex-1">Confirmer</button>
+          </div>
+
         </div>
       </div>
-    </div>
 
-    <!-- MODAL SUPPRESSION -->
-    <!-- Modal de confirmation avant suppression d'un membre -->
-    <div v-if="showDeleteModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
-      <div class="w-full max-w-sm rounded-lg bg-white p-6 shadow-lg">
-        <h3 class="mb-4 text-lg font-semibold text-gray-900">Confirmer la Suppression</h3>
-        <p class="mb-6 text-sm text-gray-600">
-          Etes-vous sur de vouloir supprimer le membre <span class="font-medium">{{ selectedMember?.pseudo }}</span> ? Cette action ne peut pas etre annulee.
-        </p>
+      <!-- MODAL SUPPRESSION -->
+      <div v-if="showDeleteModal"
+        class="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-sm rounded-xl p-6 border shadow">
 
-        <!-- Boutons d'action du modal -->
-        <div class="flex gap-3">
-          <button
-            @click="showDeleteModal = false"
-            class="flex-1 rounded-lg border border-gray-300 px-4 py-2 font-medium text-gray-700 hover:bg-gray-50 transition"
-          >
-            Annuler
-          </button>
-          <button
-            @click="confirmDelete"
-            class="flex-1 rounded-lg bg-red-600 px-4 py-2 font-medium text-white hover:bg-red-700 transition"
-          >
-            Supprimer
-          </button>
+          <h3 class="text-lg font-semibold text-gray-900 mb-2">Confirmer la suppression</h3>
+          <p class="text-sm text-gray-600 mb-6">
+            Êtes-vous sûr de vouloir supprimer
+            <span class="font-medium">{{ selectedMember?.pseudo }}</span> ?
+            Cette action est irréversible.
+          </p>
+
+          <div class="flex gap-3">
+            <button @click="showDeleteModal = false" class="btn-secondary flex-1">Annuler</button>
+            <button @click="confirmDelete" class="btn-primary bg-red-600 hover:bg-red-700 flex-1">
+              Supprimer
+            </button>
+          </div>
+
         </div>
       </div>
+
     </div>
   </AuthenticatedLayout>
 </template>

@@ -1,15 +1,34 @@
 <template>
-    <div @click="show(reflection.id)" class="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition duration-300 border-l-4 border-indigo-500">
+    <div 
+            @click="reflection.statut !== 'valide' && show(reflection.id)"
+            :class="[
+                'p-6 rounded-lg shadow-md transition duration-300 border-l-4 border-indigo-500',
+                reflection.votes.find(vote => vote.user_id === $page.props.auth.user?.id)
+                    ? '' 
+                    : 'bg-white',
+                reflection.statut === 'valide' 
+                    ? 'pointer-events-none opacity-60 cursor-not-allowed hover:shadow-md' 
+                    : 'hover:shadow-lg cursor-pointer'
+            ]"
+        >
+
+
         <p class="text-gray-700 italic mb-4 h-10">
         "{{ truncatedContent }}"
         </p>
-
         <div class="flex items-center justify-between text-sm text-gray-500 border-t pt-3">
         <span class="font-semibold text-indigo-600">
             — {{ reflection.user.name }}
         </span>
         <span>
-            {{ formattedDate }}
+            {{ formattedDate }}... 
+        </span>
+        <span :class="{
+            'text-yellow-400':reflection.statut=='ferme',
+            'text-blue-700':reflection.statut=='ouvert',
+            'text-green-600':reflection.statut=='valide'
+        }">
+            {{ reflection.statut }} 
         </span>
         </div>
     </div>
@@ -47,4 +66,5 @@ const formattedDate = computed(() => {
     day: 'numeric',
   });
 });
+
 </script>

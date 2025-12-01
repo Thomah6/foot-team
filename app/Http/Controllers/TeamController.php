@@ -9,17 +9,26 @@ use Inertia\Inertia;
 
 class TeamController extends Controller
 {
-    public function vue()
-    {
-        // $members = Team::
-        return Inertia::render("Teams/Vue", [
-            'teams' => Team::with('users')->get()
-
-        ]);
-    }
+    /**
+     * Liste les équipes (lecture seule)
+     */
     public function index()
     {
+        $user = auth()->user();
+        $isAdmin = ($user->role === 'admin') || (method_exists($user, 'hasRole') && $user->hasRole('admin'));
+
         return Inertia::render("Teams/Index", [
+            'teams' => Team::with('users')->get(),
+            'isAdmin' => $isAdmin,
+        ]);
+    }
+
+    /**
+     * Affiche le formulaire de gestion des équipes
+     */
+    public function manage()
+    {
+        return Inertia::render("Teams/Manage", [
             'teams' => Team::with('users')->get()
         ]);
     }
@@ -31,7 +40,7 @@ class TeamController extends Controller
             'description' => 'nullable',
         ]);
         Team::create($validated);
-        return redirect()->route('admin.teams')->with('success', '');
+        return redirect()->route('admin.teams.index')->with('success', '');
     }
 
     public function update(Request $request, Team $team)
@@ -75,14 +84,19 @@ class TeamController extends Controller
 
         $team->users()->sync($request->members);
 
-         return redirect()->route('admin.teams')->with('success', 'Affectation mise à jour');
+         return redirect()->route('admin.teams.index')->with('success', 'Affectation mise à jour');
     }
 
-    public function show(Team $team){
-        //Charges les membre liés a l'équipe
+    public function show(Team $team)
+    {
+        // Charges les membres liés à l'équipe
         $team->load('users');
-        return inertia('Teams/Show', [
-            'team' => $team
+        $user = auth()->user();
+        $isAdmin = ($user->role === 'admin') || (method_exists($user, 'hasRole') && $user->hasRole('admin'));
+
+        return Inertia::render('Teams/Show', [
+            'team' => $team,
+            'isAdmin' => $isAdmin,
         ]);
     }
 

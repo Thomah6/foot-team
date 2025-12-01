@@ -46,9 +46,9 @@ const submit = () => {
         <span v-else>Soumettre la Réflexion</span>
       </button>
 
-      <div v-if="$page.props.flash.success" class="mt-3 p-3 bg-green-100 text-green-700 rounded-lg">
+      <!-- <div v-if="$page.props.flash.success" class="mt-3 p-3 bg-green-100 text-green-700 rounded-lg">
         {{ $page.props.flash.success }}
-      </div>
+      </div> -->
     </form>
   </div>
 </template>
