@@ -32,7 +32,7 @@ const submit = () => {
             Créer un Nouveau Membre
           </h2>
 
-          <Link :href="route('members.index')"
+          <Link :href="route('admin.members.index')"
             class="inline-flex items-center gap-2 px-3 py-2 bg-sky-50 text-sky-800 rounded">
           ← Retour
           </Link>

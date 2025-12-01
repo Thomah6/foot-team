@@ -53,8 +53,8 @@ defineProps({
                                 <!-- <NavLink :href="route('dashboard')" :active="route().current('dashboard')">
                                     Dashboard
                                 </NavLink>
-                                <NavLink v-if="isAdmin()" :href="route('members.index')"
-                                    :active="route().current('members.*')">
+                                <NavLink v-if="isAdmin()" :href="route('admin.members.index')"
+                                    :active="route().current('admin.members.*')">
                                     Membres
                                 </NavLink>
                                 <NavLink v-if="isAdmin()" :href="route('admin.team-stats.index')"
@@ -157,8 +157,8 @@ defineProps({
                             Dashboard
                         </ResponsiveNavLink>
 
-                        <ResponsiveNavLink v-if="isAdmin()" :href="route('members.index')"
-                            :active="route().current('members.*')">
+                        <ResponsiveNavLink v-if="isAdmin()" :href="route('admin.members.index')"
+                            :active="route().current('admin.members.*')">
                             Membres
                         </ResponsiveNavLink>
                         <ResponsiveNavLink v-if="isAdmin()" :href="route('admin.team-stats.index')"

@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, defineProps } from "vue";
+import { ref, computed, defineProps, onMounted, onUnmounted } from "vue";
 import { Link, usePage, router } from "@inertiajs/vue3";
 defineProps({
     Notification: {
@@ -31,8 +31,8 @@ const menu = computed(() => {
         {
             label: "Stats des membres",
             icon: "fas fa-table",
-            link: route("bureau.stats.index", [], false), // false pour forcer le chemin absolu
-            active: route().current("bureau.stats.index.*"),
+            link: route("admin.bureau.stats.index", [], false), // false pour forcer le chemin absolu
+            active: route().current("admin.bureau.stats.index.*"),
         },
         {
             label: "Finances",
@@ -40,7 +40,7 @@ const menu = computed(() => {
             link: route("finances.index"),
             active: route().current("finances.*"),
         },
-        // { label: "Stats", icon: "fas fa-chart-bar", link: route('admin.stats.index'), active: route().current('admin.stats.*') },
+        { label: "Stats", icon: "fas fa-chart-bar", link: route('admin.stats.index'), active: route().current('admin.stats.*') },
         { label: "Classement", icon: "fas fa-trophy", link: route('stats.classements.index'), active: route().current('stats.classements.*') },
         {
             label: "Présences",
@@ -99,8 +99,8 @@ const menu = computed(() => {
         items.push({
             label: "Membres (Bureau)",
             icon: "fas fa-user-friends",
-            link: route("bureau.members.index"),
-            active: route().current("bureau.members.index"),
+            link: route("admin.bureau.members.index"),
+            active: route().current("admin.bureau.members.index"),
         });
     }
 
@@ -109,8 +109,8 @@ const menu = computed(() => {
             {
                 label: "Membres",
                 icon: "fas fa-user-friends",
-                link: route("members.index"),
-                active: route().current("members.index"),
+                link: route("admin.members.index"),
+                active: route().current("admin.members.index"),
             },
             {
                 label: "Statistiques équipes",
@@ -124,15 +124,15 @@ const menu = computed(() => {
         items.push({
             label: "Membres",
             icon: "fas fa-user-friends",
-            link: route("bureau.members.index"),
-            active: route().current("bureau.members.index"),
+            link: route("admin.bureau.members.index"),
+            active: route().current("admin.bureau.members.index"),
         });
 
         items.push({
             label: 'Stats des membres',
             icon: 'fas fa-chart-bar',
-            link: route('bureau.stats.index', [], false),
-            active: route().current('bureau.stats.index.*')
+            link: route('admin.bureau.stats.index', [], false),
+            active: route().current('admin.bureau.stats.index.*')
         });
     }
     // Correction principale : toujours retourner le menu
@@ -175,6 +175,21 @@ const handleImageError = (event) => {
     // Si l'image ne charge pas, utiliser l'avatar par défaut
     event.target.src = `https://ui-avatars.com/api/?name=${user.name}&color=7F9CF5&background=EBF4FF&size=40`;
 };
+
+// Gestionnaire d'événement pour le toggle global
+const handleToggleSidebar = () => {
+    isOpen.value = !isOpen.value;
+};
+
+// Ajouter l'écouteur d'événement au montage du composant
+onMounted(() => {
+    window.addEventListener('toggle-sidebar', handleToggleSidebar);
+});
+
+// Nettoyer l'écouteur d'événement au démontage
+onUnmounted(() => {
+    window.removeEventListener('toggle-sidebar', handleToggleSidebar);
+});
 </script>
 
 <template>
@@ -183,7 +198,7 @@ const handleImageError = (event) => {
 
     <!-- Menu hamburger pour mobile -->
     <button v-if="!isOpen" @click="toggleMenu"
-        class="lg:hidden fixed top-4 left-4 z-40 p-3 bg-white rounded-lg shadow-lg border hover:bg-gray-50 transition">
+        class="lg:hidden fixed top-2 left-4 z-40 p-2 bg-white rounded-md shadow-lg border hover:bg-gray-50 transition">
         <i class="fas fa-bars text-gray-700"></i>
     </button>
 
