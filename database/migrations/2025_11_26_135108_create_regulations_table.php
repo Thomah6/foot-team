@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('regulations', function (Blueprint $table) {
             $table->id();
             $table->string('title');      // Titre du règlement ou section
-            $table->text('content')->nullable();      // Contenu du règlement
             $table->timestamps();
  });
     }

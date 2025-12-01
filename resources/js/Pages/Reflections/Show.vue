@@ -3,7 +3,7 @@
   <Layout class="flex flex-col lg:flex-row">
 
     <div class="max-w-4xl  w-full lg:w-1/2 mx-auto py-10 px-4 sm:px-6 lg:px-8">
-        
+
         <div class="bg-white p-8 rounded-2xl shadow-2xl border-t-4 border-indigo-600 mb-10">
         <blockquote
           class="text-sm sm:text-xl lg:text-3xl font-serif text-gray-900 italic mb-6 border-l-4 border-gray-300 pl-4 "
@@ -23,7 +23,7 @@
                                     type="button"
                                     class="inline-flex items-center rounded-md border border-transparent bg-white px-3 py-2 text-sm font-medium leading-4 text-gray-500 transition duration-150 ease-in-out hover:text-gray-700 focus:outline-none"
                                 >
-        
+
                                     <svg
                                         class="-me-0.5 ms-2 h-4 w-4"
                                         xmlns="http://www.w3.org/2000/svg"
@@ -39,7 +39,7 @@
                                 </button>
                             </span>
                         </template>
-        
+
                         <template #content>
                             <DropdownLink
                                 @click="activeRef(reflection.id)"
@@ -56,7 +56,6 @@
                 Le {{ formatCommentDate(reflection.created_at) }}
             </p>
         </div>
-
         <div>
           <Vote
             :options="options"
@@ -136,7 +135,7 @@ defineProps({
 
 function like(id){
     console.log(id);
-    
+
     router.get(route('likeComment',id));
 }
 function dislike(id){
@@ -147,10 +146,11 @@ function dislike(id){
 const formatCommentDate = (dateString) => {
   const date = new Date(dateString);
   return date.toLocaleDateString("fr-FR");
-};
+}
 
 function deleteRef(id) {
-  router.get(route("reflections.destroy", id));
+    console.log(id);
+  router.delete(route("reflections.destroy", id));
 }
 
 function activeRef(id) {

@@ -1,8 +1,8 @@
 <template>
-    <div class="vote-component">
-        <h2 class="text-lg font-bold text-center">Cast Your Vote</h2>
-        <div class="grid grid-cols-2 gap-4 w-full">
-            <div v-for="option in props.options" :key="option.id" class="vote-option">
+    <div class="vote-component p-4">
+        <h2 class="text-lg font-bold mb-4 text-center">Cast Your Vote</h2>
+        <div v-if="!isVoteEnded" class="grid grid-cols-2 gap-4 w-full">
+            <div v-for="option in options" :key="option.id" class="vote-option">
                 <label
                     @click="submitVote(option)"
                     :class="{
@@ -14,7 +14,7 @@
                             option.option === 'CONTRE',
                         'bg-gray-100 border-gray-500': selectedOption !== option.id,
                     }"
-                    class="block border rounded-lg p-4 cursor-pointer transition-all"
+                    class="block border rounded-lg p-4 mb-4 cursor-pointer transition-all"
                 >
                     <input
                         type="radio"

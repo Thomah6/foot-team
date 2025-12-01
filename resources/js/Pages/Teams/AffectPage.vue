@@ -1,99 +1,176 @@
 <template>
-      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-    <section class="flex gap-12">
-        <section> <AdminsideBar /> </section>
-        <div class="p-6">
-            <h1 class="text-2xl font-bold mb-4">
-              Affectation des joueurs — {{ team.name }}
-            </h1>
-
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-
-      <!-- JOUEURS DISPONIBLES -->
-      <div
-        class="bg-white rounded-xl shadow p-4 min-h-[400px]"
-        @dragover.prevent
-        @drop="dropToAvailable"
-      >
-        <h2 class="text-xl font-semibold mb-3">Joueurs disponibles</h2>
-
-        <input
-          type="text"
-          v-model="searchQuery"
-          placeholder="Rechercher..."
-          class="border w-full p-2 mb-3 rounded"
-        />
-
-        <div class="space-y-2">
-          <div
-            v-for="player in filteredAvailable"
-            :key="player.id"
-            class="p-3 bg-gray-100 rounded-lg border cursor-move transform transition-all duration-200 hover:scale-[1.02]"
-            draggable="true"
-            @dragstart="dragStart(player, 'available')"
-          >
-            <i class="fa-solid fa-futbol"></i>
-            {{ player.name }}
-          </div>
-        </div>
-      </div>
-
-      <!-- JOUEURS AFFECTÉS -->
-      <div
-        class="bg-white rounded-xl shadow p-4 min-h-[400px] terrain"
-        @dragover.prevent
-        @drop="dropToAssigned"
-      >
-        <h2 class="text-xl font-semibold mb-3 text-green-600">Joueurs affectés</h2>
-
-        <div class="space-y-2">
-          <div
-            v-for="player in assignedPlayers"
-            :key="player.id"
-            class="p-2 rounded-lg cursor-move transform transition-all duration-200 hover:scale-[1.02]"
-            draggable="true"
-            @dragstart="dragStart(player, 'assigned')"
-          >
-          <div class="flex flex-col items-center">
-            <i class="fa-solid fa-futbol"></i>
-            <p class="text-white">{{ player.name }}</p>
-          </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="mt-6">
-      <button
-        class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700"
-        :disabled="saving"
-        @click="saveAffectation"
-      >
-        Sauvegarder
-      </button>
-      <!-- MERCATO -->
-<div class="mt-6 flex items-center gap-3">
-  <input
-    type="number"
-    v-model.number="mercatoCount"
-    min="1"
-    :max="availablePlayers.length"
-    placeholder="Nombre de joueurs à affecter"
-    class="border p-2 rounded w-48"
-  />
-  <button
-    class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
-    @click="doMercato"
-    :disabled="availablePlayers.length === 0 || !mercatoCount"
-  >
-    Mercato
-  </button>
-</div>
-
-    </div>
-
-  </div>
+  <div class="flex flex-col md:flex-row min-h-screen bg-gray-50">
+    <!-- Sidebar -->
+    <section class="hidden md:block">
+      <AdminsideBar />
     </section>
+
+    <!-- Main content -->
+    <main class="flex-1 w-full p-4 md:p-10">
+      <div class="max-w-6xl mx-auto">
+        <!-- Header -->
+        <div class="mb-8">
+          <a href="/teams/index" class="text-blue-600 hover:text-blue-800 text-sm font-semibold flex items-center gap-1 mb-3">
+            <i class="fas fa-arrow-left"></i> Retour
+          </a>
+          <h1 class="text-2xl sm:text-4xl font-extrabold text-gray-900 mb-2">
+            Affectation des joueurs
+          </h1>
+          <p class="text-gray-600 text-sm">{{ team.name }} — Glissez-déposez ou utilisez le mercato</p>
+        </div>
+
+        <!-- Drag-and-drop section - Mobile optimized -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-8">
+
+          <!-- JOUEURS DISPONIBLES -->
+          <div class="flex flex-col">
+            <h2 class="text-lg font-semibold mb-4 text-gray-800 flex items-center gap-2">
+              <i class="fas fa-list text-gray-500"></i>
+              Joueurs disponibles
+            </h2>
+            <div
+              class="bg-white rounded-xl shadow border border-gray-300 p-4 min-h-96 flex flex-col overflow-y-auto"
+              @dragover.prevent="$event.dataTransfer.dropEffect = 'move'"
+              @drop="dropToAvailable"
+            >
+              <!-- Search input -->
+              <input
+                type="text"
+                v-model="searchQuery"
+                placeholder="Rechercher..."
+                class="border border-gray-300 w-full p-3 mb-4 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+              />
+
+              <!-- Player list -->
+              <div class="space-y-2 flex-1">
+                <div
+                  v-for="player in filteredAvailable"
+                  :key="player.id"
+                  class="p-3 bg-gradient-to-r from-gray-100 to-gray-50 rounded-lg border-2 border-gray-300 cursor-move transform transition-all duration-200 hover:scale-[1.02] hover:from-blue-50 hover:to-blue-50 hover:border-blue-400 active:scale-95 select-none"
+                  draggable="true"
+                  @dragstart="dragStart(player, 'available')"
+                >
+                  <div class="flex items-center gap-2">
+                    <i class="fas fa-futbol text-gray-600"></i>
+                    <span class="font-medium text-gray-800 text-sm">{{ player.name }}</span>
+                  </div>
+                </div>
+
+                <!-- Empty state -->
+                <div v-if="filteredAvailable.length === 0" class="text-center py-8 text-gray-500">
+                  <i class="fas fa-inbox text-3xl mb-2 opacity-30"></i>
+                  <p class="text-sm">Aucun joueur disponible</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- JOUEURS AFFECTÉS -->
+          <div class="flex flex-col">
+            <h2 class="text-lg font-semibold mb-4 text-green-700 flex items-center gap-2">
+              <i class="fas fa-check-circle text-green-600"></i>
+              Joueurs affectés
+            </h2>
+            <div
+              class="bg-white rounded-xl shadow border-2 border-green-300 p-4 min-h-96 flex flex-col overflow-y-auto terrain"
+              @dragover.prevent="$event.dataTransfer.dropEffect = 'move'"
+              @drop="dropToAssigned"
+            >
+              <div class="flex flex-wrap gap-3 content-start flex-1">
+                <div
+                  v-for="player in assignedPlayers"
+                  :key="player.id"
+                  class="flex flex-col items-center cursor-move transform transition-all duration-200 hover:scale-110 active:scale-95 select-none"
+                  draggable="true"
+                  @dragstart="dragStart(player, 'assigned')"
+                  :title="player.name"
+                >
+                  <!-- Petite icône/badge -->
+                  <div class="w-10 h-10 rounded-full bg-green-500 flex items-center justify-center text-white shadow-md hover:bg-green-600 transition mb-1 border border-green-600">
+                    <i class="fas fa-futbol text-sm"></i>
+                  </div>
+                  
+                  <!-- Nom du joueur -->
+                  <p class="text-xs font-semibold text-gray-700 text-center max-w-[50px] line-clamp-2">
+                    {{ player.name }}
+                  </p>
+                </div>
+
+                <!-- Empty state -->
+                <div v-if="assignedPlayers.length === 0" class="w-full flex items-center justify-center py-12 text-gray-500">
+                  <div class="text-center">
+                    <i class="fas fa-inbox text-4xl mb-3 opacity-30"></i>
+                    <p class="text-sm font-medium">Glissez les joueurs ici</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Compteur de joueurs -->
+              <div v-if="assignedPlayers.length > 0" class="mt-4 pt-4 border-t border-green-300 text-center">
+                <p class="text-sm font-semibold text-green-700">
+                  {{ assignedPlayers.length }} Joueur{{ assignedPlayers.length !== 1 ? 's' : '' }} affecté{{ assignedPlayers.length !== 1 ? 's' : '' }}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Actions - Mobile optimized -->
+        <div class="bg-white rounded-xl shadow border border-gray-200 p-4 md:p-6 space-y-4">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <!-- Save button -->
+            <button
+              class="w-full bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition font-semibold text-sm md:text-base disabled:opacity-50 flex items-center justify-center gap-2"
+              :disabled="saving"
+              @click="saveAffectation"
+            >
+              <i class="fas fa-save"></i>
+              {{ saving ? 'Sauvegarde...' : 'Sauvegarder' }}
+            </button>
+
+            <!-- Reset button -->
+            <button
+              class="w-full bg-gray-600 text-white px-6 py-3 rounded-lg hover:bg-gray-700 transition font-semibold text-sm md:text-base"
+              @click="() => {
+                availablePlayers.value = [...props.available];
+                assignedPlayers.value = [...props.assigned];
+              }"
+            >
+              <i class="fas fa-redo mr-2"></i>
+              Réinitialiser
+            </button>
+          </div>
+
+          <!-- Mercato - Mobile optimized -->
+          <div class="border-t border-gray-300 pt-4">
+            <h3 class="font-semibold text-gray-800 mb-3 flex items-center gap-2">
+              <i class="fas fa-magic text-purple-600"></i>
+              Mercato aléatoire
+            </h3>
+            <p class="text-xs md:text-sm text-gray-600 mb-3">Affectez automatiquement un nombre aléatoire de joueurs</p>
+            <div class="flex gap-2 flex-col sm:flex-row">
+              <input
+                type="number"
+                v-model.number="mercatoCount"
+                min="1"
+                :max="availablePlayers.length"
+                placeholder="Nombre de joueurs"
+                class="flex-1 border border-gray-300 p-3 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-400"
+              />
+              <button
+                class="bg-purple-600 text-white px-4 py-3 rounded-lg hover:bg-purple-700 transition font-semibold text-sm whitespace-nowrap disabled:opacity-50"
+                @click="doMercato"
+                :disabled="availablePlayers.length === 0 || !mercatoCount"
+              >
+                <i class="fas fa-shuffle mr-2"></i>
+                Mercato
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
 </template>
 
 <script setup>
@@ -106,7 +183,6 @@ const props = defineProps({
   available: Array,
   assigned: Array,
 })
-console.log(props.available);
 
 const searchQuery = ref("")
 const draggedPlayer = ref(null)
@@ -155,60 +231,83 @@ function saveAffectation() {
   })
 }
 
+// Mercato - Affectation aléatoire
+const mercatoCount = ref(0)
 
-//Mercato
-const mercatoCount = ref(0);
-function doMercato(){
-    if(mercatoCount.value < 0) return
+function doMercato() {
+  if (mercatoCount.value < 1) return
 
-    //melanger
-    const shulffled = [...availablePlayers.value].sort(()=>Math.random() - 0.5)
+  // Mélanger les joueurs disponibles
+  const shuffled = [...availablePlayers.value].sort(() => Math.random() - 0.5)
 
-    //Sélectionner le nombre demander
-    const selected = shulffled.slice(0, Math.min(mercatoCount.value, availablePlayers.value.length))
-    //Les affecter
-    selected.forEach(player => {
-        availablePlayers.value = availablePlayers.value.filter(p => p.id !== player.id);
-        assignedPlayers.value.push(player)
-    })
+  // Sélectionner le nombre demandé
+  const selected = shuffled.slice(0, Math.min(mercatoCount.value, availablePlayers.value.length))
 
-    //Réinitialiser l'input
-    mercatoCount.value = 0
+  // Les affecter
+  selected.forEach(player => {
+    availablePlayers.value = availablePlayers.value.filter(p => p.id !== player.id)
+    assignedPlayers.value.push(player)
+  })
+
+  // Réinitialiser l'input
+  mercatoCount.value = 0
 }
-
 </script>
-<style>
-/* .terrain{
-    background-image: url('@/../../../public/terrain.jpg');
-    background-size: cover;
-    background-repeat: no-repeat;
-    width: 125%;
-} */
- .terrain {
-    position: relative;
-    background-image: url('@/../../../public/terrain.jpg');
-    background-size: 100%;       /* affiche toute l’image sans couper */
-    background-repeat: no-repeat;   /* pas de répétition */
-    /* background-position: center;    bien centré */
-    width: 128%;                    /* full width en mobile */
-    min-height: 300px;              /* donne une vraie zone à l’image */
-    /* display: block; */
+
+<style scoped>
+.terrain {
+  background-image: url('/terrain.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  position: relative;
 }
-/* TABLETTE */
+
+/* Mobile - Image visible but not covering */
+@media (max-width: 767px) {
+  .terrain {
+    background-size: contain;
+    min-height: 300px;
+  }
+}
+
+/* Tablet - Better coverage */
 @media (min-width: 768px) {
-    .terrain {
-        background-size: cover;     /* maintenant on peut couvrir */
-
-        min-height: 400px;
-    }
+  .terrain {
+    background-size: cover;
+    min-height: 400px;
+  }
 }
 
-
-/* DESKTOP */
+/* Desktop - Full coverage */
 @media (min-width: 1024px) {
-    .terrain {
-        width: 125%;                /* ton ancien style, mais seulement en desktop */
-        min-height: 500px;
-    }
+  .terrain {
+    min-height: 500px;
+  }
+}
+
+/* Smooth drag-and-drop animations */
+.drag-over {
+  background-color: rgba(59, 130, 246, 0.1);
+  border-color: rgb(59, 130, 246);
+}
+
+/* Hidden scrollbar styling for drag areas */
+div::-webkit-scrollbar {
+  width: 6px;
+}
+
+div::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 10px;
+}
+
+div::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 10px;
+}
+
+div::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
 }
 </style>

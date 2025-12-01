@@ -7,6 +7,7 @@ const navLinks = [
   { name: 'Dashboard', href: '/admin/dashboard', permission: 'view dashboard' },
   { name: 'Utilisateurs', href: '/admin/users', permission: 'view users' },
   { name: 'Articles', href: '/admin/articles', permission: 'edit articles' },
+  { name: 'Classement', href: '/classements', permission: 'view dashboard' },
   { name: 'Paramètres', href: '/admin/settings', permission: 'edit settings' },
 ];
 
