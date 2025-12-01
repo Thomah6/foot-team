@@ -22,7 +22,7 @@ const showPassword = ref(false);
 const showPasswordConfirm = ref(false);
 
 const submit = () => {
-  form.patch(route('members.update', props.member.id));
+  form.patch(route('admin.members.update', props.member.id));
 };
 </script>
 
