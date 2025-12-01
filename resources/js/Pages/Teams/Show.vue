@@ -1,25 +1,25 @@
 <template>
-  <div class="flex flex-col md:flex-row min-h-screen bg-gray-50">
+  <div class="flex flex-col md:flex-row min-h-screen bg-gray-50 dark:bg-gray-900">
 
     <!-- Sidebar -->
-    <section class="hidden md:block">
+    <section class="hidden md:block dark:bg-gray-900">
       <AdminsideBar />
     </section>
 
     <!-- Main content -->
-    <main class="flex-1 w-full p-4 md:p-10 bg-gray-50 min-h-screen">
+    <main class="flex-1 w-full p-4 md:p-10 bg-gray-50 min-h-screen dark:bg-gray-900 min-h-screen">
       <div class="max-w-6xl mx-auto">
 
         <!-- TOP BAR - Mobile optimized -->
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
           <div>
-            <a href="/teams/index" class="text-blue-600 hover:text-blue-800 text-sm font-semibold flex items-center gap-1 mb-2">
+            <a href="/teams/index" class="text-blue-600 hover:text-blue-800 text-sm font-semibold flex items-center gap-1 mb-2 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300">
               <i class="fas fa-arrow-left"></i> Retour
             </a>
-            <h1 class="text-2xl sm:text-4xl font-extrabold tracking-tight text-gray-900">
+            <h1 class="text-2xl sm:text-4xl font-extrabold tracking-tight text-gray-900 dark:text-white">
               {{ props.team.name }}
             </h1>
-            <p class="text-gray-600 text-sm mt-1">
+            <p class="text-gray-600 text-sm mt-1 dark:text-gray-400 ">
               {{ isAdmin ? 'Gérez les membres de cette équipe' : 'Membres de l\'équipe' }}
             </p>
           </div>
@@ -32,28 +32,28 @@
 
         <!-- Mobile filter toggle (Admin only) -->
         <div v-if="isAdmin" class="md:hidden mb-4">
-          <details class="bg-white rounded-lg shadow-md border border-gray-200 p-4">
-            <summary class="font-semibold text-gray-800 cursor-pointer flex items-center gap-2 hover:text-blue-600">
+          <details class="bg-white rounded-lg shadow-md border border-gray-200 p-4  dark:bg-gray-800 dark:border-gray-700">
+            <summary class="font-semibold text-gray-800 cursor-pointer flex items-center gap-2 hover:text-blue-600 dark:text-gray-200 dark:hover:text-blue-400">
               <i class="fas fa-filter"></i> Filtres
             </summary>
             <div class="mt-4 space-y-4">
               <!-- Search -->
               <div class="relative">
-                <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500"></i>
                 <input
                   v-model="filters.search"
                   type="text"
                   placeholder="Rechercher..."
-                  class="w-full bg-gray-100 border border-gray-300 rounded-lg h-11 pl-10 px-3 text-sm focus:ring-2 focus:ring-blue-300 focus:bg-white transition"
+                  class="w-full bg-gray-100 border border-gray-300 rounded-lg h-11 pl-10 px-3 text-sm focus:ring-2 focus:ring-blue-300 focus:bg-white transition dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:bg-gray-800 "
                 />
               </div>
 
               <!-- Role -->
               <div class="relative">
-                <i class="fas fa-user-tag absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                <i class="fas fa-user-tag absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500"></i>
                 <select
                   v-model="filters.role"
-                  class="w-full bg-gray-100 border border-gray-300 rounded-lg h-11 pl-10 pr-3 text-sm focus:ring-2 focus:ring-blue-300"
+                  class="w-full bg-gray-100 border border-gray-300 rounded-lg h-11 pl-10 pr-3 text-sm focus:ring-2 focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                 >
                   <option value="">Tous les rôles</option>
                   <option value="admin">Admin</option>
@@ -64,10 +64,10 @@
 
               <!-- Goalkeeper -->
               <div class="relative">
-                <i class="fas fa-shield-alt absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                <i class="fas fa-shield-alt absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500"></i>
                 <select
                   v-model="filters.goalkeeper"
-                  class="w-full bg-gray-100 border border-gray-300 rounded-lg h-11 pl-10 pr-3 text-sm focus:ring-2 focus:ring-blue-300"
+                  class="w-full bg-gray-100 border border-gray-300 rounded-lg h-11 pl-10 pr-3 text-sm focus:ring-2 focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:text-white "
                 >
                   <option value="">Tous</option>
                   <option value="yes">Gardien</option>
@@ -77,7 +77,7 @@
 
               <button
                 @click="resetFilters"
-                class="w-full h-10 font-semibold bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition text-sm"
+                class="w-full h-10 font-semibold bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition text-sm dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600"
               >
                 Réinitialiser
               </button>
@@ -90,9 +90,9 @@
 
           <!-- FILTER SIDEBAR - Desktop only (Admin only) -->
           <aside v-if="isAdmin" class="hidden md:block md:col-span-1">
-            <div class="bg-white p-6 rounded-xl shadow-md border border-gray-200 sticky top-6">
+            <div class="bg-white p-6 rounded-xl shadow-md border border-gray-200 sticky top-6 dark:bg-gray-800 dark:border-gray-700">
 
-              <h2 class="text-lg font-bold text-gray-800 mb-6 flex items-center gap-2">
+              <h2 class="text-lg font-bold text-gray-800 mb-6 flex items-center gap-2 dark:text-gray-300">
                 <i class="fas fa-filter text-gray-500"></i> Filtres
               </h2>
 
@@ -104,19 +104,19 @@
                     v-model="filters.search"
                     type="text"
                     placeholder="Chercher..."
-                    class="w-full bg-gray-100 border border-gray-300 rounded-lg h-11 pl-10 px-3 text-sm focus:ring-2 focus:ring-blue-300 focus:bg-white transition"
+                    class="w-full bg-gray-100 border border-gray-300 rounded-lg h-11 pl-10 px-3 text-sm focus:ring-2 focus:ring-blue-300 focus:bg-white transition dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:bg-gray-800"
                   />
                 </div>
               </div>
 
               <!-- Role -->
               <label class="flex flex-col mb-5">
-                <span class="text-sm font-semibold text-gray-700 mb-2">Rôle</span>
+                <span class="text-sm font-semibold text-gray-700 mb-2 dark:text-gray-300">Rôle</span>
                 <div class="relative">
-                  <i class="fas fa-user-tag absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                  <i class="fas fa-user-tag absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500"></i>
                   <select
                     v-model="filters.role"
-                    class="w-full bg-gray-100 border border-gray-300 rounded-lg h-11 pl-10 pr-3 text-sm focus:ring-2 focus:ring-blue-300"
+                    class="w-full bg-gray-100 border border-gray-300 rounded-lg h-11 pl-10 pr-3 text-sm focus:ring-2 focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                   >
                     <option value="">Tous les rôles</option>
                     <option value="admin">Admin</option>
@@ -128,12 +128,12 @@
 
               <!-- Goalkeeper -->
               <label class="flex flex-col mb-5">
-                <span class="text-sm font-semibold text-gray-700 mb-2">Gardien</span>
+                <span class="text-sm font-semibold text-gray-700 mb-2 dark:text-gray-300">Gardien</span>
                 <div class="relative">
                   <i class="fas fa-shield-alt absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
                   <select
                     v-model="filters.goalkeeper"
-                    class="w-full bg-gray-100 border border-gray-300 rounded-lg h-11 pl-10 pr-3 text-sm focus:ring-2 focus:ring-blue-300"
+                    class="w-full bg-gray-100 border border-gray-300 rounded-lg h-11 pl-10 pr-3 text-sm focus:ring-2 focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                   >
                     <option value="">Tous</option>
                     <option value="yes">Oui</option>
@@ -145,7 +145,7 @@
               <!-- RESET BUTTON -->
               <button
                 @click="resetFilters"
-                class="w-full h-10 mt-4 font-semibold bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition text-sm"
+                class="w-full h-10 mt-4 font-semibold bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition text-sm  dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600"
               >
                 Réinitialiser les filtres
               </button>
@@ -163,9 +163,9 @@
               <div
                 v-for="member in filteredMembers"
                 :key="member.id"
-                class="flex items-center gap-4 bg-white p-4 sm:p-5 rounded-xl border border-gray-200 shadow-sm hover:shadow-md hover:border-blue-300 transition-all"
+                class="flex items-center gap-4 bg-white p-4 sm:p-5 rounded-xl border border-gray-200 shadow-sm hover:shadow-md hover:border-blue-300 transition-all dark:bg-gray-800 dark:border-gray-700 dark:hover:border-blue-500"
               >
-                
+
                 <!-- Avatar -->
                 <div
                   class="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-cover bg-center shadow-md flex-shrink-0"
@@ -174,22 +174,22 @@
 
                 <!-- Info - Flex-grow -->
                 <div class="flex-1 min-w-0">
-                  <p class="text-base sm:text-lg font-bold text-gray-800 truncate">
+                  <p class="text-base sm:text-lg font-bold text-gray-800 truncate dark:text-white">
                     {{ member.name }}
-                    <span v-if="member.pseudo" class="text-gray-500 text-sm font-normal">({{ member.pseudo }})</span>
+                    <span v-if="member.pseudo" class="text-gray-500 text-sm font-normal dark:text-gray-400">({{ member.pseudo }})</span>
                   </p>
-                  <p class="text-xs sm:text-sm text-gray-500">{{ member.email }}</p>
-                  <p class="text-xs sm:text-sm text-gray-600 mt-1">
+                  <p class="text-xs sm:text-sm text-gray-500 dark:text-gray-400">{{ member.email }}</p>
+                  <p class="text-xs sm:text-sm text-gray-600 mt-1 dark:text-gray-300">
                     <i class="fas fa-tag mr-1"></i>{{ member.role }}
                   </p>
                 </div>
 
                 <!-- Tags - Responsive -->
                 <div class="flex flex-col gap-2 flex-shrink-0">
-                  <span v-if="member.is_goalkeeper" class="px-3 py-1 rounded-full bg-yellow-100 text-yellow-700 text-xs font-semibold whitespace-nowrap">
+                  <span v-if="member.is_goalkeeper" class="px-3 py-1 rounded-full bg-yellow-100 text-yellow-700 text-xs font-semibold whitespace-nowrap  dark:bg-yellow-500/10 dark:text-yellow-400">
                     <i class="fas fa-shield-alt mr-1"></i>Gardien
                   </span>
-                  <span v-if="member.position" class="px-3 py-1 rounded-full bg-blue-100 text-blue-700 text-xs font-semibold whitespace-nowrap capitalize">
+                  <span v-if="member.position" class="px-3 py-1 rounded-full bg-blue-100 text-blue-700 text-xs font-semibold whitespace-nowrap dark:bg-blue-500/10 dark:text-blue-400 capitalize">
                     {{ member.position }}
                   </span>
                 </div>
@@ -197,9 +197,9 @@
             </div>
 
             <!-- Empty state -->
-            <div v-else class="text-center py-12 bg-white rounded-xl border border-gray-200">
+            <div v-else class="text-center py-12 bg-white rounded-xl border border-gray-200  dark:bg-gray-800 dark:border-gray-700">
               <i class="fas fa-search text-gray-300 text-4xl mb-3"></i>
-              <p class="text-gray-500 text-lg">Aucun membre ne correspond à vos filtres</p>
+              <p class="text-gray-500 text-lg dark:text-gray-400">Aucun membre ne correspond à vos filtres</p>
             </div>
           </div>
 

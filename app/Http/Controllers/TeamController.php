@@ -62,9 +62,12 @@ class TeamController extends Controller
 
     public function affectPage(Team $team)
     {
+        $assignedUserIds = \DB::table('team_user')->pluck('user_id')->toArray();
+        // dd($assignedUserIds);
         $all = User::all();
+        $availlable = $all->whereNotIn('id', $assignedUserIds)->values()->all();
+
         $assigned = $team->users;
-        $availlable = $all->whereNotIn('id', $assigned->pluck('id'))->values()->all();
 
         return inertia('Teams/AffectPage', [
             'team' => $team,
