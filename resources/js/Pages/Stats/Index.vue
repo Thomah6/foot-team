@@ -4,6 +4,7 @@ import { Link } from '@inertiajs/vue3'
 import { useForm } from '@inertiajs/vue3'
 import AdminsideBar from '@/Components/AdminsideBar.vue';
 import ConfirmModal from '@/Components/ConfirmModal.vue';
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 
 const props = defineProps({
     pendingCount: Number,
@@ -82,43 +83,39 @@ const formatRelative = (date) => {
 </script>
 
 <template>
-    <div class="flex">
-         <div>
-               <AdminsideBar />
-         </div>
-
-    <div class="relative min-h-screen w-full bg-gradient-to-b from-slate-50 via-slate-100 to-white text-slate-900 font-sans">
-        <!-- Header Premium Style -->
-        <div class="relative bg-gradient-to-b from-white to-slate-50 py-16 px-4 border-b border-slate-200">
-            <div class="flex items-center justify-between max-w-6xl mx-auto mb-12">
-                <!-- Logo et titre -->
-                <div class="flex items-center gap-4">
-                    <div class="w-16 h-16 bg-gradient-to-br from-slate-200 to-slate-300 rounded-xl flex items-center justify-center border border-slate-300">
-                        <i class="fas fa-chart-bar text-slate-700 text-2xl"></i>
+    <AuthenticatedLayout>
+        <div class="relative min-h-screen w-full bg-gradient-to-b from-slate-50 via-slate-100 to-white text-slate-900 font-sans">
+            <!-- Header Premium Style -->
+            <div class="relative bg-gradient-to-b from-white to-slate-50 py-8 sm:py-12 lg:py-16 px-4 border-b border-slate-200">
+                <div class="flex flex-col sm:flex-row items-center justify-between max-w-6xl mx-auto mb-8 sm:mb-12 gap-6">
+                    <!-- Logo et titre -->
+                    <div class="flex items-center gap-3 sm:gap-4">
+                        <div class="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-slate-200 to-slate-300 rounded-xl flex items-center justify-center border border-slate-300">
+                            <i class="fas fa-chart-bar text-slate-700 text-lg sm:text-2xl"></i>
+                        </div>
+                        <div class="text-slate-700 font-light text-lg sm:text-xl tracking-wider hidden sm:block">FOOT TEAM</div>
                     </div>
-                    <div class="text-slate-700 font-light text-xl tracking-wider">FOOT TEAM</div>
+                    
+                    <!-- Titre central -->
+                    <div class="text-center order-first sm:order-none">
+                        <div class="text-slate-600 text-lg sm:text-xl font-light tracking-widest mb-1 sm:mb-2">STATISTIQUES</div>
+                        <div class="text-slate-500 text-xs sm:text-sm tracking-widest">Gestion des stats</div>
+                    </div>
+                    
+                    <!-- Logo à droite -->
+                    <div class="w-20 sm:w-24"></div>
                 </div>
                 
-                <!-- Titre central -->
-                <div class="text-center">
-                    <div class="text-slate-600 text-xl font-light tracking-widest mb-2">TABLEAU DE BORD</div>
-                    <div class="text-slate-500 text-sm tracking-widest">ADMINISTRATION</div>
+                <!-- Titre principal -->
+                <div class="text-center mb-8 sm:mb-12">
+                    <h1 class="text-3xl sm:text-4xl lg:text-6xl font-thin text-slate-900 tracking-wider mb-3 sm:mb-4">TABLEAU DE BORD</h1>
+                    <div class="text-slate-600 text-sm sm:text-lg tracking-widest font-light">Validation des statistiques</div>
                 </div>
-                
-                <!-- Logo à droite -->
-                <div class="w-24"></div>
             </div>
-            
-            <!-- Titre principal -->
-            <div class="text-center mb-8">
-                <h1 class="text-6xl font-thin text-slate-900 tracking-wider mb-3">STATISTIQUES</h1>
-                <div class="text-slate-600 text-lg tracking-widest font-light">Gestion des performances</div>
-            </div>
-        </div>
 
-        <div class="max-w-6xl mx-auto px-4 py-16">
-            <!-- Stats Cards Grid -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+            <div class="max-w-6xl mx-auto px-4 py-16">
+                <!-- Stats Cards Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
                 
                 <!-- Pending stats -->
                 <div class="bg-white/80 backdrop-blur-sm rounded-2xl p-8 text-center border border-slate-200 shadow-lg">
@@ -222,7 +219,7 @@ const formatRelative = (date) => {
                 </div>
             </div>
         </div>
-    </div>
-    </div>
+        </div>
+    </AuthenticatedLayout>
     <ConfirmModal v-model="showRejectModal" title="Rejeter la statistique" message="Êtes-vous sûr de vouloir rejeter cette statistique ?" confirm-text="Rejeter" cancel-text="Annuler" variant="danger" @confirm="confirmReject" />
 </template>
