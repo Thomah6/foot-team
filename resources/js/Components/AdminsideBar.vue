@@ -97,7 +97,7 @@ const menu = computed(() => {
 
 
     // Items conditionnels
-   
+
 
     if (isAdmin()) {
         items.push(
@@ -251,15 +251,13 @@ const handleLogout = () => {
                     : 'hover:bg-blue-500/10 text-text-primary-light dark:text-text-primary-dark'
                     ">
             <i :class="item.icon" class="text-lg w-5 text-center"></i>
-            <p class="text-sm font-medium">{{ item.label }}</p>
+            <p class="text-sm font-medium dark:text-gray-100">{{ item.label }}</p>
             <span v-if="item.label === 'Reflections' && Notification > 0" class="ml-2 inline-flex items-center justify-center h-5 min-w-[20px] px-1.5 rounded-full text-xs font-bold text-white bg-red-500">
                 {{ Notification }}
             </span>
             <span v-if="item.label === 'Membres' && $page.props.inactiveUsersCount > 0" class="ml-2 inline-flex items-center justify-center h-5 min-w-[20px] px-1.5 rounded-full text-xs font-bold text-white bg-amber-500">
                 {{ $page.props.inactiveUsersCount }}
             </span>
-            <p class="text-sm font-medium dark:text-gray-100">{{ item.label }}</p><span v-if="item.label === 'Reflections'">
-                {{ Notification}}</span>
             </Link>
         </nav>
 
