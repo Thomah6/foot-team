@@ -84,7 +84,7 @@ function confirmSubmit() {
                 // Delay navigation briefly so the toast is visible to the user
                 setTimeout(() => {
                     router.visit(route("finances.index"));
-                }, 800);
+                }, 1500);
             },
             onFinish: () => {
                 showConfirmLoading.value = false;

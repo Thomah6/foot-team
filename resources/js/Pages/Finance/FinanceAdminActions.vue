@@ -1,15 +1,12 @@
 <script setup>
 import { usePage } from "@inertiajs/vue3";
 
-
 const emit = defineEmits(["valider", "depense", "ajustement"]);
 const page = usePage();
 const role = page.props.auth.user.role;
 
-
 const isAdmin = role === "admin";
 const isBureau = role === "bureau";
-
 
 function validerDepots() {
     emit("valider", "cotisation");
@@ -25,7 +22,6 @@ function ajustementManuel() {
 }
 </script>
 
-
 <template>
     <div
         class="flex flex-col gap-4 p-6 bg-white dark:bg-slate-900 border border-neutral-200 dark:border-slate-700 rounded-lg"
@@ -33,7 +29,6 @@ function ajustementManuel() {
         <h2 class="text-xl font-bold text-neutral-900 dark:text-white">
             Actions Spéciales
         </h2>
-
 
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
             <!-- Valider dépôts : admin par exemple -->
@@ -52,7 +47,6 @@ function ajustementManuel() {
                 >
             </button>
 
-
             <!-- Valider dépenses en attente : admin -->
             <button
                 v-if="isAdmin"
@@ -69,7 +63,6 @@ function ajustementManuel() {
                 >
             </button>
 
-
             <!-- Ajouter dépense : admin + bureau -->
             <button
                 v-if="isAdmin || isBureau"
@@ -85,7 +78,6 @@ function ajustementManuel() {
                     >Ajouter Dépense</span
                 >
             </button>
-
 
             <!-- Ajustement manuel : admin seulement -->
             <button

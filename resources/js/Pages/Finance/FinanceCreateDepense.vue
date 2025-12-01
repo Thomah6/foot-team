@@ -45,10 +45,9 @@ function sendDepense() {
         toastMessage.value = page.props.flash.success
         toastType.value = 'success'
         toastVisible.value = true
-        // Delay navigation briefly so the toast is visible to the user
         setTimeout(() => {
           router.visit(route('finances.index'))
-        }, 800)
+        }, 1500)
       }
     },
     onFinish: () => {

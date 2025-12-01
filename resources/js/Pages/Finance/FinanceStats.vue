@@ -12,29 +12,6 @@ const props = defineProps({
 });
 </script>
 
-<style scoped>
-@keyframes slideDown {
-  from {
-    opacity: 0;
-    transform: translateY(-30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.card-animate {
-  animation: slideDown 0.6s ease-out forwards;
-}
-
-.card-1 { animation-delay: 0.1s; }
-.card-2 { animation-delay: 0.2s; }
-.card-3 { animation-delay: 0.3s; }
-.card-4 { animation-delay: 0.4s; }
-.card-5 { animation-delay: 0.5s; }
-</style>
-
 <template>
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 sm:gap-6">
         <div
@@ -145,3 +122,36 @@ const props = defineProps({
         </div>
     </div>
 </template>
+
+<style scoped>
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.card-animate {
+    animation: slideDown 0.6s ease-out forwards;
+}
+
+.card-1 {
+    animation-delay: 0.1s;
+}
+.card-2 {
+    animation-delay: 0.2s;
+}
+.card-3 {
+    animation-delay: 0.3s;
+}
+.card-4 {
+    animation-delay: 0.4s;
+}
+.card-5 {
+    animation-delay: 0.5s;
+}
+</style>
