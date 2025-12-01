@@ -4,7 +4,7 @@ import { ref, watch, onMounted } from 'vue'
 import { Link, useForm } from '@inertiajs/vue3'
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue'
 
-defineProps({
+const props = defineProps({
   members: Object,
   filters: Object,
 })
@@ -28,10 +28,10 @@ const form = useForm({
 })
 
 onMounted(() => {
-  searchQuery.value = (filters && filters.search) || '';
-  roleFilter.value = (filters && filters.role) || '';
-  statusFilter.value = (filters && filters.status) || '';
-  perPageValue.value = (filters && filters.perPage) || 10;
+  searchQuery.value = (props.filters && props.filters.search) || '';
+  roleFilter.value = (props.filters && props.filters.role) || '';
+  statusFilter.value = (props.filters && props.filters.status) || '';
+  perPageValue.value = (props.filters && props.filters.perPage) || 10;
 });
 
 // Recherche live avec debounce
@@ -40,7 +40,7 @@ watch(searchQuery, (val) => {
   if (searchTimeout) clearTimeout(searchTimeout);
   searchTimeout = setTimeout(() => {
     form.search = val;
-    form.get(route('members.index'), { preserveState: true, preserveScroll: true });
+    form.get(route('admin.members.index'), { preserveState: true, preserveScroll: true });
   }, 300);
 });
 
@@ -54,7 +54,7 @@ const handleFilter = () => {
   form.role = roleFilter.value
   form.status = statusFilter.value
   form.perPage = perPageValue.value
-  form.get(route('members.index'), { preserveScroll: true })
+  form.get(route('admin.members.index'), { preserveScroll: true })
 }
 
 const resetFilters = () => {
@@ -63,7 +63,7 @@ const resetFilters = () => {
   statusFilter.value = ''
   perPageValue.value = 10
   form.reset()
-  form.get(route('members.index'), { preserveScroll: true })
+  form.get(route('admin.members.index'), { preserveScroll: true })
 }
 
 // Modaux
@@ -75,14 +75,14 @@ const openRoleModal = (member) => {
 
 const updateRole = () => {
   const roleForm = useForm({ role: selectedRole.value })
-  roleForm.patch(route('members.update-role', selectedMember.value.id), {
+  roleForm.patch(route('admin.members.update-role', selectedMember.value.id), {
     onSuccess: () => showRoleModal.value = false,
   })
 }
 
 const toggleStatus = (member) => {
   const statusForm = useForm({})
-  statusForm.patch(route('members.toggle-status', member.id), {
+  statusForm.patch(route('admin.members.toggle-status', member.id), {
     preserveScroll: true,
     preserveState: true,
   })
@@ -95,7 +95,7 @@ const deleteMember = (member) => {
 
 const confirmDelete = () => {
   const deleteForm = useForm({})
-  deleteForm.delete(route('members.destroy', selectedMember.value.id), {
+  deleteForm.delete(route('admin.members.destroy', selectedMember.value.id), {
     onSuccess: () => showDeleteModal.value = false,
   })
 }
@@ -160,7 +160,7 @@ const getStatusColor = (isActive) => {
             <p class="text-sm text-gray-600">Administration de l'effectif</p>
           </div>
 
-          <Link :href="route('members.create')" class="btn-primary inline-flex items-center gap-2">
+          <Link :href="route('admin.members.create')" class="btn-primary inline-flex items-center gap-2">
           Ajouter un nouveau membre
           </Link>
         </div>
@@ -313,7 +313,7 @@ const getStatusColor = (isActive) => {
                   {{ member.is_active ? 'Désactiver' : 'Activer' }}
                 </button>
 
-                <Link :href="route('members.edit', member.id)" class="btn-secondary flex-1 text-center">
+                <Link :href="route('admin.members.edit', member.id)" class="btn-secondary flex-1 text-center">
                 Éditer
                 </Link>
 
@@ -379,11 +379,9 @@ const getStatusColor = (isActive) => {
                         {{ member.is_active ? 'Désactiver' : 'Activer' }}
                       </button>
 
-                      <Link :href="route('members.edit', member.id)" class="btn-secondary">
-                      Éditer
-                      </Link>
-
-                      <button @click="deleteMember(member)" class="btn-secondary border-red-300 text-red-700">
+                      <Link :href="route('admin.members.edit', member.id)" class="btn-secondary">
+                        Éditer
+                      </Link>                      <button @click="deleteMember(member)" class="btn-secondary border-red-300 text-red-700">
                         Supprimer
                       </button>
                     </div>

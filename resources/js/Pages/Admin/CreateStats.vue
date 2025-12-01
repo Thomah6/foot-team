@@ -1,6 +1,7 @@
 <script setup>
 import { useForm } from '@inertiajs/vue3';
 import AdminsideBar from '@/Components/AdminsideBar.vue';
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 const props = defineProps({
   users: Array,
 });
@@ -20,10 +21,14 @@ const submit = () => {
 </script>
 
 <template>
+<AuthenticatedLayout>
+
+
  <div class="flex">
-         <div>
-               <AdminsideBar />
-         </div>
+
+
+
+
          <div class=" flex-1">
   <h1 class="text-center text-3xl font-bold mb-8 text-gray-800">
     Statistique des joueurs
@@ -117,4 +122,6 @@ const submit = () => {
   </div>
   </div>
   </div>
+</AuthenticatedLayout>
+
 </template>

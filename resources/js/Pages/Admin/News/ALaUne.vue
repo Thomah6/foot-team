@@ -17,6 +17,15 @@ const props = defineProps({
             </h2>
 
             <div v-if="featured && featured.title" class="space-y-2">
+                <!-- Image featured -->
+                <div v-if="featured.image" class="mb-2">
+                    <img 
+                        :src="`/storage/${featured.image}`" 
+                        alt="Image à la une" 
+                        class="w-full h-48 object-cover rounded"
+                    />
+                </div>
+
                 <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100">
                     {{ featured.title }}
                 </h3>

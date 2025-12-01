@@ -19,10 +19,10 @@ function handleImageError() {
 
 <template>
     <Head title="Dashboard - FC Dynamo" />
-    
+
     <!-- Font Awesome CDN -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-    
+
     <AuthenticatedLayout>
         <div class="relative min-h-screen w-full font-display bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
             <!-- Contenu principal -->
@@ -33,7 +33,7 @@ function handleImageError() {
                         <div class="p-8">
                             <!-- Hero Section -->
                             <div class="relative w-full rounded-xl overflow-hidden bg-white dark:bg-gray-800 shadow-lg dark:shadow-none mb-8">
-                                <div class="absolute inset-0 bg-cover bg-center" 
+                                <div class="absolute inset-0 bg-cover bg-center"
                                      style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCq5SmIFwaqOxatQv-MMr6vmBY_JeCcxPb3rbasK4fR6vxUq8RhLoZj4U-HGbvTJ8EALKaDPfgZw0WJC9B5MU4YVTxgNrbb66g0F_9nkDl5NSh75LFTiWvXeZ8v-Xt3NftWiLKgmAH7Uho9PPKEPpZodFfuZ9hOt91WtwSJnO6B1c6dXf_Xy1-CIMJq8LmYvmI6qgipl_udXDpjf54bUIKBNoWOFQLJd4BkdarIHGqeyXCaEckHvoxKfNzq3fTFALJVJX4eRtUcA'); opacity: 0.1;">
                                 </div>
                                 <div class="relative flex flex-col md:flex-row items-center justify-between p-8 md:p-12 gap-8">
@@ -65,10 +65,10 @@ function handleImageError() {
                                         <div class="flex overflow-x-auto [-ms-scrollbar-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden -mx-8 px-4">
                                             <div class="flex items-stretch p-4 gap-6">
                                                 <!-- BannerPlayerMonth Component -->
-                                                <BannerPlayerMonth 
-                                                    :player="page.props.player" 
+                                                <BannerPlayerMonth
+                                                    :player="page.props.player"
                                                     :stats="page.props.stats"
-                                                    :previousPlayers="page.props.previousPlayers" 
+                                                    :previousPlayers="page.props.previousPlayers"
                                                 />
                                             </div>
                                         </div>
