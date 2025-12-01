@@ -1,6 +1,6 @@
 <template>
     <div class="mt-10">
-        <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b pb-3">
+        <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b pb-3 dark:text-gray-100">
           Commentaires ({{ reflection.comments.length }})
         </h3>
 

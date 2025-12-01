@@ -40,7 +40,7 @@ watch(searchQuery, (val) => {
   if (searchTimeout) clearTimeout(searchTimeout);
   searchTimeout = setTimeout(() => {
     form.search = val;
-    form.get(route('members.index'), { preserveState: true, preserveScroll: true });
+    form.get(route('admin.members.index'), { preserveState: true, preserveScroll: true });
   }, 300);
 });
 
@@ -54,7 +54,7 @@ const handleFilter = () => {
   form.role = roleFilter.value
   form.status = statusFilter.value
   form.perPage = perPageValue.value
-  form.get(route('members.index'), { preserveScroll: true })
+  form.get(route('admin.members.index'), { preserveScroll: true })
 }
 
 const resetFilters = () => {
@@ -63,7 +63,7 @@ const resetFilters = () => {
   statusFilter.value = ''
   perPageValue.value = 10
   form.reset()
-  form.get(route('members.index'), { preserveScroll: true })
+  form.get(route('admin.members.index'), { preserveScroll: true })
 }
 
 // Modaux

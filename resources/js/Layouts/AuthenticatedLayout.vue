@@ -53,8 +53,8 @@ defineProps({
                                 <!-- <NavLink :href="route('dashboard')" :active="route().current('dashboard')">
                                     Dashboard
                                 </NavLink>
-                                <NavLink v-if="isAdmin()" :href="route('members.index')"
-                                    :active="route().current('members.*')">
+                                <NavLink v-if="isAdmin()" :href="route('admin.members.index')"
+                                    :active="route().current('admin.members.*')">
                                     Membres
                                 </NavLink>
                                 <NavLink v-if="isAdmin()" :href="route('admin.team-stats.index')"
@@ -121,8 +121,22 @@ defineProps({
                             </div>
                         </div>
 
-                        <!-- Hamburger -->
-                        <div class="-me-2 flex items-center sm:hidden">
+                        <!-- Avatar seul en mobile -->
+                        <div class="sm:hidden flex items-center">
+                            <img
+                                v-if="$page.props.auth.user.avatar && $page.props.auth.user.avatar !== ''"
+                                :src="'/storage/' + $page.props.auth.user.avatar"
+                                :alt="$page.props.auth.user.name"
+                                class="w-8 h-8 rounded-full object-cover"
+                                @error="handleImageError"
+                            >
+                            <div v-else class="w-8 h-8 rounded-full bg-gradient-to-br from-green-400 to-blue-500 flex items-center justify-center">
+                                <i class="fas fa-user text-white text-sm"></i>
+                            </div>
+                        </div>
+
+                        <!-- Hamburger (caché en mobile) -->
+                        <!-- <div class="-me-2 flex items-center sm:hidden">
                             <button @click="
                                 showingNavigationDropdown =
                                 !showingNavigationDropdown
@@ -143,22 +157,19 @@ defineProps({
                                         d="M6 18L18 6M6 6l12 12" />
                                 </svg>
                             </button>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
 
-                <!-- Responsive Navigation Menu -->
-                <div :class="{
-                    block: showingNavigationDropdown,
-                    hidden: !showingNavigationDropdown,
-                }" class="sm:hidden">
+                <!-- Responsive Navigation Menu (caché en mobile) -->
+                <!-- <div class="sm:hidden">
                     <div class="space-y-1 pb-3 pt-2">
                         <ResponsiveNavLink :href="route('dashboard')" :active="route().current('dashboard')">
                             Dashboard
                         </ResponsiveNavLink>
 
-                        <ResponsiveNavLink v-if="isAdmin()" :href="route('members.index')"
-                            :active="route().current('members.*')">
+                        <ResponsiveNavLink v-if="isAdmin()" :href="route('admin.members.index')"
+                            :active="route().current('admin.members.*')">
                             Membres
                         </ResponsiveNavLink>
                         <ResponsiveNavLink v-if="isAdmin()" :href="route('admin.team-stats.index')"
@@ -172,7 +183,6 @@ defineProps({
 
                     </div>
 
-                    <!-- Responsive Settings Options -->
                     <div
                         class="border-t border-gray-200 pb-1 pt-4"
                     >
@@ -203,7 +213,7 @@ defineProps({
                             </ResponsiveNavLink>
                         </div>
                     </div>
-                </div>
+                </div> -->
             </nav>
 
             <!-- Page Heading -->
