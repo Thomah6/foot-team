@@ -62,6 +62,7 @@ const menu = computed(() => {
             active: route().current('regulations.index'),
         },
         {
+
             label: "Teams",
             icon: "fas fa-people-group",
             link: route("admin.teams.index"),
@@ -117,6 +118,12 @@ const menu = computed(() => {
                 icon: "fas fa-chart-line",
                 link: route("admin.team-stats.index"),
                 active: route().current("admin.team-stats.*"),
+            },
+            {
+                label: "Page Admin",
+                icon: "fas fa-chart-pie",
+                link: route("admin.AdminLayout"),
+                active: route().current("admin.AdminLayout*"),
             }
         );
     }
@@ -130,13 +137,28 @@ const menu = computed(() => {
 
         items.push({
             label: 'Stats des membres',
-            icon: 'fas fa-chart-bar',
+            icon: 'fas fa-chart-area',
             link: route('bureau.stats.index', [], false),
             active: route().current('bureau.stats.index.*')
         });
+
+      
     }
+
+        items.push({
+            label: 'Stats des joueurs',
+            icon: 'fas fa-signal',
+            link: route('Admin.CreateStats', [], false),
+            active: route().current('Admin.CreateStats*')
+        });
     // Correction principale : toujours retourner le menu
+
+
+    
+       
     return items;
+
+    
 }
 );
 

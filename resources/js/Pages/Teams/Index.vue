@@ -3,6 +3,7 @@ import { useForm, router } from '@inertiajs/vue3'
 import { ref, computed } from 'vue'
 import AdminsideBar from "@/Components/AdminsideBar.vue";
 import ConfirmModal from '@/Components/ConfirmModal.vue'
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 
 const props = defineProps({
   teams: Array,
@@ -92,8 +93,8 @@ function viewTeam(teamId) {
   router.get(`/teams/${teamId}`)
 }
 </script>
-
 <template>
+<AuthenticatedLayout>
     <div class="flex flex-col md:flex-row min-h-screen bg-gray-50">
         <!-- Sidebar - Hidden on mobile, visible on desktop -->
         <div class="hidden md:block">
@@ -269,5 +270,5 @@ function viewTeam(teamId) {
         variant="danger"
         @confirm="confirmDeleteTeam"
     />
+</AuthenticatedLayout>
 </template>
-

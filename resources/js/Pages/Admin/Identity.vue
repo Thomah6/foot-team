@@ -1,5 +1,6 @@
 <script setup>
 import { useForm } from '@inertiajs/vue3';
+import { Link } from '@inertiajs/vue3';
 import { ref, watch } from 'vue';
 
 const props = defineProps({
@@ -98,6 +99,7 @@ const submit = () => {
       </div>
 
       <!-- Bouton -->
+    
       <button
         @click="submit"
         :disabled="form.processing"
@@ -105,8 +107,8 @@ const submit = () => {
       >
         Enregistrer
       </button>
+      </div>
+      </div>
 
 
-    </div>
-  </div>
 </template>

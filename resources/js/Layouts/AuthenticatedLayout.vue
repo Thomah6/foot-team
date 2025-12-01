@@ -63,9 +63,9 @@ defineProps({
                                 </NavLink> -->
                                 <NavLink v-if="isAdmin()" :href="route('reflections.index')"
                                     :active="route().current('reflections.*')">
-                                    Reflexions 
-                                    <span v-if="notifications > 0" 
-                                        class="ms-2 inline-flex items-center justify-center h-5 min-w-[20px] 
+                                    Reflexions
+                                    <span v-if="notifications > 0"
+                                        class="ms-2 inline-flex items-center justify-center h-5 min-w-[20px]
                                                 px-1.5 rounded-full text-xs font-bold text-white bg-red-500">
                                         {{ notifications }}
                                     </span>
@@ -169,7 +169,7 @@ defineProps({
                             :active="route().current('reflections.*')">
                             Reflexions <span class="badge">{{ notifications }}</span>
                         </ResponsiveNavLink>
-                        
+
                     </div>
 
                     <!-- Responsive Settings Options -->
@@ -219,17 +219,23 @@ defineProps({
             <!-- Page Content -->
             <main class="flex h-full border">
                 <div class="min-h-full max-h-[calc(100vh-4rem)] sticky top-0 z-50">
-                    <AdminsideBar 
+                    <AdminsideBar
                     :votes="votes"
                     :reflections="reflections"
                     :Notification="notifications"
                     />
                 </div>
-                <div class="h-[calc(100vh-4rem)] overflow-y-scroll w-full">
-                    <slot :updateNotifications="updateNotifCount()" /> 
+                <div class="scroller h-[calc(100vh-4rem)] overflow-y-scroll w-full">
+                    <slot :updateNotifications="updateNotifCount()" />
                 </div>
 
             </main>
         </div>
     </div>
 </template>
+<style scoped>
+.scroller {
+    scrollbar-width: none;
+    scrollbar-color: #a0aec0 transparent;
+}
+</style>
