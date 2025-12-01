@@ -445,7 +445,7 @@ const props = defineProps({
                                     <div class="flex items-center gap-2">
                                    
                                         <span class="font-bold text-2xl text-gray-900 min-w-[40px] text-right">
-                                          {{u}}
+                                        
                                             {{ u.total_goals_against ?? 0 }}
                                         </span>
                                     </div>
