@@ -100,6 +100,11 @@ const confirmDelete = () => {
   })
 }
 
+const filterInactiveUsers = () => {
+  statusFilter.value = 'inactive'
+  handleFilter()
+}
+
 // Styles role
 const getRoleColor = (role) => {
   const colors = {
@@ -158,6 +163,34 @@ const getStatusColor = (isActive) => {
           <Link :href="route('admin.members.create')" class="btn-primary inline-flex items-center gap-2">
           Ajouter un nouveau membre
           </Link>
+        </div>
+      </div>
+
+      <!-- NOTIFICATION BANNER -->
+      <div v-if="inactiveUsersCount > 0" class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 mb-6">
+        <div class="rounded-xl bg-amber-50 border border-amber-200 p-4 shadow-sm">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-3">
+              <div class="flex-shrink-0">
+                <svg class="h-5 w-5 text-amber-400" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+                </svg>
+              </div>
+              <div>
+                <h3 class="text-sm font-medium text-amber-800">
+                  Nouveaux utilisateurs en attente d'activation
+                </h3>
+                <p class="text-sm text-amber-700 mt-1">
+                  {{ inactiveUsersCount }} utilisateur{{ inactiveUsersCount > 1 ? 's' : '' }} nécessite{{ inactiveUsersCount > 1 ? 'nt' : '' }} une activation.
+                </p>
+              </div>
+            </div>
+            <div class="flex gap-2">
+              <button @click="filterInactiveUsers" class="bg-amber-100 hover:bg-amber-200 text-amber-800 px-3 py-2 rounded-md text-sm font-medium transition">
+                Voir les inactifs
+              </button>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -306,7 +339,7 @@ const getStatusColor = (isActive) => {
               </thead>
 
               <tbody class="divide-y divide-gray-200">
-                <tr v-for="member in members.data" :key="member.id" class="hover:bg-gray-50">
+                <tr v-for="member in members.data" :key="member.id" :class="['hover:bg-gray-50', !member.is_active ? 'bg-amber-50 border-l-4 border-amber-400' : '']">
                   <td class="px-6 py-4">
                     <div class="flex items-center gap-3">
                       <div class="h-10 w-10 rounded-full bg-green-100 flex items-center justify-center">
