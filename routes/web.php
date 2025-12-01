@@ -135,19 +135,7 @@ Route::prefix('admin')->middleware('role:admin')->group(function () {
     // Admin-only management routes are defined later in admin-only groups.
 
     // Espace bureau - Gestion des membres
-    Route::prefix('bureau')->middleware('role:bureau')->group(function () {
-        Route::get('/members', [BureauMemberController::class, 'index'])->name('bureau.members.index');
 
-        // Statistiques du bureau
-        Route::prefix('stats')->group(function () {
-            Route::get('/', [BureauStatController::class, 'index'])->name('bureau.stats.index');
-            Route::get('/leaderboards', [BureauStatController::class, 'leaderboards'])->name('bureau.stats.leaderboards');
-            Route::get('/leaderboards/goals', [BureauStatController::class, 'goalLeaders'])->name('bureau.stats.leaderboards.goals');
-            Route::get('/leaderboards/assists', [BureauStatController::class, 'assistLeaders'])->name('bureau.stats.leaderboards.assists');
-            Route::get('/leaderboards/goalkeepers', [BureauStatController::class, 'goalkeeperLeaders'])->name('bureau.stats.leaderboards.goalkeepers');
-            Route::get('/members/{user}/stats', [BureauStatController::class, 'memberStats'])->name('bureau.stats.member');
-        });
-    });
 
     // Réflexions
     // Route::prefix('reflections')->group(function () {
@@ -191,10 +179,10 @@ Route::prefix('admin')->middleware('role:admin')->group(function () {
 
         // Identity management
         Route::get('/identity', [IdentityController::class, 'index'])->name('admin.identity');
- 
- 
+
+
 Route::get('/admin/identity', [IdentityController::class, 'index']);
- 
+
 Route::post('/admin/identity/update', [IdentityController::class, 'update'])
     ->name('admin.identity.update');
 
@@ -264,7 +252,41 @@ Route::post('/admin/identity/update', [IdentityController::class, 'update'])
         });
         // Les routes d'administration des actualités sont déjà définies plus haut
     });
+
+    // Gestion des actualités (Admin)
+    Route::prefix('news')->name('news.')->group(function () {
+
+        Route::get('/create', [NewsController::class, 'create'])->name('create');
+        Route::post('/', [NewsController::class, 'store'])->name('store');
+        Route::get('/{id}/edit', [NewsController::class, 'edit'])->name('edit');
+        Route::put('/{id}', [NewsController::class, 'update'])->name('update');
+        Route::delete('/{id}', [NewsController::class, 'destroy'])->name('destroy');
+        Route::get('/showReglement', [NewsController::class, 'showReglement'])->name('showReglement');
+        Route::patch('/{id}/toggle-banner', [NewsController::class, 'toggleBanner'])->name('toggle-banner');
+
+        // Bannière du joueur du mois
+        Route::prefix('bannerplayermonth')->name('bannerplayermonth.')->group(function () {
+            Route::get('/', [PlayerOfTheMonthController::class, 'index'])->name('index');
+            Route::put('/', [PlayerOfTheMonthController::class, 'update'])->name('update');
+            Route::delete('/', [PlayerOfTheMonthController::class, 'destroy'])->name('destroy');
+        });
+    });
 });
+
+
+Route::prefix('bureau')->middleware('role:bureau')->group(function () {
+        Route::get('/members', [BureauMemberController::class, 'index'])->name('bureau.members.index');
+
+        // Statistiques du bureau
+        Route::prefix('stats')->group(function () {
+            Route::get('/', [BureauStatController::class, 'index'])->name('bureau.stats.index');
+            Route::get('/leaderboards', [BureauStatController::class, 'leaderboards'])->name('bureau.stats.leaderboards');
+            Route::get('/leaderboards/goals', [BureauStatController::class, 'goalLeaders'])->name('bureau.stats.leaderboards.goals');
+            Route::get('/leaderboards/assists', [BureauStatController::class, 'assistLeaders'])->name('bureau.stats.leaderboards.assists');
+            Route::get('/leaderboards/goalkeepers', [BureauStatController::class, 'goalkeeperLeaders'])->name('bureau.stats.leaderboards.goalkeepers');
+            Route::get('/members/{user}/stats', [BureauStatController::class, 'memberStats'])->name('bureau.stats.member');
+        });
+    });
 
 Route::prefix('reflections')->group(function () {
     Route::get('/', [ReflectionController::class, 'index'])->name('reflections.index');
@@ -274,7 +296,7 @@ Route::prefix('reflections')->group(function () {
     Route::get('/{id}/edit', [ReflectionController::class, 'edit'])->name('reflections.edit');
     Route::get('/{reflection}/validate', [ReflectionController::class, 'validateReflection'])->name('reflections.validate');
     Route::put('/{id}', [ReflectionController::class, 'update'])->name('reflections.update');
-    Route::delete('/{id}', [ReflectionController::class, 'destroy'])->name('reflections.destroy');
+    Route::delete('/{reflection}', [ReflectionController::class, 'destroy'])->name('reflections.destroy');
     Route::patch('/{id}/toggle', [ReflectionController::class, 'toggle'])->name('reflections.toggle'); // activation/desactivationRoute::post('/{id}/validate', [ReflectionController::class, 'validateAfterDelay'])->name('admin.reflections.validate');
     //Routes concernant les commentaires sur les reflexions
     Route::post('/comments',[CommentController::class,'store'])->name('comments.store');
@@ -334,9 +356,24 @@ Route::prefix('finances')->group(function () {
 
 // Routes pour les règlements
 Route::middleware(['auth', 'is.active'])->group(function () {
+
+    // Resource pour titres + contenus
     Route::resource('regulations', RegulationControler::class);
-    Route::post('/regulations/content', [RegulationControler::class, 'storeContent'])->name('regulations.storeContent');
+
+    // Routes spécifiques pour les contenus liés
+
+    Route::post('/regulations/fusion', [RegulationControler::class, 'fusion'])->name('regulations.fusion');
+
+    Route::get('/regulations/content/{content}/edit', [RegulationControler::class, 'editContent'])
+    ->name('regulations.content.edit');
+
+    Route::put('/regulations/content/{content}', [RegulationControler::class, 'updateContent'])
+        ->name('regulations.content.update');
+
+    Route::delete('/regulations/content/{content}', [RegulationControler::class, 'destroyContent'])
+        ->name('regulations.content.destroy');
 });
+
 
 // Routes pour les ajustements financiers
 Route::prefix('finances')->group(function () {
@@ -394,18 +431,18 @@ Route::delete('/comments/{comment}', [CommentsSuggestionController::class, 'dest
 
 
 Route::get('/admin', [AdminController::class,'index'])->name('Admin.AdminLayout');
- 
- 
+
+
 Route::get('/admin/create', [StatController::class,'create'])->name('Admin.CreateStats');
- 
+
 Route::get('/identity', [IdentityController::class, 'index'])->name('admin.identity');
- 
- 
+
+
 Route::get('/admin/identity', [IdentityController::class, 'index']);
- 
+
 Route::post('/admin/identity/update', [IdentityController::class, 'update'])
     ->name('admin.identity.update');
-    
+
 Route::post('/admin/identity/delete-identity', [IdentityController::class, 'deleteIdentity'])
      ->name('admin.identity.delete-identity');
 
@@ -419,7 +456,7 @@ Route::middleware(['auth', 'is.active', 'role:admin'])->group(function () {
 
 
 
- 
+
 // Routes pour les réflexions
 Route::prefix('reflections')->group(function () {
     Route::get('/', [ReflectionController::class, 'index'])->name('reflections.index');
@@ -433,7 +470,7 @@ Route::prefix('reflections')->group(function () {
     Route::patch('/{id}/toggle', [ReflectionController::class, 'toggle'])->name('reflections.toggle'); // activation/desactivationRoute::post('/{id}/validate', [ReflectionController::class, 'validateAfterDelay'])->name('admin.reflections.validate');
     //Routes concernant les commentaires sur les reflexions
     Route::post('/comments',[CommentController::class,'store'])->name('comments.store');
- 
+
     //Routes pour les likes des commentaires
     // Route::get('/comments/like/{comment}',[CommentlikeController::class,'like'])->name('likeComment');
     // Route::get('/comments/dislike/{comment}',[CommentlikeController::class,'dislike'])->name('dislikeComment');

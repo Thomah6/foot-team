@@ -13,16 +13,16 @@ class StatSeeder extends Seeder
     {
         // Désactiver les contraintes de clés étrangères
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-        
+
         // Vider la table stats
         Stat::truncate();
-        
+
         // Réactiver les contraintes
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 
         // Récupérer tous les utilisateurs
         $users = User::all();
-        
+
         if ($users->isEmpty()) {
             $this->command->warn('Aucun utilisateur trouvé. Veuillez d\'abord exécuter UserSeeder.');
             return;
