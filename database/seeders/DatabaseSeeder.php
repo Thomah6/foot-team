@@ -22,24 +22,10 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        User::factory(10)->create();
         Stat::factory(10)->create();
         Team::factory(5)->create();
         TeamStat::factory(15)->create();
-        // Créer les utilisateurs de base d'abord
-
-        // // Créer les utilisateurs de base d'abord
-        // User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
-
-        // // Créer des utilisateurs supplémentaires pour les stats
-        // User::factory()->create([
-        //     'name' => 'Jean Dupont',
-        //     'email' => 'jean@example.com',
-        // ]);
-        // Créer 5 utilisateurs fixes (admin, bureau, 3 joueurs) pour dev rapide
+        
         User::factory()->create([
             'name' => 'Admin Super',
             'email' => 'admin@test.com',
@@ -53,22 +39,22 @@ class DatabaseSeeder extends Seeder
             'role' => 'bureau',
             'password' => bcrypt('password'),
         ]);
-
+        
         User::factory()->create([
             'name' => 'Jean Dupont',
             'email' => 'jean.dupont@test.com',
             'role' => 'simple',
             'password' => bcrypt('password'),
         ]);
-
+        
         User::factory()->create([
             'name' => 'Alice Martin',
             'email' => 'alice.martin@test.com',
             'role' => 'simple',
             'password' => bcrypt('password'),
         ]);
-
-        User::factory(10)->create([]);
+        
+        User::factory(10)->create();
         Reflection::factory(40)->create([]);
         Comment::factory(100)->create([]);
         Commentlike::factory(500)->create([]);
