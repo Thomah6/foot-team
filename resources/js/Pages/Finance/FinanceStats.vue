@@ -40,20 +40,10 @@ const props = defineProps({
             </p>
         </div>
 
-        <div
-            class="card-animate card-2 flex flex-col gap-2 rounded-lg p-6 bg-white dark:bg-slate-900 border border-neutral-200 dark:border-slate-700"
-        >
-            <p
-                class="text-green-600 dark:text-green-300 text-2xl sm:text-3xl font-bold"
-            >
-                {{
-                    Number(props.soldeCotisations ?? 0).toLocaleString(
-                        "fr-FR",
-                        { minimumFractionDigits: 2 }
-                    )
-                }}F CFA
-            </p>
-        </div>
+            <div class="card-animate card-2 flex flex-col gap-2 rounded-lg p-6 bg-white dark:bg-slate-900 border border-neutral-200 dark:border-slate-700">
+      <p class="text-neutral-800 dark:text-slate-300 text-base font-medium">Total des Cotisations (validées)</p>
+      <p class="text-green-600 dark:text-green-300 text-2xl sm:text-3xl font-bold">{{ Number(props.soldeCotisations ?? 0).toLocaleString('fr-FR', {minimumFractionDigits:2}) }}F CFA</p>
+    </div>
 
         <div
             class="card-animate card-3 flex flex-col gap-2 rounded-lg p-6 bg-white dark:bg-slate-900 border border-neutral-200 dark:border-slate-700"
