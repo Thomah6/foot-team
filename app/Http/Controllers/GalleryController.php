@@ -35,7 +35,7 @@ class GalleryController extends Controller
                 return $gallery;
             });
 
-            dd($galleries->toArray());
+          
         return Inertia::render('GalleryPage', [
             'galleries' => $galleries
         ]);
