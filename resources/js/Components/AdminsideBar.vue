@@ -96,14 +96,7 @@ const menu = computed(() => {
 
 
     // Items conditionnels
-    if (isBureau()) {
-        items.push({
-            label: "Membres (Bureau)",
-            icon: "fas fa-user-friends",
-            link: route("bureau.members.index"),
-            active: route().current("bureau.members.index"),
-        });
-    }
+   
 
     if (isAdmin()) {
         items.push(
