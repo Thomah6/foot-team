@@ -35,6 +35,11 @@ const props = defineProps({
         <div class="stat-number">{{ stats.articles }}</div>
         <p>au total sur la plateforme</p>
       </Card>
+      <Card title="Utilisateurs Inactifs" class="inactive-card">
+        <div class="stat-number">{{ stats.inactiveUsers }}</div>
+        <p>en attente d'activation</p>
+        <Button variant="primary" size="sm" @click="$inertia.visit('/admin/members')">Gérer</Button>
+      </Card>
     </div>
 
     <div class="actions mt-6">
