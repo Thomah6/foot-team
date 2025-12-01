@@ -126,22 +126,22 @@ const props = defineProps({
 }
 
 .card-animate {
-    animation: slideDown 0.6s ease-out forwards;
+    animation: slideDown 1.6s ease-out forwards;
 }
 
 .card-1 {
-    animation-delay: 0.1s;
+    animation-delay: 1.1s;
 }
 .card-2 {
-    animation-delay: 0.2s;
+    animation-delay: 1.2s;
 }
 .card-3 {
-    animation-delay: 0.3s;
+    animation-delay: 1.3s;
 }
 .card-4 {
-    animation-delay: 0.4s;
+    animation-delay: 1.4s;
 }
 .card-5 {
-    animation-delay: 0.5s;
+    animation-delay: 1.5s;
 }
 </style>
