@@ -37,14 +37,14 @@ function submit() {
         <form @submit.prevent="submit" class="space-y-4">
 
           <!-- Sélection du titre -->
-          <div>
+          <!-- <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">Titre parent</label>
             <select v-model="form.regulation_id" class="w-full border rounded-lg p-2">
               <option disabled value="">Choisir un titre</option>
               <option v-for="t in props.titles" :key="t.id" :value="t.id">{{ t.title }}</option>
             </select>
             <div v-if="form.errors.regulation_id" class="text-red-500 text-sm mt-1">{{ form.errors.regulation_id }}</div>
-          </div>
+          </div> -->
 
           <!-- Numéro du sous-point -->
           <div>

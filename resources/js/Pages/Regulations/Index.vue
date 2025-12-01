@@ -1,29 +1,26 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { router } from '@inertiajs/vue3'
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue'
 
 const props = defineProps({
-  titles: {       // On passe maintenant directement les titres depuis le backend
-    type: Array,
-    default: () => []
-  },
+  titles: Array,
   can: Object
 })
 
 // Recherche
 const search = ref('')
 
-// Filtrer les titres selon la recherche
 const filteredTitles = computed(() =>
   (props.titles || []).filter(t =>
     t.title.toLowerCase().includes(search.value.toLowerCase())
   )
 )
 
-// Découper le contenu en lignes
+// Découpage du contenu
 function contentLines(content) {
   if (!content) return []
-  return content.split('\n').map(line => line.trim()).filter(line => line.length > 0)
+  return content.split('\n').map(line => line.trim()).filter(l => l.length)
 }
 
 // Carousel
@@ -42,8 +39,7 @@ function prev() {
 }
 
 function goTo(i) {
-  if (filteredTitles.value.length === 0) return
-  current.value = i % filteredTitles.value.length
+  current.value = i
 }
 
 function start() {
@@ -56,7 +52,7 @@ function stop() {
   timer = null
 }
 
-// Swipe / Drag
+// Swipe (mobile)
 let startX = 0
 let endX = 0
 
@@ -71,11 +67,30 @@ function onTouchMove(e) {
 function onTouchEnd() {
   const diff = startX - endX
   if (Math.abs(diff) > 50) {
-    if (diff > 0) next()
-    else prev()
+    diff > 0 ? next() : prev()
   }
-  startX = 0
-  endX = 0
+}
+
+// 🔥 Modal de suppression
+const showDeleteModal = ref(false)
+
+function openDeleteModal() {
+  showDeleteModal.value = true
+}
+
+function closeDeleteModal() {
+  showDeleteModal.value = false
+}
+
+function deleteRegulation() {
+  const selected = filteredTitles.value[current.value]
+  if (!selected) return
+
+  router.delete(`/regulations/${selected.id}`, {
+    onSuccess: () => {
+      showDeleteModal.value = false
+    }
+  })
 }
 
 onMounted(start)
@@ -91,13 +106,25 @@ onUnmounted(stop)
           <!-- Header -->
           <div class="flex justify-between items-center mb-6">
             <h1 class="text-xl font-bold">Liste des règlements</h1>
-            <button
-              v-if="props.can.create"
-              class="bg-green-500 text-black px-3 py-2 rounded cursor-pointer"
-              @click="$inertia.visit('/regulations/create')"
-            >
-              Créer un contenu
-            </button>
+
+            <div class="flex gap-2">
+              <button
+                v-if="props.can.create"
+                class="bg-green-500 text-black px-3 py-2 rounded cursor-pointer"
+                @click="$inertia.visit('/regulations/create')"
+              >
+                Créer un contenu
+              </button>
+
+              <!-- 🔥 SUPPRESSION -->
+              <button
+                v-if="$page.props.auth.user.role === 'admin'"
+                class="bg-red-600 text-white px-3 py-2 rounded cursor-pointer"
+                @click="openDeleteModal"
+              >
+                Supprimer la rubrique
+              </button>
+            </div>
           </div>
 
           <!-- Search -->
@@ -105,13 +132,10 @@ onUnmounted(stop)
             v-model="search"
             type="text"
             placeholder="Rechercher un règlement..."
-            class="border w-full mb-6 rounded p-2 text-base
-                   max-sm:p-1 max-sm:text-sm
-                   focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500
-                   autofill:bg-yellow-100 dark:bg-gray-700 dark:text-gray-100 dark:border-gray-600"
+            class="border w-full mb-6 rounded p-2 text-base focus:outline-none focus:ring-2 focus:ring-green-500"
           />
 
-          <!-- Empty state -->
+          <!-- No search result -->
           <div v-if="filteredTitles.length === 0" class="text-red-500 font-semibold mb-6">
             Aucun règlement trouvé pour "{{ search }}"
           </div>
@@ -119,7 +143,7 @@ onUnmounted(stop)
           <!-- Carousel -->
           <div
             v-else
-            class="relative bg-gray-50 dark:bg-gray-800 shadow-md border dark:border-gray-600 rounded-lg p-2 cursor-grab active:cursor-grabbing overflow-hidden"
+            class="relative bg-gray-50 shadow-md border rounded-lg p-3 cursor-grab active:cursor-grabbing overflow-hidden"
             @mouseenter="stop"
             @mouseleave="start"
             @mousedown="onTouchStart"
@@ -131,7 +155,7 @@ onUnmounted(stop)
           >
             <!-- Slides -->
             <div
-              class="flex transition-transform duration-500 ease-in-out w-full"
+              class="flex transition-transform duration-700 ease-in-out"
               :style="{ transform: `translateX(-${current * 100}%)` }"
             >
               <div
@@ -139,47 +163,48 @@ onUnmounted(stop)
                 :key="t.id"
                 class="w-full flex-shrink-0 px-2 box-border"
               >
-                <h2 class="font-bold text-green-600 text-lg mb-4">{{ t.title }}</h2>
-                <span>Voici : {{ t.sub_number }}</span>
+                <h2 class="font-bold text-green-600 text-lg mb-4 animate-fadeIn">
+                  {{ t.title }}
+                </h2>
 
                 <!-- Contenus -->
                 <ul class="space-y-2">
                   <li
-                    v-for="c in t.contents || []"
+                    v-for="c in t.contents"
                     :key="c.id"
-                    class="border p-3 rounded bg-white dark:bg-gray-700"
+                    class="border p-3 rounded bg-white animate-slideUp"
                   >
                     <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2">
                       <ul class="flex-1 space-y-1">
-                         <li
+                        <li
                           v-for="line in contentLines(c.content)"
                           :key="line"
-                          class="text-gray-700 dark:text-gray-200 list-disc list-inside"
+                          class="text-gray-700 list-disc list-inside"
                         >
-                           {{ line }}
+                          {{ line }}
                         </li>
                       </ul>
 
                       <div class="flex gap-2 mt-2 sm:mt-0">
                         <button
                           v-if="$page.props.auth.user.role === 'admin'"
-                          class="bg-green-500 text-gray-700 px-3 py-1 rounded"
+                          class="bg-green-500 text-white px-3 py-1 rounded"
                           @click="$inertia.visit(`/regulations/content/${c.id}/edit`)"
                         >
                           Modifier
                         </button>
                         <button
                           v-if="$page.props.auth.user.role === 'admin'"
-                          class="bg-red-600 text-gray-700 px-3 py-1 rounded"
+                          class="bg-red-600 text-white px-3 py-1 rounded"
                           @click="$inertia.delete(`/regulations/content/${c.id}`)"
                         >
                           Supprimer
                         </button>
                       </div>
                     </div>
+
                   </li>
                 </ul>
-
               </div>
             </div>
 
@@ -188,16 +213,74 @@ onUnmounted(stop)
               <button
                 v-for="(t, i) in filteredTitles"
                 :key="t.id"
-                class="w-2.5 h-2.5 rounded-full"
-                :class="i === current ? 'bg-green-600' : 'bg-gray-300 hover:bg-gray-400 dark:bg-gray-500 dark:hover:bg-gray-400'"
+                class="w-3 h-3 rounded-full transition"
+                :class="i === current ? 'bg-green-600' : 'bg-gray-300'"
                 @click="goTo(i)"
-                aria-label="Indicateur de slide"
               />
             </div>
-
           </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 🔥 MODAL SUPPRESSION -->
+    <div
+      v-if="showDeleteModal"
+      class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 animate-fadeIn"
+    >
+      <div class="bg-white p-6 rounded-lg shadow-lg w-96 animate-scaleIn">
+        <h2 class="text-lg font-bold mb-4 text-red-600">Supprimer la rubrique ?</h2>
+        <p class="mb-6 text-gray-700">
+          Cette action supprimera définitivement le règlement et tous ses contenus associés.
+          Êtes-vous sûr ?
+        </p>
+
+        <div class="flex justify-end gap-3">
+          <button
+            class="px-4 py-2 rounded bg-gray-300"
+            @click="closeDeleteModal"
+          >
+            Annuler
+          </button>
+
+          <button
+            class="px-4 py-2 rounded bg-red-600 text-white"
+            @click="deleteRegulation"
+          >
+            Oui, supprimer
+          </button>
         </div>
       </div>
     </div>
   </AuthenticatedLayout>
 </template>
+
+<style>
+/* Animations douces */
+.animate-fadeIn {
+  animation: fadeIn .5s ease;
+}
+
+.animate-slideUp {
+  animation: slideUp .5s ease;
+}
+
+.animate-scaleIn {
+  animation: scaleIn .3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0 }
+  to { opacity: 1 }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes scaleIn {
+  from { transform: scale(0.8); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+</style>
