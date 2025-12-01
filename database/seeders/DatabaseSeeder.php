@@ -107,12 +107,12 @@ class DatabaseSeeder extends Seeder
         // Dont un actif
         // -----------------------------------
 
-        // Mois actuels pour éviter les erreurs
-        // $months = [
-        //     Carbon::now()->startOfMonth(),
-        //     Carbon::now()->subMonth()->startOfMonth(),
-        //     Carbon::now()->subMonths(2)->startOfMonth(),
-        // ];
+        //Mois actuels pour éviter les erreurs
+        $months = [
+            Carbon::now()->startOfMonth(),
+            Carbon::now()->subMonth()->startOfMonth(),
+            Carbon::now()->subMonths(2)->startOfMonth(),
+        ];
 
         foreach ($months as $index => $month) {
             $user = $users->random();

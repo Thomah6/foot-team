@@ -18,11 +18,12 @@ class BureauStatController extends Controller
 		$totalStats = Stat::count();
 		$activePlayers = User::has('stats')->count();
 		$latestStats = Stat::with('user')->latest()->take(6)->get();
-
+        $avatar = 'storage/avatars';
 		return Inertia::render('Bureau/Index', [
 			'totalStats' => $totalStats,
 			'activePlayers' => $activePlayers,
 			'latestStats' => $latestStats,
+			'avatar' => $avatar,
 		]);
 	}
 
@@ -32,6 +33,7 @@ class BureauStatController extends Controller
 		$goalLeaders = User::withSum(['stats as total_goals' => function ($q) {
 			$q->where('validated_by_admin', true);
 		}], 'goals')
+		->with('teams')
 		->orderByDesc('total_goals')
 		->take(12)
 		->get();
@@ -39,6 +41,7 @@ class BureauStatController extends Controller
 		$assistLeaders = User::withSum(['stats as total_assists' => function ($q) {
 			$q->where('validated_by_admin', true);
 		}], 'assists')
+		->with('teams')
 		->orderByDesc('total_assists')
 		->take(12)
 		->get();
@@ -46,9 +49,11 @@ class BureauStatController extends Controller
 		$goalkeeperLeaders = User::withSum(['stats as total_goals_against' => function ($q) {
 			$q->where('validated_by_admin', true);
 		}], 'goals_against')
+		->with('teams')
 		->orderBy('total_goals_against') // fewer goals against = better
-		->take(12)
+		->take(10)
 		->get();
+		
 
 		return Inertia::render('Bureau/Leaderboards', [
 			'goals' => $goalLeaders,
