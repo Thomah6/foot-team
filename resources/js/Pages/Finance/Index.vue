@@ -8,8 +8,10 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import Toast from "@/Shared/Toast.vue";
 import ConfirmModalFinance from "@/Components/ConfirmModalFinance.vue";
 
+
 import { ref, watch, onMounted } from "vue";
 import { router, usePage } from "@inertiajs/vue3";
+
 
 // Props reçues du backend Laravel
 const props = defineProps({
@@ -33,7 +35,9 @@ const props = defineProps({
     pendingDepensesCount: [Number, String],
 });
 
+
 const filteredfinances = ref(props.finances);
+
 
 // Toast notification (Inertia flash)
 const page = usePage();
@@ -41,11 +45,13 @@ const toastVisible = ref(false);
 const toastMessage = ref("");
 const toastType = ref("success");
 
+
 function showToast(message, type = "success") {
     toastMessage.value = message;
     toastType.value = type;
     toastVisible.value = true;
 }
+
 
 // watch success and error flash messages
 watch(
@@ -61,16 +67,19 @@ watch(
     }
 );
 
+
 onMounted(() => {
     const p = page.props;
     if (p.flash && p.flash.success) showToast(p.flash.success, "success");
     if (p.flash && p.flash.error) showToast(p.flash.error, "error");
 });
 
+
 const financesData = ref(props.finances.data || []);
 const links = ref(props.finances.links || []);
 const currentPage = ref(props.finances.current_page || 1);
 const lastPage = ref(props.finances.last_page || 1);
+
 
 // handleFiltre appelé par FinanceFilter
 function handleFiltre({ selectedUser, dateFrom, dateTo, selectedType }) {
@@ -96,14 +105,17 @@ function handleFiltre({ selectedUser, dateFrom, dateTo, selectedType }) {
     );
 }
 
+
 const showConfirmAll = ref(false);
 const showConfirmAllType = ref('cotisation');
 const showConfirmAllLoading = ref(false);
+
 
 function askValiderTous(type = 'cotisation') {
     showConfirmAllType.value = type;
     showConfirmAll.value = true;
 }
+
 
 function confirmValiderTous() {
     showConfirmAllLoading.value = true;
@@ -137,12 +149,15 @@ function confirmValiderTous() {
     );
 }
 
+
 function cancelValiderTous() {
     showConfirmAll.value = false;
 }
 
+
 function onChangePage(pageNumber) {
     const currentFilters = page.props.filters || props.filters || {};
+
 
     router.get(
         route("finances.index"),
@@ -163,9 +178,11 @@ function onChangePage(pageNumber) {
     );
 }
 
+
 // Called when table needs refresh (e.g., after validation)
 function refreshTable() {
     const currentFilters = page.props.filters || props.filters || {};
+
 
     router.get(
         route("finances.index"),
@@ -193,26 +210,31 @@ function refreshTable() {
     );
 }
 
+
 function handleDepense() {
     router.get(route("finances.createDepense"));
 }
 
+
 function handleAjustement() {
     router.get(route("finances.createAjustement"));
 }
+
 
 const role = page.props.auth.user.role;
 const isAdmin = role === "admin";
 const isBureau = role === "bureau";
 </script>
 
+
 <template>
     <AuthenticatedLayout>
         <div class="w-full px-4 py-6 sm:px-6 lg:px-8">
             <div class="max-w-7xl mx-auto space-y-6 sm:space-y-8">
-                <h1 class="text-3xl sm:text-4xl font-black text-neutral-900">
+                <h1 class="text-3xl sm:text-4xl font-black text-neutral-900 dark:text-white">
                     Caisse / Finances
                 </h1>
+
 
                 <!-- FinanceStats - Full width at top -->
                 <FinanceStats
@@ -224,6 +246,7 @@ const isBureau = role === "bureau";
                     :pending-depenses-total="Number(props.pendingDepensesTotal)"
                     :pending-depenses-count="Number(props.pendingDepensesCount)"
                 />
+
 
                 <!-- FinanceCreateDepot & FinanceAdminActions - Side by side on desktop, stacked on mobile -->
                 <div
@@ -238,6 +261,7 @@ const isBureau = role === "bureau";
                     />
                 </div>
 
+
                 <ConfirmModalFinance
                     :show="showConfirmAll"
                     :loading="showConfirmAllLoading"
@@ -247,17 +271,19 @@ const isBureau = role === "bureau";
                     @cancel="cancelValiderTous"
                 />
 
+
                 <!-- FinanceFilter & FinanceHistoriqueTable - Full width container -->
                 <div
-                    class="p-4 sm:p-6 rounded-lg bg-white border border-neutral-200 space-y-4"
+                    class="p-4 sm:p-6 rounded-lg bg-white dark:bg-slate-900 border border-neutral-200 dark:border-slate-700 space-y-4"
                 >
-                    <h2 class="text-lg sm:text-xl font-bold text-neutral-900">
+                    <h2 class="text-lg sm:text-xl font-bold text-neutral-900 dark:text-white">
                         Historique des transactions
                     </h2>
                     <FinanceFilter
                         :users="props.users"
                         @filter="handleFiltre"
                     />
+
 
                     <FinanceHistoriqueTable
                         :finances="financesData"
