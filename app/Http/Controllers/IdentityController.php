@@ -89,6 +89,25 @@ public function update(Request $request)
     return back()->with('success', 'Identité mise à jour');
 }
 
+public function deleteIdentity()
+{
+    $identity = Identity::first();
+
+    if ($identity) {
+        // Supprimer le fichier logo si il existe
+        if ($identity->logo && file_exists(public_path($identity->logo))) {
+            unlink(public_path($identity->logo));
+        }
+
+        // Supprimer complètement l'enregistrement
+        $identity->delete();
+    }
+
+    return back()->with('success', 'Logo et nom supprimés avec succès.');
+}
+
+
+
 
 
 }

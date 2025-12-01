@@ -16,6 +16,7 @@ class FinanceController extends Controller
 {
     $query = Finance::with('user');
 
+
     if ($request->member_id) {
         $query->where('user_id', $request->member_id);
     }

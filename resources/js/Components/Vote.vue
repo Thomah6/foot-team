@@ -1,7 +1,7 @@
 <template>
     <div class="vote-component p-4">
         <h2 class="text-lg font-bold mb-4 text-center">Cast Your Vote</h2>
-        <div v-if="!isVoteEnded">
+        <div v-if="!isVoteEnded" class="grid grid-cols-2 gap-4 w-full">
             <div v-for="option in options" :key="option.id" class="vote-option">
                 <label
                     @click="submitVote(option)"
@@ -40,7 +40,7 @@
 </template>
 
 <script setup>
-import { ref, defineProps } from "vue";
+import { ref, defineProps, onMounted } from "vue";
 import { router } from "@inertiajs/vue3";
 
 const props = defineProps({
@@ -62,6 +62,9 @@ const props = defineProps({
     },
     reflection: Object,
 });
+onMounted(() => {
+  console.log(props.existingVote);
+});
 
 const selectedOption = ref(null);
 
@@ -71,7 +74,7 @@ const submitVote = (option) => {
     const value = option.option === "POUR" ? 1 : -1;
 
     router.post(route("vote.store"), {
-        reflection_id: props.reflection.id, 
+        reflection_id: props.reflection.id,
         value: value,
     });
 };
@@ -86,10 +89,10 @@ const validateVote = () => {
 <style scoped>
 .vote-component {
     max-width: 600px;
-    margin: 0 auto;
 }
 .vote-option {
     transition: background-color 0.3s, border-color 0.3s;
+    max-height: 40px;
 }
 .vote-option:hover {
     background-color: #f0f0f0;

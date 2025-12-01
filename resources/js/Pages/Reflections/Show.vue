@@ -1,16 +1,16 @@
 <template>
     <AuthenticatedLayout>
   <Layout class="flex flex-col lg:flex-row">
- 
+
     <div class="max-w-4xl  w-full lg:w-1/2 mx-auto py-10 px-4 sm:px-6 lg:px-8">
-       
+
         <div class="bg-white p-8 rounded-2xl shadow-2xl border-t-4 border-indigo-600 mb-10">
         <blockquote
           class="text-sm sm:text-xl lg:text-3xl font-serif text-gray-900 italic mb-6 border-l-4 border-gray-300 pl-4 "
         >
           "{{ reflection.contenu }}"
         </blockquote>
- 
+
         <div class="flex justify-between items-center text-gray-500 text-sm">
           <p class="font-semibold text-indigo-700">
             Publié par {{ reflection.user.name }}
@@ -23,7 +23,7 @@
                                     type="button"
                                     class="inline-flex items-center rounded-md border border-transparent bg-white px-3 py-2 text-sm font-medium leading-4 text-gray-500 transition duration-150 ease-in-out hover:text-gray-700 focus:outline-none"
                                 >
-       
+
                                     <svg
                                         class="-me-0.5 ms-2 h-4 w-4"
                                         xmlns="http://www.w3.org/2000/svg"
@@ -39,7 +39,7 @@
                                 </button>
                             </span>
                         </template>
-       
+
                         <template #content>
                             <DropdownLink
                                 @click="activeRef(reflection.id)"
@@ -56,7 +56,6 @@
                 Le {{ formatCommentDate(reflection.created_at) }}
             </p>
         </div>
- 
         <div>
           <Vote
             :options="options"
@@ -72,12 +71,12 @@
           <p v-if="!$page.props.auth.user" class="text-sm text-red-500">Connectez-vous pour voter.</p>
         </div>
       </div>
- 
+
       <CommentForm :reflection="reflection"/>
       <!-- <CreateForm/> -->
     </div>
- 
- 
+
+
       <div class=" mx-auto w-full lg:w-1/2 py-10 px-4 sm:px-6 lg:px-8 overflow-y-scroll h-screen">
         <div v-if="comments.length === 0" class="text-center p-6 bg-gray-50 rounded-lg text-gray-500 italic">
             Soyez le premier à commenter !
@@ -111,7 +110,7 @@
     </Layout>
   </AuthenticatedLayout>
 </template>
- 
+
 <script setup>
 import { defineProps, onMounted } from 'vue';
 import { router } from '@inertiajs/vue3';
@@ -120,9 +119,9 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
 import CommentForm from './CommentForm.vue';
 // import Layout from '@/Layouts/AppLayout.vue';
- 
+
 import Vote from "@/Components/Vote.vue";
- 
+
 defineProps({
   reflection: Object,
   comments:Array,
@@ -130,13 +129,13 @@ defineProps({
   isVoteEnded:Boolean,
   isAdmin:Boolean,
   existingVote:Number,
- 
+
 });
- 
- 
+
+
 function like(id){
     console.log(id);
-   
+
     router.get(route('likeComment',id));
 }
 function dislike(id){
@@ -148,14 +147,15 @@ const formatCommentDate = (dateString) => {
   const date = new Date(dateString);
   return date.toLocaleDateString("fr-FR");
 }
- 
+
 function deleteRef(id) {
-  router.get(route("reflections.destroy", id));
+    console.log(id);
+  router.delete(route("reflections.destroy", id));
 }
- 
+
 function activeRef(id) {
   router.get(route("reflections.validate", id));
 }
 </script>
- 
+
 <style scoped></style>

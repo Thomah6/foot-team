@@ -1,6 +1,15 @@
 <script setup>
 import { ref, computed, defineProps } from "vue";
-import { Link, usePage } from "@inertiajs/vue3";
+import { Link, usePage, router } from "@inertiajs/vue3";
+defineProps({
+    Notification: {
+        type: Number,
+        default: 0,
+        required: false,
+    },
+    votes: Array,
+    reflections: Array,
+});
 // import VoteHistory from "../Pages/VoteHistory.vue";
 // import VoteListAdmin from "../Pages/VoteListAdmin.vue";
 
@@ -10,8 +19,8 @@ const isAdmin = () => page.props.auth.user.role === "admin";
 const isBureau = () => page.props.auth.user.role === "bureau";
 
 const isOpen = ref(false);
-
 const menu = computed(() => {
+    // Menu de base (unique, sans doublons)
     const items = [
         {
             label: "Dashboard",
@@ -22,7 +31,7 @@ const menu = computed(() => {
         {
             label: "Stats des membres",
             icon: "fas fa-table",
-            link: route("bureau.stats.index"),
+            link: route("bureau.stats.index", [], false), // false pour forcer le chemin absolu
             active: route().current("bureau.stats.index.*"),
         },
         {
@@ -32,51 +41,44 @@ const menu = computed(() => {
             active: route().current("finances.*"),
         },
         // { label: "Stats", icon: "fas fa-chart-bar", link: route('admin.stats.index'), active: route().current('admin.stats.*') },
-        // { label: "Voir classements", icon: "fas fa-trophy", link: route('stats.classements.index'), active: route().current('stats.classements.*') },
+        { label: "Classement", icon: "fas fa-trophy", link: route('stats.classements.index'), active: route().current('stats.classements.*') },
         {
-            label: "Profile",
-            icon: "fas fa-user",
-            link: route("profile.edit"),
-            active: route().current("profile.edit"),
+            label: "Présences",
+            icon: "fas fa-calendar-check",
+            link: route('presence.index'),
+            active: route().current('presence.*') || route().current('presence.index'),
         },
+
         {
             label: "Gallery",
             icon: "fa-solid fa-photo-film",
             link: route("galleries.index"),
             active: route().current("galleries.index"),
         },
+        {
+            label: "Regulations",
+            icon: "fas fa-book",
+            link: route('regulations.index'),
+            active: route().current('regulations.index'),
+        },
+        {
 
-        {
-            label: "Stats des membres",
-            icon: "fas fa-users",
-            link: route("bureau.stats.index"),
-            active: route().current("bureau.stats.index.*"),
-        },
-        {
-            label: "Profile",
-            icon: "fas fa-user",
-            link: route("profile.edit"),
-            active: route().current("profile.edit"),
-        },
-        {
-            label: "Présences",
-            icon: "fas fa-calendar-check",
-            link: route("presence.index"),
-            active: route().current("presence.*"),
-        },
-        { label: "Regulations", icon: "fas fa-user", link: route('regulations.index'), active: route().current('regulations.index') },
-
-        {
             label: "Teams",
             icon: "fas fa-people-group",
-            link: route("admin.teams"),
-            active: route().current("admin.teams"),
+            link: route("admin.teams.index"),
+            active: route().current("admin.teams.*"),
         },
         {
             label: "SuggestionBox",
             icon: "fas fa-lightbulb",
             link: route("suggestions"),
             active: route().current("suggestions"),
+        },
+        {
+            label: "Reflections",
+            icon: "fas fa-comments",
+            link: route("reflections.index"),
+            active: route().current("reflections.*"),
         },
         {
             label: "Historique des Votes Personnels",
@@ -92,7 +94,17 @@ const menu = computed(() => {
         },
     ];
 
-    // 👉 Ajouter l’item "membres" *seulement si admin ou bureau*
+
+    // Items conditionnels
+    if (isBureau()) {
+        items.push({
+            label: "Membres (Bureau)",
+            icon: "fas fa-user-friends",
+            link: route("bureau.members.index"),
+            active: route().current("bureau.members.index"),
+        });
+    }
+
     if (isAdmin()) {
         items.push(
             {
@@ -102,10 +114,10 @@ const menu = computed(() => {
                 active: route().current("members.index"),
             },
             {
-                label: "Statisques des Équipes",
+                label: "Statistiques équipes",
                 icon: "fas fa-chart-line",
                 link: route("admin.team-stats.index"),
-                active: route().current("admin.team-stats.index"),
+                active: route().current("admin.team-stats.*"),
             }
         );
     }
@@ -116,32 +128,41 @@ const menu = computed(() => {
             link: route("bureau.members.index"),
             active: route().current("bureau.members.index"),
         });
+
+        items.push({
+            label: 'Stats des membres',
+            icon: 'fas fa-chart-bar',
+            link: route('bureau.stats.index', [], false),
+            active: route().current('bureau.stats.index.*')
+        });
     }
-
-    items.push({
-        label: "Membres",
-        icon: "fas fa-user-friends",
-        link: route('bureau.members.index'),
-        active: route().current('bureau.members.index')
-    });
-
-    items.push({
-        label: 'Stats des membres',
-        icon: 'fas fa-chart-bar',
-        link: route('bureau.stats.index'),
-        active: route().current('bureau.stats.index.*')
-    });
-
-
-
-
+    // Correction principale : toujours retourner le menu
     return items;
-});
+}
+);
+
+// Bottom menu (profil, paramètres, déconnexion...) - keep empty by default to avoid undefined in template
+const bottomMenu = [];
 
 
-const bottomMenu = [
-    { label: "Settings", icon: "fas fa-cog", link: route("profile.edit") },
-];
+
+
+const handleLinkClick = () => {
+    // Ne fermer le menu que si la sidebar mobile est ouverte
+    if (isOpen.value) {
+        closeMenu();
+    }
+};
+
+const navigate = (href) => {
+    // debug log
+    // eslint-disable-next-line no-console
+    console.log('[AdminsideBar] navigate ->', href);
+    // Use Inertia router to perform a proper visit
+    router.get(href);
+    // Close mobile menu after navigation
+    if (isOpen.value) closeMenu();
+};
 
 const toggleMenu = () => {
     isOpen.value = !isOpen.value;
@@ -155,11 +176,6 @@ const handleImageError = (event) => {
     // Si l'image ne charge pas, utiliser l'avatar par défaut
     event.target.src = `https://ui-avatars.com/api/?name=${user.name}&color=7F9CF5&background=EBF4FF&size=40`;
 };
-
-defineProps({
-    votes: Array,
-    reflections: Array,
-});
 </script>
 
 <template>
@@ -215,13 +231,14 @@ defineProps({
 
         <!-- Navigation Items -->
         <nav class="flex flex-col gap-2 mt-4 flex-1 overflow-y-auto">
-            <Link v-for="(item, index) in menu" :key="index" :href="item.link" @click="closeMenu"
+            <Link v-for="(item, index) in menu" :key="index" :href="item.link"
                 class="flex items-center gap-3 px-3 py-2 rounded-md transition-colors" :class="item.active
                     ? 'bg-blue-500/20 text-blue-600'
                     : 'hover:bg-blue-500/10 text-text-primary-light dark:text-text-primary-dark'
                     ">
             <i :class="item.icon" class="text-lg w-5 text-center"></i>
-            <p class="text-sm font-medium">{{ item.label }}</p>
+            <p class="text-sm font-medium">{{ item.label }}</p><span v-if="item.label === 'Reflections'">{{ Notification
+                }}</span>
             </Link>
 
             <!-- <Link :href="menu[2].link" class="flex items-center gap-3 px-3 py-2 rounded-md transition-colors" :class="menu[2].active
@@ -232,20 +249,20 @@ defineProps({
             <p class="text-sm font-medium">{{ menu[2].label }}</p>
             </Link> -->
         </nav>
-       
 
 
 
-    <!-- Bottom -->
-    <div class="mt-auto flex flex-col gap-2 border-t border-gray-200 dark:border-gray-700 pt-4">
-      <Link v-for="(item, index) in bottomMenu" :key="`bottom-${index}`" :href="item.link" @click="closeMenu"
-        class="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-blue-500/10 transition-colors text-text-primary-light dark:text-text-primary-dark">
-      <i :class="item.icon" class="text-lg w-5 text-center"></i>
-      <p class="text-sm font-medium">{{ item.label }}</p>
-      </Link>
-    </div>
 
-  </aside>
+
+        <div class="mt-auto flex flex-col gap-2 border-t border-gray-200 dark:border-gray-700 pt-4">
+            <Link v-for="(item, index) in bottomMenu" :key="`bottom-${index}`" :href="item.link"
+                class="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-blue-500/10 transition-colors text-text-primary-light dark:text-text-primary-dark">
+            <i :class="item.icon" class="text-lg w-5 text-center"></i>
+            <p class="text-sm font-medium">{{ item.label }}</p>
+            </Link>
+        </div>
+
+    </aside>
 </template>
 
 <style scoped>

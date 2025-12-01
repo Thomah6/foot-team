@@ -197,10 +197,16 @@
 </template>
 
 <script>
-import { useForm } from "@inertiajs/vue3";
+import { useForm, router } from "@inertiajs/vue3";
 
 export default {
     name: "FileUpload",
+    props: {
+        embedded: {
+            type: Boolean,
+            default: false,
+        },
+    },
     data() {
         return {
             files: [],
@@ -421,6 +427,10 @@ export default {
                     this.isUploading = false;
                     this.showUploadComplete = true;
                     this.form.reset();
+                        // Redirect to galleries after 2 seconds
+                        setTimeout(() => {
+                            router.visit(route('galleries.index'));
+                        }, 2000);
                 },
                 onError: (errors) => {
                     console.error("❌ Erreurs reçues :", errors);
@@ -531,6 +541,18 @@ export default {
     padding: 1.5rem;
     transition: all 0.3s ease;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Embedded mode (when displayed side-by-side in a layout) */
+.container.embedded {
+    max-width: none;
+    margin: 0;
+    padding: 0;
+}
+
+.container.embedded .upload-container {
+    padding: 0;
+    margin: 0;
 }
 
 .description-container:focus-within {
