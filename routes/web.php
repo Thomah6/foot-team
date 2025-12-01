@@ -119,6 +119,10 @@ Route::prefix('admin')->name('admin.')->middleware('role:admin')->group(function
         // Stats management
         Route::get('/create', [StatController::class, 'create'])->name('CreateStats');
 
+
+    Route::middleware('role:admin')->group(function () {
+
+
         // Identity management
         Route::get('/identity', [IdentityController::class, 'index'])->name('admin.identity');
 
@@ -148,6 +152,10 @@ Route::prefix('admin')->name('admin.')->middleware('role:admin')->group(function
                 Route::get('/members/{user}/stats', [BureauStatController::class, 'memberStats'])->name('bureau.stats.member');
             });
         });
+
+    });
+
+
 
         // Gestion des statistiques
         Route::prefix('stats')->group(function () {
@@ -381,7 +389,7 @@ Route::get('/admin/create', [StatController::class,'create'])->name('Admin.Creat
 Route::get('/identity', [IdentityController::class, 'index'])->name('admin.identity');
 
 
-Route::get('/admin/identity', [IdentityController::class, 'index']);
+// Route::get('/admin/identity', [IdentityController::class, 'index']->name('admin.indentity'));
 
 Route::post('/admin/identity/update', [IdentityController::class, 'update'])
     ->name('admin.identity.update');
