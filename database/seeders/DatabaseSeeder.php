@@ -40,12 +40,12 @@ class DatabaseSeeder extends Seeder
         //     'email' => 'jean@example.com',
         // ]);
         // Créer 5 utilisateurs fixes (admin, bureau, 3 joueurs) pour dev rapide
-        User::factory()->create([
-            'name' => 'Admin Super',
-            'email' => 'admin@test.com',
-            'role' => 'admin',
-            'password' => bcrypt('password'),
-        ]);
+        // User::factory()->create([
+        //     'name' => 'Admin Super',
+        //     'email' => 'admin@test.com',
+        //     'role' => 'admin',
+        //     'password' => bcrypt('password'),
+        // ]);
 
         User::factory()->create([
             'name' => 'Bureau Team',
@@ -107,12 +107,12 @@ class DatabaseSeeder extends Seeder
         // Dont un actif
         // -----------------------------------
 
-        // Mois actuels pour éviter les erreurs
-        // $months = [
-        //     Carbon::now()->startOfMonth(),
-        //     Carbon::now()->subMonth()->startOfMonth(),
-        //     Carbon::now()->subMonths(2)->startOfMonth(),
-        // ];
+        //Mois actuels pour éviter les erreurs
+        $months = [
+            Carbon::now()->startOfMonth(),
+            Carbon::now()->subMonth()->startOfMonth(),
+            Carbon::now()->subMonths(2)->startOfMonth(),
+        ];
 
         foreach ($months as $index => $month) {
             $user = $users->random();
