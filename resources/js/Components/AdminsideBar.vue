@@ -208,6 +208,9 @@ const handleLogout = () => {
 </script>
 
 <template>
+    <!-- Font Awesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    
     <!-- Hamburger pour mobile -->
     <button v-if="!isOpen" @click="toggleMenu"
         class="lg:hidden fixed top-4 left-4 z-50 p-3 bg-white dark:bg-gray-800 rounded-lg shadow hover:bg-gray-100 dark:hover:bg-gray-700 transition">
