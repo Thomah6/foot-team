@@ -32,8 +32,8 @@ const menu = computed(() => {
         {
             label: "Stats des membres",
             icon: "fas fa-table",
-            link: route("admin.bureau.stats.index", [], false), // false pour forcer le chemin absolu
-            active: route().current("admin.bureau.stats.index.*"),
+            link: route("bureau.stats.index", [], false), // false pour forcer le chemin absolu
+            active: route().current("bureau.stats.index.*"),
         },
         {
             label: "Finances",
@@ -97,14 +97,7 @@ const menu = computed(() => {
 
 
     // Items conditionnels
-    if (isBureau()) {
-        items.push({
-            label: "Membres (Bureau)",
-            icon: "fas fa-user-friends",
-            link: route("admin.bureau.members.index"),
-            active: route().current("admin.bureau.members.index"),
-        });
-    }
+   
 
     if (isAdmin()) {
         items.push(
@@ -139,8 +132,8 @@ const menu = computed(() => {
         items.push({
             label: 'Stats des membres',
             icon: 'fas fa-chart-bar',
-            link: route('admin.bureau.stats.index', [], false),
-            active: route().current('admin.bureau.stats.index.*')
+            link: route('bureau.stats.index', [], false),
+            active: route().current('bureau.stats.index.*')
         });
 
 
