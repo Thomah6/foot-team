@@ -40,7 +40,7 @@ class ReflectionController extends Controller
             ]);
 
         }
-        
+
     }
 
 
@@ -75,7 +75,7 @@ class ReflectionController extends Controller
     public function show(Reflection $reflection){
 
 
-        
+
 
         $comments=CommentController::ravel($reflection);
 
@@ -111,7 +111,7 @@ class ReflectionController extends Controller
                 ...$returnVote,
             ]);
         }
-        
+
     }
 
     /**
@@ -184,14 +184,14 @@ class ReflectionController extends Controller
         return redirect()->back()
             ->with('success', 'Le statut de la réflexion a été mis à jour.');
     }
-    
+
     /**
      * Valide une réflexion (Admin)
      */
     public function validateReflection(Reflection $reflection)
     {
         // $this->authorize('update', $reflection);
-        
+
         $reflection->update([
             'statut' => 'valide',
         ]);
@@ -213,10 +213,11 @@ class ReflectionController extends Controller
      */
     public function destroy(Reflection $reflection)
     {
-        $this->authorize('delete', $reflection); // Vérification d'autorisation
+        // dd($reflection->toArray());
+        // $this->authorize('delete', $reflection); // Vérification d'autorisation
         $reflection->delete();
 
-        return redirect()->back()
+        return redirect(route('reflections.index'))
             ->with('success', 'La réflexion a été supprimée.');
     }
 }
