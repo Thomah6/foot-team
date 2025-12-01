@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue'
-import { router, usePage } from '@inertiajs/vue3'
+import { router, usePage, Link } from '@inertiajs/vue3'
 import Toast from '@/Shared/Toast.vue'
 import ConfirmModalFinance from '@/Components/ConfirmModalFinance.vue'
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue'
@@ -68,10 +68,6 @@ function sendDepense() {
 function cancelDepense() {
   showConfirm.value = false
 }
-
-function goBack() {
-  router.back()
-}
 </script>
 
 
@@ -99,13 +95,12 @@ function goBack() {
       />
 
 
-      <button
-        @click="goBack"
-        type="button"
-        class="w-full h-12 px-4 bg-neutral-200 dark:bg-slate-800 text-neutral-900 dark:text-white rounded-lg font-bold mt-4 hover:bg-neutral-300 dark:hover:bg-slate-700"
+      <Link
+        :href="route('finances.index')"
+        class="w-full h-12 px-4 bg-neutral-200 dark:bg-slate-800 text-neutral-900 dark:text-white rounded-lg font-bold mt-4 hover:bg-neutral-300 dark:hover:bg-slate-700 flex items-center justify-center"
       >
         Retour
-      </button>
+      </Link>
 
       <button
         @click="openConfirm"
