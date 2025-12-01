@@ -63,6 +63,37 @@
                         />
                     </div>
 
+                    <!-- COMPTEUR DE TEMPS RESTANT -->
+                    <div v-if="reflection.date_fin_vote" class="mt-6 pt-6 border-t">
+                        <div v-if="!timeRemaining.isEnded" class="bg-gradient-to-r from-blue-50 to-indigo-50 p-4 rounded-lg border-l-4 border-[#1E63F8]">
+                            <p class="text-sm font-semibold text-gray-700 mb-3">⏱️ Temps restant pour voter:</p>
+                            <div class="flex gap-4 justify-center">
+                                <div class="flex flex-col items-center">
+                                    <span class="text-2xl font-bold text-[#1E63F8]">{{ String(timeRemaining.days).padStart(2, '0') }}</span>
+                                    <span class="text-xs text-gray-600">jour(s)</span>
+                                </div>
+                                <div class="text-2xl text-gray-400">:</div>
+                                <div class="flex flex-col items-center">
+                                    <span class="text-2xl font-bold text-[#1E63F8]">{{ String(timeRemaining.hours).padStart(2, '0') }}</span>
+                                    <span class="text-xs text-gray-600">h</span>
+                                </div>
+                                <div class="text-2xl text-gray-400">:</div>
+                                <div class="flex flex-col items-center">
+                                    <span class="text-2xl font-bold text-[#1E63F8]">{{ String(timeRemaining.minutes).padStart(2, '0') }}</span>
+                                    <span class="text-xs text-gray-600">min</span>
+                                </div>
+                                <div class="text-2xl text-gray-400">:</div>
+                                <div class="flex flex-col items-center">
+                                    <span class="text-2xl font-bold text-[#1E63F8]">{{ String(timeRemaining.seconds).padStart(2, '0') }}</span>
+                                    <span class="text-xs text-gray-600">sec</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div v-else class="bg-red-50 p-4 rounded-lg border-l-4 border-red-500">
+                            <p class="text-sm font-semibold text-red-700">🔒 Le vote pour cette réflexion est terminé</p>
+                        </div>
+                    </div>
+
                     <div>
                         <p v-if="!$page.props.auth.user" class="text-sm text-red-500 mt-4">
                             Connectez-vous pour voter.
@@ -155,7 +186,7 @@
 
 
 <script setup>
-import { defineProps, onMounted } from 'vue';
+import { defineProps, onMounted, ref, onUnmounted } from 'vue';
 import { router } from '@inertiajs/vue3';
 import Dropdown from '@/Components/Dropdown.vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
@@ -165,7 +196,7 @@ import CommentForm from './CommentForm.vue';
 
 import Vote from "@/Components/Vote.vue";
 
-defineProps({
+const props = defineProps({
   reflection: Object,
   comments:Array,
   options:Array,
@@ -175,6 +206,78 @@ defineProps({
 
 });
 
+// État du compteur
+const timeRemaining = ref({
+  days: 0,
+  hours: 0,
+  minutes: 0,
+  seconds: 0,
+  isEnded: false,
+});
+
+let countdownInterval;
+
+// Fonction pour calculer le temps restant
+const calculateTimeRemaining = () => {
+  if (!props.reflection || !props.reflection.date_fin_vote) {
+    console.warn("date_fin_vote non disponible");
+    return;
+  }
+
+  // Parser la date correctement (format ISO ou autre)
+  const endDate = new Date(props.reflection.date_fin_vote);
+  const now = new Date();
+
+  console.log("Date de fin:", props.reflection.date_fin_vote);
+  console.log("Date fin parsée:", endDate);
+  console.log("Date maintenant:", now);
+
+  const diff = endDate - now;
+
+  console.log("Différence (ms):", diff);
+
+  if (diff <= 0) {
+    timeRemaining.value = {
+      days: 0,
+      hours: 0,
+      minutes: 0,
+      seconds: 0,
+      isEnded: true,
+    };
+    if (countdownInterval) {
+      clearInterval(countdownInterval);
+    }
+    return;
+  }
+
+  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+  const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+  timeRemaining.value = {
+    days,
+    hours,
+    minutes,
+    seconds,
+    isEnded: false,
+  };
+};
+
+// Initialiser et démarrer le compteur au montage
+onMounted(() => {
+  if (props.reflection.date_fin_vote) {
+    calculateTimeRemaining();
+    countdownInterval = setInterval(calculateTimeRemaining, 1000);
+  }
+});
+
+// Nettoyer l'intervalle au démontage
+onUnmounted(() => {
+  if (countdownInterval) {
+    clearInterval(countdownInterval);
+  }
+});
 
 function like(id){
     console.log(id);
