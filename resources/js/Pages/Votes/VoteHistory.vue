@@ -87,16 +87,3 @@ defineProps({
 }
 </style>
 
-<script setup>
-import { defineProps } from "vue";
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-
-const formatCommentDate = (dateString) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString("fr-FR");
-};
-
-defineProps({
-    votes: Array,
-});
-</script>
