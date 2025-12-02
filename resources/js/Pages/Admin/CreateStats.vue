@@ -1,5 +1,5 @@
 <script setup>
-import { useForm } from '@inertiajs/vue3';
+import { useForm,router } from '@inertiajs/vue3';
 import { ref } from 'vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 
@@ -26,11 +26,15 @@ const submit = () => {
     preserveScroll: true,
 
     onSuccess: () => {
+      
       pendingMessage.value =
+      
         "Statistique envoyée, en attente de validation par l'administrateur.";
-
+  
       // Réinitialise proprement tous les champs
       form.reset();
+router.visit('/dashboard');
+       
     },
   });
 };
