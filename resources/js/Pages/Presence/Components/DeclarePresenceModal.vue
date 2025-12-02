@@ -1,58 +1,60 @@
 <template>
   <div class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-    <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl max-w-md w-full mx-4 overflow-hidden">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full mx-4 overflow-hidden border-2 border-lime-200/50">
       <!-- Header with gradient -->
-      <div class="bg-gradient-to-r from-blue-600 to-blue-700 dark:from-blue-700 dark:to-blue-800 px-6 py-5">
+      <div class="bg-gradient-to-r from-lime-500 to-emerald-500 px-6 py-5">
         <div class="flex items-center gap-3">
-          <span class="material-symbols-outlined text-3xl text-white">sports_soccer</span>
+          <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
+            <i class="fas fa-calendar-plus text-white text-xl"></i>
+          </div>
           <div>
-            <h2 class="text-2xl font-black text-white">Déclarer présence</h2>
-            <p v-if="isBureau" class="text-xs text-blue-100">Bureau • Pour un membre</p>
+            <h2 class="text-2xl font-bold text-white">Déclarer présence</h2>
+            <p v-if="isBureau" class="text-xs text-white/80">Bureau • Pour un combattant</p>
           </div>
         </div>
       </div>
 
       <!-- Content -->
-      <div class="p-6 space-y-5">
+      <div class="p-6 space-y-6">
         <!-- Sélecteur de joueur (Bureau uniquement) -->
         <div v-if="isBureau">
-          <label class="block text-sm font-semibold text-[#111318] dark:text-white mb-2">
-            Pour quel joueur ? *
+          <label class="block text-sm font-semibold text-gray-700 mb-2">
+            Pour quel combattant ? *
           </label>
           <select
             v-model="selectedUserId"
-            class="w-full px-4 py-3 border-2 border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-[#111318] dark:text-white focus:outline-0 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20 dark:focus:ring-blue-400/20 font-medium transition"
+            class="w-full px-4 py-3 border-2 border-lime-300 rounded-xl bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-lime-500/30 focus:border-lime-500 font-medium transition"
           >
             <option v-for="user in users" :key="user.id" :value="user.id.toString()">
               ⚽ {{ user.name }}{{ currentUserId === user.id ? ' (Moi)' : '' }}
             </option>
           </select>
-          <p class="text-xs text-slate-500 dark:text-slate-400 mt-2">
-            Sélectionnez le membre pour lequel vous déclarez la présence. Vous êtes pré-sélectionné.
+          <p class="text-xs text-gray-500 mt-2">
+            Sélectionnez le combattant pour lequel vous déclarez la présence.
           </p>
         </div>
 
         <!-- Date input -->
         <div>
-          <label class="block text-sm font-semibold text-[#111318] dark:text-white mb-2">
-            Date de présence *
+          <label class="block text-sm font-semibold text-gray-700 mb-2">
+            Date de bataille *
           </label>
           <input
             v-model="selectedDate"
             type="date"
-            class="w-full px-4 py-3 border-2 border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-[#111318] dark:text-white focus:outline-0 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20 dark:focus:ring-blue-400/20 font-medium transition"
+            class="w-full px-4 py-3 border-2 border-lime-300 rounded-xl bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-lime-500/30 focus:border-lime-500 font-medium transition"
           />
-          <p class="text-xs text-slate-500 dark:text-slate-400 mt-2">
-            Sélectionnez la date d'une présence aux événements.
+          <p class="text-xs text-gray-500 mt-2">
+            Sélectionnez la date de présence aux événements.
           </p>
         </div>
 
         <!-- Info déclarée par (Bureau) -->
-        <div v-if="isBureau" class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+        <div v-if="isBureau" class="bg-lime-50 border border-lime-300 rounded-xl p-4">
           <div class="flex items-start gap-3">
-            <span class="material-symbols-outlined text-lg text-blue-600 dark:text-blue-400">info</span>
-            <div class="text-sm text-blue-700 dark:text-blue-300">
-              <p class="font-semibold mb-1">Déclaration par le bureau</p>
+            <i class="fas fa-info-circle text-lime-600 text-lg mt-0.5"></i>
+            <div class="text-sm text-gray-700">
+              <p class="font-bold mb-1">Déclaration par le bureau</p>
               <p class="text-xs opacity-90">Votre nom sera enregistré comme déclarant ({{ currentUserName }})</p>
             </div>
           </div>
@@ -60,20 +62,20 @@
       </div>
 
       <!-- Footer -->
-      <div class="flex gap-3 justify-end p-6 bg-slate-50 dark:bg-slate-700/50 border-t border-slate-200 dark:border-slate-600">
+      <div class="flex gap-3 justify-end p-6 bg-lime-50/50 border-t border-lime-200">
         <button
           @click="$emit('close')"
-          class="px-4 py-2 border-2 border-slate-300 dark:border-slate-600 rounded-lg text-[#111318] dark:text-white hover:bg-slate-100 dark:hover:bg-slate-600/50 font-semibold text-sm transition"
+          class="px-5 py-3 border-2 border-lime-300 rounded-xl text-gray-700 hover:bg-white font-bold text-sm transition hover:shadow-md"
         >
           Annuler
         </button>
         <button
           @click="submit"
           :disabled="isBureau && !selectedUserId"
-          class="px-6 py-2 bg-gradient-to-r from-green-600 to-emerald-600 dark:from-green-700 dark:to-emerald-700 text-white rounded-lg hover:from-green-700 hover:to-emerald-700 dark:hover:from-green-600 dark:hover:to-emerald-600 font-semibold text-sm shadow-md hover:shadow-lg transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+          class="px-6 py-3 bg-gradient-to-r from-lime-500 to-emerald-500 text-white rounded-xl hover:from-lime-600 hover:to-emerald-600 font-bold text-sm shadow-lg hover:shadow-xl hover:shadow-emerald-500/30 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <span class="flex items-center gap-2">
-            <span class="material-symbols-outlined text-base">check_circle</span>
+            <i class="fas fa-check-circle"></i>
             Confirmer
           </span>
         </button>
@@ -93,7 +95,6 @@ const props = defineProps({
 })
 
 const selectedDate = ref(new Date().toISOString().split('T')[0])
-// Pré-sélectionner le bureau déclarant par défaut
 const selectedUserId = ref(props.isBureau && props.currentUserId ? props.currentUserId.toString() : '')
 
 const emit = defineEmits(['close', 'submit'])
