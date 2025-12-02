@@ -84,7 +84,7 @@ const formatRelative = (date) => {
 
 <template>
     <AuthenticatedLayout>
-        <div class="relative min-h-screen w-full bg-gradient-to-b from-slate-50 via-slate-100 to-white text-slate-900 font-sans">
+    <div class="relative min-h-screen w-full bg-gradient-to-br from-lime-50 via-emerald-50 to-green-50 text-lime-900 font-sans">
             <!-- Header Premium Style -->
             <div class="relative bg-gradient-to-b from-white to-slate-50 py-8 sm:py-12 lg:py-16 px-4 border-b border-slate-200">
                 <div class="flex flex-col sm:flex-row items-center justify-between max-w-6xl mx-auto mb-8 sm:mb-12 gap-6">
@@ -114,11 +114,11 @@ const formatRelative = (date) => {
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
                 
                 <!-- Pending stats -->
-                <div class="bg-white/80 backdrop-blur-sm rounded-2xl p-8 text-center border border-slate-200 shadow-lg">
+                <div class="bg-white/80 backdrop-blur-sm rounded-2xl p-8 text-center border border-lime-200 shadow-lg">
                     <div class="bg-gradient-to-br from-red-100 to-red-200 w-24 h-24 rounded-2xl flex items-center justify-center mx-auto mb-6 border border-red-300">
                         <i class="fas fa-hourglass-half text-red-600 text-4xl"></i>
                     </div>
-                    <h3 class="text-2xl font-thin text-slate-900 mb-3 tracking-wide">EN ATTENTE</h3>
+                    <h3 class="text-2xl font-thin text-lime-900 mb-3 tracking-wide">EN ATTENTE</h3>
                     <p class="text-5xl font-thin text-red-600 mb-6">{{ props.pendingCount }}</p>
                     <Link href="/admin/stats/pending"
                           class="inline-flex items-center gap-3 bg-red-100 text-red-700 px-6 py-3 rounded-2xl font-light hover:bg-red-200 transition-all duration-300 tracking-wider border border-red-300">
@@ -128,26 +128,26 @@ const formatRelative = (date) => {
                 </div>
 
                 <!-- Validated stats -->
-                <div class="bg-white/80 backdrop-blur-sm rounded-2xl p-8 text-center border border-slate-200 shadow-lg">
-                    <div class="bg-gradient-to-br from-green-100 to-green-200 w-24 h-24 rounded-2xl flex items-center justify-center mx-auto mb-6 border border-green-300">
-                        <i class="fas fa-circle-check text-green-600 text-4xl"></i>
+                <div class="bg-white/80 backdrop-blur-sm rounded-2xl p-8 text-center border border-lime-200 shadow-lg">
+                    <div class="bg-gradient-to-br from-lime-100 to-emerald-100 w-24 h-24 rounded-2xl flex items-center justify-center mx-auto mb-6 border border-lime-300">
+                        <i class="fas fa-circle-check text-lime-600 text-4xl"></i>
                     </div>
-                    <h3 class="text-2xl font-thin text-slate-900 mb-3 tracking-wide">VALIDÉES</h3>
-                    <p class="text-5xl font-thin text-green-600 mb-6">{{ props.validatedCount }}</p>
-                    <div class="text-slate-600 font-light tracking-wider">
+                    <h3 class="text-2xl font-thin text-lime-900 mb-3 tracking-wide">VALIDÉES</h3>
+                    <p class="text-5xl font-thin text-lime-600 mb-6">{{ props.validatedCount }}</p>
+                    <div class="text-lime-600 font-light tracking-wider">
                         STATS PUBLIÉES
                     </div>
                 </div>
 
                 <!-- Add new stats -->
-                <div class="bg-white/80 backdrop-blur-sm rounded-2xl p-8 text-center border border-slate-200 shadow-lg">
-                    <div class="bg-gradient-to-br from-blue-100 to-blue-200 w-24 h-24 rounded-2xl flex items-center justify-center mx-auto mb-6 border border-blue-300">
-                        <i class="fas fa-plus text-blue-600 text-4xl"></i>
+                <div class="bg-white/80 backdrop-blur-sm rounded-2xl p-8 text-center border border-lime-200 shadow-lg">
+                    <div class="bg-gradient-to-br from-emerald-100 to-green-100 w-24 h-24 rounded-2xl flex items-center justify-center mx-auto mb-6 border border-emerald-300">
+                        <i class="fas fa-plus text-emerald-600 text-4xl"></i>
                     </div>
-                    <h3 class="text-2xl font-thin text-slate-900 mb-3 tracking-wide">AJOUTER</h3>
-                    <p class="text-5xl font-thin text-blue-600 mb-6">+</p>
+                    <h3 class="text-2xl font-thin text-lime-900 mb-3 tracking-wide">AJOUTER</h3>
+                    <p class="text-5xl font-thin text-emerald-600 mb-6">+</p>
                     <Link href="/admin/stats/create"
-                          class="inline-flex items-center gap-3 bg-blue-100 text-blue-700 px-6 py-3 rounded-2xl font-light hover:bg-blue-200 transition-all duration-300 tracking-wider border border-blue-300">
+                          class="inline-flex items-center gap-3 bg-emerald-100 text-emerald-700 px-6 py-3 rounded-2xl font-light hover:bg-emerald-200 transition-all duration-300 tracking-wider border border-emerald-300">
                         <i class="fas fa-plus"></i>
                         NOUVELLE STATS
                     </Link>
@@ -155,46 +155,46 @@ const formatRelative = (date) => {
             </div>
 
             <!-- Historique récent -->
-            <div class="bg-white/80 backdrop-blur-sm rounded-3xl p-12 text-slate-900 border border-slate-200 shadow-lg">
+            <div class="bg-white/80 backdrop-blur-sm rounded-3xl p-12 text-lime-900 border border-lime-200 shadow-lg">
                 <div class="flex items-center justify-between mb-8">
                     <div>
-                        <h2 class="text-4xl font-thin mb-2 tracking-wider text-slate-900">HISTORIQUE RÉCENT</h2>
-                        <p class="text-slate-600 font-light">Dernières performances enregistrées</p>
+                        <h2 class="text-4xl font-thin mb-2 tracking-wider text-lime-900">HISTORIQUE RÉCENT</h2>
+                        <p class="text-lime-600 font-light">Dernières performances enregistrées</p>
                     </div>
-                    <div class="bg-gradient-to-br from-slate-100 to-slate-200 w-16 h-16 rounded-2xl flex items-center justify-center border border-slate-300">
-                        <i class="fas fa-history text-slate-600 text-2xl"></i>
+                    <div class="bg-gradient-to-br from-lime-100 to-emerald-100 w-16 h-16 rounded-2xl flex items-center justify-center border border-lime-300">
+                        <i class="fas fa-history text-lime-600 text-2xl"></i>
                     </div>
                 </div>
 
                 <!-- Message si aucun historique -->
                 <div v-if="props.lastStats.length === 0"
                      class="text-center py-12">
-                    <div class="bg-slate-100 w-32 h-32 rounded-2xl flex items-center justify-center mx-auto mb-6 border border-slate-300">
-                        <i class="fas fa-folder-open text-slate-500 text-4xl"></i>
+                    <div class="bg-lime-100 w-32 h-32 rounded-2xl flex items-center justify-center mx-auto mb-6 border border-lime-300">
+                        <i class="fas fa-folder-open text-lime-500 text-4xl"></i>
                     </div>
-                    <p class="text-slate-600 text-xl font-light">Aucune statistique récente pour le moment.</p>
+                    <p class="text-lime-600 text-xl font-light">Aucune statistique récente pour le moment.</p>
                 </div>
 
                 <!-- Liste des dernières stats -->
                 <div v-else class="space-y-4">
-                    <div v-for="item in props.lastStats" 
+                    <div v-for="item in props.lastStats"
                          :key="item.id"
-                         class="bg-slate-50 rounded-2xl p-6 border border-slate-200 hover:bg-slate-100 transition-colors">
+                         class="bg-lime-50 rounded-2xl p-6 border border-lime-200 hover:bg-lime-100 transition-colors">
                         <div class="flex items-center gap-6">
                             <img :src="item.user?.avatar || 'https://via.placeholder.com/100x100.png/00ee99?text=J'"
-                                 class="h-16 w-16 rounded-2xl object-cover border-2 border-slate-300" />
+                                 class="h-16 w-16 rounded-2xl object-cover border-2 border-lime-300" />
 
                             <div class="flex-grow">
                                 <div class="flex items-center gap-4 mb-2">
-                                    <h4 class="text-xl font-light text-slate-900">{{ item.user?.name || 'Joueur inconnu' }}</h4>
+                                    <h4 class="text-xl font-light text-lime-900">{{ item.user?.name || 'Joueur inconnu' }}</h4>
                                     <span class="text-xs font-semibold py-1 px-3 rounded-full"
-                                          :class="item.validated_by_admin ? 'bg-green-100 text-green-700 border border-green-300' : 'bg-yellow-100 text-yellow-700 border border-yellow-300'">
+                                          :class="item.validated_by_admin ? 'bg-emerald-100 text-emerald-700 border border-emerald-300' : 'bg-yellow-100 text-yellow-700 border border-yellow-300'">
                                         {{ item.validated_by_admin ? 'Validée' : 'En attente' }}
                                     </span>
                                 </div>
-                                <p class="text-slate-600 font-light">
-                                    <span class="text-slate-900 font-medium">{{ item.goals }}</span> buts — 
-                                    <span class="text-slate-900 font-medium">{{ item.assists }}</span> passes — 
+                                <p class="text-lime-600 font-light">
+                                    <span class="text-lime-900 font-medium">{{ item.goals }}</span> buts —
+                                    <span class="text-lime-900 font-medium">{{ item.assists }}</span> passes —
                                     match du {{ format(item.date) }}
                                 </p>
                             </div>
@@ -202,7 +202,7 @@ const formatRelative = (date) => {
                             <!-- Boutons d'action si en attente -->
                             <div v-if="!item.validated_by_admin" class="flex flex-col gap-2 sm:flex-row sm:gap-3">
                                 <button @click="validateStat(item.id)"
-                                        class="bg-green-100 text-green-700 px-3 sm:px-4 py-2 rounded-xl font-light hover:bg-green-200 transition-all duration-300 border border-green-300 text-sm sm:text-base">
+                                        class="bg-emerald-100 text-emerald-700 px-3 sm:px-4 py-2 rounded-xl font-light hover:bg-emerald-200 transition-all duration-300 border border-emerald-300 text-sm sm:text-base">
                                     <i class="fas fa-check mr-1 sm:mr-2"></i>Valider
                                 </button>
                                 <button @click="rejectStat(item.id)"

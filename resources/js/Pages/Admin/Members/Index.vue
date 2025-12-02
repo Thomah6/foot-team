@@ -135,11 +135,11 @@ const getStatusColor = (isActive) => {
 <style>
 /* Boutons globaux cohérents */
 .btn-primary {
-  @apply rounded-lg bg-green-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-green-700 transition shadow-sm;
+  @apply rounded-lg bg-gradient-to-r from-lime-500 to-emerald-500 px-4 py-2.5 text-sm font-semibold text-white hover:from-lime-600 hover:to-emerald-600 transition shadow-sm;
 }
 
 .btn-secondary {
-  @apply rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 transition;
+  @apply rounded-lg border border-lime-300 bg-white px-4 py-2.5 text-sm font-medium text-lime-700 hover:bg-lime-50 transition;
 }
 
 /* Champs */
