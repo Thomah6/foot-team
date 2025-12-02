@@ -192,12 +192,9 @@ const submit = () => {
 
             <!-- Buttons -->
             <div class="flex gap-3 pt-6 border-t border-gray-200">
-              <a
-                href="admin/members"
-                class="flex-1 rounded-lg border border-gray-300 px-4 py-2 text-center font-medium text-gray-700 hover:bg-gray-50 transition"
-              >
+             <Link :href="route('admin.members.index')" class="flex-1 border rounded-lg py-2 text-center hover:bg-gray-50">
                 Annuler
-              </a>
+              </Link>
               <button
                 type="submit"
                 :disabled="form.processing"
