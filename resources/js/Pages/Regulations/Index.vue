@@ -258,7 +258,7 @@ hover:shadow-red-500/30 transform hover:scale-105 transition-all"
 
                       <div class="flex gap-2 mt-4 sm:mt-0">
                         <button v-if="$page.props.auth.user.role === 'admin'"
-                                class="bg-citron-600 hover:bg-citron-700 dark:bg-citron-500 dark:hover:bg-citron-600 text-white px-3 py-2 rounded-lg transition font-semibold text-sm flex items-center gap-2"
+                                class="flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-emerald-600 to-lime-600 rounded-lg text-white font-bold text-sm shadow-lg hover:shadow-emerald-500/30 transform hover:scale-105 transition-all"
                                 @click="$inertia.visit(`/regulations/content/${c.id}/edit`)">
                           <i class="fas fa-edit"></i>
                           Modifier
