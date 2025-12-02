@@ -22,7 +22,6 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        User::factory(10)->create();
         Stat::factory(10)->create();
         Team::factory(5)->create();
         TeamStat::factory(15)->create();
@@ -68,7 +67,6 @@ class DatabaseSeeder extends Seeder
             'password' => bcrypt('password'),
         ]);
 
-        User::factory(10)->create([]);
         Reflection::factory(40)->create([]);
         Comment::factory(100)->create([]);
         Commentlike::factory(500)->create([]);

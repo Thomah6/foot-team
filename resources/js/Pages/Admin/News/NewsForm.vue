@@ -34,6 +34,7 @@ watch(() => props.news, (newVal) => {
   <div class="space-y-6">
 
     <!-- IMAGE UPLOAD -->
+<<<<<<< HEAD
     <div class="space-y-3">
       <label class="block font-medium text-gray-700 dark:text-gray-300">Image</label>
 
@@ -48,6 +49,20 @@ watch(() => props.news, (newVal) => {
                file:border-0 file:text-sm file:font-medium
                file:bg-citron-500 file:text-white
                hover:file:bg-citron-600 transition-all" />
+=======
+    <div class="space-y-2">
+      <label class="font-semibold text-gray-700 dark:text-gray-300">Image</label>
+
+      <!-- Preview -->
+      <div v-if="imagePreview" class="mt-3 w-full rounded-lg overflow-hidden shadow-md border border-gray-300 dark:border-gray-600">
+        <img :src="imagePreview" class="w-full h-64 sm:h-72 object-cover rounded-lg" alt="Aperçu">
+      </div>
+
+      <input type="file" accept="image/*" @change="handleFileChange" class="block w-full text-sm text-gray-700 bg-white dark:bg-gray-800 
+                     border border-gray-300 dark:border-gray-600 rounded-lg cursor-pointer
+                     file:bg-green-600 file:text-white file:border-none file:px-4 file:py-2 file:rounded-lg 
+                     hover:file:bg-green-700 transition">
+>>>>>>> bc0c59620896928c4b8142a64de53d68a350f302
 
       <div v-if="errors.image" class="text-red-500 dark:text-red-400 text-sm">
         {{ errors.image }}
@@ -63,6 +78,7 @@ watch(() => props.news, (newVal) => {
       <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
         Titre *
       </label>
+<<<<<<< HEAD
       <input v-model="form.title" type="text" required
         class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600
                bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100
@@ -70,6 +86,14 @@ watch(() => props.news, (newVal) => {
                transition-all duration-200" 
         placeholder="Titre de l'actualité" />
       <p v-if="errors.title" class="text-sm text-red-500 dark:text-red-400">{{ errors.title }}</p>
+=======
+      <input v-model="form.title" type="text" name="title"
+        class="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-700
+               bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100
+               focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" />
+
+      <p v-if="errors.title" class="text-sm text-red-500">{{ errors.title }}</p>
+>>>>>>> bc0c59620896928c4b8142a64de53d68a350f302
     </div>
 
     <!-- Content -->
@@ -77,6 +101,7 @@ watch(() => props.news, (newVal) => {
       <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
         Contenu *
       </label>
+<<<<<<< HEAD
       <textarea v-model="form.content" required
         class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600
                bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100
@@ -85,6 +110,15 @@ watch(() => props.news, (newVal) => {
                transition-all duration-200"
         placeholder="Contenu de l'actualité..."></textarea>
       <p v-if="errors.content" class="text-sm text-red-500 dark:text-red-400">{{ errors.content }}</p>
+=======
+      <textarea v-model="form.content" name="content"
+        class="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-700
+               bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100
+               min-h-[150px]
+               focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+      </textarea>
+      <p v-if="errors.content" class="text-sm text-red-500">{{ errors.content }}</p>
+>>>>>>> bc0c59620896928c4b8142a64de53d68a350f302
     </div>
 
     <!-- Published toggle -->

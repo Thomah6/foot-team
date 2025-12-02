@@ -7,19 +7,30 @@ const props = defineProps({
     type: Object,
     required: true
   },
-  titles: {
-    type: Array,
+  title: {
+    type: String,
     required: true
   }
 })
 
+/** FORMULAIRE POUR LE TITRE DE LA RUBRIQUE **/
+const titleForm = useForm({
+  title: props.title
+})
+
+function updateTitle() {
+  titleForm.put(`/regulations/${props.content.regulation_id}/title`, {
+    preserveScroll: true,
+  })
+}
+
+/** FORMULAIRE POUR LE CONTENU **/
 const form = useForm({
-  regulation_id: props.content.regulation_id,
   sub_number: props.content.sub_number || '',
   content: props.content.content || ''
 })
 
-function submit() {
+function updateContent() {
   form.put(`/regulations/content/${props.content.id}`, {
     onSuccess: () => {
       $inertia.visit('/regulations')
@@ -27,68 +38,100 @@ function submit() {
   })
 }
 </script>
+
 <template>
   <AuthenticatedLayout>
+
     <div 
       class="min-h-screen flex items-center justify-center px-4 bg-cover bg-center"
       style="background-image: url('https://static.vecteezy.com/system/resources/thumbnails/046/408/525/small/football-soccer-grass-field-stadium-with-light-for-outdoor-sport-photo.jpg');"
     >
-      <!-- Bloc translucide avec blur -->
       <div class="w-full max-w-xl 
-                  bg-citron-600/40 dark:bg-gray-900/70 
+                  bg-blue-600/40 dark:bg-gray-900/70 
                   backdrop-blur-md 
-                  border border-citron-300/40 dark:border-gray-700 
+                  border border-blue-300/40 dark:border-gray-700 
                   rounded-xl shadow-lg p-6 sm:p-8 
                   text-white dark:text-gray-100">
-        <h1 class="text-2xl font-bold mb-6 text-center text-citron-100 dark:text-citron-50">Modifier un sous-point</h1>
 
-        <form @submit.prevent="submit" class="space-y-4">
+        <!-- TITRE DU RÈGLEMENT -->
+        <!-- <h1 class="text-xl font-bold mb-4 text-center">Modifier la rubrique</h1>
+
+        <form @submit.prevent="updateTitle" class="mb-8 space-y-2">
+          <label class="block text-sm font-medium">Titre de la rubrique</label>
+          <input 
+            type="text"
+            v-model="titleForm.title"
+            class="w-full p-2 rounded-lg text-black dark:text-white bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600"
+          />
+          <div v-if="titleForm.errors.title" class="text-red-300 text-sm">
+            {{ titleForm.errors.title }}
+          </div>
+
+          <button 
+            type="submit"
+            class="w-full bg-blue-700 hover:bg-blue-800 text-white py-2 rounded-lg"
+            :disabled="titleForm.processing"
+          >
+            <span v-if="titleForm.processing">Mise à jour...</span>
+            <span v-else>Modifier le titre</span>
+          </button>
+        </form> -->
+
+        <!-- CONTENU DU SOUS-POINT -->
+        <h1 class="text-xl font-bold mb-4 text-center">Modifier le sous-point</h1>
+
+        <form @submit.prevent="updateContent" class="space-y-4">
+
           <!-- Numéro du sous-point -->
           <div>
-            <label class="block text-sm font-medium mb-1 text-citron-100 dark:text-citron-200">Numéro du sous-point</label>
-            <input type="text" v-model="form.sub_number" placeholder="Ex: 1.1"
-                   class="w-full border rounded-lg p-2 
-                          text-black dark:text-white 
-                          bg-white dark:bg-gray-800 
-                          border-gray-300 dark:border-gray-600 
-                          focus:ring-2 focus:ring-citron-500 focus:border-transparent" />
-            <div v-if="form.errors.sub_number" class="text-red-300 dark:text-red-400 text-sm mt-1">
+            <label class="block text-sm font-medium mb-1">Numéro du sous-point</label>
+            <input 
+              type="text" 
+              v-model="form.sub_number" 
+              placeholder="Ex: 1.1"
+              class="w-full p-2 rounded-lg text-black dark:text-white bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600"
+            />
+            <div v-if="form.errors.sub_number" class="text-red-300 text-sm mt-1">
               {{ form.errors.sub_number }}
             </div>
           </div>
 
           <!-- Contenu -->
           <div>
-            <label class="block text-sm font-medium mb-1 text-citron-100 dark:text-citron-200">Contenu</label>
-            <textarea v-model="form.content" rows="5"
-                      class="w-full border rounded-lg p-2 resize-none 
-                             text-black dark:text-white 
-                             bg-white dark:bg-gray-800 
-                             border-gray-300 dark:border-gray-600
-                             focus:ring-2 focus:ring-citron-500 focus:border-transparent"></textarea>
-            <div v-if="form.errors.content" class="text-red-300 dark:text-red-400 text-sm mt-1">
+            <label class="block text-sm font-medium mb-1">Contenu</label>
+            <textarea 
+              v-model="form.content" 
+              rows="5"
+              class="w-full p-2 rounded-lg resize-none text-black dark:text-white bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600"
+            />
+            <div v-if="form.errors.content" class="text-red-300 text-sm mt-1">
               {{ form.errors.content }}
             </div>
           </div>
 
           <!-- Boutons -->
           <div class="flex gap-4">
-            <button type="submit" 
-                    class="flex-1 bg-citron-600 hover:bg-citron-700 dark:bg-citron-500 dark:hover:bg-citron-600 
-                           text-white py-2 rounded-lg transition font-semibold"
-                    :disabled="form.processing">
+            <button 
+              type="submit" 
+              class="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg"
+              :disabled="form.processing"
+            >
               <span v-if="form.processing">Sauvegarde...</span>
               <span v-else>Mettre à jour</span>
             </button>
 
-            <button type="button" 
-                    class="flex-1 bg-gray-700 hover:bg-gray-800 dark:bg-gray-600 dark:hover:bg-gray-700 text-white py-2 rounded-lg transition font-semibold"
-                    @click="$inertia.visit('/regulations')">
+            <button 
+              type="button" 
+              @click="$inertia.visit('/regulations')"
+              class="flex-1 bg-gray-700 hover:bg-gray-800 text-white py-2 rounded-lg"
+            >
               Annuler
             </button>
           </div>
+
         </form>
       </div>
     </div>
+
   </AuthenticatedLayout>
 </template>
