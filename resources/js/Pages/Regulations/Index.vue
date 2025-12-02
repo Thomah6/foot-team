@@ -156,7 +156,17 @@ onUnmounted(stop)
           </div>
 
           <!-- Carousel -->
-          <div v-else class="relative bg-white/20 dark:bg-gray-800/40 backdrop-blur-md shadow-md border border-gray-200 dark:border-gray-700 rounded-lg p-3 cursor-grab active:cursor-grabbing overflow-hidden">
+          <div v-else
+               class="relative bg-white/20 dark:bg-gray-800/40 backdrop-blur-md shadow-md border border-gray-200 dark:border-gray-700 rounded-lg p-3 cursor-grab active:cursor-grabbing overflow-hidden"
+               @mouseenter="stop"
+               @mouseleave="start"
+               @mousedown="onTouchStart"
+               @mousemove="onTouchMove"
+               @mouseup="onTouchEnd"
+               @touchstart="onTouchStart"
+               @touchmove="onTouchMove"
+               @touchend="onTouchEnd"
+          >
             <!-- Slides -->
             <div class="flex transition-transform duration-700 ease-in-out"
                  :style="{ transform: `translateX(-${current * 100}%)` }">
@@ -209,35 +219,24 @@ onUnmounted(stop)
   </AuthenticatedLayout>
 </template>
 
-
-
-
 <style>
 /* Animations douces */
 .animate-fadeIn {
   animation: fadeIn .5s ease;
 }
-
 .animate-slideUp {
   animation: slideUp .5s ease;
 }
-
 .animate-scaleIn {
   animation: scaleIn .3s ease;
 }
-
 @keyframes fadeIn {
   from { opacity: 0 }
   to { opacity: 1 }
 }
-
 @keyframes slideUp {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
 }
-
-@keyframes scaleIn {
-  from { transform: scale(0.8); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
-}
 </style>
+
