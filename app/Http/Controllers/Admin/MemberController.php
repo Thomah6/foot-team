@@ -41,6 +41,9 @@ class MemberController extends Controller
         $members = $query->paginate($perPage)
                          ->appends($request->query());
 
+        // Compter les utilisateurs inactifs pour la notification
+        $inactiveUsersCount = User::where('is_active', false)->count();
+
         return Inertia::render('Admin/Members/Index', [
             'members' => $members,
             'filters' => [
@@ -49,6 +52,7 @@ class MemberController extends Controller
                 'status' => $request->input('status', ''),
                 'perPage' => $perPage,
             ],
+            'inactiveUsersCount' => $inactiveUsersCount,
         ]);
     }
 

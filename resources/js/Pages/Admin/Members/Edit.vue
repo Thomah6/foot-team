@@ -22,7 +22,7 @@ const showPassword = ref(false);
 const showPasswordConfirm = ref(false);
 
 const submit = () => {
-  form.patch(route('members.update', props.member.id));
+  form.patch(route('admin.members.update', props.member.id));
 };
 </script>
 
@@ -36,7 +36,7 @@ const submit = () => {
             Editer le membre {{ member.pseudo }}
           </h2>
 
-          <Link :href="route('members.index')"
+          <Link :href="route('admin.members.index')"
             class="inline-flex items-center gap-2 px-3 py-2 bg-sky-50 text-sky-800 rounded">
           ← Retour
           </Link>

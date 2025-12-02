@@ -152,12 +152,7 @@ defineProps({
               
             </button>
 
-     <div class="w-full flex justify-end">
-    <a href="/admin/create"
-       class="px-4 py-2 bg-black text-white rounded-lg shadow hover:bg-gray-800 transition font-medium">
-        renseigner
-    </a>
-</div>
+  
      <div class="w-full flex justify-end">
     <a href="/admin/identity"
        class="px-4 py-2 bg-black text-white rounded-lg shadow hover:bg-gray-800 transition font-medium">

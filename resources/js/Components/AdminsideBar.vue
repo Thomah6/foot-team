@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, defineProps } from "vue";
+import { ref, computed, defineProps, onMounted, onUnmounted } from "vue";
 import { Link, usePage, router } from "@inertiajs/vue3";
 defineProps({
     Notification: {
@@ -15,6 +15,7 @@ defineProps({
 
 const page = usePage();
 const user = page.props.auth.user;
+
 const isAdmin = () => page.props.auth.user.role === "admin";
 const isBureau = () => page.props.auth.user.role === "bureau";
 
@@ -28,19 +29,19 @@ const menu = computed(() => {
             link: route("dashboard"),
             active: route().current("dashboard"),
         },
-        {
-            label: "Stats des membres",
-            icon: "fas fa-table",
-            link: route("bureau.stats.index", [], false), // false pour forcer le chemin absolu
-            active: route().current("bureau.stats.index.*"),
-        },
+        // {
+        //     label: "Stats des membres",
+        //     icon: "fas fa-table",
+        //     link: route("bureau.stats.index", [], false), // false pour forcer le chemin absolu
+        //     active: route().current("bureau.stats.index.*"),
+        // },
         {
             label: "Finances",
             icon: "fas fa-wallet",
             link: route("finances.index"),
             active: route().current("finances.*"),
         },
-        // { label: "Stats", icon: "fas fa-chart-bar", link: route('admin.stats.index'), active: route().current('admin.stats.*') },
+        { label: "Stats", icon: "fas fa-chart-bar", link: route('admin.stats.index'), active: route().current('admin.stats.*') },
         { label: "Classement", icon: "fas fa-trophy", link: route('stats.classements.index'), active: route().current('stats.classements.*') },
         {
             label: "Présences",
@@ -96,28 +97,34 @@ const menu = computed(() => {
 
 
     // Items conditionnels
-    if (isBureau()) {
-        items.push({
-            label: "Membres (Bureau)",
-            icon: "fas fa-user-friends",
-            link: route("bureau.members.index"),
-            active: route().current("bureau.members.index"),
-        });
-    }
+
 
     if (isAdmin()) {
         items.push(
             {
                 label: "Membres",
                 icon: "fas fa-user-friends",
-                link: route("members.index"),
-                active: route().current("members.index"),
+                link: route("admin.members.index"),
+                active: route().current("admin.members.index"),
+            },
+
+            {
+                label: 'Stats des membres',
+                icon: 'fas fa-chart-bar',
+                link: route('admin.bureau.stats.index', [], false),
+                active: route().current('admin.bureau.stats.index.*')
             },
             {
                 label: "Statistiques équipes",
                 icon: "fas fa-chart-line",
                 link: route("admin.team-stats.index"),
                 active: route().current("admin.team-stats.*"),
+            },
+            {
+                label: "Identité visuelle",
+                icon: "fas fa-chart-pie",
+                link: route("admin.identity"),
+                active: route().current("admin.identity*"),
             }
         );
     }
@@ -125,8 +132,8 @@ const menu = computed(() => {
         items.push({
             label: "Membres",
             icon: "fas fa-user-friends",
-            link: route("bureau.members.index"),
-            active: route().current("bureau.members.index"),
+            link: route("admin.bureau.members.index"),
+            active: route().current("admin.bureau.members.index"),
         });
 
         items.push({
@@ -135,9 +142,24 @@ const menu = computed(() => {
             link: route('bureau.stats.index', [], false),
             active: route().current('bureau.stats.index.*')
         });
+
+
     }
+
+    items.push({
+        label: 'Stats des joueurs',
+        icon: 'fas fa-signal',
+        link: route('Admin.CreateStats', [], false),
+        active: route().current('Admin.CreateStats*')
+    });
     // Correction principale : toujours retourner le menu
+
+
+
+
     return items;
+
+
 }
 );
 
@@ -164,17 +186,31 @@ const navigate = (href) => {
     if (isOpen.value) closeMenu();
 };
 
-const toggleMenu = () => {
+const toggleMenu = () => isOpen.value = !isOpen.value;
+const closeMenu = () => isOpen.value = false;
+
+const handleImageError = (event) => {
+    event.target.src = `https://ui-avatars.com/api/?name=${user.name}&color=7F9CF5&background=EBF4FF&size=40`;
+};
+
+// Gestionnaire d'événement pour le toggle global
+const handleToggleSidebar = () => {
     isOpen.value = !isOpen.value;
 };
 
-const closeMenu = () => {
-    isOpen.value = false;
-};
+// Ajouter l'écouteur d'événement au montage du composant
+onMounted(() => {
+    window.addEventListener('toggle-sidebar', handleToggleSidebar);
+});
 
-const handleImageError = (event) => {
-    // Si l'image ne charge pas, utiliser l'avatar par défaut
-    event.target.src = `https://ui-avatars.com/api/?name=${user.name}&color=7F9CF5&background=EBF4FF&size=40`;
+// Nettoyer l'écouteur d'événement au démontage
+onUnmounted(() => {
+    window.removeEventListener('toggle-sidebar', handleToggleSidebar);
+});
+
+// Fonction pour gérer la déconnexion
+const handleLogout = () => {
+    router.post('/logout');
 };
 </script>
 
@@ -182,173 +218,214 @@ const handleImageError = (event) => {
     <!-- Font Awesome CDN -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 
-    <!-- Menu hamburger pour mobile -->
+    <!-- Hamburger pour mobile -->
     <button v-if="!isOpen" @click="toggleMenu"
-        class="lg:hidden fixed top-4 left-4 z-40 p-3 bg-white rounded-lg shadow-lg border hover:bg-gray-50 transition">
-        <i class="fas fa-bars text-gray-700"></i>
+        class="lg:hidden fixed top-4 left-4 z-40 p-3 bg-gradient-to-br from-lime-400 to-emerald-600 rounded-xl shadow-lg hover:shadow-emerald-500/30 transform hover:scale-105 transition-all duration-300">
+        <i class="fas fa-bars text-white"></i>
     </button>
 
-    <!-- Overlay pour mobile -->
-    <div v-if="isOpen" @click="closeMenu" class="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-30"></div>
+    <!-- Overlay mobile -->
+    <div v-if="isOpen" @click="closeMenu"
+        class="lg:hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-40 animate-fade-in"></div>
 
     <!-- Sidebar -->
     <aside :class="[
-        'fixed lg:static inset-y-0 left-0 z-40 transform transition-transform duration-300 ease-in-out',
-        'flex w-64 flex-col border-r border-border-light dark:border-border-dark bg-surface-light dark:bg-surface-dark p-4 font-inter',
-        'backdrop-blur-sm bg-white/95 dark:bg-gray-900/95 h-[100vh]',
-        isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0',
+        'fixed lg:static inset-y-0 left-0 z-40 w-72 flex flex-col p-6 font-inter border-r border-lime-200/30 dark:border-emerald-900/50 bg-gradient-to-b from-white/95 via-white/90 to-white/85 dark:from-gray-900/95 dark:via-gray-900/90 dark:to-gray-900/85 backdrop-blur-xl h-screen transform transition-all duration-300 ease-in-out shadow-xl',
+        isOpen ? 'translate-x-0 shadow-2xl' : '-translate-x-full lg:translate-x-0'
     ]">
-        <!-- Logo -->
-        <div class="flex items-center justify-between px-2 py-2">
-            <div class="flex items-center gap-3">
-                <div class="relative">
-                    <img :src="user.avatar && user.avatar !== ''
-                        ? '/storage/' + user.avatar
-                        : `https://ui-avatars.com/api/?name=${user.name}&color=7F9CF5&background=EBF4FF&size=40`
-                        " :alt="user.name"
-                        class="w-10 h-10 rounded-lg object-cover border-2 border-white dark:border-gray-700 shadow-sm"
-                        @error="handleImageError" />
-                    <div
-                        class="absolute -bottom-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-white dark:border-gray-700">
+
+        <!-- Header avec Logo FC Dynamo -->
+        <div class="mb-8 px-2">
+            <div class="flex items-center justify-between mb-6">
+             
+                <button @click="closeMenu"
+                    class="lg:hidden p-2 rounded-lg hover:bg-lime-500/10 dark:hover:bg-emerald-500/10 transition-all">
+                    <i class="fas fa-times text-emerald-600 dark:text-lime-400"></i>
+                </button>
+            </div>
+
+            <!-- User Card avec style Blue Lock -->
+            <div
+                class="relative overflow-hidden rounded-xl bg-gradient-to-r from-white to-lime-50/50 dark:from-gray-800 dark:to-emerald-900/30 p-4 border border-lime-200 dark:border-emerald-800 shadow-sm">
+                <div
+                    class="absolute top-0 right-0 w-16 h-16 bg-gradient-to-br from-lime-400/20 to-emerald-600/20 rounded-full -translate-y-8 translate-x-4">
+                </div>
+
+                <div class="flex items-center gap-3 relative z-10">
+                    <div class="relative">
+                        <img :src="user.avatar && user.avatar !== '' ? '/storage/' + user.avatar : `https://ui-avatars.com/api/?name=${user.name}&color=FFFFFF&background=65A30D&size=48`"
+                            @error="handleImageError"
+                            class="w-12 h-12 rounded-xl object-cover border-2 border-white dark:border-gray-800 shadow-lg" />
+                        <div
+                            class="absolute -bottom-1 -right-1 w-4 h-4 bg-gradient-to-br from-lime-500 to-emerald-700 rounded-full border-2 border-white dark:border-gray-800 shadow-lg">
+                        </div>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <h2 class="text-base font-bold text-gray-900 dark:text-white truncate">{{ user.name }}</h2>
+                        <div class="flex items-center gap-2 mt-1">
+                            <span
+                                class="text-xs font-semibold px-2 py-0.5 rounded-full bg-gradient-to-r from-lime-500 to-emerald-600 text-white">
+                                {{ user.role || "STRIKER" }}
+                            </span>
+                            <span class="text-xs text-emerald-600 dark:text-lime-400 font-medium">
+                                {{ user.stats?.goals || 0 }}⚽
+                            </span>
+                        </div>
                     </div>
                 </div>
-                <div>
-                    <h1 class="text-base font-bold text-text-primary-light dark:text-text-primary-dark">
-                        {{ user.name }}
-                    </h1>
-                    <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark">
-                        {{ user.role || "Member" }}
-                    </p>
+
+
+            </div>
+        </div>
+
+        <!-- Navigation principale - Menu de combat -->
+        <nav class="flex flex-col gap-1.5 flex-1 overflow-y-auto">
+            <div class="px-2 mb-3">
+                <span class="text-xs font-bold uppercase tracking-wider text-emerald-600 dark:text-lime-400">
+                    Arène de Combat
+                </span>
+                <div class="h-0.5 w-12 bg-gradient-to-r from-lime-400 to-emerald-500 rounded-full mt-1"></div>
+            </div>
+
+            <Link v-for="(item, index) in menu" :key="index" :href="item.link"
+                class="group relative flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 hover:translate-x-1"
+                :class="item.active
+                    ? 'bg-gradient-to-r from-lime-400/20 to-emerald-500/20 border-l-4 border-emerald-500 dark:border-lime-400 shadow-sm'
+                    : 'hover:bg-lime-500/5 dark:hover:bg-emerald-500/5 border-l-4 border-transparent'
+                    ">
+            <!-- Icon avec effet Blue Lock -->
+            <div :class="[
+                'w-9 h-9 rounded-lg flex items-center justify-center transition-all duration-300',
+                item.active
+                    ? 'bg-gradient-to-br from-lime-400 to-emerald-600 shadow-lg'
+                    : 'bg-lime-100 dark:bg-emerald-900/30 group-hover:bg-gradient-to-br group-hover:from-lime-300 group-hover:to-emerald-500'
+            ]">
+                <i :class="item.active
+                    ? 'text-white'
+                    : 'text-lime-600 dark:text-emerald-400 group-hover:text-white'"></i>
+            </div>
+
+            <div class="flex-1 min-w-0">
+                <p class="text-sm font-semibold truncate" :class="item.active
+                    ? 'text-gray-900 dark:text-white'
+                    : 'text-gray-700 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-white'">
+                    {{ item.label }}
+                </p>
+                <p v-if="item.description" class="text-xs text-gray-500 dark:text-gray-400 truncate mt-0.5">
+                    {{ item.description }}
+                </p>
+            </div>
+
+            <!-- Badges de notification -->
+            <div v-if="item.label === 'Reflections' && Notification > 0" class="animate-pulse">
+                <div class="relative">
+                    <div
+                        class="w-6 h-6 bg-gradient-to-br from-red-500 to-red-600 rounded-full flex items-center justify-center shadow-lg">
+                        <span class="text-xs font-bold text-white">{{ Notification }}</span>
+                    </div>
+                    <div class="absolute inset-0 bg-red-400 rounded-full animate-ping opacity-75"></div>
                 </div>
             </div>
 
-            <!-- Bouton close pour mobile -->
-            <button @click="closeMenu"
-                class="lg:hidden p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition">
-                <i class="fas fa-times text-gray-600 dark:text-gray-300"></i>
-            </button>
-        </div>
+            <div v-if="item.label === 'Membres' && $page.props.inactiveUsersCount > 0" class="animate-pulse">
+                <div class="relative">
+                    <div
+                        class="w-6 h-6 bg-gradient-to-br from-amber-500 to-amber-600 rounded-full flex items-center justify-center shadow-lg">
+                        <span class="text-xs font-bold text-white">{{ $page.props.inactiveUsersCount }}</span>
+                    </div>
+                    <div class="absolute inset-0 bg-amber-400 rounded-full animate-ping opacity-75"></div>
+                </div>
+            </div>
 
-        <!-- Navigation Items -->
-        <nav class="flex flex-col gap-2 mt-4 flex-1 overflow-y-auto">
-            <Link v-for="(item, index) in menu" :key="index" :href="item.link"
-                class="flex items-center gap-3 px-3 py-2 rounded-md transition-colors" :class="item.active
-                    ? 'bg-blue-500/20 text-blue-600'
-                    : 'hover:bg-blue-500/10 text-text-primary-light dark:text-text-primary-dark'
-                    ">
-            <i :class="item.icon" class="text-lg w-5 text-center"></i>
-            <p class="text-sm font-medium">{{ item.label }}</p><span v-if="item.label === 'Reflections'">{{ Notification
-                }}</span>
+            <!-- Flèche pour item actif -->
+            <div v-if="item.active" class="ml-2">
+                <i class="fas fa-chevron-right text-xs text-emerald-500 dark:text-lime-400"></i>
+            </div>
             </Link>
-
-            <!-- <Link :href="menu[2].link" class="flex items-center gap-3 px-3 py-2 rounded-md transition-colors" :class="menu[2].active
-                ? 'bg-blue-500/20 text-blue-600'
-                : 'hover:bg-blue-500/10 text-text-primary-light dark:text-text-primary-dark'
-                ">
-            <i :class="menu[2].icon" class="text-lg"></i>
-            <p class="text-sm font-medium">{{ menu[2].label }}</p>
-            </Link> -->
         </nav>
 
+        <!-- Zone de Stratégie (Bottom Menu) -->
+        <div class="mt-auto pt-6 border-t border-lime-200/30 dark:border-emerald-900/30">
+            
 
+            <div class="space-y-1.5">
+                
+               
+                <!-- Logout - Quitter l'arène -->
+                <button @click="handleLogout"
+                    class="group w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-gradient-to-r hover:from-red-500/10 hover:to-red-600/10 border border-red-200 dark:border-red-900/30 transition-all duration-300">
+                    <div
+                        class="w-8 h-8 rounded-lg bg-red-100 dark:bg-red-900/20 flex items-center justify-center group-hover:bg-gradient-to-br group-hover:from-red-500 group-hover:to-red-600 transition-all">
+                        <i
+                            class="fas fa-sign-out-alt text-sm text-red-500 dark:text-red-400 group-hover:text-white"></i>
+                    </div>
+                    <p class="text-sm font-medium text-red-600 dark:text-red-400 group-hover:text-white">
+                        Quitter l'Arène
+                    </p>
+                    <span class="text-xs text-red-400 dark:text-red-500 ml-auto group-hover:text-white/70">
+                        ÉGO ↓
+                    </span>
+                </button>
+            </div>
 
-
-
-        <div class="mt-auto flex flex-col gap-2 border-t border-gray-200 dark:border-gray-700 pt-4">
-            <Link v-for="(item, index) in bottomMenu" :key="`bottom-${index}`" :href="item.link"
-                class="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-blue-500/10 transition-colors text-text-primary-light dark:text-text-primary-dark">
-            <i :class="item.icon" class="text-lg w-5 text-center"></i>
-            <p class="text-sm font-medium">{{ item.label }}</p>
-            </Link>
+            <br><br></br>
         </div>
-
     </aside>
 </template>
 
 <style scoped>
-.font-inter {
-    font-family: "Inter", sans-serif;
-}
+@keyframes fade-in {
+    from {
+        opacity: 0;
+        backdrop-filter: blur(0);
+    }
 
-/* Animation pour les transitions fluides */
-.transition-colors {
-    transition: background-color 0.2s ease, color 0.2s ease;
-}
-
-/* Style pour les icônes Font Awesome */
-i.fas {
-    width: 1.25rem;
-    text-align: center;
-}
-
-/* Responsive styles */
-@media (max-width: 1023px) {
-    aside {
-        box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    to {
+        opacity: 1;
+        backdrop-filter: blur(8px);
     }
 }
 
-/* Animation de transition pour la sidebar */
-.transform {
-    transition: transform 0.3s ease-in-out;
-}
-
-/* Z-index management */
-.z-40 {
-    z-index: 40;
-}
-
-.z-30 {
-    z-index: 30;
-}
-
-/* Background fix pour sidebar */
-aside {
-    background-color: rgba(255, 255, 255, 0.98);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-}
-
-.dark aside {
-    background-color: rgba(17, 24, 39, 0.98);
-}
-
-/* Assurer que la sidebar est au-dessus sur mobile */
-@media (max-width: 1023px) {
-    aside {
-        box-shadow: 0 0 40px rgba(0, 0, 0, 0.15);
-        background-color: rgba(255, 255, 255, 1);
+@keyframes slide-in {
+    from {
+        transform: translateX(-100%);
+        opacity: 0;
     }
 
-    .dark aside {
-        background-color: rgba(17, 24, 39, 1);
+    to {
+        transform: translateX(0);
+        opacity: 1;
     }
 }
 
-/* Scrollbar styling pour la navigation */
-.overflow-y-auto::-webkit-scrollbar {
-    width: 4px;
+@keyframes pulse-glow {
+
+    0%,
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: 0.8;
+        transform: scale(1.05);
+    }
 }
 
-.overflow-y-auto::-webkit-scrollbar-track {
-    background: transparent;
+.animate-fade-in {
+    animation: fade-in 0.3s ease-out forwards;
 }
 
-.overflow-y-auto::-webkit-scrollbar-thumb {
-    background: rgba(0, 0, 0, 0.1);
-    border-radius: 2px;
+.animate-pulse {
+    animation: pulse-glow 2s infinite;
 }
 
-.overflow-y-auto::-webkit-scrollbar-thumb:hover {
-    background: rgba(0, 0, 0, 0.2);
-}
 
-/* Dark mode scrollbar */
-.dark .overflow-y-auto::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.1);
-}
 
-.dark .overflow-y-auto::-webkit-scrollbar-thumb:hover {
-    background: rgba(255, 255, 255, 0.2);
+/* Smooth transitions */
+* {
+    transition-property: background-color, border-color, color, fill, stroke, transform, opacity;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 200ms;
 }
 </style>

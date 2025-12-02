@@ -1,67 +1,144 @@
 <script setup>
-import { usePage } from '@inertiajs/vue3'
+import { usePage } from "@inertiajs/vue3";
 
-const emit = defineEmits(['valider', 'depense', 'ajustement'])
-const page = usePage()
-const role = page.props.auth.user.role
+const emit = defineEmits(["valider", "depense", "ajustement"]);
+const page = usePage();
+const role = page.props.auth.user.role;
 
-const isAdmin = role === 'admin'
-const isBureau = role === 'bureau'
+const isAdmin = role === "admin";
+const isBureau = role === "bureau";
 
-function validerDepots() { emit('valider', 'cotisation') }
-function validerDepenses() { emit('valider', 'dépense') }
-function ajouterDepense() { emit('depense') }
-function ajustementManuel() { emit('ajustement') }
+function validerDepots() {
+    emit("valider", "cotisation");
+}
+function validerDepenses() {
+    emit("valider", "dépense");
+}
+function ajouterDepense() {
+    emit("depense");
+}
+function ajustementManuel() {
+    emit("ajustement");
+}
 </script>
 
-<template>
-  <div class="flex flex-col gap-4 p-6 bg-white border border-neutral-200 rounded-lg">
-    <h2 class="text-xl font-bold text-neutral-900">Actions Spéciales</h2>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-      <!-- Valider dépôts : admin par exemple -->
-      <button
-        v-if="isAdmin"
-        @click="validerDepots"
-        type="button"
-        class="flex items-center justify-center gap-2 h-12 px-4 border border-neutral-200 bg-white rounded-lg hover:bg-neutral-100 transition-colors"
-      >
-        <span class="material-symbols-outlined text-secondary">check_circle</span>
-        <span class="text-sm font-semibold text-neutral-800">Valider Dépôts</span>
-      </button>
 
-      <!-- Valider dépenses en attente : admin -->
-      <button
-        v-if="isAdmin"
-        @click="validerDepenses"
-        type="button"
-        class="flex items-center justify-center gap-2 h-12 px-4 border border-neutral-200 bg-white rounded-lg hover:bg-neutral-100 transition-colors"
-      >
-        <span class="material-symbols-outlined text-secondary">checklist_rtl</span>
-        <span class="text-sm font-semibold text-neutral-800">Valider Dépenses</span>
-      </button>
+<<template>
+    <div class="relative overflow-hidden rounded-2xl bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm border-2 border-lime-200 dark:border-emerald-800/50 p-6 shadow-xl">
+        <!-- Header -->
+        <div class="mb-6">
+            <h2 class="text-xl font-black text-gray-900 dark:text-white flex items-center gap-3">
+                <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-lime-400 to-emerald-600 flex items-center justify-center">
+                    <i class="fas fa-tools text-white"></i>
+                </div>
+                🛠️ ACTIONS ADMINISTRATIVES
+            </h2>
+            <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">
+                Outils de gestion financière avancés
+            </p>
+        </div>
 
-      <!-- Ajouter dépense : admin + bureau -->
-      <button
-        v-if="isAdmin || isBureau"
-        @click="ajouterDepense"
-        type="button"
-        class="flex items-center justify-center gap-2 h-12 px-4 border border-neutral-200 bg-white rounded-lg hover:bg-neutral-100 transition-colors"
-      >
-        <span class="material-symbols-outlined text-danger">remove_circle</span>
-        <span class="text-sm font-semibold text-neutral-800">Ajouter Dépense</span>
-      </button>
+        <!-- Actions Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <!-- Valider Dépôts -->
+            <button
+                v-if="isAdmin"
+                @click="validerDepots"
+                class="group relative flex items-center gap-4 p-4 bg-gradient-to-r from-white to-lime-50/50 dark:from-gray-800 dark:to-emerald-900/20 border-2 border-lime-200 dark:border-emerald-800/50 rounded-xl hover:border-lime-400 dark:hover:border-emerald-500 hover:scale-[1.02] transition-all duration-300 overflow-hidden"
+            >
+                <div class="flex-shrink-0 w-12 h-12 rounded-lg bg-gradient-to-br from-green-400 to-emerald-500 flex items-center justify-center">
+                    <i class="fas fa-check-circle text-white text-lg"></i>
+                </div>
+                <div class="text-left">
+                    <div class="font-bold text-gray-900 dark:text-white">Valider Dépôts</div>
+                    <div class="text-xs text-gray-500 dark:text-gray-400">Approuver les cotisations</div>
+                </div>
+                <i class="fas fa-arrow-right text-lime-600 dark:text-emerald-400 ml-auto group-hover:translate-x-1 transition-transform"></i>
+                <div class="absolute inset-0 bg-gradient-to-r from-green-500/5 to-emerald-600/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+            </button>
 
-      <!-- Ajustement manuel : admin seulement -->
-      <button
-        v-if="isAdmin"
-        @click="ajustementManuel"
-        type="button"
-        class="flex items-center justify-center gap-2 h-12 px-4 border border-neutral-200 bg-white rounded-lg hover:bg-neutral-100 transition-colors"
-      >
-        <span class="material-symbols-outlined text-primary">edit</span>
-        <span class="text-sm font-semibold text-neutral-800">Ajustement Manuel</span>
-      </button>
+            <!-- Valider Dépenses -->
+            <button
+                v-if="isAdmin"
+                @click="validerDepenses"
+                class="group relative flex items-center gap-4 p-4 bg-gradient-to-r from-white to-red-50/50 dark:from-gray-800 dark:to-red-900/20 border-2 border-red-200 dark:border-red-800/50 rounded-xl hover:border-red-400 dark:hover:border-red-500 hover:scale-[1.02] transition-all duration-300 overflow-hidden"
+            >
+                <div class="flex-shrink-0 w-12 h-12 rounded-lg bg-gradient-to-br from-red-400 to-pink-500 flex items-center justify-center">
+                    <i class="fas fa-clipboard-check text-white text-lg"></i>
+                </div>
+                <div class="text-left">
+                    <div class="font-bold text-gray-900 dark:text-white">Valider Dépenses</div>
+                    <div class="text-xs text-gray-500 dark:text-gray-400">Approuver les sorties</div>
+                </div>
+                <i class="fas fa-arrow-right text-red-600 dark:text-red-400 ml-auto group-hover:translate-x-1 transition-transform"></i>
+                <div class="absolute inset-0 bg-gradient-to-r from-red-500/5 to-pink-600/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+            </button>
+
+            <!-- Ajouter Dépense -->
+            <button
+                v-if="isAdmin || isBureau"
+                @click="ajouterDepense"
+                class="group relative flex items-center gap-4 p-4 bg-gradient-to-r from-white to-orange-50/50 dark:from-gray-800 dark:to-orange-900/20 border-2 border-orange-200 dark:border-orange-800/50 rounded-xl hover:border-orange-400 dark:hover:border-orange-500 hover:scale-[1.02] transition-all duration-300 overflow-hidden"
+            >
+                <div class="flex-shrink-0 w-12 h-12 rounded-lg bg-gradient-to-br from-orange-400 to-red-500 flex items-center justify-center">
+                    <i class="fas fa-minus-circle text-white text-lg"></i>
+                </div>
+                <div class="text-left">
+                    <div class="font-bold text-gray-900 dark:text-white">Ajouter Dépense</div>
+                    <div class="text-xs text-gray-500 dark:text-gray-400">Nouvelle sortie d'argent</div>
+                </div>
+                <i class="fas fa-arrow-right text-orange-600 dark:text-orange-400 ml-auto group-hover:translate-x-1 transition-transform"></i>
+                <div class="absolute inset-0 bg-gradient-to-r from-orange-500/5 to-red-600/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+            </button>
+
+            <!-- Ajustement Manuel -->
+            <button
+                v-if="isAdmin"
+                @click="ajustementManuel"
+                class="group relative flex items-center gap-4 p-4 bg-gradient-to-r from-white to-purple-50/50 dark:from-gray-800 dark:to-purple-900/20 border-2 border-purple-200 dark:border-purple-800/50 rounded-xl hover:border-purple-400 dark:hover:border-purple-500 hover:scale-[1.02] transition-all duration-300 overflow-hidden"
+            >
+                <div class="flex-shrink-0 w-12 h-12 rounded-lg bg-gradient-to-br from-purple-400 to-blue-500 flex items-center justify-center">
+                    <i class="fas fa-edit text-white text-lg"></i>
+                </div>
+                <div class="text-left">
+                    <div class="font-bold text-gray-900 dark:text-white">Ajustement Manuel</div>
+                    <div class="text-xs text-gray-500 dark:text-gray-400">Correction de trésorerie</div>
+                </div>
+                <i class="fas fa-arrow-right text-purple-600 dark:text-purple-400 ml-auto group-hover:translate-x-1 transition-transform"></i>
+                <div class="absolute inset-0 bg-gradient-to-r from-purple-500/5 to-blue-600/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+            </button>
+        </div>
+
+        <!-- Admin Badge -->
+        <div class="mt-6 pt-4 border-t border-lime-100 dark:border-emerald-900/30">
+            <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-gradient-to-r from-lime-100 to-emerald-100 dark:from-emerald-900/30 dark:to-lime-900/30">
+                <i class="fas fa-shield-alt text-lime-600 dark:text-emerald-400 text-xs"></i>
+                <span class="text-xs font-bold text-lime-700 dark:text-emerald-400">
+                    ACCÈS RESTREINT - NIVEAU ADMIN
+                </span>
+            </div>
+        </div>
     </div>
-  </div>
 </template>
+
+<style scoped>
+/* Touch optimization */
+@media (max-width: 640px) {
+    .grid-cols-1 {
+        gap: 0.75rem;
+    }
+    
+    .p-4 {
+        padding: 1rem;
+    }
+    
+    .gap-4 {
+        gap: 1rem;
+    }
+    
+    button {
+        min-height: 70px;
+    }
+}
+</style>
