@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('titre');
             $table->text('contenu');
             $table->enum('statut', ['ouvert', 'ferme', 'valide'])->default('ouvert');
-            $table->dateTime('date_fin_vote');
+            $table->dateTime('date_fin_vote')->nullable();
             $table->timestamps();
         });
     }

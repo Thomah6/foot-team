@@ -22,7 +22,7 @@
             </button>
             <button v-else @click.prevent="comment()"
                 type="submit"
-                class="mt-3 px-4 py-2 bg-citron-500 hover:bg-citron-600 dark:bg-citron-400 dark:hover:bg-citron-500 text-white rounded-lg disabled:opacity-50 transition"
+                class="mt-3 px-4 py-2 bg-lime-500 hover:bg-lime-600 dark:bg-lime-400 dark:hover:bg-lime-500 text-white rounded-lg disabled:opacity-50 transition"
                 :disabled="false"
             >
                 Publier (Bientôt)
