@@ -15,5 +15,5 @@ const identity = usePage().props.identity;
       />
       <span class="font-bold">{{ identity?.name }}</span>
     </div>
- 
+
 </template>
