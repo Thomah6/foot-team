@@ -1,6 +1,7 @@
 <script setup>
 import { useForm } from "@inertiajs/vue3";
 import NewsForm from "./NewsForm.vue";
+import Button from '@/Components/Button.vue';
 import { ref } from "vue";
 
 const imagePreview = ref(null);
@@ -30,9 +31,13 @@ const handleFile = (e) => {
       <div class="w-full max-w-3xl bg-white dark:bg-gray-900 p-6 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 flex flex-col flex-1">
 
         <!-- Header -->
-        <h1 class="text-2xl sm:text-3xl font-bold mb-6 text-gray-800 dark:text-gray-100">
-          Créer une actualité
-        </h1>
+        <div class="mb-6 sm:mb-8">
+          <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+            <i class="fas fa-pen-fancy text-emerald-600"></i>
+            Créer une actualité
+          </h1>
+          <p class="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mt-2">Ajoutez une nouvelle actualité au club</p>
+        </div>
 
         <!-- Formulaire -->
         <form
@@ -46,14 +51,16 @@ const handleFile = (e) => {
           />
 
           <!-- Submit -->
-          <div class="flex justify-end mt-auto">
-            <button
-              type="submit"
-              class="px-6 py-2.5 bg-green-600 hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600 text-white font-medium rounded-lg shadow transition disabled:opacity-60"
-              :disabled="form.processing"
-            >
-              Enregistrer
-            </button>
+          <div class="flex flex-col sm:flex-row justify-end gap-2 sm:gap-3 mt-auto pt-6 border-t border-gray-200 dark:border-gray-700">
+            <Button :href="route('admin.news.index')" variant="secondary" size="md">
+              Annuler
+            </Button>
+            <Button type="submit" :disabled="form.processing" variant="primary" size="md">
+              <template #icon>
+                <i class="fas fa-save"></i>
+              </template>
+              {{ form.processing ? 'Enregistrement...' : 'Enregistrer' }}
+            </Button>
           </div>
 
         </form>
