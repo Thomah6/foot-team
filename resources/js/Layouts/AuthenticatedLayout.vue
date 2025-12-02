@@ -1,20 +1,59 @@
 <!-- [file name]: AuthenticatedLayout.vue
 [file content begin] -->
 <script setup>
-import { ref } from "vue";
-import { defineEmits } from "vue";
+import { ref, onMounted, onUnmounted } from "vue";
 import ApplicationLogo from "@/Components/ApplicationLogo.vue";
 import Dropdown from "@/Components/Dropdown.vue";
 import DropdownLink from "@/Components/DropdownLink.vue";
 import NavLink from "@/Components/NavLink.vue";
 import ResponsiveNavLink from "@/Components/ResponsiveNavLink.vue";
 import AdminsideBar from "@/Components/AdminsideBar.vue";
-import { Link, usePage } from "@inertiajs/vue3";
+import { Head, Link, usePage } from "@inertiajs/vue3";
 
 const showingNavigationDropdown = ref(false);
+const isSidebarOpen = ref(false);
 const page = usePage();
 const isAdmin = () => page.props.auth.user.role === "admin";
 const isBureau = () => page.props.auth.user.role === "bureau";
+const isMembre = () => page.props.auth.user.role === "membre";
+
+const toggleSidebar = () => {
+    isSidebarOpen.value = !isSidebarOpen.value;
+    // Sauvegarder l'état dans localStorage pour la persistance
+    localStorage.setItem('sidebarOpen', isSidebarOpen.value);
+};
+
+// Fermer la sidebar quand on clique sur un lien (mobile)
+const closeSidebar = () => {
+    if (window.innerWidth < 1024) {
+        isSidebarOpen.value = false;
+        localStorage.setItem('sidebarOpen', false);
+    }
+};
+
+// Gérer le redimensionnement de la fenêtre
+const handleResize = () => {
+    if (window.innerWidth >= 1024) {
+        isSidebarOpen.value = localStorage.getItem('sidebarOpen') === 'true';
+    } else {
+        isSidebarOpen.value = false;
+    }
+};
+
+// Initialisation au montage du composant
+onMounted(() => {
+    // Récupérer l'état précédent ou utiliser true par défaut pour les grands écrans
+    const savedState = localStorage.getItem('sidebarOpen');
+    isSidebarOpen.value = window.innerWidth >= 1024 ? (savedState === null ? true : savedState === 'true') : false;
+    
+    // Ajouter l'écouteur de redimensionnement
+    window.addEventListener('resize', handleResize);
+});
+
+// Nettoyer l'écouteur d'événement
+onUnmounted(() => {
+    window.removeEventListener('resize', handleResize);
+});
 
 const handleImageError = (event) => {
     // Si l'image ne charge pas, utiliser l'avatar par défaut
@@ -38,14 +77,27 @@ defineProps({
 <template>
     <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
         <!-- Navigation Header - Fixed -->
-        <nav class="fixed top-0 left-0 right-0 z-50 border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 shadow-sm">
+        <nav class="bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">
             <!-- Primary Navigation Menu -->
-            <div class="mx-auto max-w-full px-4 sm:px-6 lg:px-8">
-                <div class="flex h-16 justify-between">
-                    <div class="flex">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between h-16">
+                    <div class="flex items-center">
+                        <!-- Bouton Hamburger (mobile) -->
+                        <button 
+                            @click="toggleSidebar"
+                            class="lg:hidden p-2 rounded-md text-gray-500 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-lime-500 mr-2"
+                            aria-label="Toggle sidebar"
+                        >
+                            <i class="fas fa-bars h-6 w-6"></i>
+                        </button>
+                        
                         <!-- Logo -->
-                        <div class="flex shrink-0 items-center">
-                            <Link :href="route('dashboard')"> </Link>
+                        <div class="shrink-0 flex items-center">
+                            <Link :href="route('dashboard')">
+                                <ApplicationLogo
+                                    class="block h-9 w-auto fill-current text-gray-800 dark:text-gray-200"
+                                />
+                            </Link>
                         </div>
 
                         <!-- Navigation Links -->
@@ -227,16 +279,30 @@ defineProps({
         </nav>
 
         <!-- Main Layout Container -->
-        <div class="flex pt-16 h-screen">
-            <!-- Sidebar - Fixed on desktop, hidden on mobile -->
-            <div class="hidden lg:block fixed left-0 top-16 bottom-0 z-40 w-72">
+        <div class="flex pt-16 h-[calc(100vh-4rem)]">
+            <!-- Sidebar - Toggleable -->
+            <div 
+                class="fixed inset-y-0 left-0 z-40 w-72 transform transition-transform duration-300 ease-in-out lg:translate-x-0 bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 overflow-y-auto"
+                :class="{
+                    'translate-x-0': isSidebarOpen,
+                    '-translate-x-full': !isSidebarOpen
+                }"
+            >
                 <AdminsideBar
                     :votes="votes"
                     :reflections="reflections"
                     :Notification="notifications"
-                    class="h-full border-r border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900"
+                    class="h-full"
+                    @link-clicked="closeSidebar"
                 />
             </div>
+            
+            <!-- Overlay pour mobile quand le menu est ouvert -->
+            <div 
+                v-if="isSidebarOpen" 
+                @click="closeSidebar"
+                class="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-30"
+            ></div>
 
             <!-- Main Content Area -->
             <div class="flex-1 lg:ml-72 overflow-y-auto">
