@@ -1,24 +1,41 @@
 <script setup>
 import { useForm } from '@inertiajs/vue3';
-import AdminsideBar from '@/Components/AdminsideBar.vue';
+import { ref } from 'vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+
 const props = defineProps({
   users: Array,
 });
 
+// 🔥 Message affiché après enregistrement
+const pendingMessage = ref('');
+
+// 🔥 Formulaire Inertia
 const form = useForm({
   user_id: '',
-  goals: 0,
-  assists: 0,
-  goals_against: 0,
-  matches_played: 1,
+  goals: '',
+  assists: '',
+  goals_against: '',
+  matches_played: '',
   date: '',
 });
 
+// 🔥 Soumission + reset + message
 const submit = () => {
-  form.post(route('admin.stats.store'), { preserveScroll: true });
+  form.post(route('admin.stats.store'), {
+    preserveScroll: true,
+
+    onSuccess: () => {
+      pendingMessage.value =
+        "Statistique envoyée, en attente de validation par l'administrateur.";
+
+      // Réinitialise proprement tous les champs
+      form.reset();
+    },
+  });
 };
 </script>
+
 
 <template>
 <AuthenticatedLayout>
@@ -44,6 +61,12 @@ const submit = () => {
     <div v-if="$page.props.flash?.success" class="mb-4 p-3 rounded-md bg-green-50 text-green-700 border border-green-200">
       {{ $page.props.flash.success }}
     </div>
+
+  <div v-if="pendingMessage" class="p-4 mb-4 bg-yellow-100 text-yellow-700 rounded-md">
+  {{ pendingMessage }}
+</div>
+
+
 
     <form @submit.prevent="submit" class="space-y-5">
 
