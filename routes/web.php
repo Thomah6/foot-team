@@ -109,66 +109,8 @@ Route::middleware(['auth', 'is.active'])->group(function () {
     Route::get('/presence/day', [PresenceController::class, 'getByDate'])->name('presence.getByDate');
 });
 
-Route::prefix('admin')->middleware('role:admin')->group(function () {
-
-    Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
-
-    Route::get('/settings', [AdminController::class, 'settings'])->name('admin.settings');
-
-
-
-    // Gestion des membres (Admin uniquement)
-    Route::middleware('role:admin')->group(function () {
-
-        Route::get('/members', [MemberController::class, 'index'])->name('members.index');
-        Route::get('/members/create', [MemberController::class, 'create'])->name('members.create');
-        Route::post('/members', [MemberController::class, 'store'])->name('members.store');
-        Route::get('/members/{member}/edit', [MemberController::class, 'edit'])->name('members.edit');
-        Route::patch('/members/{member}', [MemberController::class, 'update'])->name('members.update');
-        Route::delete('/members/{member}', [MemberController::class, 'destroy'])->name('members.destroy');
-        Route::patch('/members/{member}/toggle-status', [MemberController::class, 'toggleStatus'])->name('members.toggle-status');
-        Route::patch('/members/{member}/role', [MemberController::class, 'updateRole'])->name('members.update-role');
-    });
-
-    // ===== ROUTES PRÉSENCES =====
-    // Note: presence listing and declaration are available to authenticated users (not only admins).
-    // Admin-only management routes are defined later in admin-only groups.
-
-    // Espace bureau - Gestion des membres
-
-
-    // Réflexions
-    // Route::prefix('reflections')->group(function () {
-    //     Route::get('/', [ReflectionController::class, 'index'])->name('reflections.index');
-    //     Route::get('/{reflection}', [ReflectionController::class, 'show'])->name('reflections.show');
-    //     Route::get('/create', [ReflectionController::class, 'create'])->name('reflections.create');
-    //     Route::post('/', [ReflectionController::class, 'store'])->name('reflections.store');
-    //     Route::get('/{reflection}', [ReflectionController::class, 'show'])->name('reflections.show');
-    //     Route::get('/{reflection}/edit', [ReflectionController::class, 'edit'])->name('reflections.edit');
-    //     Route::put('/{reflection}', [ReflectionController::class, 'update'])->name('reflections.update');
-    //     Route::delete('/{reflection}', [ReflectionController::class, 'destroy'])->name('reflections.destroy');
-    //     Route::patch('/{reflection}/toggle', [ReflectionController::class, 'toggle'])->name('reflections.toggle');
-    //     Route::post('/{reflection}/validate', [ReflectionController::class, 'validateReflection'])->name('reflections.validate');
-
-    //     // Routes spécifiques pour l'administration des réflexions
-    //     Route::middleware('role:admin')->group(function () {
-    //         Route::get('/{id}/validate', [ReflectionController::class, 'validateReflection'])->name('admin.reflections.validate');
-    //     });
-    //     Route::get('/{id}/edit', [ReflectionController::class, 'edit'])->name('reflections.edit');
-    //     Route::get('/{id}/validate', [ReflectionController::class, 'validate'])->name('reflections.validate');
-    //     Route::put('/{id}', [ReflectionController::class, 'update'])->name('reflections.update');
-    //     Route::delete('/{id}', [ReflectionController::class, 'destroy'])->name('reflections.destroy');
-    //     Route::patch('/{id}/toggle', [ReflectionController::class, 'toggle'])->name('reflections.toggle');
-
-    //     // Validation par l'administrateur
-    //     Route::post('/{id}/validate', [ReflectionController::class, 'validateAfterDelay'])->name('admin.reflections.validate');
-
-    //     // Commentaires sur les réflexions
-    //     Route::post('/comments', [CommentController::class, 'store'])->name('comments.store');
-    // });
-
-    // Administration
-    Route::prefix('admin')->name('admin.')->middleware('role:admin')->group(function () {
+// Administration
+Route::prefix('admin')->name('admin.')->middleware('role:admin')->group(function () {
         // Admin dashboard routes
         Route::get('/', [AdminController::class, 'index'])->name('AdminLayout');
         Route::get('/settings', [AdminController::class, 'settings'])->name('settings');
@@ -177,14 +119,58 @@ Route::prefix('admin')->middleware('role:admin')->group(function () {
         // Stats management
         Route::get('/create', [StatController::class, 'create'])->name('CreateStats');
 
+
+    Route::middleware('role:admin')->group(function () {
+
+
         // Identity management
-        Route::get('/identity', [IdentityController::class, 'index'])->name('admin.identity');
+        Route::get('/identity', [IdentityController::class, 'index'])->name('identity');
+
+        // Gestion des membres (Admin uniquement)
+        Route::middleware('role:admin')->group(function () {
+            Route::get('/members', [MemberController::class, 'index'])->name('members.index');
+            Route::get('/members/create', [MemberController::class, 'create'])->name('members.create');
+            Route::post('/members', [MemberController::class, 'store'])->name('members.store');
+            Route::get('/members/{member}/edit', [MemberController::class, 'edit'])->name('members.edit');
+            Route::patch('/members/{member}', [MemberController::class, 'update'])->name('members.update');
+            Route::delete('/members/{member}', [MemberController::class, 'destroy'])->name('members.destroy');
+            Route::patch('/members/{member}/toggle-status', [MemberController::class, 'toggleStatus'])->name('members.toggle-status');
+            Route::patch('/members/{member}/role', [MemberController::class, 'updateRole'])->name('members.update-role');
+        });
+
+        // Espace bureau - Gestion des membres
+        Route::prefix('bureau')->middleware('role:bureau')->group(function () {
+            Route::get('/members', [BureauMemberController::class, 'index'])->name('bureau.members.index');
+
+            // Statistiques du bureau
+            Route::prefix('stats')->group(function () {
+                Route::get('/', [BureauStatController::class, 'index'])->name('bureau.stats.index');
+                Route::get('/leaderboards', [BureauStatController::class, 'leaderboards'])->name('bureau.stats.leaderboards');
+                Route::get('/leaderboards/goals', [BureauStatController::class, 'goalLeaders'])->name('bureau.stats.leaderboards.goals');
+                Route::get('/leaderboards/assists', [BureauStatController::class, 'assistLeaders'])->name('bureau.stats.leaderboards.assists');
+                Route::get('/leaderboards/goalkeepers', [BureauStatController::class, 'goalkeeperLeaders'])->name('bureau.stats.leaderboards.goalkeepers');
+                Route::get('/members/{user}/stats', [BureauStatController::class, 'memberStats'])->name('bureau.stats.member');
+            });
+        });
+
+        Route::prefix('bureau')->middleware('role:admin')->group(function () {
+        Route::get('/members', [BureauMemberController::class, 'index'])->name('bureau.members.index');
+
+        // Statistiques du bureau
+        Route::prefix('stats')->group(function () {
+            Route::get('/', [BureauStatController::class, 'index'])->name('bureau.stats.index');
+            Route::get('/leaderboards', [BureauStatController::class, 'leaderboards'])->name('bureau.stats.leaderboards');
+            Route::get('/leaderboards/goals', [BureauStatController::class, 'goalLeaders'])->name('bureau.stats.leaderboards.goals');
+            Route::get('/leaderboards/assists', [BureauStatController::class, 'assistLeaders'])->name('bureau.stats.leaderboards.assists');
+            Route::get('/leaderboards/goalkeepers', [BureauStatController::class, 'goalkeeperLeaders'])->name('bureau.stats.leaderboards.goalkeepers');
+            Route::get('/members/{user}/stats', [BureauStatController::class, 'memberStats'])->name('bureau.stats.member');
+        });
+    });
 
 
-Route::get('/admin/identity', [IdentityController::class, 'index']);
+    });
 
-Route::post('/admin/identity/update', [IdentityController::class, 'update'])
-    ->name('admin.identity.update');
+
 
         // Gestion des statistiques
         Route::prefix('stats')->group(function () {
@@ -252,26 +238,6 @@ Route::post('/admin/identity/update', [IdentityController::class, 'update'])
         });
         // Les routes d'administration des actualités sont déjà définies plus haut
     });
-
-    // Gestion des actualités (Admin)
-    Route::prefix('news')->name('news.')->group(function () {
-
-        Route::get('/create', [NewsController::class, 'create'])->name('create');
-        Route::post('/', [NewsController::class, 'store'])->name('store');
-        Route::get('/{id}/edit', [NewsController::class, 'edit'])->name('edit');
-        Route::put('/{id}', [NewsController::class, 'update'])->name('update');
-        Route::delete('/{id}', [NewsController::class, 'destroy'])->name('destroy');
-        Route::get('/showReglement', [NewsController::class, 'showReglement'])->name('showReglement');
-        Route::patch('/{id}/toggle-banner', [NewsController::class, 'toggleBanner'])->name('toggle-banner');
-
-        // Bannière du joueur du mois
-        Route::prefix('bannerplayermonth')->name('bannerplayermonth.')->group(function () {
-            Route::get('/', [PlayerOfTheMonthController::class, 'index'])->name('index');
-            Route::put('/', [PlayerOfTheMonthController::class, 'update'])->name('update');
-            Route::delete('/', [PlayerOfTheMonthController::class, 'destroy'])->name('destroy');
-        });
-    });
-});
 
 
 Route::prefix('bureau')->middleware('role:bureau')->group(function () {
@@ -438,7 +404,7 @@ Route::get('/admin/create', [StatController::class,'create'])->name('Admin.Creat
 Route::get('/identity', [IdentityController::class, 'index'])->name('admin.identity');
 
 
-Route::get('/admin/identity', [IdentityController::class, 'index']);
+// Route::get('/admin/identity', [IdentityController::class, 'index']->name('admin.indentity'));
 
 Route::post('/admin/identity/update', [IdentityController::class, 'update'])
     ->name('admin.identity.update');
@@ -455,6 +421,19 @@ Route::middleware(['auth', 'is.active', 'role:admin'])->group(function () {
 
 
 
+ Route::prefix('bureau')->middleware('role:bureau')->group(function () {
+        Route::get('/members', [BureauMemberController::class, 'index'])->name('bureau.members.index');
+
+        // Statistiques du bureau
+        Route::prefix('stats')->group(function () {
+            Route::get('/', [BureauStatController::class, 'index'])->name('bureau.stats.index');
+            Route::get('/leaderboards', [BureauStatController::class, 'leaderboards'])->name('bureau.stats.leaderboards');
+            Route::get('/leaderboards/goals', [BureauStatController::class, 'goalLeaders'])->name('bureau.stats.leaderboards.goals');
+            Route::get('/leaderboards/assists', [BureauStatController::class, 'assistLeaders'])->name('bureau.stats.leaderboards.assists');
+            Route::get('/leaderboards/goalkeepers', [BureauStatController::class, 'goalkeeperLeaders'])->name('bureau.stats.leaderboards.goalkeepers');
+            Route::get('/members/{user}/stats', [BureauStatController::class, 'memberStats'])->name('bureau.stats.member');
+        });
+    });
 
 
 // Routes pour les réflexions
@@ -475,6 +454,9 @@ Route::prefix('reflections')->group(function () {
     // Route::get('/comments/like/{comment}',[CommentlikeController::class,'like'])->name('likeComment');
     // Route::get('/comments/dislike/{comment}',[CommentlikeController::class,'dislike'])->name('dislikeComment');
 });
+
+
+
 
 // Routes d'authentification
 require __DIR__ . '/auth.php';

@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Vite;
 use Illuminate\Support\ServiceProvider;
 use App\Models\Finance;
 use App\Policies\FinancePolicy;
+use Inertia\Inertia;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -41,12 +42,20 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Vite::prefetch(concurrency: 3);
-        
+
+        // Partager le nombre d'utilisateurs inactifs avec toutes les vues Inertia pour les admins
+        Inertia::share('inactiveUsersCount', function () {
+            if (auth()->check() && auth()->user()->role === 'admin') {
+                return User::where('is_active', false)->count();
+            }
+            return 0;
+        });
+
         // Lecture globale : liste
         Gate::define('view-rule', function (User $user, Regulation $rule) {
             return true;
         });
-        
+
         // Lecture : tout le monde peut voir : Lecture globale : liste
          Gate::define('viewAny-rule', function (User $user) {
             return true;

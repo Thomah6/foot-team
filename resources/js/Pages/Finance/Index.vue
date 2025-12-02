@@ -47,7 +47,6 @@ function showToast(message, type = "success") {
     toastVisible.value = true;
 }
 
-// watch success and error flash messages
 watch(
     () => page.props.flash && page.props.flash.success,
     (val) => {
@@ -72,7 +71,6 @@ const links = ref(props.finances.links || []);
 const currentPage = ref(props.finances.current_page || 1);
 const lastPage = ref(props.finances.last_page || 1);
 
-// handleFiltre appelé par FinanceFilter
 function handleFiltre({ selectedUser, dateFrom, dateTo, selectedType }) {
     router.get(
         route("finances.index"),
@@ -81,7 +79,7 @@ function handleFiltre({ selectedUser, dateFrom, dateTo, selectedType }) {
             date_from: dateFrom || "",
             date_to: dateTo || "",
             type: selectedType || "",
-            page: 1, // IMPORTANT: reset page
+            page: 1,
         },
         {
             preserveState: false,
@@ -97,10 +95,10 @@ function handleFiltre({ selectedUser, dateFrom, dateTo, selectedType }) {
 }
 
 const showConfirmAll = ref(false);
-const showConfirmAllType = ref('cotisation');
+const showConfirmAllType = ref("cotisation");
 const showConfirmAllLoading = ref(false);
 
-function askValiderTous(type = 'cotisation') {
+function askValiderTous(type = "cotisation") {
     showConfirmAllType.value = type;
     showConfirmAll.value = true;
 }
@@ -124,15 +122,14 @@ function confirmValiderTous() {
                 if (page.props && page.props.flash && page.props.flash.error) {
                     showToast(page.props.flash.error, "error");
                 }
-                // Refresh the table in-place
-                refreshTable()
+                refreshTable();
             },
             onFinish: () => {
                 showConfirmAllLoading.value = false;
             },
             onError: () => {
                 showConfirmAllLoading.value = false;
-            }
+            },
         }
     );
 }
@@ -163,7 +160,6 @@ function onChangePage(pageNumber) {
     );
 }
 
-// Called when table needs refresh (e.g., after validation)
 function refreshTable() {
     const currentFilters = page.props.filters || props.filters || {};
 
@@ -171,7 +167,7 @@ function refreshTable() {
         route("finances.index"),
         {
             ...currentFilters,
-            page: currentPage.value, // Keep current page
+            page: currentPage.value,
         },
         {
             preserveState: false,
@@ -182,7 +178,11 @@ function refreshTable() {
                 currentPage.value = page.props.finances.current_page || 1;
                 lastPage.value = page.props.finances.last_page || 1;
                 // Display flash messages if present
-                if (page.props && page.props.flash && page.props.flash.success) {
+                if (
+                    page.props &&
+                    page.props.flash &&
+                    page.props.flash.success
+                ) {
                     showToast(page.props.flash.success, "success");
                 }
                 if (page.props && page.props.flash && page.props.flash.error) {
@@ -210,11 +210,12 @@ const isBureau = role === "bureau";
     <AuthenticatedLayout>
         <div class="w-full px-4 py-6 sm:px-6 lg:px-8">
             <div class="max-w-7xl mx-auto space-y-6 sm:space-y-8">
-                <h1 class="text-3xl sm:text-4xl font-black text-neutral-900">
+                <h1
+                    class="text-3xl sm:text-4xl font-black text-neutral-900 dark:text-white"
+                >
                     Caisse / Finances
                 </h1>
 
-                <!-- FinanceStats - Full width at top -->
                 <FinanceStats
                     :solde-total="Number(props.soldeTotal)"
                     :total-attente="Number(props.totalAttente)"
@@ -225,7 +226,6 @@ const isBureau = role === "bureau";
                     :pending-depenses-count="Number(props.pendingDepensesCount)"
                 />
 
-                <!-- FinanceCreateDepot & FinanceAdminActions - Side by side on desktop, stacked on mobile -->
                 <div
                     class="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 lg:gap-8"
                 >
@@ -241,17 +241,26 @@ const isBureau = role === "bureau";
                 <ConfirmModalFinance
                     :show="showConfirmAll"
                     :loading="showConfirmAllLoading"
-                    :title="showConfirmAllType === 'dépense' ? 'Valider toutes les dépenses' : 'Valider tous les dépôts'"
-                    :message="showConfirmAllType === 'dépense' ? 'Voulez-vous valider toutes les dépenses en attente ?' : 'Voulez-vous valider tous les dépôts en attente ?'"
+                    :title="
+                        showConfirmAllType === 'dépense'
+                            ? 'Valider toutes les dépenses'
+                            : 'Valider tous les dépôts'
+                    "
+                    :message="
+                        showConfirmAllType === 'dépense'
+                            ? 'Voulez-vous valider toutes les dépenses en attente ?'
+                            : 'Voulez-vous valider tous les dépôts en attente ?'
+                    "
                     @confirm="confirmValiderTous"
                     @cancel="cancelValiderTous"
                 />
 
-                <!-- FinanceFilter & FinanceHistoriqueTable - Full width container -->
                 <div
-                    class="p-4 sm:p-6 rounded-lg bg-white border border-neutral-200 space-y-4"
+                    class="p-4 sm:p-6 rounded-lg bg-white dark:bg-slate-900 border border-neutral-200 dark:border-slate-700 space-y-4"
                 >
-                    <h2 class="text-lg sm:text-xl font-bold text-neutral-900">
+                    <h2
+                        class="text-lg sm:text-xl font-bold text-neutral-900 dark:text-white"
+                    >
                         Historique des transactions
                     </h2>
                     <FinanceFilter
