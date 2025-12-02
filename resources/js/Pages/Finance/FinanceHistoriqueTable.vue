@@ -61,9 +61,9 @@ const isBureau = role === "bureau";
 const isMember = role === "simple";
 
 function montantClass(finance) {
-    if (finance.type === "dépense") return "text-red-600";
-    if (finance.statut_valide) return "text-green-600";
-    return "text-yellow-500";
+    if (finance.type === "dépense") return "text-red-600 dark:text-red-300";
+    if (finance.statut_valide) return "text-green-600 dark:text-green-300";
+    return "text-yellow-600 dark:text-yellow-300";
 }
 
 const showConfirm = ref(false);
@@ -106,42 +106,42 @@ function cancelValider() {
 </script>
 <template>
     <div class="overflow-x-auto">
-        <table class="min-w-full divide-y divide-neutral-200">
-            <thead class="bg-neutral-100">
+        <table class="min-w-full divide-y divide-neutral-200 dark:divide-slate-700">
+            <thead class="bg-neutral-100 dark:bg-slate-800">
                 <tr>
-                    <th class="px-6 py-3 text-left text-xs font-medium">
+                    <th class="px-6 py-3 text-left text-xs font-medium text-neutral-900 dark:text-white">
                         Date
                     </th>
-                    <th class="px-6 py-3 text-left text-xs font-medium">
+                    <th class="px-6 py-3 text-left text-xs font-medium text-neutral-900 dark:text-white">
                         Membre
                     </th>
-                    <th class="px-6 py-3 text-left text-xs font-medium">
+                    <th class="px-6 py-3 text-left text-xs font-medium text-neutral-900 dark:text-white">
                         Description
                     </th>
-                    <th class="px-6 py-3 text-left text-xs font-medium">
+                    <th class="px-6 py-3 text-left text-xs font-medium text-neutral-900 dark:text-white">
                         Montant
                     </th>
-                    <th class="px-6 py-3 text-left text-xs font-medium">
+                    <th class="px-6 py-3 text-left text-xs font-medium text-neutral-900 dark:text-white">
                         Statut
                     </th>
 
                     <th
                         v-if="isAdmin"
-                        class="px-6 py-3 text-left text-xs font-medium"
+                        class="px-6 py-3 text-left text-xs font-medium text-neutral-900 dark:text-white"
                     >
                         Actions
                     </th>
                 </tr>
             </thead>
-            <tbody class="bg-white divide-y divide-neutral-200">
-                <tr v-for="finance in finances" :key="finance.id">
-                    <td class="px-6 py-4 whitespace-nowrap text-sm">
+            <tbody class="bg-white dark:bg-slate-900 divide-y divide-neutral-200 dark:divide-slate-700">
+                <tr v-for="finance in finances" :key="finance.id" class="dark:hover:bg-slate-800">
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-neutral-900 dark:text-slate-100">
                         {{ finance.date }}
                     </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-neutral-900 dark:text-slate-100">
                         {{ finance.user_name }}
                     </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm">
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-neutral-900 dark:text-slate-100">
                         {{ finance.description || "-" }}
                     </td>
                     <td
@@ -154,12 +154,12 @@ function cancelValider() {
                     <td class="px-6 py-4 whitespace-nowrap text-sm">
                         <span
                             v-if="finance.statut_valide"
-                            class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800"
+                            class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-green-100 dark:bg-green-800 text-green-900 dark:text-green-100"
                             >Validé</span
                         >
                         <span
                             v-else
-                            class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800"
+                            class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-yellow-100 dark:bg-yellow-800 text-yellow-900 dark:text-yellow-100"
                             >En attente</span
                         >
                     </td>
@@ -170,17 +170,17 @@ function cancelValider() {
                         <button
                             v-if="!finance.statut_valide && (finance.type === 'cotisation' || finance.type === 'dépense')"
                             @click="askConfirm(finance)"
-                            class="text-green-600 hover:text-green-900 font-semibold"
+                            class="text-green-600 dark:text-green-300 hover:text-green-900 dark:hover:text-green-100 font-semibold"
                         >
                             Valider
                         </button>
-                        <span v-else class="text-neutral-400">-</span>
+                        <span v-else class="text-neutral-400 dark:text-slate-500">-</span>
                     </td>
                 </tr>
                 <tr v-if="finances.length === 0">
                     <td
                         colspan="6"
-                        class="px-6 py-4 text-center text-neutral-500"
+                        class="px-6 py-4 text-center text-neutral-500 dark:text-slate-300"
                     >
                         Aucune transaction
                     </td>
@@ -190,7 +190,7 @@ function cancelValider() {
         <!-- Pagination -->
         <div v-if="lastPage > 1" class="flex items-center justify-between mt-6">
             <!-- Info page -->
-            <div class="text-sm text-gray-700">
+            <div class="text-sm text-gray-700 dark:text-slate-200">
                 Page {{ currentPage }} sur {{ lastPage }}
             </div>
 
@@ -218,10 +218,10 @@ function cancelValider() {
                     class="px-3 py-2 text-sm border rounded"
                     :class="[
                         link.active
-                            ? 'bg-blue-600 text-white border-blue-600'
+                            ? 'bg-blue-600 dark:bg-blue-700 text-white border-blue-600 dark:border-blue-700'
                             : !link.url
-                            ? 'bg-gray-100 text-gray-500'
-                            : 'bg-white text-gray-700 hover:bg-gray-50',
+                            ? 'bg-gray-100 dark:bg-slate-700 text-gray-500 dark:text-slate-400 border-gray-300 dark:border-slate-600'
+                            : 'bg-white dark:bg-slate-800 text-gray-700 dark:text-slate-200 hover:bg-gray-50 dark:hover:bg-slate-700 border-gray-300 dark:border-slate-600',
                     ]"
                     :disabled="!link.url"
                 >

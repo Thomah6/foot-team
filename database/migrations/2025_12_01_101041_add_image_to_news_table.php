@@ -11,11 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('regulations', function (Blueprint $table) {
-            $table->id();
-            $table->string('title');      // Titre du règlement ou section
-            $table->timestamps();
- });
+        Schema::table('news', function (Blueprint $table) {
+            //
+        });
     }
 
     /**
@@ -23,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('regulations');
+        Schema::table('news', function (Blueprint $table) {
+            //
+        });
     }
 };

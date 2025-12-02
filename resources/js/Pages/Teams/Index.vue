@@ -1,9 +1,9 @@
 <script setup>
 import { useForm, router } from '@inertiajs/vue3'
 import { ref, computed } from 'vue'
-import AdminsideBar from "@/Components/AdminsideBar.vue";
 import ConfirmModal from '@/Components/ConfirmModal.vue'
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+
 
 const props = defineProps({
   teams: Array,
@@ -93,7 +93,6 @@ function viewTeam(teamId) {
   router.get(`/teams/${teamId}`)
 }
 </script>
-
 <template>
     <AuthenticatedLayout>
     <div class="flex flex-col md:flex-row min-h-screen bg-gray-50 dark:bg-gray-900">
@@ -234,7 +233,7 @@ function viewTeam(teamId) {
                     </div>
 
                     <!-- Admin buttons -->
-                    <div v-if="isAdmin" class="flex flex-col gap-2">
+                    <div v-if="isAdmin" class="flex flex-col gap-3">
 
                         <button
                             @click="() => {
@@ -243,36 +242,35 @@ function viewTeam(teamId) {
                                 editForm.description = team.description
                                 startEdit(team)
                             }"
-                            class="w-full bg-yellow-500 text-white px-4 py-2 rounded-lg
-                                   hover:bg-yellow-600 transition text-sm font-semibold"
+                            class="w-full bg-black text-white px-4 py-2 rounded-xl
+                                   border border-white/20 hover:scale-105 transition text-sm font-semibold"
                         >
-                            <i class="fas fa-edit mr-2"></i>Modifier
+                            <i class="fas fa-edit mr-2"></i> Modifier
                         </button>
 
                         <button
                             @click="viewTeam(team.id)"
-                            class="w-full bg-blue-600 text-white px-4 py-2 rounded-lg
-                                   hover:bg-blue-700 transition text-sm font-semibold"
+                            class="w-full bg-gradient-to-r from-blue-600 to-indigo-600
+                                   text-white px-4 py-2 rounded-xl hover:scale-105 transition text-sm font-semibold"
                         >
-                            <i class="fas fa-eye mr-2"></i>Voir détails
+                            <i class="fas fa-eye mr-2"></i> Voir détails
                         </button>
 
                         <button
                             @click="affectPlayers(team.id)"
-                            class="w-full bg-green-600 text-white px-4 py-2 rounded-lg
-                                   hover:bg-green-700 transition text-sm font-semibold"
+                            class="w-full bg-gradient-to-r from-green-600 to-emerald-600
+                                   text-white px-4 py-2 rounded-xl hover:scale-105 transition text-sm font-semibold"
                         >
-                            <i class="fas fa-users-cog mr-2"></i>Affecter joueurs
+                            <i class="fas fa-users-cog mr-2"></i> Affecter joueurs
                         </button>
 
                         <button
                             @click="deleteTeam(team.id)"
-                            class="w-full bg-red-600 text-white px-4 py-2 rounded-lg
-                                   hover:bg-red-700 transition text-sm font-semibold"
+                            class="w-full bg-red-200
+                                   text-white px-4 py-2 rounded-xl hover:scale-105 transition text-sm font-semibold"
                         >
-                            <i class="fas fa-trash mr-2"></i>Supprimer
+                            <i class="fas fa-trash mr-2"></i> Supprimer
                         </button>
-
                     </div>
 
                     <!-- Member button -->
@@ -301,7 +299,6 @@ function viewTeam(teamId) {
 
     </main>
 </div>
-</AuthenticatedLayout>
 
 
     <!-- Delete confirmation modal -->
@@ -314,5 +311,5 @@ function viewTeam(teamId) {
         variant="danger"
         @confirm="confirmDeleteTeam"
     />
+</AuthenticatedLayout>
 </template>
-

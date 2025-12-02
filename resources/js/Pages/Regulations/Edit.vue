@@ -3,23 +3,26 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue'
 import { useForm } from '@inertiajs/vue3'
 
 const props = defineProps({
-  rule: {
+  content: {
     type: Object,
     required: true
   },
+  titles: {
+    type: Array,
+    required: true
+  }
 })
 
 const form = useForm({
-  title: props.rule.title || '',
-  content: props.rule.content || '',
-  parent_id: props.rule.parent_id || null,
-  order: props.rule.order || 0,
+  regulation_id: props.content.regulation_id,
+  sub_number: props.content.sub_number || '',
+  content: props.content.content || ''
 })
 
 function submit() {
-  form.put(`/regulations/${props.rule.id}`, {
+  form.put(`/regulations/content/${props.content.id}`, {
     onSuccess: () => {
-      // Optionnel : toast ou redirection
+      $inertia.visit('/regulations')
     }
   })
 }
@@ -27,64 +30,60 @@ function submit() {
 
 <template>
   <AuthenticatedLayout>
-    <div class="min-h-screen flex items-center justify-center 
-                bg-[url('https://st.depositphotos.com/1000423/1958/i/450/depositphotos_19580567-stock-photo-two-football-players-in-jump.jpg')] 
-                bg-cover bg-center relative px-4">
-      
-      <!-- Overlay sombre + blur léger -->
-      <div class="absolute inset-0 bg-black/50 backdrop-blur-sm"></div>
-  
-      <!-- Formulaire centré avec blur réduit -->
-      <div class="relative w-full max-w-2xl bg-white/80 backdrop-blur-[2px] rounded-xl shadow-lg p-6 sm:p-10 mx-4">
-        <h1 class="text-2xl font-bold mb-4 text-green-600 text-center">Modifier un règlement</h1>
-        <h2 class="text-lg font-bold mb-6 text-center text-gray-700">Titre actuel : {{ form.title }}</h2>
-  
-        <form @submit.prevent="submit" class="space-y-6">
-          <!-- Champ titre -->
+    <div 
+      class="min-h-screen flex items-center justify-center px-4 bg-cover bg-center"
+      style="background-image: url('https://static.vecteezy.com/system/resources/thumbnails/046/408/525/small/football-soccer-grass-field-stadium-with-light-for-outdoor-sport-photo.jpg');"
+    >
+      <!-- Bloc translucide avec blur -->
+      <div class="w-full max-w-xl 
+                  bg-blue-600/40 dark:bg-gray-900/70 
+                  backdrop-blur-md 
+                  border border-blue-300/40 dark:border-gray-700 
+                  rounded-xl shadow-lg p-6 sm:p-8 
+                  text-white dark:text-gray-100">
+        <h1 class="text-2xl font-bold mb-6 text-center">Modifier un sous-point</h1>
+
+        <form @submit.prevent="submit" class="space-y-4">
+          <!-- Numéro du sous-point -->
           <div>
-            <label class="block text-sm font-medium text-gray-800 mb-2">Titre</label>
-            <input 
-              v-model="form.title" 
-              type="text" 
-              class="w-full rounded-lg border border-gray-300 p-2 text-sm bg-white
-                     focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition duration-200"
-            />
-            <div v-if="form.errors.title" class="text-red-500 text-sm mt-1">{{ form.errors.title }}</div>
+            <label class="block text-sm font-medium mb-1 text-white dark:text-gray-300">Numéro du sous-point</label>
+            <input type="text" v-model="form.sub_number" placeholder="Ex: 1.1"
+                   class="w-full border rounded-lg p-2 
+                          text-black dark:text-white 
+                          bg-white dark:bg-gray-800 
+                          border-gray-300 dark:border-gray-600" />
+            <div v-if="form.errors.sub_number" class="text-red-300 dark:text-red-400 text-sm mt-1">
+              {{ form.errors.sub_number }}
+            </div>
           </div>
-  
-          <!-- Champ contenu -->
+
+          <!-- Contenu -->
           <div>
-            <label class="block text-sm font-medium text-gray-800 mb-2">Contenu</label>
-            <textarea 
-              v-model="form.content" 
-              rows="5"
-              class="w-full rounded-lg border border-gray-300 p-2 text-sm bg-white
-                     focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition duration-200 resize-none"
-            ></textarea>
-            <div v-if="form.errors.content" class="text-red-500 text-sm mt-1">{{ form.errors.content }}</div>
+            <label class="block text-sm font-medium mb-1 text-white dark:text-gray-300">Contenu</label>
+            <textarea v-model="form.content" rows="5"
+                      class="w-full border rounded-lg p-2 resize-none 
+                             text-black dark:text-white 
+                             bg-white dark:bg-gray-800 
+                             border-gray-300 dark:border-gray-600"></textarea>
+            <div v-if="form.errors.content" class="text-red-300 dark:text-red-400 text-sm mt-1">
+              {{ form.errors.content }}
+            </div>
           </div>
-  
+
           <!-- Boutons -->
-          <div class="flex flex-col sm:flex-row gap-4">
-            <!-- Mettre à jour -->
-            <button 
-              type="submit" 
-              class="flex-1 bg-green-500 hover:bg-green-600 text-white font-semibold py-2 rounded-lg shadow-md
-                     transition duration-200 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed"
-              :disabled="form.processing"
-            >
-              <span v-if="form.processing"> Sauvegarde...</span>
-              <span v-else> Mettre à jour</span>
+          <div class="flex gap-4">
+            <button type="submit" 
+                    class="flex-1 bg-blue-600 dark:bg-cyan-500 hover:bg-blue-700 dark:hover:bg-cyan-600 
+                           text-white py-2 rounded-lg"
+                    :disabled="form.processing">
+              <span v-if="form.processing">Sauvegarde...</span>
+              <span v-else>Mettre à jour</span>
             </button>
-  
-            <!-- Annuler -->
-            <button 
-              type="button"
-              class="flex-1 bg-red-500 hover:bg-red-600 text-white font-semibold py-2 rounded-lg shadow-md
-                     transition duration-200 ease-in-out"
-              @click="$inertia.visit('/regulations')"
-            >
-               Annuler
+
+            <button type="button" 
+                    class="flex-1 bg-gray-700 dark:bg-gray-600 text-white py-2 rounded-lg hover:bg-gray-800 dark:hover:bg-gray-700"
+                    @click="$inertia.visit('/regulations')">
+              Annuler
             </button>
           </div>
         </form>
@@ -92,4 +91,3 @@ function submit() {
     </div>
   </AuthenticatedLayout>
 </template>
-

@@ -210,7 +210,6 @@
 
 <script setup>
 import { reactive, computed } from 'vue'
-import AdminsideBar from "@/Components/AdminsideBar.vue";
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 
 const props = defineProps({

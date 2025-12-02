@@ -14,9 +14,11 @@ class Regulation extends Model
      */
     protected $fillable = [
         'title',
-        'content',
     ];
 
-
+    public function contents()
+    {
+        return $this->hasMany(RegulationContent::class)->orderBy('order');
+    }
 
 }

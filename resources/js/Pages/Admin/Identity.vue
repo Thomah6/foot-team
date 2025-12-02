@@ -1,5 +1,6 @@
 <script setup>
 import { useForm } from '@inertiajs/vue3';
+import { Link } from '@inertiajs/vue3';
 import { ref, watch } from 'vue';
 
 const props = defineProps({
@@ -31,21 +32,19 @@ const submit = () => {
     });
 };
 
-// ⚡ Bouton pour supprimer logo + preview + nom
-const deleteIdentity = () => {
-    form.post('/admin/identity/delete-identity', {
-        onSuccess: () => {
-            form.name = "";      // vider le nom côté formulaire
-            form.logo = null;    // vider le fichier côté formulaire
-            preview.value = null; // retirer la preview
-        }
-    });
-};
-
 
 </script>
 
 <template>
+
+<div class="flex flex-col gap-4">
+  <a href="/dashboard"
+     class="self-end px-4 py-2 bg-blue-600 text-white rounded-lg shadow 
+            hover:bg-blue-700 transition font-medium">
+    Sortir
+  </a>
+</div>
+
   <div class="min-h-screen flex items-center justify-center bg-gray-50 p-6">
     <div class="w-full max-w-md bg-white rounded-xl shadow-md p-8 space-y-6">
       
@@ -100,6 +99,7 @@ const deleteIdentity = () => {
       </div>
 
       <!-- Bouton -->
+    
       <button
         @click="submit"
         :disabled="form.processing"
@@ -107,14 +107,8 @@ const deleteIdentity = () => {
       >
         Enregistrer
       </button>
-<button
-  @click="deleteIdentity"
-  type="button"
-  class="w-full py-2 px-4 bg-red-600 text-white font-semibold rounded-lg shadow hover:bg-red-700 transition-colors"
->
-  Supprimer logo et nom
-</button>
+      </div>
+      </div>
 
-    </div>
-  </div>
+
 </template>

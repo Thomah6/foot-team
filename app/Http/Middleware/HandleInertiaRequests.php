@@ -23,8 +23,8 @@ public function share(Request $request): array
     $user = $request->user();
 
     return array_merge(parent::share($request), [
+        'identity' => Identity::first(),
         'auth' => [
-            'identity' => Identity::first(),
             'user' => $user ? [
                 'id'    => $user->id,
                 'name'  => $user->name,
