@@ -174,14 +174,14 @@ function viewTeam(teamId) {
                         <div class="flex gap-2 flex-col sm:flex-row">
                             <button
                                 @click="submitEdit"
-                                class="flex-1 bg-citron-600 hover:bg-citron-700 dark:bg-citron-500 dark:hover:bg-citron-600 text-white px-4 py-2 rounded-lg transition text-sm font-semibold"
+                                class="flex-1 bg-citron-600 hover:bg-citron-700 dark:bg-citron-500 dark:hover:bg-citron-600 text-gray-800 px-4 py-2 rounded-lg transition text-sm font-semibold"
                                 :disabled="editForm.processing"
                             >
                                 <i class="fas fa-check mr-1"></i>Sauvegarder
                             </button>
                             <button
                                 @click="cancelEdit"
-                                class="flex-1 bg-gray-400 hover:bg-gray-500 dark:bg-gray-700 dark:hover:bg-gray-800 text-white px-4 py-2 rounded-lg transition text-sm font-semibold"
+                                class="flex-1 bg-gray-400 hover:bg-gray-500 dark:bg-gray-700 dark:hover:bg-gray-800 text-gray-800 px-4 py-2 rounded-lg transition text-sm font-semibold"
                             >
                                 <i class="fas fa-times mr-1"></i>Annuler
                             </button>
@@ -209,25 +209,25 @@ function viewTeam(teamId) {
                                     editForm.description = team.description
                                     startEdit(team)
                                 }"
-                                class="w-full bg-citron-500 hover:bg-citron-600 dark:bg-citron-600 dark:hover:bg-citron-700 text-white px-4 py-2 rounded-lg transition text-sm font-semibold"
+                                class="w-full bg-citron-500 hover:bg-citron-600 dark:bg-citron-600 dark:hover:bg-citron-700 text-gray-800 px-4 py-2 rounded-lg transition text-sm font-semibold"
                             >
                                 <i class="fas fa-edit mr-2"></i>Modifier
                             </button>
                             <button
                                 @click="viewTeam(team.id)"
-                                class="w-full bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition text-sm font-semibold"
+                                class="w-full bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-gray-800 px-4 py-2 rounded-lg transition text-sm font-semibold"
                             >
                                 <i class="fas fa-eye mr-2"></i>Voir détails
                             </button>
                             <button
                                 @click="affectPlayers(team.id)"
-                                class="w-full bg-green-600 hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600 text-white px-4 py-2 rounded-lg transition text-sm font-semibold"
+                                class="w-full bg-green-600 hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600 text-gray-800 px-4 py-2 rounded-lg transition text-sm font-semibold"
                             >
                                 <i class="fas fa-users-cog mr-2"></i>Affecter joueurs
                             </button>
                             <button
                                 @click="deleteTeam(team.id)"
-                                class="w-full bg-red-600 hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600 text-white px-4 py-2 rounded-lg transition text-sm font-semibold"
+                                class="w-full bg-red-600 hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600 text-gray-800 px-4 py-2 rounded-lg transition text-sm font-semibold"
                             >
                                 <i class="fas fa-trash mr-2"></i>Supprimer
                             </button>
@@ -237,9 +237,9 @@ function viewTeam(teamId) {
                         <div v-else class="flex flex-col gap-2">
                             <button
                                 @click="viewTeam(team.id)"
-                                class="w-full bg-citron-600 hover:bg-citron-700 dark:bg-citron-500 dark:hover:bg-citron-600 text-white px-4 py-2 rounded-lg transition text-sm font-semibold"
+                                class="w-full bg-citron-600 hover:bg-citron-700 dark:bg-citron-500 dark:hover:bg-citron-600 text-gray-800 px-4 py-2 rounded-lg transition text-sm font-semibold"
                             >
-                                <i class="fas fa-eye mr-2"></i>Voir l'équipe
+                                <span class="text-black"><i class="fas fa-eye mr-2"></i>Voir l'équipe</span>
                             </button>
                         </div>
                     </div>

@@ -23,26 +23,55 @@ onMounted(() => {
   
   <div class="min-h-screen bg-gradient-to-br from-slate-50 via-lime-50 to-emerald-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 overflow-hidden relative transition-colors duration-300">
     
-    <!-- Animated Background Elements -->
+    <!-- Video Background -->
     <div class="absolute inset-0 overflow-hidden">
-      <!-- Light mode gradient circles -->
-      <div class="absolute w-96 h-96 bg-lime-200/30 rounded-full blur-3xl animate-pulse -top-48 -left-48 dark:hidden"></div>
-      <div class="absolute w-96 h-96 bg-emerald-200/20 rounded-full blur-3xl animate-pulse delay-700 -bottom-48 -right-48 dark:hidden"></div>
+      <!-- Video avec flou et overlay -->
+      <div class="absolute inset-0">
+        <video 
+          class="absolute inset-0 w-full h-full object-cover"
+          autoplay
+          muted
+          loop
+          playsinline
+          preload="metadata"
+          poster="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAxNiAxNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjE2IiBoZWlnaHQ9IjE2IiBmaWxsPSIjMDAwMDAwIiBvcGFjaXR5PSIwLjEiLz4KPC9zdmc+"
+        >
+          <!-- Vous pouvez ajouter plusieurs sources pour différents formats -->
+          <source src="/storage/assets/video.mp4" type="video/mp4">
+          <!-- Image de secours si la vidéo ne se charge pas -->
+        </video>
+        
+        <!-- Flou appliqué à la vidéo -->
+        <div class="absolute inset-0 backdrop-blur-md"></div>
+        
+        <!-- Overlay sombre pour améliorer la lisibilité -->
+        <div class="absolute inset-0 bg-black/20 dark:bg-black/40"></div>
+        
+        <!-- Overlay coloré pour le thème -->
+        <div class="absolute inset-0 bg-gradient-to-br from-lime-500/10 via-emerald-500/10 to-lime-500/10 dark:from-lime-700/20 dark:via-emerald-700/20 dark:to-lime-700/20"></div>
+      </div>
       
-      <!-- Dark mode gradient circles -->
-      <div class="hidden dark:block absolute w-96 h-96 bg-lime-500/10 rounded-full blur-3xl animate-pulse -top-48 -left-48"></div>
-      <div class="hidden dark:block absolute w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl animate-pulse delay-700 -bottom-48 -right-48"></div>
-      
-      <!-- Geometric pattern overlay -->
-      <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTMwIDBWMzAiIHN0cm9rZT0iIzExMTExMSIgc3Ryb2tlLW9wYWNpdHk9IjAuMDMiIHN0cm9rZS13aWR0aD0iMSIvPgo8cGF0aCBkPSJNMCAzMEgzMCIgc3Ryb2tlPSIjMTExMTExIiBzdHJva2Utb3BhY2l0eT0iMC4wMyIgc3Ryb2tlLXdpZHRoPSIxIi8+CjxzZWc+Cg==')] opacity-20 dark:bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTMwIDBWMzAiIHN0cm9rZT0iI0ZGRkZGRiIgc3Ryb2tlLW9wYWNpdHk9IjAuMDMiIHN0cm9rZS13aWR0aD0iMSIvPgo8cGF0aCBkPSJNMCAzMEgzMCIgc3Ryb2tlPSIjRkZGRkZGIiBzdHJva2Utb3BhY2l0eT0iMC4wMyIgc3Ryb2tlLXdpZHRoPSIxIi8+CjxzZWc+Cg==')]"></div>
-    </div>
+      <!-- Animated Background Elements (gardés mais avec opacité réduite) -->
+      <div class="absolute inset-0">
+        <!-- Light mode gradient circles -->
+        <div class="absolute w-96 h-96 bg-lime-200/20 rounded-full blur-3xl animate-pulse -top-48 -left-48 dark:hidden"></div>
+        <div class="absolute w-96 h-96 bg-emerald-200/15 rounded-full blur-3xl animate-pulse delay-700 -bottom-48 -right-48 dark:hidden"></div>
+        
+        <!-- Dark mode gradient circles -->
+        <div class="hidden dark:block absolute w-96 h-96 bg-lime-500/10 rounded-full blur-3xl animate-pulse -top-48 -left-48"></div>
+        <div class="hidden dark:block absolute w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl animate-pulse delay-700 -bottom-48 -right-48"></div>
+        
+        <!-- Geometric pattern overlay -->
+        <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTMwIDBWMzAiIHN0cm9rZT0iIzExMTExMSIgc3Ryb2tlLW9wYWNpdHk9IjAuMDMiIHN0cm9rZS13aWR0aD0iMSIvPgo8cGF0aCBkPSJNMCAzMEgzMCIgc3Ryb2tlPSIjMTExMTExIiBzdHJva2Utb3BhY2l0eT0iMC4wMyIgc3Ryb2tlLXdpZHRoPSIxIi8+CjxzZWc+Cg==')] opacity-10 dark:bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTMwIDBWMzAiIHN0cm9rZT0iI0ZGRkZGRiIgc3Ryb2tlLW9wYWNpdHk9IjAuMDMiIHN0cm9rZS13aWR0aD0iMSIvPgo8cGF0aCBkPSJNMCAzMEgzMCIgc3Ryb2tlPSIjRkZGRkZGIiBzdHJva2Utb3BhY2l0eT0iMC4wMyIgc3Ryb2tlLXdpZHRoPSIxIi8+CjxzZWc+Cg==')] opacity-5"></div>
+      </div>
 
-    <!-- Subtle football field lines pattern -->
-    <div class="absolute inset-0 opacity-5">
-      <div class="absolute top-1/4 left-0 right-0 h-px bg-black dark:bg-white"></div>
-      <div class="absolute top-1/2 left-0 right-0 h-px bg-black dark:bg-white"></div>
-      <div class="absolute top-3/4 left-0 right-0 h-px bg-black dark:bg-white"></div>
-      <div class="absolute top-1/2 left-1/4 w-1/2 border border-black dark:border-white rounded-full h-2/3"></div>
+      <!-- Subtle football field lines pattern -->
+      <div class="absolute inset-0 opacity-5">
+        <div class="absolute top-1/4 left-0 right-0 h-px bg-black dark:bg-white"></div>
+        <div class="absolute top-1/2 left-0 right-0 h-px bg-black dark:bg-white"></div>
+        <div class="absolute top-3/4 left-0 right-0 h-px bg-black dark:bg-white"></div>
+        <div class="absolute top-1/2 left-1/4 w-1/2 border border-black dark:border-white rounded-full h-2/3"></div>
+      </div>
     </div>
 
     <!-- Main Content -->
@@ -50,7 +79,7 @@ onMounted(() => {
       
       <!-- Logo/Club Identity -->
       <div class="text-center mb-8">
-        <div class="mb-6 inline-flex items-center justify-center w-24 h-24 rounded-2xl  transform hover:rotate-6 transition-transform duration-300">
+        <div class="mb-6 inline-flex items-center justify-center w-24 h-24 rounded-2xl transform hover:rotate-6 transition-transform duration-300">
           <!-- Logo du club depuis BDD ou icône par défaut -->
           <img 
             v-if="clubIdentity.logo" 
@@ -65,7 +94,7 @@ onMounted(() => {
         </div>
         
         <h1 class="text-5xl md:text-7xl font-black mb-4">
-          <span class="bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-emerald-800 dark:from-lime-300 dark:to-emerald-400">
+          <span class="bg-clip-text text-white bg-gradient-to-r from-gray-900 to-emerald-800 dark:from-lime-300 dark:to-emerald-400">
             {{ clubIdentity.name }}
           </span>
         </h1>
@@ -76,7 +105,7 @@ onMounted(() => {
       <!-- Tagline -->
       <div class="text-center mb-12 max-w-2xl">
         <p class="text-lg md:text-xl font-medium leading-relaxed text-gray-800 dark:text-gray-200 mb-4">
-          <span class="bg-gradient-to-r from-lime-600 to-emerald-600 dark:from-lime-400 dark:to-emerald-400 bg-clip-text text-transparent">
+          <span class="bg-gradient-to-r from-lime-600 to-emerald-600 dark:from-lime-400 dark:to-emerald-400 bg-clip-text text-white">
             ⚡ Je vois le terrain comme une toile, chaque dribble comme un coup de pinceau. Ma création ? La victoire absolue.
           </span>
         </p>
@@ -225,5 +254,26 @@ onMounted(() => {
 * {
   transition: background-color 0.3s ease, border-color 0.3s ease;
 }
-</style>
 
+/* Styles pour la vidéo de fond */
+video {
+  filter: blur(8px);
+  -webkit-filter: blur(8px);
+  transform: scale(1.05); /* Légèrement agrandie pour couvrir les bords du flou */
+}
+
+/* Ajustements pour les mobiles pour économiser la batterie */
+@media (max-width: 768px) {
+  video {
+    filter: blur(4px);
+    -webkit-filter: blur(4px);
+  }
+}
+
+/* Pour les navigateurs qui ne supportent pas video */
+.video-fallback {
+  background-image: url('/images/football-background.jpg');
+  background-size: cover;
+  background-position: center;
+}
+</style>
