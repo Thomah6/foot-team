@@ -162,13 +162,13 @@ const menu = computed(() => {
 // Bottom menu (profil, paramètres, déconnexion...) - keep empty by default to avoid undefined in template
 const bottomMenu = [];
 
-
-
+const emit = defineEmits(['link-clicked']);
 
 const handleLinkClick = () => {
-    // Ne fermer le menu que si la sidebar mobile est ouverte
-    if (isOpen.value) {
-        closeMenu();
+    if (window.innerWidth < 1024) {
+        isOpen.value = false;
+        // Émettre l'événement pour fermer la sidebar dans le layout parent
+        emit('link-clicked');
     }
 };
 
@@ -253,12 +253,7 @@ const handleLogout = () => {
         @touchmove.prevent>
     </div>
 
-    <!-- Mobile Hamburger Button -->
-    <button v-if="!isOpen" @click="toggleMenu"
-        class="md:hidden fixed top-4 left-4 z-[9999] p-3 bg-gradient-to-br from-lime-500 to-emerald-600 rounded-xl shadow-lg hover:shadow-emerald-500/30 transform hover:scale-105 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500"
-        aria-label="Ouvrir le menu">
-        <i class="fas fa-bars text-white text-xl"></i>
-    </button>
+    <!-- Le bouton hamburger a été déplacé dans le layout principal -->
 
     <!-- Sidebar -->
     <aside :class="[
