@@ -37,13 +37,6 @@ const submit = () => {
 
 <template>
 
-<div class="flex flex-col gap-4">
-  <a href="/dashboard"
-     class="self-end px-4 py-2 bg-blue-600 text-white rounded-lg shadow 
-            hover:bg-blue-700 transition font-medium">
-    Sortir
-  </a>
-</div>
 
   <div class="min-h-screen flex items-center justify-center bg-gray-50 p-6">
     <div class="w-full max-w-md bg-white rounded-xl shadow-md p-8 space-y-6">

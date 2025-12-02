@@ -17,6 +17,8 @@ const format = (date) => {
 </script>
 
 <template>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
     <div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-8">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             
@@ -92,13 +94,13 @@ const format = (date) => {
                              class="w-12 h-12 rounded-full object-cover" />
                         
                         <div class="flex-1">
-                            <p class="font-semibold text-lg">{{ buuteur.name }}</p>
-                            <p class="text-sm text-gray-600">{{ buuteur.pseudo }}</p>
+                            <p class="font-semibold text-lg">{{ buteur.name }}</p>
+                            <p class="text-sm text-gray-600">{{ buteur.pseudo }}</p>
                         </div>
                         
                         <!-- Stats -->
                         <div class="text-right">
-                            <p class="text-2xl font-bold text-blue-600">{{ buuteur.total_goals }}</p>
+                            <p class="text-2xl font-bold text-blue-600">{{ buteur.total_goals }}</p>
                             <p class="text-sm text-gray-600">buts</p>
                         </div>
                     </div>
