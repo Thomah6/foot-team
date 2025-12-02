@@ -27,17 +27,7 @@ class DatabaseSeeder extends Seeder
         TeamStat::factory(15)->create();
         // Créer les utilisateurs de base d'abord
 
-        // // Créer les utilisateurs de base d'abord
-        // User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
-
-        // // Créer des utilisateurs supplémentaires pour les stats
-        // User::factory()->create([
-        //     'name' => 'Jean Dupont',
-        //     'email' => 'jean@example.com',
-        // ]);
+        
         // Créer 5 utilisateurs fixes (admin, bureau, 3 joueurs) pour dev rapide
         User::factory()->create([
             'name' => 'Admin Super',
@@ -136,14 +126,7 @@ class DatabaseSeeder extends Seeder
         Reflection::factory(10)->create();
         // Vote::factory(10)->create();
         echo "\n Database seeded successfully !\n";
-        // Reflection::factory(40)->create();
-        // Comment::factory(200)->create();
-
-        // User::factory(10)->create();
-        // User::factory()->create([
-        //     'name' => 'Pierre Durand',
-        //     'email' => 'pierre@example.com',
-        // ]);
+       
 
         // Ensuite créer les stats (maintenant il y a des utilisateurs)
         // $this->call([

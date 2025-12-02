@@ -76,12 +76,10 @@ const submit = () => {
       </div>
 
       <!-- Bouton -->
-      <Link :href="route('dashboard')">
       <button @click="submit" :disabled="form.processing"
         class="w-full py-2 px-4 bg-blue-600 text-white font-semibold rounded-lg shadow hover:bg-blue-700 dark:hover:bg-blue-500 disabled:opacity-50 transition-colors">
         Enregistrer
       </button>
-      </Link>
     </div>
   </div>
 </template>

@@ -204,12 +204,6 @@ const identity = page.props.identity;
                         <div class="relative">
                             <div class="flex items-center justify-between mb-4">
                                 <div>
-                                    <h2
-                                        class="text-xl font-black text-gray-900 dark:text-white flex items-center gap-2">
-                                        <span
-                                            class="w-1 h-6 bg-gradient-to-b from-lime-400 to-emerald-500 rounded-full"></span>
-                                        ZONE D'INTENSITÉ
-                                    </h2>
                                     <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">
                                         Les dernières nouvelles de l'arène
                                     </p>
