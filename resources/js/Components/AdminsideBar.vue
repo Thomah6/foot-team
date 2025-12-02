@@ -1,12 +1,9 @@
 <!-- [file name]: AdminsideBar.vue
 [file content begin] -->
 <script setup>
-import { ref, computed, defineProps, defineEmits, onMounted, onUnmounted } from "vue";
+import { ref, computed, defineProps, onMounted, onUnmounted } from "vue";
 import { Link, usePage, router } from "@inertiajs/vue3";
-
-const emit = defineEmits(['link-clicked']);
-
-const props = defineProps({
+defineProps({
     Notification: {
         type: Number,
         default: 0,
@@ -15,12 +12,6 @@ const props = defineProps({
     votes: Array,
     reflections: Array,
 });
-
-// Fonction pour gérer le clic sur un lien
-const handleLinkClick = () => {
-    emit('link-clicked');
-};
-
 // import VoteHistory from "../Pages/VoteHistory.vue";
 // import VoteListAdmin from "../Pages/VoteListAdmin.vue";
 
@@ -171,6 +162,16 @@ const menu = computed(() => {
 // Bottom menu (profil, paramètres, déconnexion...) - keep empty by default to avoid undefined in template
 const bottomMenu = [];
 
+const emit = defineEmits(['link-clicked']);
+
+const handleLinkClick = () => {
+    if (window.innerWidth < 1024) {
+        isOpen.value = false;
+        // Émettre l'événement pour fermer la sidebar dans le layout parent
+        emit('link-clicked');
+    }
+};
+
 const navigate = (href) => {
     // debug log
     // eslint-disable-next-line no-console
@@ -251,6 +252,8 @@ const handleLogout = () => {
         :class="{ 'opacity-100': isOpen, 'opacity-0 pointer-events-none': !isOpen }"
         @touchmove.prevent>
     </div>
+
+    <!-- Le bouton hamburger a été déplacé dans le layout principal -->
 
     <!-- Sidebar -->
     <aside :class="[
