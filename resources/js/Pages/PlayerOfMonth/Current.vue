@@ -54,10 +54,6 @@ const totalStats = computed(() => {
                 <div class="flex items-center justify-between max-w-6xl mx-auto mb-12">
                     <!-- Logo à gauche -->
                     <div class="flex items-center gap-4">
-                        <div class="w-16 h-16 bg-gradient-to-br from-citron-200 to-citron-300 dark:from-gray-800 dark:to-gray-700 rounded-xl flex items-center justify-center border border-citron-300 dark:border-gray-600">
-                            <i class="fas fa-trophy text-citron-600 dark:text-citron-400 text-2xl"></i>
-                        </div>
-                        <div class="text-citron-600 dark:text-citron-400 font-light text-xl tracking-wider">FOOT TEAM</div>
                     </div>
                     
                     <!-- Titre central -->

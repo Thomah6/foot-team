@@ -95,7 +95,7 @@ function handleImageError() {
                                         <div class="absolute inset-0 bg-gradient-to-r from-emerald-700 to-lime-700 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
                                     </Link>
                                     <p class="text-xs text-gray-500 dark:text-gray-400 text-center mt-3">
-                                        Découvrez le prédateur du mois
+                                        Découvrez le joueur du mois
                                     </p>
                                 </div>
                             </div>
@@ -138,7 +138,7 @@ function handleImageError() {
                                 <div>
                                     <h2 class="text-xl font-black text-gray-900 dark:text-white flex items-center gap-2">
                                         <span class="w-1 h-6 bg-gradient-to-b from-lime-400 to-emerald-500 rounded-full"></span>
-                                        PRÉDATEUR DU MOIS
+                                        joueur DU MOIS
                                     </h2>
                                     <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">
                                         Celui qui domine l'arène ce mois-ci
@@ -252,33 +252,6 @@ function handleImageError() {
                             </div>
                         </div>
 
-                        <!-- Prochain Match -->
-                        <div class="bg-gradient-to-br from-white to-lime-50/50 dark:from-gray-800 dark:to-emerald-900/20 rounded-2xl p-6 border border-lime-200/50 dark:border-emerald-800/50 shadow-lg">
-                            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-                                <i class="fas fa-calendar-alt text-lime-500 dark:text-emerald-400"></i>
-                                PROCHAINE BATAILLE
-                            </h3>
-                            
-                            <div class="text-center p-4 bg-gradient-to-r from-lime-50 to-emerald-50 dark:from-emerald-900/20 dark:to-lime-900/20 rounded-xl mb-4">
-                                <div class="text-xs font-bold text-emerald-700 dark:text-lime-400 uppercase tracking-wider mb-2">Samedi 15 juin</div>
-                                <div class="text-lg font-black text-gray-900 dark:text-white">FC Dynamo vs Les Titans</div>
-                                <div class="text-sm text-gray-600 dark:text-gray-400 mt-1">Stade de l'Arène • 20:30</div>
-                            </div>
-                            
-                            <div class="flex items-center justify-between text-sm">
-                                <div class="flex items-center gap-2">
-                                    <i class="fas fa-map-marker-alt text-lime-600 dark:text-emerald-400"></i>
-                                    <span>Présence :</span>
-                                </div>
-                                <div class="font-bold text-emerald-700 dark:text-lime-400">24/26</div>
-                            </div>
-                            
-                            <button class="w-full mt-4 py-3 bg-gradient-to-r from-lime-500 to-emerald-500 hover:from-lime-600 hover:to-emerald-600 text-white font-bold rounded-lg transition-all transform hover:scale-105 active:scale-95">
-                                Marquer présence
-                            </button>
-                        </div>
-
-                       
                     </div>
                 </div>
 

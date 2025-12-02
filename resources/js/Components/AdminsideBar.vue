@@ -1,3 +1,5 @@
+<!-- [file name]: AdminsideBar.vue
+[file content begin] -->
 <script setup>
 import { ref, computed, defineProps, onMounted, onUnmounted } from "vue";
 import { Link, usePage, router } from "@inertiajs/vue3";
@@ -186,8 +188,40 @@ const navigate = (href) => {
     if (isOpen.value) closeMenu();
 };
 
-const toggleMenu = () => isOpen.value = !isOpen.value;
-const closeMenu = () => isOpen.value = false;
+const toggleMenu = () => {
+    isOpen.value = !isOpen.value;
+    // Empêche le défilement du body quand le menu est ouvert
+    document.body.style.overflow = isOpen.value ? 'hidden' : '';
+};
+
+const closeMenu = () => {
+    isOpen.value = false;
+    document.body.style.overflow = '';
+};
+
+// Fermer le menu quand on clique en dehors
+const handleClickOutside = (event) => {
+    const sidebar = document.querySelector('aside');
+    const button = document.querySelector('button[aria-expanded]');
+    
+    if (isOpen.value && !sidebar.contains(event.target) && !button.contains(event.target)) {
+        closeMenu();
+    }
+};
+
+onMounted(() => {
+    document.addEventListener('click', handleClickOutside);
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && isOpen.value) {
+            closeMenu();
+        }
+    });
+});
+
+onUnmounted(() => {
+    document.removeEventListener('click', handleClickOutside);
+    document.body.style.overflow = ''; // S'assurer de réactiver le défilement
+});
 
 const handleImageError = (event) => {
     event.target.src = `https://ui-avatars.com/api/?name=${user.name}&color=7F9CF5&background=EBF4FF&size=40`;
@@ -218,35 +252,46 @@ const handleLogout = () => {
     <!-- Font Awesome CDN -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 
-    <!-- Hamburger pour mobile -->
-    <button v-if="!isOpen" @click="toggleMenu"
-        class="lg:hidden fixed top-4 left-4 z-40 p-3 bg-gradient-to-br from-lime-400 to-emerald-600 rounded-xl shadow-lg hover:shadow-emerald-500/30 transform hover:scale-105 transition-all duration-300">
-        <i class="fas fa-bars text-white"></i>
-    </button>
-
-    <!-- Overlay mobile -->
+    <!-- Mobile Overlay -->
     <div v-if="isOpen" @click="closeMenu"
-        class="lg:hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-40 animate-fade-in"></div>
+        class="lg:hidden fixed inset-0 bg-black/50 backdrop-blur-sm z-40 transition-opacity duration-300"
+        :class="{ 'opacity-100': isOpen, 'opacity-0 pointer-events-none': !isOpen }"
+        @touchmove.prevent>
+    </div>
+
+    <!-- Mobile Hamburger Button -->
+    <button v-if="!isOpen" @click="toggleMenu"
+        class="lg:hidden fixed top-4 left-4 z-50 p-3 bg-gradient-to-br from-lime-400 to-emerald-600 rounded-xl shadow-lg hover:shadow-emerald-500/30 transform hover:scale-105 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500">
+        <i class="fas fa-bars text-white text-lg"></i>
+        <span class="sr-only">Ouvrir le menu</span>
+    </button>
 
     <!-- Sidebar -->
     <aside :class="[
-        'fixed lg:static inset-y-0 left-0 z-40 w-72 flex flex-col p-6 font-inter border-r border-lime-200/30 dark:border-emerald-900/50 bg-gradient-to-b from-white/95 via-white/90 to-white/85 dark:from-gray-900/95 dark:via-gray-900/90 dark:to-gray-900/85 backdrop-blur-xl h-screen transform transition-all duration-300 ease-in-out shadow-xl',
-        isOpen ? 'translate-x-0 shadow-2xl' : '-translate-x-full lg:translate-x-0'
-    ]">
-
-        <!-- Header avec Logo FC Dynamo -->
-        <div class="mb-8 px-2">
-            <div class="flex items-center justify-between mb-6">
-             
+        'w-full lg:w-72 h-full flex flex-col p-4 lg:p-6 font-inter',
+        'bg-white dark:bg-gray-900 backdrop-blur-xl',
+        'overflow-y-auto',
+        'fixed lg:static left-0 top-0 transform transition-transform duration-300 ease-in-out z-40',
+        'border-r border-gray-200 dark:border-gray-800',
+        isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
+    ]"
+    :aria-expanded="isOpen"
+    :aria-hidden="!isOpen"
+    @click.stop>
+        
+        <!-- Mobile Header -->
+        <div class="mb-6 lg:mb-8">
+            <div class="flex items-center justify-between mb-4 lg:hidden">
+                <h1 class="text-lg font-bold text-gray-900 dark:text-white">Menu</h1>
                 <button @click="closeMenu"
-                    class="lg:hidden p-2 rounded-lg hover:bg-lime-500/10 dark:hover:bg-emerald-500/10 transition-all">
-                    <i class="fas fa-times text-emerald-600 dark:text-lime-400"></i>
+                    class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-all">
+                    <i class="fas fa-times text-gray-600 dark:text-gray-400 text-lg"></i>
                 </button>
             </div>
 
-            <!-- User Card avec style Blue Lock -->
+            <!-- User Card -->
             <div
-                class="relative overflow-hidden rounded-xl bg-gradient-to-r from-white to-lime-50/50 dark:from-gray-800 dark:to-emerald-900/30 p-4 border border-lime-200 dark:border-emerald-800 shadow-sm">
+                class="relative overflow-hidden rounded-xl bg-gradient-to-r from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 p-4 border border-gray-200 dark:border-gray-700 shadow-sm">
                 <div
                     class="absolute top-0 right-0 w-16 h-16 bg-gradient-to-br from-lime-400/20 to-emerald-600/20 rounded-full -translate-y-8 translate-x-4">
                 </div>
@@ -273,16 +318,14 @@ const handleLogout = () => {
                         </div>
                     </div>
                 </div>
-
-
             </div>
         </div>
 
-        <!-- Navigation principale - Menu de combat -->
-        <nav class="flex flex-col gap-1.5 flex-1 overflow-y-auto">
+        <!-- Navigation -->
+        <nav class="flex flex-col gap-1.5 flex-1 overflow-y-auto pb-4">
             <div class="px-2 mb-3">
                 <span class="text-xs font-bold uppercase tracking-wider text-emerald-600 dark:text-lime-400">
-                    Arène de Combat
+                    Accès rapide
                 </span>
                 <div class="h-0.5 w-12 bg-gradient-to-r from-lime-400 to-emerald-500 rounded-full mt-1"></div>
             </div>
@@ -291,141 +334,124 @@ const handleLogout = () => {
                 class="group relative flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 hover:translate-x-1"
                 :class="item.active
                     ? 'bg-gradient-to-r from-lime-400/20 to-emerald-500/20 border-l-4 border-emerald-500 dark:border-lime-400 shadow-sm'
-                    : 'hover:bg-lime-500/5 dark:hover:bg-emerald-500/5 border-l-4 border-transparent'
-                    ">
-            <!-- Icon avec effet Blue Lock -->
-            <div :class="[
-                'w-9 h-9 rounded-lg flex items-center justify-center transition-all duration-300',
-                item.active
-                    ? 'bg-gradient-to-br from-lime-400 to-emerald-600 shadow-lg'
-                    : 'bg-lime-100 dark:bg-emerald-900/30 group-hover:bg-gradient-to-br group-hover:from-lime-300 group-hover:to-emerald-500'
-            ]">
-                <i :class="item.active
-                    ? 'text-white'
-                    : 'text-lime-600 dark:text-emerald-400 group-hover:text-white'"></i>
-            </div>
-
-            <div class="flex-1 min-w-0">
-                <p class="text-sm font-semibold truncate" :class="item.active
-                    ? 'text-gray-900 dark:text-white'
-                    : 'text-gray-700 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-white'">
-                    {{ item.label }}
-                </p>
-                <p v-if="item.description" class="text-xs text-gray-500 dark:text-gray-400 truncate mt-0.5">
-                    {{ item.description }}
-                </p>
-            </div>
-
-            <!-- Badges de notification -->
-            <div v-if="item.label === 'Reflections' && Notification > 0" class="animate-pulse">
-                <div class="relative">
-                    <div
-                        class="w-6 h-6 bg-gradient-to-br from-red-500 to-red-600 rounded-full flex items-center justify-center shadow-lg">
-                        <span class="text-xs font-bold text-white">{{ Notification }}</span>
-                    </div>
-                    <div class="absolute inset-0 bg-red-400 rounded-full animate-ping opacity-75"></div>
+                    : 'hover:bg-gray-100 dark:hover:bg-gray-800 border-l-4 border-transparent'
+                    "
+                @click="handleLinkClick">
+                <!-- Icon -->
+                <div :class="[
+                    'w-9 h-9 rounded-lg flex items-center justify-center transition-all duration-300',
+                    item.active
+                        ? 'bg-gradient-to-br from-lime-400 to-emerald-600 shadow-lg'
+                        : 'bg-gray-100 dark:bg-gray-800 group-hover:bg-gradient-to-br group-hover:from-lime-300 group-hover:to-emerald-500'
+                ]">
+                    <i :class="[item.icon, item.active
+                        ? 'text-white'
+                        : 'text-gray-600 dark:text-gray-400 group-hover:text-white']"></i>
                 </div>
-            </div>
 
-            <div v-if="item.label === 'Membres' && $page.props.inactiveUsersCount > 0" class="animate-pulse">
-                <div class="relative">
-                    <div
-                        class="w-6 h-6 bg-gradient-to-br from-amber-500 to-amber-600 rounded-full flex items-center justify-center shadow-lg">
-                        <span class="text-xs font-bold text-white">{{ $page.props.inactiveUsersCount }}</span>
-                    </div>
-                    <div class="absolute inset-0 bg-amber-400 rounded-full animate-ping opacity-75"></div>
+                <div class="flex-1 min-w-0">
+                    <p class="text-sm font-semibold truncate" :class="item.active
+                        ? 'text-gray-900 dark:text-white'
+                        : 'text-gray-700 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-white'">
+                        {{ item.label }}
+                    </p>
+                    <p v-if="item.description" class="text-xs text-gray-500 dark:text-gray-400 truncate mt-0.5">
+                        {{ item.description }}
+                    </p>
                 </div>
-            </div>
 
-            <!-- Flèche pour item actif -->
-            <div v-if="item.active" class="ml-2">
-                <i class="fas fa-chevron-right text-xs text-emerald-500 dark:text-lime-400"></i>
-            </div>
+                <!-- Badges -->
+                <div v-if="item.label === 'Reflections' && Notification > 0" class="animate-pulse">
+                    <div class="relative">
+                        <div
+                            class="w-6 h-6 bg-gradient-to-br from-red-500 to-red-600 rounded-full flex items-center justify-center shadow-lg">
+                            <span class="text-xs font-bold text-white">{{ Notification }}</span>
+                        </div>
+                        <div class="absolute inset-0 bg-red-400 rounded-full animate-ping opacity-75"></div>
+                    </div>
+                </div>
+
+                <div v-if="item.label === 'Membres' && $page.props.inactiveUsersCount > 0" class="animate-pulse">
+                    <div class="relative">
+                        <div
+                            class="w-6 h-6 bg-gradient-to-br from-amber-500 to-amber-600 rounded-full flex items-center justify-center shadow-lg">
+                            <span class="text-xs font-bold text-white">{{ $page.props.inactiveUsersCount }}</span>
+                        </div>
+                        <div class="absolute inset-0 bg-amber-400 rounded-full animate-ping opacity-75"></div>
+                    </div>
+                </div>
+
+                <!-- Active arrow -->
+                <div v-if="item.active" class="ml-2">
+                    <i class="fas fa-chevron-right text-xs text-emerald-500 dark:text-lime-400"></i>
+                </div>
             </Link>
         </nav>
 
-        <!-- Zone de Stratégie (Bottom Menu) -->
-        <div class="mt-auto pt-6 border-t border-lime-200/30 dark:border-emerald-900/30">
-            
-
+        <!-- Bottom Section -->
+        <div class="mt-auto pt-6 border-t border-gray-200 dark:border-gray-800">
             <div class="space-y-1.5">
-                
-               
-                <!-- Logout - Quitter l'arène -->
+                <!-- Logout -->
                 <button @click="handleLogout"
                     class="group w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-gradient-to-r hover:from-red-500/10 hover:to-red-600/10 border border-red-200 dark:border-red-900/30 transition-all duration-300">
                     <div
                         class="w-8 h-8 rounded-lg bg-red-100 dark:bg-red-900/20 flex items-center justify-center group-hover:bg-gradient-to-br group-hover:from-red-500 group-hover:to-red-600 transition-all">
-                        <i
-                            class="fas fa-sign-out-alt text-sm text-red-500 dark:text-red-400 group-hover:text-white"></i>
+                        <i class="fas fa-sign-out-alt text-sm text-red-500 dark:text-red-400 group-hover:text-white"></i>
                     </div>
                     <p class="text-sm font-medium text-red-600 dark:text-red-400 group-hover:text-white">
-                        Quitter l'Arène
+                        Déconnexion
                     </p>
-                    <span class="text-xs text-red-400 dark:text-red-500 ml-auto group-hover:text-white/70">
-                        ÉGO ↓
-                    </span>
                 </button>
             </div>
-
-            <br><br></br>
         </div>
     </aside>
 </template>
 
 <style scoped>
-@keyframes fade-in {
-    from {
-        opacity: 0;
-        backdrop-filter: blur(0);
-    }
-
-    to {
-        opacity: 1;
-        backdrop-filter: blur(8px);
-    }
-}
-
-@keyframes slide-in {
-    from {
-        transform: translateX(-100%);
-        opacity: 0;
-    }
-
-    to {
-        transform: translateX(0);
-        opacity: 1;
-    }
-}
-
-@keyframes pulse-glow {
-
-    0%,
-    100% {
-        opacity: 1;
-        transform: scale(1);
-    }
-
-    50% {
-        opacity: 0.8;
-        transform: scale(1.05);
-    }
-}
-
-.animate-fade-in {
-    animation: fade-in 0.3s ease-out forwards;
-}
-
-.animate-pulse {
-    animation: pulse-glow 2s infinite;
-}
-
-
-
 /* Smooth transitions */
 * {
     transition-property: background-color, border-color, color, fill, stroke, transform, opacity;
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
     transition-duration: 200ms;
 }
+
+/* Scrollbar styling */
+nav::-webkit-scrollbar {
+    width: 4px;
+}
+
+nav::-webkit-scrollbar-track {
+    background: rgba(203, 213, 225, 0.1);
+    border-radius: 10px;
+}
+
+nav::-webkit-scrollbar-thumb {
+    background: linear-gradient(to bottom, rgb(132, 204, 22), rgb(16, 185, 129));
+    border-radius: 10px;
+}
+
+nav::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(to bottom, rgb(101, 163, 13), rgb(5, 150, 105));
+}
+
+/* Dark mode scrollbar */
+.dark nav::-webkit-scrollbar-track {
+    background: rgba(31, 41, 55, 0.1);
+}
+
+@keyframes pulse-glow {
+    0%, 100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.8;
+        transform: scale(1.05);
+    }
+}
+
+.animate-pulse {
+    animation: pulse-glow 2s infinite;
+}
 </style>
+<!-- [file content end] -->
