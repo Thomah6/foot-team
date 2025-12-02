@@ -13,7 +13,56 @@
     padding: 2rem;
     color: #fff;
 } */
+/* Couleurs du thème vert citron */
+:root {
+  --citron-50: #f7fee7;
+  --citron-100: #ecfccb;
+  --citron-200: #d9f99d;
+  --citron-300: #bef264;
+  --citron-400: #a3e635;
+  --citron-500: #84cc16;
+  --citron-600: #65a30d;
+  --citron-700: #4d7c0f;
+  --citron-800: #3f6212;
+  --citron-900: #365314;
+}
 
+.bg-citron-500 {
+  background-color: var(--citron-500);
+}
+.hover\:bg-citron-600:hover {
+  background-color: var(--citron-600);
+}
+.text-citron-500 {
+  color: var(--citron-500);
+}
+.border-citron-500 {
+  border-color: var(--citron-500);
+}
+.focus\:ring-citron-500:focus {
+  --tw-ring-color: var(--citron-500);
+}
+
+.dark .bg-citron-500 {
+  background-color: var(--citron-600);
+}
+.dark .hover\:bg-citron-600:hover {
+  background-color: var(--citron-700);
+}
+.dark .text-citron-500 {
+  color: var(--citron-400);
+}
+.dark .border-citron-500 {
+  border-color: var(--citron-600);
+}
+.dark .focus\:ring-citron-500:focus {
+  --tw-ring-color: var(--citron-600);
+}
+
+/* Transitions douces */
+* {
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
 .container {
     max-width: 800px;
     margin: 0 auto;

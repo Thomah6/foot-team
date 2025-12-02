@@ -5,15 +5,13 @@ const identity = usePage().props.identity;
 </script>
 
 <template>
- 
-    <div class="flex items-center space-x-2">
-      <img 
-        v-if="identity?.logo" 
-        :src="identity.logo" 
-        alt="Logo du club" 
-         class="w-50 h-50 rounded-full  object-cover border border-gray-300 shadow-sm"
+    <div class="flex items-center space-x-3">
+      <img
+        v-if="identity?.logo"
+        :src="identity.logo"
+        alt="Logo du club"
+         class="w-12 h-12 rounded-full object-cover border-2 border-citron-500 dark:border-citron-600 shadow-lg"
       />
-      <span class="font-bold">{{ identity?.name }}</span>
+      <span class="font-bold text-gray-800 dark:text-gray-100 text-lg">{{ identity?.name }}</span>
     </div>
-
 </template>

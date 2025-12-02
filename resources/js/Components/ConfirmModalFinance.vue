@@ -8,14 +8,14 @@ defineProps({
 defineEmits(['confirm', 'cancel'])
 </script>
 <template>
-  <div v-if="show" class="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-    <div class="bg-white rounded-lg shadow-lg w-full max-w-sm p-4">
-      <h2 class="font-bold text-lg mb-2">{{ title }}</h2>
-      <p class="text-sm text-gray-700 mb-4">{{ message }}</p>
-      <div class="flex justify-end gap-2">
+  <div v-if="show" class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 dark:bg-black/60">
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-2xl w-full max-w-sm p-6 border border-gray-200 dark:border-gray-700">
+      <h2 class="font-bold text-lg mb-3 text-gray-800 dark:text-gray-100">{{ title }}</h2>
+      <p class="text-sm text-gray-600 dark:text-gray-300 mb-6">{{ message }}</p>
+      <div class="flex justify-end gap-3">
         <button
           type="button"
-          class="px-3 py-1 text-sm border rounded"
+          class="px-4 py-2 text-sm font-medium rounded-lg border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
           @click="$emit('cancel')"
           :disabled="loading"
         >
@@ -23,7 +23,7 @@ defineEmits(['confirm', 'cancel'])
         </button>
         <button
           type="button"
-          class="px-3 py-1 text-sm bg-blue-600 text-white rounded flex items-center gap-2"
+          class="px-4 py-2 text-sm font-medium rounded-lg bg-citron-500 hover:bg-citron-600 text-white flex items-center gap-2 transition-colors shadow-sm"
           @click="$emit('confirm')"
           :disabled="loading"
         >
@@ -37,4 +37,3 @@ defineEmits(['confirm', 'cancel'])
     </div>
   </div>
 </template>
-

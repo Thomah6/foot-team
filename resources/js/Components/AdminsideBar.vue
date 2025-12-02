@@ -107,7 +107,7 @@ const menu = computed(() => {
                 link: route("admin.members.index"),
                 active: route().current("admin.members.index"),
             },
-            
+
         {
             label: 'Stats des membres',
             icon: 'fas fa-chart-bar',
@@ -217,19 +217,19 @@ const handleLogout = () => {
 <template>
     <!-- Font Awesome CDN -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-    
+
     <!-- Hamburger pour mobile -->
     <button v-if="!isOpen" @click="toggleMenu"
-        class="lg:hidden fixed top-4 left-4 z-50 p-3 bg-white dark:bg-gray-800 rounded-lg shadow hover:bg-gray-100 dark:hover:bg-gray-700 transition">
+        class="lg:hidden fixed top-4 left-4 z-50 p-3 bg-white dark:bg-gray-800 rounded-xl shadow-lg hover:bg-citron-50 dark:hover:bg-gray-700 transition-all duration-200 border border-gray-200 dark:border-gray-700">
         <i class="fas fa-bars text-gray-700 dark:text-gray-200"></i>
     </button>
 
     <!-- Overlay mobile -->
-    <div v-if="isOpen" @click="closeMenu" class="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-40"></div>
+    <div v-if="isOpen" @click="closeMenu" class="lg:hidden fixed inset-0 bg-black bg-opacity-50 dark:bg-opacity-70 z-40"></div>
 
     <!-- Sidebar -->
     <aside :class="[
-        'fixed lg:static inset-y-0 left-0 z-50 w-64 flex flex-col p-4 font-inter border-r border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 h-screen transform transition-transform duration-300 ease-in-out',
+        'fixed lg:static inset-y-0 left-0 z-50 w-64 flex flex-col p-4 font-inter border-r border-gray-200 dark:border-gray-700 bg-gradient-to-b from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 h-screen transform transition-transform duration-300 ease-in-out',
         isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
     ]">
 
@@ -239,8 +239,8 @@ const handleLogout = () => {
                 <div class="relative">
                     <img :src="user.avatar && user.avatar !== '' ? '/storage/' + user.avatar : `https://ui-avatars.com/api/?name=${user.name}&color=7F9CF5&background=EBF4FF&size=40`"
                          @error="handleImageError"
-                         class="w-10 h-10 rounded-lg object-cover border-2 border-white dark:border-gray-700 shadow-sm"/>
-                    <div class="absolute -bottom-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-white dark:border-gray-700"></div>
+                         class="w-10 h-10 rounded-lg object-cover border-2 border-white dark:border-gray-700 shadow-md"/>
+                    <div class="absolute -bottom-1 -right-1 w-3 h-3 bg-citron-500 rounded-full border-2 border-white dark:border-gray-700"></div>
                 </div>
                 <div>
                     <h1 class="text-base font-bold text-gray-900 dark:text-white">{{ user.name }}</h1>
@@ -248,43 +248,39 @@ const handleLogout = () => {
                 </div>
             </div>
 
-            <button @click="closeMenu" class="lg:hidden p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition">
+            <button @click="closeMenu" class="lg:hidden p-2 rounded-lg hover:bg-citron-50 dark:hover:bg-gray-700 transition-colors">
                 <i class="fas fa-times text-gray-600 dark:text-gray-300"></i>
             </button>
         </div>
 
         <!-- Navigation -->
-        <nav class="flex flex-col gap-2 mt-4 flex-1 overflow-y-auto">
+        <nav class="flex flex-col gap-2 mt-6 flex-1 overflow-y-auto">
             <Link v-for="(item, index) in menu" :key="index" :href="item.link"
-                class="flex items-center gap-3 px-3 py-2 rounded-md transition-colors" :class="item.active
-                    ? 'bg-blue-500/20 text-blue-600'
-                    : 'hover:bg-blue-500/10 text-text-primary-light dark:text-text-primary-dark'
+                class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200" :class="item.active
+                    ? 'bg-citron-500 text-white shadow-sm'
+                    : 'hover:bg-citron-50 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:shadow-sm'
                     ">
-            <i :class="item.icon" class="text-lg w-5 text-center"></i>
-            <p class="text-sm font-medium dark:text-gray-100">{{ item.label }}</p>
-            <span v-if="item.label === 'Reflections' && Notification > 0" class="ml-2 inline-flex items-center justify-center h-5 min-w-[20px] px-1.5 rounded-full text-xs font-bold text-white bg-red-500">
+            <i  class="text-lg w-5 text-center" :class="item.active ? 'text-white' : 'text-citron-500 dark:text-citron-400'"></i>
+            <p class="text-sm font-medium">{{ item.label }}</p>
+            <span v-if="item.label === 'Reflections' && Notification > 0" class="ml-auto inline-flex items-center justify-center h-5 min-w-[20px] px-1.5 rounded-full text-xs font-bold text-white bg-red-500">
                 {{ Notification }}
             </span>
-            <span v-if="item.label === 'Membres' && $page.props.inactiveUsersCount > 0" class="ml-2 inline-flex items-center justify-center h-5 min-w-[20px] px-1.5 rounded-full text-xs font-bold text-white bg-amber-500">
+            <span v-if="item.label === 'Membres' && $page.props.inactiveUsersCount > 0" class="ml-auto inline-flex items-center justify-center h-5 min-w-[20px] px-1.5 rounded-full text-xs font-bold text-white bg-amber-500">
                 {{ $page.props.inactiveUsersCount }}
             </span>
             </Link>
         </nav>
 
-
-
-
-
         <div class="mt-auto flex flex-col gap-2 border-t border-gray-200 dark:border-gray-700 pt-4">
             <Link v-for="(item, index) in bottomMenu" :key="`bottom-${index}`" :href="item.link"
-                class="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-blue-500/10 transition-colors text-text-primary-light dark:text-text-primary-dark">
-            <i :class="item.icon" class="text-lg w-5 text-center"></i>
+                class="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-citron-50 dark:hover:bg-gray-800 transition-colors text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white">
+            <i :class="item.icon" class="text-lg w-5 text-center text-citron-500 dark:text-citron-400"></i>
             <p class="text-sm font-medium">{{ item.label }}</p>
             </Link>
 
             <!-- Bouton logout -->
             <button @click="handleLogout"
-                class="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-red-500/10 transition-colors text-red-600 dark:text-red-400 w-full">
+                class="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors text-red-600 dark:text-red-400 w-full mt-2">
                 <i class="fas fa-sign-out-alt text-lg w-5 text-center"></i>
                 <p class="text-sm font-medium">Déconnexion</p>
             </button>
