@@ -10,6 +10,7 @@ const form = useForm({
   title: props.news.title,
   content: props.news.content,
   is_published: props.news.is_published,
+  image: null, // <-- Ajout du champ image
 });
 </script>
 
@@ -21,12 +22,17 @@ const form = useForm({
     </h1>
 
     <!-- Form -->
-    <form @submit.prevent="form.put(`/admin/news/${props.news.id}`)" class="space-y-6">
+    <form
+      @submit.prevent="form.post(`/admin/news/${props.news.id}`, { forceFormData: true })"
+      class="space-y-6"
+    >
 
+      <!-- Composant du formulaire -->
       <NewsForm
         :form="form"
         :errors="form.errors"
         :processing="form.processing"
+        :news="props.news"
       />
 
       <!-- Submit Button -->
