@@ -28,10 +28,6 @@ class CommentsSuggestionController extends Controller
     {
 
         $comment->delete();
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Commentaire supprimé avec succès.'
-        ]);
+        return redirect()->back()->with('success', 'Commentaire supprimé !');
     }
 }

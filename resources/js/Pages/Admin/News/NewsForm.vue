@@ -37,14 +37,17 @@ watch(() => props.news, (newVal) => {
 
     <!-- IMAGE UPLOAD -->
     <div class="space-y-2">
-      <label class="block font-medium">Image</label>
+      <label class="font-semibold text-gray-700 dark:text-gray-300">Image</label>
 
       <!-- Preview -->
-      <div v-if="imagePreview" class="mb-2">
-        <img :src="imagePreview" class="h-32 w-auto rounded border" alt="Aperçu">
+      <div v-if="imagePreview" class="mt-3 w-full rounded-lg overflow-hidden shadow-md border border-gray-300 dark:border-gray-600">
+        <img :src="imagePreview" class="w-full h-64 sm:h-72 object-cover rounded-lg" alt="Aperçu">
       </div>
 
-      <input type="file" accept="image/*" @change="handleFileChange" class="block w-full text-sm">
+      <input type="file" accept="image/*" @change="handleFileChange" class="block w-full text-sm text-gray-700 bg-white dark:bg-gray-800 
+                     border border-gray-300 dark:border-gray-600 rounded-lg cursor-pointer
+                     file:bg-green-600 file:text-white file:border-none file:px-4 file:py-2 file:rounded-lg 
+                     hover:file:bg-green-700 transition">
 
       <div v-if="errors.image" class="text-red-500 text-sm">
         {{ errors.image }}
@@ -56,10 +59,11 @@ watch(() => props.news, (newVal) => {
       <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
         Titre
       </label>
-      <input v-model="form.title" type="text"
+      <input v-model="form.title" type="text" name="title"
         class="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-700
                bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100
                focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" />
+
       <p v-if="errors.title" class="text-sm text-red-500">{{ errors.title }}</p>
     </div>
 
@@ -68,11 +72,12 @@ watch(() => props.news, (newVal) => {
       <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
         Contenu
       </label>
-      <textarea v-model="form.content"
+      <textarea v-model="form.content" name="content"
         class="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-700
                bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100
                min-h-[150px]
-               focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"></textarea>
+               focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+      </textarea>
       <p v-if="errors.content" class="text-sm text-red-500">{{ errors.content }}</p>
     </div>
 

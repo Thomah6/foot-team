@@ -23,11 +23,11 @@ defineProps({
             <div class="max-w-4xl mx-auto space-y-6">
                 <div class="flex items-center justify-between">
                     <div>
-                        <h1 class="text-2xl font-bold">Profil</h1>
-                        <p class="text-sm text-gray-500">Mettez à jour vos informations de profil</p>
+                        <h1 class="text-2xl font-bold text-gray-900 dark:text-citron-50">Profil</h1>
+                        <p class="text-sm text-gray-500 dark:text-citron-200">Mettez à jour vos informations de profil</p>
                     </div>
                     <div>
-                        <Link href="/dashboard" class="text-sm text-gray-600 hover:text-gray-900">
+                        <Link href="/dashboard" class="text-sm text-citron-600 dark:text-citron-400 hover:text-citron-800 dark:hover:text-citron-300 transition-colors">
                             <i class="fas fa-arrow-left mr-2"></i>
                             Retour au dashboard
                         </Link>
@@ -35,11 +35,11 @@ defineProps({
                 </div>
 
                 <!-- Avatar et Poster -->
-                <div class="bg-white p-4 shadow sm:rounded-lg sm:p-8">
+                <div class="bg-white dark:bg-gray-800 p-4 shadow-lg sm:rounded-xl sm:p-8 border border-gray-100 dark:border-gray-700">
                     <UpdateAvatarForm class="max-w-2xl" />
                 </div>
 
-                <div class="bg-white p-4 shadow sm:rounded-lg sm:p-8">
+                <div class="bg-white dark:bg-gray-800 p-4 shadow-lg sm:rounded-xl sm:p-8 border border-gray-100 dark:border-gray-700">
                     <UpdateProfileInformationForm
                         :must-verify-email="mustVerifyEmail"
                         :status="status"
@@ -47,11 +47,11 @@ defineProps({
                     />
                 </div>
 
-                <div class="bg-white p-4 shadow sm:rounded-lg sm:p-8">
+                <div class="bg-white dark:bg-gray-800 p-4 shadow-lg sm:rounded-xl sm:p-8 border border-gray-100 dark:border-gray-700">
                     <UpdatePasswordForm class="max-w-xl" />
                 </div>
 
-                <div class="bg-white p-4 shadow sm:rounded-lg sm:p-8">
+                <div class="bg-white dark:bg-gray-800 p-4 shadow-lg sm:rounded-xl sm:p-8 border border-gray-100 dark:border-gray-700">
                     <DeleteUserForm class="max-w-xl" />
                 </div>
             </div>

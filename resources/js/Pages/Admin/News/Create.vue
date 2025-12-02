@@ -9,77 +9,55 @@ const form = useForm({
   title: "",
   content: "",
   is_published: false,
-  image: null        // <── AJOUT
+  image: null
 });
 
-// Gestion du fichier et du preview
 const handleFile = (e) => {
   const file = e.target.files[0];
   form.image = file;
 
   if (file) {
     imagePreview.value = URL.createObjectURL(file);
+  } else {
+    imagePreview.value = null;
   }
 };
 </script>
 
 <template>
-  <div class="max-w-3xl mx-auto bg-white dark:bg-gray-900 p-6 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700">
+  <div class="min-h-screen flex flex-col bg-gray-100 dark:bg-gray-900 p-4">
+    <div class="flex-1 flex justify-center items-start">
+      <div class="w-full max-w-3xl bg-white dark:bg-gray-900 p-6 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 flex flex-col flex-1">
 
-    <!-- Header -->
-    <h1 class="text-3xl font-bold mb-6 text-gray-800 dark:text-gray-100">
-      Créer une actualité
-    </h1>
+        <!-- Header -->
+        <h1 class="text-2xl sm:text-3xl font-bold mb-6 text-gray-800 dark:text-gray-100">
+          Créer une actualité
+        </h1>
 
-    <!-- Form -->
-    <form 
-      @submit.prevent="form.post('/admin/news', { forceFormData: true })" 
-      class="space-y-6"
-    >
-
-      <NewsForm 
-        :form="form"
-        :errors="form.errors"
-        :processing="form.processing"
-      />
-
-      <!-- Upload Image -->
-      <div class="space-y-2">
-        <label class="font-semibold text-gray-700 dark:text-gray-300">
-          Image de l’actualité
-        </label>
-
-        <input
-          type="file"
-          accept="image/*"
-          @change="handleFile"
-          class="block w-full text-sm text-gray-700 bg-white dark:bg-gray-800 
-                 border border-gray-300 dark:border-gray-600 rounded-lg cursor-pointer
-                 file:bg-green-600 file:text-white file:border-none file:px-4 file:py-2 file:rounded-lg 
-                 hover:file:bg-green-700 transition"
-        />
-
-        <!-- Preview -->
-        <div 
-          v-if="imagePreview" 
-          class="mt-3 w-full rounded-lg overflow-hidden shadow-md border border-gray-300 dark:border-gray-600"
+        <!-- Formulaire -->
+        <form
+          @submit.prevent="form.post('/admin/news', { forceFormData: true })"
+          class="space-y-6 flex flex-col flex-1 overflow-auto"
         >
-          <img :src="imagePreview" class="w-full h-64 object-cover" />
-        </div>
-      </div>
+          <NewsForm
+            :form="form"
+            :errors="form.errors"
+            :processing="form.processing"
+          />
 
-      <!-- Submit Button -->
-      <div class="flex justify-end">
-        <button
-          type="submit"
-          class="px-6 py-2.5 bg-green-600 hover:bg-green-700 text-white font-medium 
-                 rounded-lg shadow transition disabled:opacity-60"
-          :disabled="form.processing"
-        >
-          Enregistrer
-        </button>
-      </div>
+          <!-- Submit -->
+          <div class="flex justify-end mt-auto">
+            <button
+              type="submit"
+              class="px-6 py-2.5 bg-green-600 hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600 text-white font-medium rounded-lg shadow transition disabled:opacity-60"
+              :disabled="form.processing"
+            >
+              Enregistrer
+            </button>
+          </div>
 
-    </form>
+        </form>
+      </div>
+    </div>
   </div>
 </template>

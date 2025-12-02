@@ -116,11 +116,7 @@ const toggleSidebarMenu = () => {
             <div class="flex flex-col sm:flex-row items-center justify-between max-w-6xl mx-auto mb-8 sm:mb-12 gap-6">
                 <!-- Logo et titre -->
                 <div class="flex items-center gap-3 sm:gap-4">
-                    <div class="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-slate-200 to-slate-300 rounded-xl flex items-center justify-center border border-slate-300">
-                        <i class="fas fa-hourglass-half text-slate-700 text-lg sm:text-2xl"></i>
-                    </div>
-                    <div class="text-slate-700 font-light text-lg sm:text-xl tracking-wider hidden sm:block">FOOT TEAM</div>
-                </div>
+                   </div>
                 
                 <!-- Titre central avec bouton hamburger -->
                 <div class="text-center order-first sm:order-none flex items-center gap-6 sm:pb-4">
