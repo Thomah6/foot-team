@@ -99,12 +99,7 @@ class SuggestionController extends Controller
 
     public function destroy(Suggestion $suggestion)
     {
-        if (!auth()->user()->isAdmin) {
-        abort(403);
-        }
-
         $suggestion->delete();
-
-        return back();
+        return redirect()->back()->with('success', 'Suggestion supprimé !');
     }
 }

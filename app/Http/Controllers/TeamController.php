@@ -57,7 +57,7 @@ class TeamController extends Controller
     public function destroy(Team $id)
     {
         $id->delete();
-        return back();
+        return redirect()->back()->with('success', 'Equipe supprimé !');
     }
 
     public function affectPage(Team $team)

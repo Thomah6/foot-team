@@ -30,6 +30,33 @@
       </button>
     </header>
 
+ <!-- MODAL SUCCESS -->
+<Transition name="fade">
+    <div v-if="showModal" class="fixed inset-0 flex items-center justify-center z-50" >
+    <!-- Fond sombre -->
+    <div class="absolute inset-0 bg-black/40"></div>
+
+    <!-- Modal -->
+    <div class="relative bg-white w-[90%] max-w-sm rounded-2xl shadow-xl p-6 text-center animate-bounce-in" >
+
+        <div class="w-14 h-14 mx-auto mb-3 flex items-center justify-center bg-green-100 text-green-600 rounded-full text-2xl">
+            ✓
+        </div>
+
+        <p class="text-gray-800 font-semibold text-sm">
+        {{ successMessage }}
+        </p>
+
+        <button
+            class="mt-4 text-xs text-gray-500 hover:text-gray-700"
+            @click="showModal = false"
+            >
+            Fermer
+        </button>
+    </div>
+  </div>
+</Transition>
+
     <!-- Suggestions -->
     <div class="mt-10 flex flex-col gap-8">
 
@@ -67,7 +94,7 @@
 
             <!-- Actions -->
             <div class="ml-auto flex items-center gap-3 text-gray-500 dark:text-gray-400">
-              <button v-if="isAdmin" @click="confirmDelete(suggestion.id)">
+              <button v-if="isAdmin" @click="deleteSuggestion(suggestion.id)">
                 <i class="fas fa-trash-alt"></i>
               </button>
               <button @click="toggleExpand(suggestion.id)">
@@ -287,13 +314,33 @@
   </div>
 </main>
 
-
+<!-- Delete confirmation modal -->
+    <ConfirmModal
+        v-model="showDeleteModalComment"
+        title="Supprimer votre commmentire"
+        message="Êtes-vous sûr(e) de vouloir supprimer cette commentaire ? Cette action est irréversible."
+        confirm-text="Supprimer"
+        cancel-text="Annuler"
+        variant="danger"
+        @confirm="confirmDeleteComment"
+    />
+<!-- Delete confirmation modal -->
+    <ConfirmModal
+        v-model="showDeleteModalSuggestion"
+        title="Supprimer la suggestion"
+        message="Êtes-vous sûr(e) de vouloir supprimer cette suggestion ? Cette action est irréversible."
+        confirm-text="Supprimer"
+        cancel-text="Annuler"
+        variant="danger"
+        @confirm="confirmDeleteSuggestion"
+    />
   </div>
 </template>
 
 <script setup>
 import { ref, reactive, computed, watch } from 'vue'
-import { router } from '@inertiajs/vue3'
+import { router, usePage } from '@inertiajs/vue3'
+import ConfirmModal from '@/Components/ConfirmModal.vue'
 import AdminsideBar from "@/Components/AdminsideBar.vue";
 
 // Props from controller (ensure controller sends these)
@@ -379,11 +426,7 @@ async function submitComment(suggestionId) {
   }
 }
 
-function confirmDelete(suggestionId) {
-  if (!isAdmin.value) return
-  if (!confirm('Voulez-vous vraiment supprimer cette suggestion ?')) return
-  router.delete(`/suggestions/${suggestionId}`)
-}
+
 
 // small helpers to compute reaction counts and whether current user reacted
 function countReactions(suggestion, type) {
@@ -436,13 +479,62 @@ async function updateComment() {
 }
 
 //  Supprimer un commentaire
-function deleteComment(commentId) {
-  if (!confirm("Voulez-vous supprimer ce commentaire ?")) return
+const deletingCommentId = ref(null)
+const showDeleteModalComment = ref(false)
 
-  router.delete(`/comments/${commentId}`, {
-    onError: (err) => console.error(err)
-  })
+function deleteComment(commentId) {
+
+    deletingCommentId.value = commentId
+    showDeleteModalComment.value = true
 }
+
+function confirmDeleteComment() {
+    if (!deletingCommentId.value) return
+    router.delete(`/comments/${deletingCommentId.value}`, {
+       onSuccess: () => {
+         deletingTeamId.value = null
+       }
+    })
+
+}
+
+//Supprimer une suggestion
+const deletingSuggestId = ref(null)
+const showDeleteModalSuggestion = ref(false)
+
+function deleteSuggestion(suggestionId) {
+    deletingSuggestId.value = suggestionId
+    showDeleteModalSuggestion.value = true
+}
+
+function confirmDeleteSuggestion() {
+    if (!deletingSuggestId.value) return
+    router.delete(`/suggestions/${deletingSuggestId.value}`, {
+       onSuccess: () => {
+         deletingSuggestId.value = null
+       }
+    })
+
+}
+const page = usePage()
+
+// On récupère le message venant de Inertia
+const successMessage = computed(() => page.props.flash.success)
+
+// Contrôle d'affichage du modal
+const showModal = ref(false)
+
+// Dès qu’il y a un message → affiche le modal
+watch(successMessage, (val) => {
+    if (val) {
+        showModal.value = true
+
+        // Disparait après 5 secondes
+        setTimeout(() => {
+            showModal.value = false
+        }, 2000)
+    }
+})
 
 </script>
 

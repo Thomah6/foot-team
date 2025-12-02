@@ -116,7 +116,7 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <!-- Save button -->
               <button
-                class="w-full bg-citron-600 hover:bg-citron-700 dark:bg-citron-500 dark:hover:bg-citron-600 text-white px-6 py-3 rounded-lg transition font-semibold text-sm md:text-base disabled:opacity-50 flex items-center justify-center gap-2"
+                class="w-full bg-blue-500 hover:bg-citron-700 dark:bg-citron-500 dark:hover:bg-citron-600 text-white px-6 py-3 rounded-lg transition font-semibold text-sm md:text-base disabled:opacity-50 flex items-center justify-center gap-2"
                 :disabled="saving"
                 @click="saveAffectation"
               >
@@ -154,7 +154,7 @@
                   class="flex-1 border border-gray-300 dark:border-gray-600 p-3 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-citron-400 dark:focus:ring-citron-500 bg-white dark:bg-gray-700 text-gray-800 dark:text-white transition"
                 />
                 <button
-                  class="bg-citron-600 hover:bg-citron-700 dark:bg-citron-500 dark:hover:bg-citron-600 text-white px-4 py-3 rounded-lg transition font-semibold text-sm whitespace-nowrap disabled:opacity-50"
+                  class="bg-green-500 hover:bg-citron-700 dark:bg-citron-500 dark:hover:bg-citron-600 text-white px-4 py-3 rounded-lg transition font-semibold text-sm whitespace-nowrap disabled:opacity-50"
                   @click="doMercato"
                   :disabled="availablePlayers.length === 0 || !mercatoCount"
                 >

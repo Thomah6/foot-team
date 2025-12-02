@@ -1,6 +1,6 @@
 <script setup>
-import { useForm, router } from '@inertiajs/vue3'
-import { ref, computed } from 'vue'
+import { useForm, router, usePage } from '@inertiajs/vue3'
+import { ref, computed, watch } from 'vue'
 import ConfirmModal from '@/Components/ConfirmModal.vue'
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 
@@ -8,6 +8,27 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 const props = defineProps({
   teams: Array,
   isAdmin: Boolean
+})
+
+//Les messages de succès ou d'erreur
+const page = usePage()
+
+// On récupère le message venant de Inertia
+const successMessage = computed(() => page.props.flash.success)
+
+// Contrôle d'affichage du modal
+const showModal = ref(false)
+
+// Dès qu’il y a un message → affiche le modal
+watch(successMessage, (val) => {
+    if (val) {
+        showModal.value = true
+
+        // Disparait après 5 secondes
+        setTimeout(() => {
+            showModal.value = false
+        }, 2000)
+    }
 })
 
 const search = ref('')
@@ -95,6 +116,41 @@ function viewTeam(teamId) {
 </script>
 <template>
 <AuthenticatedLayout>
+<!-- MODAL SUCCESS -->
+<Transition name="fade">
+  <div
+    v-if="showModal"
+    class="fixed inset-0 flex items-center justify-center z-50"
+  >
+    <!-- Fond sombre -->
+    <div class="absolute inset-0 bg-black/40"></div>
+
+    <!-- Modal -->
+    <div
+      class="relative bg-white w-[90%] max-w-sm rounded-2xl shadow-xl p-6 text-center animate-bounce-in"
+    >
+      <div
+        class="w-14 h-14 mx-auto mb-3 flex items-center justify-center
+               bg-green-100 text-green-600 rounded-full text-2xl"
+      >
+        ✓
+      </div>
+
+      <p class="text-gray-800 font-semibold text-sm">
+        {{ successMessage }}
+      </p>
+
+      <button
+        class="mt-4 text-xs text-gray-500 hover:text-gray-700"
+        @click="showModal = false"
+      >
+        Fermer
+      </button>
+    </div>
+  </div>
+</Transition>
+
+
     <div class="flex flex-col md:flex-row min-h-screen bg-gray-50 dark:bg-gray-900">
         <main class="flex-1 w-full p-4 md:p-10">
             <!-- Header -->
@@ -130,7 +186,7 @@ function viewTeam(teamId) {
                     </div>
                     <button
                         type="submit"
-                        class="w-full md:w-auto bg-citron-600 hover:bg-citron-700 dark:bg-citron-500 dark:hover:bg-citron-600 text-white px-6 py-3 rounded-lg shadow transition disabled:opacity-50 font-semibold text-sm md:text-base"
+                        class="w-full md:w-auto bg-blue-600 hover:bg-citron-700 dark:bg-citron-500 dark:hover:bg-citron-600 text-white px-6 py-3 rounded-lg shadow transition disabled:opacity-50 font-semibold text-sm md:text-base"
                         :disabled="createForm.processing"
                     >
                         <i class="fas fa-plus mr-2"></i>
@@ -193,7 +249,7 @@ function viewTeam(teamId) {
                         <h2 class="font-bold text-lg md:text-xl text-gray-900 dark:text-citron-50 mb-2">{{ team.name }}</h2>
                         <p class="text-gray-600 dark:text-citron-300 text-sm mb-4">{{ team.description || 'Aucune description' }}</p>
 
-                        <div class="mb-4 p-3 bg-citron-50 dark:bg-citron-900/30 rounded-lg border border-citron-200 dark:border-citron-800">
+                        <div class="mb-4 p-3 bg-blue-50 dark:bg-citron-900/30 rounded-lg border border-citron-200 dark:border-citron-800">
                             <p class="text-sm font-semibold text-gray-700 dark:text-citron-200">
                                 <i class="fas fa-users text-citron-600 dark:text-citron-400 mr-2"></i>
                                 {{ team.users.length }} Joueur{{ team.users.length !== 1 ? 's' : '' }}
@@ -209,7 +265,7 @@ function viewTeam(teamId) {
                                     editForm.description = team.description
                                     startEdit(team)
                                 }"
-                                class="w-full bg-citron-500 hover:bg-citron-600 dark:bg-citron-600 dark:hover:bg-citron-700 text-gray-800 px-4 py-2 rounded-lg transition text-sm font-semibold"
+                                class="w-full bg-black hover:bg-citron-600 dark:bg-citron-600 dark:hover:bg-citron-700 text-white px-4 py-2 rounded-lg transition text-sm font-semibold"
                             >
                                 <i class="fas fa-edit mr-2"></i>Modifier
                             </button>
@@ -267,3 +323,24 @@ function viewTeam(teamId) {
     />
 </AuthenticatedLayout>
 </template>
+<style>
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity .3s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
+@keyframes bounceIn {
+  0%   { transform: scale(0.7); opacity: 0; }
+  60%  { transform: scale(1.05); opacity: 1; }
+  100% { transform: scale(1); }
+}
+
+.animate-bounce-in {
+  animation: bounceIn .4s ease forwards;
+}
+</style>

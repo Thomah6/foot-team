@@ -48,8 +48,8 @@ const menu = computed(() => {
         {
             label: 'Stats des membres',
             icon: 'fas fa-chart-bar',
-            link: route('admin.bureau.stats.index', [], false),
-            active: route().current('admin.bureau.stats.index.*')
+            link: route('bureau.stats.index', [], false),
+            active: route().current('bureau.stats.index')
         },
             {
                 label: "Statistiques équipes",
@@ -62,7 +62,7 @@ const menu = computed(() => {
                 icon: "fas fa-chart-pie",
                 link: route("admin.identity"),
                 active: route().current("admin.identity*"),
-            }
+            },
             { label: "Membres", icon: "fas fa-user-friends", link: route("admin.members.index"), active: route().current("admin.members.index") },
             { label: "Statistiques équipes", icon: "fas fa-chart-line", link: route("admin.team-stats.index"), active: route().current("admin.team-stats.*") },
             { label: "Identité visuelle", icon: "fas fa-chart-pie", link: route("admin.identity"), active: route().current("admin.identity*") }
@@ -99,23 +99,9 @@ const handleImageError = (event) => {
     <!-- Font Awesome CDN -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 
-    <!-- Hamburger pour mobile -->
-    <button v-if="!isOpen" @click="toggleMenu"
-        class="lg:hidden fixed top-4 left-4 z-50 p-3 bg-white dark:bg-gray-800 rounded-lg shadow hover:bg-gray-100 dark:hover:bg-gray-700 transition">
-        <i class="fas fa-bars text-gray-700 dark:text-gray-200"></i>
-    </button>
-
     <!-- Overlay mobile -->
     <div v-if="isOpen" @click="closeMenu" class="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-40"></div>
 
-    <!-- Sidebar -->
-    <aside :class="[
-        'fixed lg:static inset-y-0 left-0 z-50 w-64 flex flex-col p-4 font-inter border-r border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 h-screen transform transition-transform duration-300 ease-in-out',
-        isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
-    ]">
-
-        <!-- Logo + User -->
-        <div class="flex items-center justify-between px-2 py-2">
     <aside class="flex flex-col p-4 lg:p-6 font-inter bg-white dark:bg-gray-900 h-full overflow-y-auto border-r border-gray-200 dark:border-gray-800">
         <!-- User Card -->
         <div class="mb-6 lg:mb-8">
