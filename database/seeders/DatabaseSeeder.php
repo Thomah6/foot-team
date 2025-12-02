@@ -22,9 +22,9 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        Stat::factory(10)->create();
-        Team::factory(5)->create();
-        TeamStat::factory(15)->create();
+        // Stat::factory(10)->create();
+        // Team::factory(5)->create();
+        // TeamStat::factory(15)->create();
         
         User::factory()->create([
             'name' => 'Admin Super',
@@ -47,12 +47,6 @@ class DatabaseSeeder extends Seeder
             'password' => bcrypt('password'),
         ]);
         
-        User::factory()->create([
-            'name' => 'Alice Martin',
-            'email' => 'alice.martin@test.com',
-            'role' => 'simple',
-            'password' => bcrypt('password'),
-        ]);
         
         User::factory(10)->create();
         Reflection::factory(40)->create([]);
