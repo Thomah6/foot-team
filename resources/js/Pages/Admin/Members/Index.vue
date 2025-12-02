@@ -259,7 +259,7 @@ const getStatusColor = (isActive) => {
       </div>
 
       <!-- TABLEAU -->
-      <h1 class="text-4xl font-extrabold tracking-tight text-gray-900 dark:text-white text-center underline mb-5">
+      <h1 class="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 dark:text-white text-center underline mb-5">
         Membres
       </h1>
 

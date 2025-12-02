@@ -21,7 +21,7 @@ class MemberController extends Controller
             $search = $request->input('search');
             $query->where(function ($q) use ($search) {
                 $q->where('pseudo', 'like', "%{$search}%")
-                  ->orWhere('email', 'like', "%{$search}%");
+                    ->orWhere('email', 'like', "%{$search}%");
             });
         }
 
@@ -38,8 +38,10 @@ class MemberController extends Controller
 
         // Paginate results
         $perPage = $request->input('perPage', 10);
-        $members = $query->paginate($perPage)
-                         ->appends($request->query());
+
+        $members = $query->orderBy('created_at', 'desc')
+            ->paginate($perPage)
+            ->appends($request->query());
 
         // Compter les utilisateurs inactifs pour la notification
         $inactiveUsersCount = User::where('is_active', false)->count();
@@ -84,8 +86,8 @@ class MemberController extends Controller
 
         User::create($validated);
 
-        return redirect()->route('members.index')
-                        ->with('success', 'Membre cree avec succes');
+        return redirect()->route('admin.members.index')
+            ->with('success', 'Membre cree avec succes');
     }
 
     /**
@@ -122,7 +124,7 @@ class MemberController extends Controller
         $member->update($validated);
 
         return redirect()->route('members.index')
-                        ->with('success', 'Membre modifie avec succes');
+            ->with('success', 'Membre modifie avec succes');
     }
 
     /**
@@ -132,8 +134,8 @@ class MemberController extends Controller
     {
         $member->delete();
 
-        return redirect()->route('members.index')
-                        ->with('success', 'Membre supprime avec succes');
+        return redirect()->route('admin.members.index')
+            ->with('success', 'Membre supprime avec succes');
     }
 
     /**
@@ -144,7 +146,7 @@ class MemberController extends Controller
         $member->update(['is_active' => !$member->is_active]);
 
         return redirect()->route('members.index')
-                        ->with('success', 'Statut du membre modifie');
+            ->with('success', 'Statut du membre modifie');
     }
 
     /**

@@ -5,33 +5,16 @@ const user = usePage().props.auth.user;
 </script>
 
 <template>
-  <header class="admin-header">
+  <header class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-0 px-4 sm:px-6 py-4 sm:py-6 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 sticky top-16 sm:top-0 z-40">
     <div>
-      <!-- On pourrait mettre le titre de la page ici -->
-      <h1 class="page-title">Dashboard</h1>
+      <h1 class="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">
+        Dashboard
+      </h1>
     </div>
-    <div class="user-info">
-      <span>Bonjour, {{ user.name }}</span>
-      <!-- Un lien de déconnexion irait ici -->
+    <div class="text-sm sm:text-base font-medium text-gray-700 dark:text-gray-300">
+      <span class="inline-block px-3 py-1 rounded-full bg-emerald-100 dark:bg-emerald-900 text-emerald-800 dark:text-emerald-200">
+        Bienvenue, {{ user.name }}
+      </span>
     </div>
   </header>
 </template>
-
-<style scoped>
-.admin-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem 2rem;
-  background-color: #ffffff;
-  border-bottom: 1px solid #e0e0e0;
-}
-.page-title {
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: #333;
-}
-.user-info {
-  font-weight: 500;
-}
-</style>

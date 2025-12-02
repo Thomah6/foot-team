@@ -5,31 +5,12 @@ defineProps({
 </script>
 
 <template>
-  <div class="card">
-    <h3 v-if="title" class="card-title">{{ title }}</h3>
-    <div class="card-body">
+  <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-lg transition-all duration-200 hover:-translate-y-1 p-4 sm:p-6">
+    <h3 v-if="title" class="text-base sm:text-lg font-semibold text-gray-800 dark:text-gray-100 border-b-2 border-lime-200 dark:border-lime-700 pb-3 mb-4">
+      {{ title }}
+    </h3>
+    <div class="text-gray-700 dark:text-gray-300">
       <slot />
     </div>
   </div>
 </template>
-
-<style scoped>
-.card {
-  background-color: #ffffff;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  padding: 1.5rem;
-  transition: transform 0.2s;
-}
-.card:hover {
-    transform: translateY(-5px);
-}
-.card-title {
-  margin: 0 0 1rem 0;
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #34495e;
-  border-bottom: 1px solid #f0f0f0;
-  padding-bottom: 0.75rem;
-}
-</style>

@@ -118,8 +118,8 @@ const formatRelative = (date) => {
                     <div class="bg-gradient-to-br from-red-100 to-red-200 w-24 h-24 rounded-2xl flex items-center justify-center mx-auto mb-6 border border-red-300">
                         <i class="fas fa-hourglass-half text-red-600 text-4xl"></i>
                     </div>
-                    <h3 class="text-2xl font-thin text-lime-900 mb-3 tracking-wide">EN ATTENTE</h3>
-                    <p class="text-5xl font-thin text-red-600 mb-6">{{ props.pendingCount }}</p>
+                    <h3 class="text-lg sm:text-2xl font-thin text-lime-900 mb-3 tracking-wide">EN ATTENTE</h3>
+                    <p class="text-3xl sm:text-5xl font-thin text-red-600 mb-6">{{ props.pendingCount }}</p>
                     <Link href="/admin/stats/pending"
                           class="inline-flex items-center gap-3 bg-red-100 text-red-700 px-6 py-3 rounded-2xl font-light hover:bg-red-200 transition-all duration-300 tracking-wider border border-red-300">
                         <i class="fas fa-check"></i>
@@ -132,8 +132,8 @@ const formatRelative = (date) => {
                     <div class="bg-gradient-to-br from-lime-100 to-emerald-100 w-24 h-24 rounded-2xl flex items-center justify-center mx-auto mb-6 border border-lime-300">
                         <i class="fas fa-circle-check text-lime-600 text-4xl"></i>
                     </div>
-                    <h3 class="text-2xl font-thin text-lime-900 mb-3 tracking-wide">VALIDÉES</h3>
-                    <p class="text-5xl font-thin text-lime-600 mb-6">{{ props.validatedCount }}</p>
+                    <h3 class="text-lg sm:text-2xl font-thin text-lime-900 mb-3 tracking-wide">VALIDÉES</h3>
+                    <p class="text-3xl sm:text-5xl font-thin text-lime-600 mb-6">{{ props.validatedCount }}</p>
                     <div class="text-lime-600 font-light tracking-wider">
                         STATS PUBLIÉES
                     </div>
@@ -144,8 +144,8 @@ const formatRelative = (date) => {
                     <div class="bg-gradient-to-br from-emerald-100 to-green-100 w-24 h-24 rounded-2xl flex items-center justify-center mx-auto mb-6 border border-emerald-300">
                         <i class="fas fa-plus text-emerald-600 text-4xl"></i>
                     </div>
-                    <h3 class="text-2xl font-thin text-lime-900 mb-3 tracking-wide">AJOUTER</h3>
-                    <p class="text-5xl font-thin text-emerald-600 mb-6">+</p>
+                    <h3 class="text-lg sm:text-2xl font-thin text-lime-900 mb-3 tracking-wide">AJOUTER</h3>
+                    <p class="text-3xl sm:text-5xl font-thin text-emerald-600 mb-6">+</p>
                     <Link href="/admin/stats/create"
                           class="inline-flex items-center gap-3 bg-emerald-100 text-emerald-700 px-6 py-3 rounded-2xl font-light hover:bg-emerald-200 transition-all duration-300 tracking-wider border border-emerald-300">
                         <i class="fas fa-plus"></i>
@@ -158,8 +158,8 @@ const formatRelative = (date) => {
             <div class="bg-white/80 backdrop-blur-sm rounded-3xl p-12 text-lime-900 border border-lime-200 shadow-lg">
                 <div class="flex items-center justify-between mb-8">
                     <div>
-                        <h2 class="text-4xl font-thin mb-2 tracking-wider text-lime-900">HISTORIQUE RÉCENT</h2>
-                        <p class="text-lime-600 font-light">Dernières performances enregistrées</p>
+                        <h2 class="text-2xl sm:text-4xl font-thin mb-2 tracking-wider text-lime-900">HISTORIQUE RÉCENT</h2>
+                        <p class="text-sm sm:text-base text-lime-600 font-light">Dernières performances enregistrées</p>
                     </div>
                     <div class="bg-gradient-to-br from-lime-100 to-emerald-100 w-16 h-16 rounded-2xl flex items-center justify-center border border-lime-300">
                         <i class="fas fa-history text-lime-600 text-2xl"></i>

@@ -6,17 +6,17 @@
         <div class="mx-auto max-w-3xl">
 
             <!-- Header -->
-            <header class="flex flex-wrap items-center justify-between gap-4 pb-6 border-b border-gray-200">
+            <header class="flex flex-col sm:flex-row sm:flex-wrap items-start sm:items-center justify-between gap-4 pb-6 border-b border-gray-200">
             <div>
-                <h1 class="text-4xl font-extrabold tracking-tight text-gray-900">Suggestion Box</h1>
-                <p class="text-gray-600">Share your ideas to improve the club.</p>
+                <h1 class="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900">Suggestion Box</h1>
+                <p class="text-xs sm:text-sm text-gray-600 mt-1">Share your ideas to improve the club.</p>
             </div>
 
             <button
-                class="flex items-center gap-2 bg-blue-600 text-white px-5 py-3 rounded-xl shadow-lg hover:bg-blue-700 hover:shadow-xl transition-all"
+                class="flex items-center gap-2 bg-blue-600 text-white px-4 sm:px-5 py-2 sm:py-3 rounded-lg sm:rounded-xl text-sm sm:text-base shadow-lg hover:bg-blue-700 hover:shadow-xl transition-all"
                 @click="showNew = true"
             >
-                <i class="fas fa-plus text-sm"></i>
+                <i class="fas fa-plus text-xs sm:text-sm"></i>
                 New Suggestion
             </button>
             </header>

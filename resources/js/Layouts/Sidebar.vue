@@ -4,11 +4,11 @@ import { computed } from 'vue';
 
 // Liste de tous les liens possibles dans l'application
 const navLinks = [
-  { name: 'Dashboard', href: '/admin/dashboard', permission: 'view dashboard' },
-  { name: 'Utilisateurs', href: '/admin/users', permission: 'view users' },
-  { name: 'Articles', href: '/admin/articles', permission: 'edit articles' },
-  { name: 'Classement', href: '/classements', permission: 'view dashboard' },
-  { name: 'Paramètres', href: '/admin/settings', permission: 'edit settings' },
+  { name: 'Dashboard', href: '/admin/dashboard', permission: 'view dashboard', icon: '📊' },
+  { name: 'Utilisateurs', href: '/admin/users', permission: 'view users', icon: '👥' },
+  { name: 'Articles', href: '/admin/articles', permission: 'edit articles', icon: '📰' },
+  { name: 'Classement', href: '/classements', permission: 'view dashboard', icon: '🏆' },
+  { name: 'Paramètres', href: '/admin/settings', permission: 'edit settings', icon: '⚙️' },
 ];
 
 const userPermissions = usePage().props.auth.permissions;
@@ -20,56 +20,30 @@ const filteredLinks = computed(() => {
 </script>
 
 <template>
-  <aside class="sidebar">
-    <div class="logo">Mon App</div>
-    <nav class="navigation">
-      <ul>
+  <aside class="hidden lg:flex flex-col w-64 bg-gradient-to-b from-gray-900 to-gray-800 dark:from-gray-950 dark:to-gray-900 text-white flex-shrink-0">
+    <!-- Logo -->
+    <div class="px-4 sm:px-6 py-6 border-b border-gray-700 bg-gradient-to-r from-emerald-600 to-lime-600 flex items-center justify-center">
+      <span class="text-lg sm:text-2xl font-black text-white">⚽ App</span>
+    </div>
+    
+    <!-- Navigation -->
+    <nav class="flex-1 overflow-y-auto">
+      <ul class="space-y-2 p-4 sm:p-6">
         <li v-for="link in filteredLinks" :key="link.href">
           <Link
             :href="link.href"
-            :class="{ 'active': $page.url.startsWith(link.href) }"
+            class="flex items-center gap-3 px-3 sm:px-4 py-3 sm:py-2.5 rounded-lg text-sm font-medium transition-all duration-200 hover:bg-gray-700 dark:hover:bg-gray-600"
+            :class="{
+              'bg-gradient-to-r from-emerald-600 to-lime-600 text-white shadow-lg': $page.url.startsWith(link.href),
+              'text-gray-300 hover:text-white': !$page.url.startsWith(link.href),
+            }"
           >
-            {{ link.name }}
+            <span class="text-lg">{{ link.icon }}</span>
+            <span class="flex-1">{{ link.name }}</span>
+            <span v-if="$page.url.startsWith(link.href)" class="ml-2 text-emerald-200">→</span>
           </Link>
         </li>
       </ul>
     </nav>
   </aside>
 </template>
-
-<style scoped>
-.sidebar {
-  width: 250px;
-  background-color: #2c3e50;
-  color: #ecf0f1;
-  display: flex;
-  flex-direction: column;
-  flex-shrink: 0;
-}
-.logo {
-  padding: 1.5rem;
-  font-size: 1.8rem;
-  font-weight: bold;
-  text-align: center;
-  background-color: #34495e;
-}
-.navigation ul {
-  list-style: none;
-  padding: 0;
-  margin: 1rem 0;
-}
-.navigation a {
-  display: block;
-  padding: 0.8rem 1.5rem;
-  color: #ecf0f1;
-  text-decoration: none;
-  transition: background-color 0.3s;
-}
-.navigation a:hover {
-  background-color: #34495e;
-}
-.navigation a.active {
-  background-color: #1abc9c;
-  font-weight: bold;
-}
-</style>
