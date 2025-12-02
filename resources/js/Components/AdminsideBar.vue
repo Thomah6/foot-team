@@ -71,6 +71,7 @@ const handleImageError = (event) => {
 </script>
 
 <template>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     <aside class="flex flex-col p-4 lg:p-6 font-inter bg-white dark:bg-gray-900 h-full overflow-y-auto border-r border-gray-200 dark:border-gray-800">
         <!-- User Card -->
         <div class="mb-6 lg:mb-8">

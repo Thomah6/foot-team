@@ -19,7 +19,7 @@ const identity = page.props.identity;
 </script>
 
 <template>
-
+    
     <Head title="Arène Dynamo - Dashboard" />
 
     <!-- Font Awesome CDN -->
