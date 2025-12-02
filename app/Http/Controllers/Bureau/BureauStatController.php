@@ -50,9 +50,11 @@ class BureauStatController extends Controller
 			$q->where('validated_by_admin', true);
 		}], 'goals_against')
 		->with('teams')
+		->with('stats')
 		->orderBy('total_goals_against') // fewer goals against = better
 		->take(10)
 		->get();
+        // dd($goalLeaders->toArray());
 		
 
 		return Inertia::render('Bureau/Leaderboards', [

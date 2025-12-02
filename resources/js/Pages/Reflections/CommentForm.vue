@@ -1,39 +1,38 @@
 <template>
     <div class="mt-10">
-        <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b pb-3 dark:text-gray-100">
+        <h3 class="text-2xl font-bold text-gray-800 dark:text-citron-50 mb-6 border-b pb-3 border-gray-200 dark:border-gray-700">
           Commentaires ({{ reflection.comments.length }})
         </h3>
 
-        <div v-if="$page.props.auth.user" class="mb-8 p-6 bg-gray-50 rounded-xl shadow-inner">
-            <h4 class="font-semibold mb-3">Ajouter un commentaire</h4>
+        <div v-if="$page.props.auth.user" class="mb-8 p-6 bg-gray-50 dark:bg-gray-800 rounded-xl shadow-inner">
+            <h4 class="font-semibold mb-3 text-gray-700 dark:text-citron-200">Ajouter un commentaire</h4>
             <textarea
                 name="content"
                 v-model="form.content"
                 rows="3"
                 placeholder="Votre réponse..."
-                class="w-full p-3 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 resize-none"
+                class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-citron-500 focus:border-citron-500 resize-none bg-white dark:bg-gray-700 text-gray-700 dark:text-white"
                 :disabled="false"
             ></textarea>
             <button v-if="content.length<0"
-                class="mt-3 px-4 py-2 bg-indigo-500 text-white rounded-lg hover:bg-indigo-600 disabled:opacity-50"
+                class="mt-3 px-4 py-2 bg-citron-500 hover:bg-citron-600 dark:bg-citron-400 dark:hover:bg-citron-500 text-white rounded-lg disabled:opacity-50 transition"
                 :disabled="true"
             >
                 Publier (Bientôt)
             </button>
             <button v-else @click.prevent="comment()"
                 type="submit"
-                class="mt-3 px-4 py-2 bg-indigo-500 text-white rounded-lg hover:bg-indigo-600 disabled:opacity-50"
+                class="mt-3 px-4 py-2 bg-lime-500 hover:bg-lime-600 dark:bg-lime-400 dark:hover:bg-lime-500 text-white rounded-lg disabled:opacity-50 transition"
                 :disabled="false"
             >
                 Publier (Bientôt)
             </button>
         </div>
-        <div v-else class="mb-8 p-4 bg-yellow-50 rounded-lg text-yellow-800 border border-yellow-200">
+        <div v-else class="mb-8 p-4 bg-yellow-50 dark:bg-yellow-900/30 rounded-lg text-yellow-800 dark:text-yellow-300 border border-yellow-200 dark:border-yellow-700">
             Connectez-vous pour commenter cette réflexion.
         </div>
       </div>
 </template>
-
 <script setup>
 import { defineProps, ref } from 'vue';
 import { useForm } from '@inertiajs/vue3';

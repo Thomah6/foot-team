@@ -1,5 +1,5 @@
 <template>
-    <div class="container">
+    <div :class="['container', embedded ? 'embedded' : '']">
         <div class="upload-container">
             <!-- Upload Box -->
             <div
@@ -180,10 +180,10 @@
                     }"
                 >
                     <span class="button-content">
-                        <span class="button-icon" v-if="!form.processing">🚀</span>
+                        <span class="button-icon" v-if="!form.processing"></span>
                         <span class="button-icon loading" v-else>⏳</span>
                         <span class="button-text">
-                            {{ form.processing ? 'Uploading to Server...' : 'Send' }}
+                            {{ form.processing ? 'Uploading to Server...' : 'Send to Gallery' }}
                         </span>
                     </span>
                     <div class="button-shine"></div>
@@ -216,7 +216,7 @@ export default {
             showUploadComplete: false,
             maxFileSize: 10 * 1024 * 1024, // 10MB
             allowedTypes: ["image/jpeg", "image/png", "image/gif"],
-            primaryColor: "#13ec6d",
+            primaryColor: "#84cc16", // Couleur citron du thème
             form: useForm({
                 images: [],
                 description: "",
@@ -353,63 +353,6 @@ export default {
                 progressCallback(progress);
             }, 100 + Math.random() * 200);
         },
-        // submit() {
-        //     console.log("➡️ Bouton cliqué, submit() déclenché");
-
-        //     // Vérifier les fichiers ajoutés
-        //     console.log("📂 Fichiers présents dans this.files :", this.files);
-        //     console.log(
-        //         "📂 Fichiers présents dans form.images :",
-        //         this.form.images
-        //     );
-
-        //     // Vérifier la route appelée
-        //     console.log("📡 Route appelée :", route("galleries.store"));
-
-        //     // Mettre à jour le statut des fichiers pour l'upload réel
-        //     this.files.forEach(file => {
-        //         file.uploadStatus = "Uploading...";
-        //         file.status = "uploading";
-        //     });
-
-        //     // Réinitialiser l'état d'upload pour l'UI
-        //     this.isUploading = true;
-        //     this.uploadProgress = 0;
-
-        //     this.form.post(route("galleries.store"), {
-        //         forceFormData: true,
-        //         onProgress: (event) => {
-        //             console.log("⏳ Progression :", event.percentage + "%");
-        //             this.uploadProgress = event.percentage;
-        //         },
-        //         onSuccess: () => {
-        //             console.log("✅ Upload terminé avec succès");
-        //             this.isUploading = false;
-        //             this.showUploadComplete = true;
-
-        //             // Mettre à jour le statut des fichiers après upload réussi
-        //             this.files.forEach(file => {
-        //                 file.uploadStatus = "Uploaded successfully";
-        //                 file.status = "success";
-        //             });
-
-        //             // Réinitialiser seulement le form Inertia pour de nouveaux uploads
-        //             this.form.description = "";
-        //             this.form.images = [];
-        //         },
-        //         onError: (errors) => {
-        //             console.error("❌ Erreurs reçues :", errors);
-        //             this.isUploading = false;
-
-        //             // Mettre à jour le statut des fichiers en cas d'erreur
-        //             this.files.forEach(file => {
-        //                 file.uploadStatus = "Upload failed";
-        //                 file.status = "error";
-        //             });
-        //         },
-        //     });
-        // },
-
         submit() {
             this.form.post(route("galleries.store"), {
                 forceFormData: true,
@@ -470,27 +413,12 @@ export default {
                 setTimeout(() => errorDiv.remove(), 300);
             }, 4000);
         },
-        // removeFile(fileId) {
-        //     // Trouver le fichier à supprimer
-        //     const fileToRemove = this.files.find(f => f.id === fileId);
-
-        //     // Supprimer de la liste d'affichage
-        //     this.files = this.files.filter((f) => f.id !== fileId);
-
-        //     // Supprimer du form Inertia
-        //     if (fileToRemove) {
-        //         this.form.images = this.form.images.filter(
-        //             (f) => f.name !== fileToRemove.name || f.size !== fileToRemove.size
-        //         );
-        //     }
-        // },
-
         removeFile(fileId) {
             // On cherche le fichier dans la liste locale
             const fileObj = this.files.find((f) => f.id === fileId);
             if (!fileObj) return;
 
-            // Si le fichier n’a pas encore d’ID serveur → suppression locale seulement
+            // Si le fichier n'a pas encore d'ID serveur → suppression locale seulement
             if (!fileObj.serverId) {
                 console.warn(
                     "⚠️ Pas d'ID serveur pour ce fichier, suppression locale uniquement"
@@ -499,7 +427,7 @@ export default {
                 return;
             }
 
-            // 🔎 Suppression côté backend avec l’ID serveur
+            // 🔎 Suppression côté backend avec l'ID serveur
             this.form.delete(route("galleries.destroy", fileObj.serverId), {
                 onSuccess: () => {
                     console.log("✅ Fichier supprimé côté backend");
@@ -532,15 +460,48 @@ export default {
 </script>
 
 <style scoped>
+/* Variables pour le thème light/dark */
+:root {
+    --bg-primary: #f9fafb;
+    --bg-secondary: #ffffff;
+    --bg-tertiary: #f3f4f6;
+    --border-color: #e5e7eb;
+    --text-primary: #111827;
+    --text-secondary: #6b7280;
+    --text-tertiary: #9ca3af;
+    --citron-500: #84cc16;
+    --citron-600: #65a30d;
+    --citron-50: #f7fee7;
+    --citron-100: #ecfccb;
+    --success-bg: #dcfce7;
+    --error-bg: #fee2e2;
+}
+
+.dark {
+    --bg-primary: #111827;
+    --bg-secondary: #1f2937;
+    --bg-tertiary: #374151;
+    --border-color: #4b5563;
+    --text-primary: #f9fafb;
+    --text-secondary: #d1d5db;
+    --text-tertiary: #9ca3af;
+    --citron-500: #a3e635;
+    --citron-600: #84cc16;
+    --citron-50: #365314;
+    --citron-100: #3f6212;
+    --success-bg: #064e3b;
+    --error-bg: #7f1d1d;
+}
+
 /* Styles pour le conteneur de description */
 .description-container {
     margin-top: 2rem;
-    background: #182c21;
-    border: 1px solid #2a3d33;
+    background: var(--bg-secondary);
+    border: 2px solid var(--border-color);
     border-radius: 16px;
     padding: 1.5rem;
     transition: all 0.3s ease;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
 }
 
 /* Embedded mode (when displayed side-by-side in a layout) */
@@ -556,26 +517,26 @@ export default {
 }
 
 .description-container:focus-within {
-    border-color: #13ec6d;
-    box-shadow: 0 0 0 3px rgba(19, 236, 109, 0.1), 0 8px 32px rgba(19, 236, 109, 0.2);
+    border-color: var(--citron-500);
+    box-shadow: 0 0 0 3px rgba(132, 204, 22, 0.1), 0 8px 32px rgba(132, 204, 22, 0.15);
     transform: translateY(-2px);
 }
 
 .description-label {
     display: block;
     font-weight: 600;
-    color: #f6f8f7;
+    color: var(--text-primary);
     margin-bottom: 0.75rem;
     font-size: 1rem;
 }
 
 .description-textarea {
     width: 100%;
-    background: #102218;
-    border: 2px solid #2a3d33;
+    background: var(--bg-primary);
+    border: 2px solid var(--border-color);
     border-radius: 12px;
     padding: 1rem 1.25rem;
-    color: #f6f8f7;
+    color: var(--text-primary);
     font-family: inherit;
     font-size: 0.95rem;
     resize: vertical;
@@ -586,27 +547,27 @@ export default {
 }
 
 .description-textarea::placeholder {
-    color: #618972;
+    color: var(--text-tertiary);
     opacity: 0.7;
 }
 
 .description-textarea:focus {
-    border-color: #13ec6d;
-    box-shadow: 0 0 0 4px rgba(19, 236, 109, 0.15), 0 0 30px rgba(19, 236, 109, 0.1);
-    background: #0f1f16;
+    border-color: var(--citron-500);
+    box-shadow: 0 0 0 4px rgba(132, 204, 22, 0.15), 0 0 30px rgba(132, 204, 22, 0.1);
+    background: var(--bg-secondary);
 }
 
 .description-textarea:disabled {
     opacity: 0.6;
     cursor: not-allowed;
-    border-color: #2a3d33;
+    border-color: var(--border-color);
     box-shadow: none;
 }
 
 .character-count {
     text-align: right;
     font-size: 0.75rem;
-    color: #a0b5a9;
+    color: var(--text-secondary);
     margin-top: 0.5rem;
     transition: color 0.3s ease;
 }
@@ -624,8 +585,8 @@ export default {
 
 .submit-button {
     position: relative;
-    background: linear-gradient(135deg, #13ec6d 0%, #10d15f 100%);
-    color: #102218;
+    background: linear-gradient(135deg, var(--citron-500) 0%, var(--citron-600) 100%);
+    color: white;
     border: none;
     border-radius: 16px;
     padding: 1.25rem 2.5rem;
@@ -634,8 +595,8 @@ export default {
     cursor: pointer;
     transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     overflow: hidden;
-    box-shadow: 0 8px 30px rgba(19, 236, 109, 0.3),
-                0 4px 15px rgba(19, 236, 109, 0.2),
+    box-shadow: 0 8px 30px rgba(132, 204, 22, 0.3),
+                0 4px 15px rgba(132, 204, 22, 0.2),
                 inset 0 1px 0 rgba(255, 255, 255, 0.2);
     min-width: 220px;
 }
@@ -660,33 +621,33 @@ export default {
 
 .submit-button:hover:not(.disabled):not(.processing) {
     transform: translateY(-3px) scale(1.02);
-    box-shadow: 0 12px 40px rgba(19, 236, 109, 0.4),
-                0 6px 20px rgba(19, 236, 109, 0.3),
+    box-shadow: 0 12px 40px rgba(132, 204, 22, 0.4),
+                0 6px 20px rgba(132, 204, 22, 0.3),
                 inset 0 1px 0 rgba(255, 255, 255, 0.3);
 }
 
 .submit-button:active:not(.disabled):not(.processing) {
     transform: translateY(-1px) scale(1.01);
-    box-shadow: 0 6px 25px rgba(19, 236, 109, 0.3),
-                0 3px 12px rgba(19, 236, 109, 0.2);
+    box-shadow: 0 6px 25px rgba(132, 204, 22, 0.3),
+                0 3px 12px rgba(132, 204, 22, 0.2);
 }
 
 .submit-button:focus:not(.disabled):not(.processing) {
     outline: none;
-    box-shadow: 0 0 0 4px rgba(19, 236, 109, 0.3),
-                0 12px 40px rgba(19, 236, 109, 0.4);
+    box-shadow: 0 0 0 4px rgba(132, 204, 22, 0.3),
+                0 12px 40px rgba(132, 204, 22, 0.4);
 }
 
 .submit-button.processing {
-    background: linear-gradient(135deg, #0fa54f 0%, #0d8f43 100%);
+    background: linear-gradient(135deg, #65a30d 0%, #4d7c0f 100%);
     cursor: progress;
     transform: none;
-    box-shadow: 0 4px 20px rgba(15, 165, 79, 0.3);
+    box-shadow: 0 4px 20px rgba(101, 163, 13, 0.3);
 }
 
 .submit-button.disabled {
-    background: linear-gradient(135deg, #2a3d33 0%, #1e2e25 100%);
-    color: #618972;
+    background: linear-gradient(135deg, var(--bg-tertiary) 0%, var(--border-color) 100%);
+    color: var(--text-tertiary);
     cursor: not-allowed;
     transform: none;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
@@ -743,23 +704,31 @@ export default {
 
 .submit-hint {
     margin-top: 1rem;
-    color: #a0b5a9;
+    color: var(--text-secondary);
     font-size: 0.9rem;
     font-weight: 500;
 }
 
 /* Styles existants conservés */
+.status-success {
+    color: var(--citron-500);
+}
+
 .status-error {
     color: #dc2626;
 }
 
+.status-uploading {
+    color: #f59e0b;
+}
+
 .status-pending {
-    color: #a0b5a9;
+    color: var(--text-tertiary);
 }
 
 .file-upload-status {
     font-size: 0.75rem;
-    color: #a0b5a9;
+    color: var(--text-tertiary);
     margin-top: 0.25rem;
 }
 
@@ -771,10 +740,10 @@ export default {
 
 body {
     font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-    background: #102218;
+    background: var(--bg-primary);
     min-height: 100vh;
     padding: 2rem;
-    color: #f6f8f7;
+    color: var(--text-primary);
 }
 
 .container {
@@ -792,47 +761,47 @@ body {
     position: relative;
     padding: 6rem;
     text-align: center;
-    border: 3px dashed #2a3d33;
+    border: 3px dashed var(--border-color);
     border-radius: 20px;
     transition: all 0.3s ease;
-    background: #182c21;
+    background: var(--bg-secondary);
     cursor: pointer;
 }
 
 .upload-box.dragover {
-    border-color: #13ec6d;
-    background: #182c21;
+    border-color: var(--citron-500);
+    background: var(--citron-50);
     transform: scale(1.02);
 }
 
 .upload-box.uploading {
-    border-color: #13ec6d;
-    background: #182c21;
+    border-color: var(--citron-500);
+    background: var(--bg-secondary);
 }
 
 .upload-icon {
     display: flex;
     justify-content: center;
     margin-bottom: 1.5rem;
-    color: #13ec6d;
+    color: var(--citron-500);
 }
 
 .upload-title {
     font-size: 1.5rem;
     font-weight: 600;
     margin-bottom: 0.5rem;
-    color: #f6f8f7;
+    color: var(--text-primary);
 }
 
 .upload-subtitle {
-    color: #a0b5a9;
+    color: var(--text-secondary);
     margin-bottom: 2rem;
     font-size: 0.95rem;
 }
 
 .upload-button {
-    background: #13ec6d;
-    color: #102218;
+    background: var(--citron-500);
+    color: white;
     border: none;
     padding: 1rem 2rem;
     border-radius: 12px;
@@ -840,12 +809,13 @@ body {
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(19, 236, 109, 0.3);
+    box-shadow: 0 4px 15px rgba(132, 204, 22, 0.3);
 }
 
 .upload-button:hover {
+    background: var(--citron-600);
     transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(19, 236, 109, 0.4);
+    box-shadow: 0 8px 25px rgba(132, 204, 22, 0.4);
 }
 
 .upload-progress {
@@ -878,24 +848,24 @@ body {
     transform: translate(-50%, -50%);
     font-weight: 600;
     font-size: 1rem;
-    color: #f6f8f7;
+    color: var(--text-primary);
 }
 
 .progress-label {
-    color: #a0b5a9;
+    color: var(--text-secondary);
     font-size: 0.9rem;
 }
 
 .files-preview {
-    background: #182c21;
-    border: 1px solid #2a3d33;
+    background: var(--bg-secondary);
+    border: 2px solid var(--border-color);
     border-radius: 20px;
     padding: 2rem;
     opacity: 0;
     visibility: hidden;
     transform: translateY(20px);
     transition: all 0.4s ease;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
 }
 
 .files-preview.show {
@@ -914,22 +884,23 @@ body {
 .preview-title {
     font-size: 1.3rem;
     font-weight: 600;
-    color: #f6f8f7;
+    color: var(--text-primary);
 }
 
 .add-more-btn {
-    background: rgba(19, 236, 109, 0.1);
-    color: #13ec6d;
-    border: 1px solid #13ec6d;
+    background: rgba(132, 204, 22, 0.1);
+    color: var(--citron-500);
+    border: 2px solid var(--citron-500);
     padding: 0.5rem 1rem;
     border-radius: 8px;
     font-size: 0.85rem;
+    font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
 }
 
 .add-more-btn:hover {
-    background: rgba(19, 236, 109, 0.2);
+    background: rgba(132, 204, 22, 0.2);
 }
 
 .files-list {
@@ -942,15 +913,16 @@ body {
     align-items: center;
     gap: 1rem;
     padding: 1rem;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid #2a3d33;
+    background: var(--bg-primary);
+    border: 2px solid var(--border-color);
     border-radius: 12px;
     transition: all 0.3s ease;
 }
 
 .file-item:hover {
-    background: rgba(255, 255, 255, 0.1);
+    background: var(--bg-tertiary);
     transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
 .file-preview {
@@ -958,7 +930,7 @@ body {
     height: 60px;
     object-fit: cover;
     border-radius: 8px;
-    background: rgba(255, 255, 255, 0.1);
+    background: var(--bg-tertiary);
 }
 
 .file-info {
@@ -967,13 +939,13 @@ body {
 
 .file-name {
     font-weight: 500;
-    color: #f6f8f7;
+    color: var(--text-primary);
     margin-bottom: 0.25rem;
 }
 
 .file-size {
     font-size: 0.85rem;
-    color: #a0b5a9;
+    color: var(--text-secondary);
 }
 
 .file-status {
@@ -984,19 +956,15 @@ body {
     font-size: 1.5rem;
 }
 
-.status-uploading, .status-success {
-    color: #13ec6d;
-}
-
 .file-actions {
     display: flex;
     gap: 0.5rem;
 }
 
 .file-action {
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid #2a3d33;
-    color: #f6f8f7;
+    background: var(--bg-tertiary);
+    border: 2px solid var(--border-color);
+    color: var(--text-primary);
     width: 32px;
     height: 32px;
     border-radius: 6px;
@@ -1008,7 +976,7 @@ body {
 }
 
 .file-action:hover:not(:disabled) {
-    background: rgba(255, 255, 255, 0.2);
+    background: var(--border-color);
 }
 
 .file-action:disabled {
@@ -1019,15 +987,16 @@ body {
 .file-action.delete:hover:not(:disabled) {
     background: rgba(220, 38, 38, 0.2);
     border-color: #dc2626;
+    color: #dc2626;
 }
 
 .upload-complete {
-    background: #182c21;
-    border: 1px solid #2a3d33;
+    background: var(--bg-secondary);
+    border: 2px solid var(--border-color);
     border-radius: 20px;
     padding: 3rem 2rem;
     text-align: center;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
 }
 
 .complete-header {
@@ -1037,13 +1006,13 @@ body {
 .success-icon {
     width: 80px;
     height: 80px;
-    background: #13ec6d;
+    background: var(--citron-500);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 2.5rem;
-    color: #102218;
+    color: white;
     margin: 0 auto 1.5rem;
     animation: successBounce 0.6s ease;
 }
@@ -1063,12 +1032,12 @@ body {
 .complete-title {
     font-size: 1.8rem;
     font-weight: 600;
-    color: #f6f8f7;
+    color: var(--text-primary);
     margin-bottom: 0.5rem;
 }
 
 .complete-subtitle {
-    color: #a0b5a9;
+    color: var(--text-secondary);
     font-size: 1rem;
 }
 
@@ -1090,24 +1059,25 @@ body {
 }
 
 .new-upload-btn {
-    background: #13ec6d;
-    color: #102218;
-    box-shadow: 0 4px 15px rgba(19, 236, 109, 0.3);
+    background: var(--citron-500);
+    color: white;
+    box-shadow: 0 4px 15px rgba(132, 204, 22, 0.3);
 }
 
 .new-upload-btn:hover {
+    background: var(--citron-600);
     transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(19, 236, 109, 0.4);
+    box-shadow: 0 8px 25px rgba(132, 204, 22, 0.4);
 }
 
 .view-files-btn {
-    background: rgba(255, 255, 255, 0.1);
-    color: #f6f8f7;
-    border: 1px solid #2a3d33;
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+    border: 2px solid var(--border-color);
 }
 
 .view-files-btn:hover {
-    background: rgba(255, 255, 255, 0.2);
+    background: var(--border-color);
 }
 
 /* Responsive Design */
@@ -1166,15 +1136,20 @@ body {
     position: fixed;
     top: 20px;
     right: 20px;
-    background: rgba(254, 226, 226, 0.95);
+    background: var(--error-bg);
     color: #dc2626;
     padding: 1rem;
     border-radius: 12px;
-    border: 1px solid rgba(252, 165, 165, 0.5);
+    border: 2px solid rgba(252, 165, 165, 0.5);
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     z-index: 1000;
     backdrop-filter: blur(10px);
     max-width: 300px;
+}
+
+.dark .error-notification {
+    color: #fca5a5;
+    border-color: rgba(127, 29, 29, 0.5);
 }
 
 @keyframes slideInRight {
@@ -1198,24 +1173,4 @@ body {
         opacity: 0;
     }
 }
-
-@keyframes slideOut {
-    from {
-        opacity: 1;
-        transform: translateY(0);
-    }
-    to {
-        opacity: 0;
-        transform: translateY(-20px);
-    }
-}
 </style>
-
-
-
-
-
-
-
-
-

@@ -105,13 +105,9 @@ class NewsController extends Controller
             // Nouvelle image
             $validated['image'] = $request->file('image')
                 ->store('news', 'public');
-        }
 
-        if ($request->hasFile('image')) {
-            $path = $request->file('image')->store('news', 'public');
-            $news->image = $path;
+                
         }
-        
 
         $news->update($validated);
 

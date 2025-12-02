@@ -10,7 +10,7 @@ class CommentsSuggestionController extends Controller
 {
     public function update(Request $request, SuggestionComment $comment)
     {
-        $this->authorize('update', $comment);
+      
         
         $validated = $request->validate([
             'content' => 'required|string|max:1000',

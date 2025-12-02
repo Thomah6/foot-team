@@ -55,7 +55,7 @@ const props = defineProps({
                                     d="M10 19l-7-7m0 0l7-7m-7 7h18"
                                 />
                             </svg>
-                            Retour au tableau de bord
+                            Retour
                         </Link>
                     </div>
                 </div>
@@ -156,10 +156,6 @@ const props = defineProps({
                                 class="text-sm text-gray-500"
                             >
                             
-                                {{
-                                    u.teams[0].name ??
-                                    "Sans équipe"
-                                }}
                             </p>
                                  <p class="text-sm text-gray-500 mt-1">
                                         {{ u.position || 'Gardien' }}
@@ -302,10 +298,6 @@ const props = defineProps({
                                                     class="text-sm text-gray-500"
                                                 >
                                                 
-                                                    {{
-                                                        u.teams[0].name  ??
-                                                        "Sans équipe"
-                                                    }}
                                                 </p>
                                                      <p class="text-sm text-gray-500 mt-1">
                                         {{ u.position || 'Gardien' }}
@@ -437,7 +429,7 @@ const props = defineProps({
                                 <span 
                                     class="inline-flex items-center px-4 py-2 rounded-lg text-sm font-medium bg-gradient-to-r from-gray-50 to-gray-100 text-gray-700 border border-gray-200 shadow-sm"
                                 >
-                                    {{ u.teams[0].name  ?? "Sans équipe" }}
+                                
                                 </span>
                             </div>
                         </td>
