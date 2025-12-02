@@ -5,7 +5,6 @@ import DeclarePresenceModal from './Components/DeclarePresenceModal.vue'
 import PresenceStatusCell from './Components/PresenceStatusCell.vue'
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue'
 
-
 const props = defineProps({
   presenceData: Array,
   dayPresences: Array,
@@ -31,14 +30,6 @@ const formatDateHeader = (date) => {
   return `${dayName} ${dayNum}/${month}`
 }
 
-const formatMonthDisplay = (dateStr) => {
-  const d = new Date(dateStr + '-01')
-  return d.toLocaleDateString('fr-FR', {
-    month: 'long',
-    year: 'numeric',
-  })
-}
-
 const handleSearch = () => {
   if (!searchQuery.value) {
     filteredPresenceData.value = props.presenceData
@@ -50,9 +41,6 @@ const handleSearch = () => {
   }
 }
 
-// Month navigation replaced by native month input (monthInput/loadMonthFromInput)
-
-// Month picker (format YYYY-MM) for native month input like in History.vue
 const monthInput = ref(props.month ? props.month.slice(0, 7) : new Date().toISOString().slice(0, 7))
 const loadMonthFromInput = () => {
   if (monthInput.value) {
@@ -61,7 +49,6 @@ const loadMonthFromInput = () => {
 }
 
 const declarPresence = async (date, userId = null) => {
-  // Si bureau, post via fetch avec user_id
   if (props.isBureau && userId) {
     try {
       const res = await fetch(route('presence.store'), {
@@ -85,8 +72,6 @@ const declarPresence = async (date, userId = null) => {
       }
 
       const data = await res.json()
-
-      // Mettre à jour la table locale
       const presenceObj = data.presence
       const row = filteredPresenceData.value.find((r) => r.id === presenceObj.user_id)
       if (row) {
@@ -112,7 +97,6 @@ const declarPresence = async (date, userId = null) => {
     }
   }
 
-  // Si admin, post via fetch to get JSON response and update UI immediately
   if (props.isAdmin) {
     try {
       const res = await fetch(route('presence.store'), {
@@ -136,12 +120,9 @@ const declarPresence = async (date, userId = null) => {
       }
 
       const data = await res.json()
-
-      // Mettre à jour la table locale
       const presenceObj = data.presence
       const row = filteredPresenceData.value.find((r) => r.id === presenceObj.user_id)
       if (row) {
-        // Build new row object with updated presences so Vue detects change
         const newPresences = {
           ...row.presences,
           [date]: {
@@ -159,18 +140,15 @@ const declarPresence = async (date, userId = null) => {
       showDeclarePresenceModal.value = false
       return
     } catch (e) {
-      // Fallback: reload to reflect server state
       showDeclarePresenceModal.value = false
       window.location.reload()
     }
   }
 
-  // Non-admin: keep existing Inertia flow (reload on success)
   const form = useForm({ date: date })
   form.post(route('presence.store'), {
     onSuccess: () => {
       showDeclarePresenceModal.value = false
-      // Recharger la page
       window.location.reload()
     },
   })
@@ -181,13 +159,11 @@ const updatePresence = (presenceId, data) => {
     const form = useForm(data)
     form.patch(route('presence.update', { presence: presenceId }), {
       onSuccess: () => {
-        // Trouver et mettre à jour l'objet présence dans les données
         const presenceToUpdate = filteredPresenceData.value.find((row) => {
           return Object.values(row.presences).some((p) => p && p.id === presenceId)
         })
 
         if (presenceToUpdate) {
-          // Trouver la date de cette présence et la mettre à jour
           for (const [date, presence] of Object.entries(presenceToUpdate.presences)) {
             if (presence && presence.id === presenceId) {
               const updatedEntry = {
@@ -217,89 +193,102 @@ handleSearch()
 <AuthenticatedLayout>
   <main class="flex-1 p-8">
     <div class="w-full max-w-7xl mx-auto flex flex-col gap-6">
-      <!-- PageHeading -->
+      <!-- Header -->
       <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
         <div class="flex flex-col gap-2">
           <div class="flex items-center gap-3 mb-1">
-            <span class="material-symbols-outlined text-4xl text-blue-600 dark:text-blue-400">sports_soccer</span>
-            <h1 class="text-3xl md:text-4xl font-black leading-tight tracking-tight text-[#111318] dark:text-white">
-              Présences
-            </h1>
+            <div class="w-16 h-16 bg-gradient-to-br from-lime-100 to-emerald-100 rounded-2xl flex items-center justify-center border-2 border-lime-300">
+              <i class="fas fa-calendar-check text-lime-600 text-2xl"></i>
+            </div>
+            <div>
+              <h1 class="text-4xl font-bold text-gray-900 tracking-tight bg-gradient-to-r from-lime-600 to-emerald-600 bg-clip-text text-transparent">
+                Calendrier des Présences
+              </h1>
+              <p class="text-gray-600 text-lg font-medium tracking-wide mt-2">
+                Gestion des présences dans l'arène • Saison 2024
+              </p>
+            </div>
           </div>
-          <p class="text-[#636f88] dark:text-slate-400 text-sm md:text-base font-normal leading-normal">
-            Calendrier d'événements footballistiques • Gérez vos déclarations
-          </p>
         </div>
         <Link
           :href="route('presence.history')"
-          class="flex w-full md:w-auto min-w-[160px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-11 px-4 bg-gradient-to-r from-blue-600 to-blue-700 dark:from-blue-700 dark:to-blue-800 text-white text-sm font-bold leading-normal tracking-[0.015em] border border-blue-600 dark:border-blue-700 shadow-md hover:shadow-lg hover:from-blue-700 hover:to-blue-800 dark:hover:from-blue-600 dark:hover:to-blue-700 transition-all gap-2"
+          class="inline-flex items-center gap-3 bg-gradient-to-r from-lime-500 to-emerald-500 text-white px-8 py-4 rounded-2xl font-bold hover:from-lime-600 hover:to-emerald-600 transition-all duration-300 tracking-wider text-lg shadow-lg hover:shadow-xl hover:shadow-emerald-500/30"
         >
-          <span class="material-symbols-outlined text-base">history</span>
-          <span>Historique</span>
+          <i class="fas fa-history"></i>
+          Historique des Batailles
         </Link>
       </div>
 
       <!-- Toolbar -->
-      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 p-4 md:p-5 bg-gradient-to-br from-white to-gray-50 dark:from-background-dark dark:to-slate-800 border border-slate-200 dark:border-white/10 rounded-xl shadow-sm">
-        <!-- Calendar Navigation -->
-        <div class="flex w-full md:w-auto items-center gap-3">
-          
-          <input
-            v-model="monthInput"
-            @change="loadMonthFromInput"
-            type="month"
-            class="px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-[#111318] dark:text-white focus:outline-0 focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 font-medium"
-            title="Sélectionner le mois"
-          />
-          
-        </div>
+      <div class="bg-gradient-to-br from-white to-lime-50 backdrop-blur-sm rounded-2xl border-2 border-lime-200/50 p-6 shadow-lg">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <!-- Calendar Navigation -->
+          <div class="flex items-center gap-4">
+            <div class="flex flex-col">
+              <label class="text-sm font-semibold text-gray-700 mb-2">Mois</label>
+              <input
+                v-model="monthInput"
+                @change="loadMonthFromInput"
+                type="month"
+                class="px-4 py-3 border-2 border-lime-300 rounded-xl bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-lime-500/30 focus:border-lime-500 font-medium"
+                title="Sélectionner le mois"
+              />
+            </div>
+          </div>
 
-        <!-- Search and Actions -->
-        <div class="flex w-full md:w-auto flex-col sm:flex-row items-stretch sm:items-center gap-3">
-          <!-- SearchBar -->
-          <label class="flex flex-1 sm:flex-none sm:w-72 h-11 items-center rounded-lg overflow-hidden border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 focus-within:ring-2 focus-within:ring-blue-500 dark:focus-within:ring-blue-400 transition">
-            <span class="text-slate-600 dark:text-slate-400 px-3">
-              <span class="material-symbols-outlined text-lg">search</span>
-            </span>
-            <input
-              v-model="searchQuery"
-              @input="handleSearch"
-              class="flex-1 bg-transparent text-[#111318] dark:text-white focus:outline-0 text-sm placeholder:text-slate-400 dark:placeholder:text-slate-500 pr-3"
-              placeholder="Filtrer les joueurs..."
-            />
-          </label>
+          <!-- Search and Actions -->
+          <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
+            <!-- SearchBar -->
+            <div class="flex flex-col">
+              <label class="text-sm font-semibold text-gray-700 mb-2">Rechercher un combattant</label>
+              <div class="flex items-center h-12 rounded-xl overflow-hidden border-2 border-lime-300 bg-white focus-within:ring-2 focus-within:ring-lime-500/30 focus-within:border-lime-500 transition">
+                <span class="text-lime-600 px-4">
+                  <i class="fas fa-search"></i>
+                </span>
+                <input
+                  v-model="searchQuery"
+                  @input="handleSearch"
+                  class="flex-1 bg-transparent text-gray-900 focus:outline-none placeholder:text-gray-400 pr-4"
+                  placeholder="Nom du combattant..."
+                />
+              </div>
+            </div>
 
-          <!-- Declare Presence Button -->
-          <button
-            @click="showDeclarePresenceModal = true"
-            class="flex items-center justify-center gap-2 h-11 px-4 bg-gradient-to-r from-green-600 to-emerald-600 dark:from-green-700 dark:to-emerald-700 text-white rounded-lg font-semibold text-sm shadow-md hover:shadow-lg hover:from-green-700 hover:to-emerald-700 dark:hover:from-green-600 dark:hover:to-emerald-600 transition-all active:scale-95"
-          >
-            <span class="material-symbols-outlined text-lg">add_circle</span>
-            <span>Déclarer</span>
-          </button>
+            <!-- Declare Presence Button -->
+            <div class="flex flex-col">
+              <label class="text-sm font-semibold text-gray-700 mb-2 invisible">Action</label>
+              <button
+                @click="showDeclarePresenceModal = true"
+                class="flex items-center justify-center gap-3 h-12 px-6 bg-gradient-to-r from-lime-500 to-emerald-500 text-white rounded-xl font-bold shadow-lg hover:shadow-xl hover:from-lime-600 hover:to-emerald-600 hover:shadow-emerald-500/30 transition-all duration-300"
+              >
+                <i class="fas fa-plus-circle"></i>
+                Déclarer une présence
+              </button>
+            </div>
+          </div>
         </div>
       </div>
 
       <!-- Table -->
       <div class="w-full @container">
-        <div class="flex rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-background-dark shadow-md overflow-x-auto">
+        <div class="bg-white backdrop-blur-sm rounded-2xl border-2 border-lime-200/50 shadow-xl overflow-x-auto">
           <table class="w-full border-collapse">
-            <thead class="border-b-2 border-slate-300 dark:border-slate-600 bg-gradient-to-r from-slate-50 to-slate-100 dark:from-slate-800 dark:to-slate-700">
+            <thead class="border-b-2 border-lime-200 bg-gradient-to-r from-lime-50 to-emerald-50">
               <tr>
-                <th class="table-col-1 px-4 py-4 text-left text-[#111318] dark:text-white font-black text-sm sticky left-0 bg-gradient-to-r from-slate-50 to-slate-100 dark:from-slate-800 dark:to-slate-700 z-10">
+                <th class="px-6 py-4 text-left text-gray-900 font-bold text-sm sticky left-0 bg-gradient-to-r from-lime-50 to-emerald-50 z-10">
                   <div class="flex items-center gap-2">
-                    <span class="material-symbols-outlined text-lg">group</span>
-                    <span>Joueur</span>
+                    <i class="fas fa-users text-lime-600"></i>
+                    <span>COMBATTANT</span>
                   </div>
                 </th>
                 <th
                   v-for="date in monthDates"
                   :key="date"
-                  class="table-col px-4 py-4 text-center text-[#636f88] dark:text-slate-300 text-xs md:text-sm font-semibold whitespace-nowrap hover:bg-slate-100 dark:hover:bg-slate-700 transition"
+                  class="px-4 py-4 text-center text-gray-700 text-xs md:text-sm font-semibold whitespace-nowrap hover:bg-lime-100/50 transition min-w-[80px]"
                 >
                   <div class="flex flex-col items-center gap-1">
-                    <span>{{ formatDateHeader(date).split(' ')[0] }}</span>
-                    <span class="text-[0.65rem] md:text-xs opacity-75">{{ formatDateHeader(date).split(' ')[1] }}</span>
+                    <span class="font-bold">{{ formatDateHeader(date).split(' ')[0] }}</span>
+                    <span class="text-xs opacity-75 font-medium">{{ formatDateHeader(date).split(' ')[1] }}</span>
                   </div>
                 </th>
               </tr>
@@ -309,13 +298,13 @@ handleSearch()
                 v-for="(row, index) in filteredPresenceData"
                 :key="row.id"
                 :class="[
-                  'border-t border-slate-200/80 dark:border-white/10 transition hover:bg-blue-50/50 dark:hover:bg-blue-900/20',
-                  index % 2 === 1 ? 'bg-slate-50/50 dark:bg-white/2.5' : '',
+                  'border-t border-lime-100 transition hover:bg-lime-50/50',
+                  index % 2 === 0 ? 'bg-lime-50/30' : '',
                 ]"
               >
-                <td class="table-col-1 px-4 py-4 w-[250px] text-[#111318] dark:text-white font-semibold text-sm sticky left-0 z-10" :class="[index % 2 === 1 ? 'bg-slate-50/50 dark:bg-white/2.5' : 'bg-white dark:bg-background-dark']">
-                  <div class="flex items-center gap-2 truncate">
-                    <div class="w-8 h-8 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
+                <td class="px-6 py-4 w-[250px] text-gray-900 font-bold text-sm sticky left-0 z-10" :class="[index % 2 === 0 ? 'bg-lime-50/30' : 'bg-white']">
+                  <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-gradient-to-br from-lime-400 to-emerald-500 flex items-center justify-center text-white text-sm font-bold flex-shrink-0">
                       {{ row.name.charAt(0).toUpperCase() }}
                     </div>
                     <span class="truncate">{{ row.name }}</span>
@@ -324,7 +313,7 @@ handleSearch()
                 <td
                   v-for="date in monthDates"
                   :key="`${row.id}-${date}`"
-                  class="table-col px-3 py-4 text-center"
+                  class="px-3 py-4 text-center min-w-[80px]"
                 >
                   <PresenceStatusCell
                     :presence="row.presences[date]"
@@ -335,6 +324,28 @@ handleSearch()
               </tr>
             </tbody>
           </table>
+        </div>
+      </div>
+
+      <!-- Legend -->
+      <div class="bg-gradient-to-br from-lime-50 to-emerald-50 backdrop-blur-sm rounded-2xl border-2 border-lime-200/50 p-6 shadow-lg">
+        <div class="flex flex-wrap items-center gap-6">
+          <div class="flex items-center gap-2">
+            <i class="fas fa-circle-check text-emerald-500 text-xl"></i>
+            <span class="text-gray-700 font-medium">Présent validé</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <i class="fas fa-clock text-amber-500 text-xl"></i>
+            <span class="text-gray-700 font-medium">En attente de validation</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <i class="fas fa-circle-xmark text-red-500 text-xl"></i>
+            <span class="text-gray-700 font-medium">Absent</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <i class="fas fa-minus text-gray-300 text-xl"></i>
+            <span class="text-gray-700 font-medium">Non déclaré</span>
+          </div>
         </div>
       </div>
     </div>
@@ -354,11 +365,6 @@ handleSearch()
 </template>
 
 <style scoped>
-.table-col-1 {
-  position: sticky;
-  left: 0;
-  z-index: 10;
-}
 @container (max-width: 840px) {
   .table-col:nth-child(n + 8) {
     display: none;
