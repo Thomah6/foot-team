@@ -101,13 +101,13 @@ const identity = page.props.identity;
                                     <h2 class="text-2xl md:text-3xl font-extrabold leading-tight mb-4">
                                         <span
                                             class="bg-gradient-to-r from-gray-900 to-emerald-800 dark:from-lime-300 dark:to-emerald-400 bg-clip-text text-transparent">
-                                            Bienvenue dans l'Arène !
+                                            Bienvenue au FC <span>{{ identity?.name ?? 'Nom du Club' }}</span> !
                                         </span>
                                     </h2>
 
                                     <p
                                         class="text-gray-700 dark:text-gray-300 text-base md:text-lg mb-6 leading-relaxed">
-                                        Zone de haute intensité FC Dynamo. Suivez les stats en temps réel, analysez
+                                        Zone de haute intensité du FC <span>{{ identity?.name ?? 'Nom du Club' }}</span>. Suivez les stats en temps réel, analysez
                                         chaque mouvement, et forgez votre <span
                                             class="font-bold text-emerald-700 dark:text-lime-400">EGO de
                                             champion</span>. Votre destin commence ici.
