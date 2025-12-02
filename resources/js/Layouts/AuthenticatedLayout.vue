@@ -12,24 +12,9 @@ import AdminsideBar from "@/Components/AdminsideBar.vue";
 import { Link, usePage } from "@inertiajs/vue3";
 
 const showingNavigationDropdown = ref(false);
-const isSidebarOpen = ref(false);
 const page = usePage();
 const isAdmin = () => page.props.auth.user.role === "admin";
 const isBureau = () => page.props.auth.user.role === "bureau";
-
-// Fonction pour basculer la sidebar
-const toggleSidebar = () => {
-    isSidebarOpen.value = !isSidebarOpen.value;
-    // Émettre un événement pour synchroniser avec d'autres composants si nécessaire
-    window.dispatchEvent(new CustomEvent('sidebar-toggled', { detail: isSidebarOpen.value }));
-};
-
-// Fermer la sidebar quand on clique sur un lien
-const closeSidebar = () => {
-    if (window.innerWidth < 1024) {
-        isSidebarOpen.value = false;
-    }
-};
 
 const handleImageError = (event) => {
     // Si l'image ne charge pas, utiliser l'avatar par défaut
@@ -242,30 +227,16 @@ defineProps({
         </nav>
 
         <!-- Main Layout Container -->
-        <div class="flex pt-16 h-[calc(100vh-4rem)]">
-            <!-- Sidebar - Toggleable on mobile -->
-            <div 
-                class="fixed lg:static inset-y-0 left-0 z-40 w-72 transform transition-transform duration-300 ease-in-out lg:translate-x-0"
-                :class="{
-                    'translate-x-0': isSidebarOpen,
-                    '-translate-x-full': !isSidebarOpen
-                }"
-            >
+        <div class="flex pt-16 h-screen">
+            <!-- Sidebar - Fixed on desktop, hidden on mobile -->
+            <div class="hidden lg:block fixed left-0 top-16 bottom-0 z-40 w-72">
                 <AdminsideBar
                     :votes="votes"
                     :reflections="reflections"
                     :Notification="notifications"
                     class="h-full border-r border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900"
-                    @link-clicked="closeSidebar"
                 />
             </div>
-            
-            <!-- Overlay pour mobile quand le menu est ouvert -->
-            <div 
-                v-if="isSidebarOpen" 
-                @click="closeSidebar"
-                class="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-30"
-            ></div>
 
             <!-- Main Content Area -->
             <div class="flex-1 lg:ml-72 overflow-y-auto">

@@ -71,39 +71,84 @@ function onTouchEnd() {
   }
 }
 
-// 🔥 Modal de suppression
-const showDeleteModal = ref(false)
+// --- Modales de suppression ---
+const showDeleteModal = ref(false)               // pour supprimer la rubrique (titre + contenus)
+const showContentDeleteModal = ref(false)        // pour supprimer un contenu précis
+const selectedRegulationId = ref(null)           // id de la rubrique sélectionnée
+const selectedContentId = ref(null)              // id du contenu sélectionné
+const selectedContentLabel = ref('')             // affichage dans la modale
 
 function openDeleteModal() {
+  const sel = filteredTitles.value[current.value]
+  if (!sel) return
+  selectedRegulationId.value = sel.id
   showDeleteModal.value = true
 }
 
 function closeDeleteModal() {
+  selectedRegulationId.value = null
   showDeleteModal.value = false
 }
 
-function deleteRegulation() {
-  const selected = filteredTitles.value[current.value]
-  if (!selected) return
-
-  router.delete(`/regulations/${selected.id}`, {
+function deleteRegulationConfirm() {
+  if (!selectedRegulationId.value) return
+  router.delete(`/regulations/${selectedRegulationId.value}`, {
     onSuccess: () => {
-      showDeleteModal.value = false
+      closeDeleteModal()
+      // si on supprime l'élément courant, on remet l'index à 0 ou au précédent
+      if (current.value >= filteredTitles.value.length - 1) current.value = Math.max(0, filteredTitles.value.length - 2)
     }
   })
 }
 
-onMounted(start)
-onUnmounted(stop)
+// Contenu
+function openContentDeleteModal(content) {
+  selectedContentId.value = content.id
+  selectedContentLabel.value = content.sub_number ?? `Contenu #${content.id}`
+  showContentDeleteModal.value = true
+}
+
+function closeContentDeleteModal() {
+  selectedContentId.value = null
+  selectedContentLabel.value = ''
+  showContentDeleteModal.value = false
+}
+
+function deleteContentConfirm() {
+  if (!selectedContentId.value) return
+  router.delete(`/regulations/content/${selectedContentId.value}`, {
+    onSuccess: () => {
+      closeContentDeleteModal()
+    }
+  })
+}
+
+// Clavier : echap ferme les modales
+function onKeydown(e) {
+  if (e.key === 'Escape') {
+    if (showContentDeleteModal.value) closeContentDeleteModal()
+    else if (showDeleteModal.value) closeDeleteModal()
+  }
+}
+
+onMounted(() => {
+  start()
+  window.addEventListener('keydown', onKeydown)
+})
+onUnmounted(() => {
+  stop()
+  window.removeEventListener('keydown', onKeydown)
+})
 </script>
 <template>
   <AuthenticatedLayout>
     <div class="relative flex flex-col md:flex-row overflow-x-hidden min-h-screen">
-      
+
       <!-- Vidéo en background -->
-      <video autoplay muted loop playsinline 
-             class="absolute inset-0 w-full h-full object-cover">
-        <source src="https://dm0qx8t0i9gc9.cloudfront.net/watermarks/video/HZHnL4R6xj1hrqjd5/videoblocks-63277d369467e60a6bd204a6_b6lw8rr2ms__2e614f57e25a88afa5e7613d4f09343d__P360.mp4" type="video/mp4" />
+      <video autoplay muted loop playsinline class="absolute inset-0 w-full h-full object-cover">
+        <source
+          src="https://dm0qx8t0i9gc9.cloudfront.net/watermarks/video/HZHnL4R6xj1hrqjd5/videoblocks-63277d369467e60a6bd204a6_b6lw8rr2ms__2e614f57e25a88afa5e7613d4f09343d__P360.mp4"
+          type="video/mp4" />
         Votre navigateur ne supporte pas la vidéo.
       </video>
 
@@ -201,7 +246,7 @@ onUnmounted(stop)
                         
                         <ul class="space-y-2">
                           <li v-for="line in contentLines(c.content)" :key="line" 
-                              class="text-gray-900 dark:text-citron-100 flex items-start gap-2">
+                              class="text-gray-900 dark:text-white flex items-start gap-2">
                             <span class="text-citron-500 dark:text-citron-400 mt-1">•</span>
                             <span>{{ line }}</span>
                           </li>
@@ -215,6 +260,8 @@ onUnmounted(stop)
                           <i class="fas fa-edit"></i>
                           Modifier
                         </button>
+
+                        <!-- now opens modal -->
                         <button v-if="$page.props.auth.user.role === 'admin'"
                                 class="bg-red-600 hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600 text-white px-3 py-2 rounded-lg transition font-semibold text-sm flex items-center gap-2"
                                 @click="$inertia.delete(`/regulations/content/${c.id}`)">
@@ -248,6 +295,52 @@ onUnmounted(stop)
         </div>
       </div>
     </div>
+
+    <!-- Modal supprimer rubrique -->
+    <transition name="fade">
+      <div v-if="showDeleteModal" class="fixed inset-0 z-50 flex items-center justify-center">
+        <div class="absolute inset-0 bg-black/50" @click="closeDeleteModal"></div>
+        <div class="relative bg-white dark:bg-gray-800 max-w-lg w-full rounded-lg p-6 shadow-lg z-10">
+          <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">Confirmer la suppression</h3>
+          <p class="text-sm text-gray-700 dark:text-gray-300 mb-4">
+            Voulez-vous vraiment supprimer cette rubrique et tous ses contenus ? Cette action est irréversible.
+          </p>
+
+          <div class="flex justify-end gap-3">
+            <button class="px-4 py-2 rounded border border-gray-300 dark:border-gray-700" @click="closeDeleteModal">
+              Annuler
+            </button>
+            <button class="px-4 py-2 bg-red-600 hover:bg-red-500 text-white rounded" @click="deleteRegulationConfirm">
+              Supprimer
+            </button>
+          </div>
+        </div>
+      </div>
+    </transition>
+
+    <!-- Modal supprimer contenu -->
+    <transition name="fade">
+      <div v-if="showContentDeleteModal" class="fixed inset-0 z-50 flex items-center justify-center">
+        <div class="absolute inset-0 bg-black/50" @click="closeContentDeleteModal"></div>
+        <div class="relative bg-white dark:bg-gray-800 max-w-md w-full rounded-lg p-6 shadow-lg z-10">
+          <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">Confirmer la suppression</h3>
+          <p class="text-sm text-gray-700 dark:text-gray-300 mb-4">
+            Voulez-vous vraiment supprimer <strong class="text-gray-900 dark:text-gray-100">{{ selectedContentLabel
+              }}</strong> ?
+          </p>
+
+          <div class="flex justify-end gap-3">
+            <button class="px-4 py-2 rounded border border-gray-300 dark:border-gray-700"
+              @click="closeContentDeleteModal">
+              Annuler
+            </button>
+            <button class="px-4 py-2 bg-red-600 hover:bg-red-500 text-white rounded" @click="deleteContentConfirm">
+              Supprimer
+            </button>
+          </div>
+        </div>
+      </div>
+    </transition>
   </AuthenticatedLayout>
 </template>
 
