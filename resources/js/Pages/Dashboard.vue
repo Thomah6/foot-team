@@ -249,7 +249,7 @@ const identity = page.props.identity;
                        
 
                             <div class="mt-6 pt-4 border-t border-lime-100 dark:border-emerald-900/30">
-                                <Link href="/stats"
+                                <Link href="/admin/stats"
                                     class="w-full flex items-center justify-center gap-2 py-2.5 text-sm font-medium text-emerald-600 dark:text-lime-400 hover:text-emerald-700 dark:hover:text-lime-300 transition-colors">
                                 <i class="fas fa-chart-bar"></i>
                                 Voir stats détaillées

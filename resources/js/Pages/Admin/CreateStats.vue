@@ -1,52 +1,75 @@
 <script setup>
 import { useForm } from '@inertiajs/vue3';
-import AdminsideBar from '@/Components/AdminsideBar.vue';
+import { ref } from 'vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+ 
 const props = defineProps({
   users: Array,
 });
-
+ 
+// 🔥 Message affiché après enregistrement
+const pendingMessage = ref('');
+ 
+// 🔥 Formulaire Inertia
 const form = useForm({
   user_id: '',
-  goals: 0,
-  assists: 0,
-  goals_against: 0,
-  matches_played: 1,
+  goals: '',
+  assists: '',
+  goals_against: '',
+  matches_played: '',
   date: '',
 });
-
+ 
+// 🔥 Soumission + reset + message
 const submit = () => {
-  form.post(route('admin.stats.store'), { preserveScroll: true });
+  form.post(route('admin.stats.store'), {
+    preserveScroll: true,
+ 
+    onSuccess: () => {
+      pendingMessage.value =
+        "Statistique envoyée, en attente de validation par l'administrateur.";
+ 
+      // Réinitialise proprement tous les champs
+      form.reset();
+    },
+  });
 };
 </script>
-
+ 
+ 
 <template>
 <AuthenticatedLayout>
-
-
+ 
+ 
  <div class="flex">
-
-
-
-
+ 
+ 
+ 
+ 
          <div class=" flex-1">
   <h1 class="text-center text-3xl font-bold mb-8 text-gray-800">
     Statistique des joueurs
   </h1>
-
+ 
   <div class="max-w-xl mx-auto bg-white shadow-lg rounded-2xl p-8 border border-gray-200">
-
+ 
     <h2 class="text-xl font-semibold mb-6 text-gray-700">
       Ajouter une Statistique
     </h2>
-
+ 
     <!-- Flash success -->
     <div v-if="$page.props.flash?.success" class="mb-4 p-3 rounded-md bg-green-50 text-green-700 border border-green-200">
       {{ $page.props.flash.success }}
     </div>
-
+ 
+  <div v-if="pendingMessage" class="p-4 mb-4 bg-yellow-100 text-yellow-700 rounded-md">
+  {{ pendingMessage }}
+</div>
+ 
+ 
+ 
     <form @submit.prevent="submit" class="space-y-5">
-
+ 
       <!-- FIELD TEMPLATE -->
       <div>
         <label class="block text-sm font-medium mb-1 text-gray-600">Membre</label>
@@ -61,7 +84,7 @@ const submit = () => {
           {{ form.errors.user_id }}
         </p>
       </div>
-
+ 
       <!-- GOALS -->
       <div>
         <label class="block text-sm font-medium mb-1 text-gray-600">Buts</label>
@@ -71,7 +94,7 @@ const submit = () => {
           {{ form.errors.goals }}
         </p>
       </div>
-
+ 
       <!-- ASSISTS -->
       <div>
         <label class="block text-sm font-medium mb-1 text-gray-600">Passes Décisives</label>
@@ -81,7 +104,7 @@ const submit = () => {
           {{ form.errors.assists }}
         </p>
       </div>
-
+ 
       <!-- GOALS AGAINST -->
       <div>
         <label class="block text-sm font-medium mb-1 text-gray-600">Buts Encaissés</label>
@@ -91,7 +114,7 @@ const submit = () => {
           {{ form.errors.goals_against }}
         </p>
       </div>
-
+ 
       <!-- MATCHES PLAYED -->
       <div>
         <label class="block text-sm font-medium mb-1 text-gray-600">Matchs Joués</label>
@@ -101,7 +124,7 @@ const submit = () => {
           {{ form.errors.matches_played }}
         </p>
       </div>
-
+ 
       <!-- DATE -->
       <div>
         <label class="block text-sm font-medium mb-1 text-gray-600">Date</label>
@@ -111,17 +134,19 @@ const submit = () => {
           {{ form.errors.date }}
         </p>
       </div>
-
+ 
       <!-- SUBMIT -->
       <button type="submit" :disabled="form.processing"
         class="w-full bg-green-500 text-white py-3 rounded-xl hover:bg-green-600 transition font-semibold shadow-md">
         Enregistrer
       </button>
-
+ 
     </form>
   </div>
   </div>
   </div>
 </AuthenticatedLayout>
-
+ 
 </template>
+ 
+ 
