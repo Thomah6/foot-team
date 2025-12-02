@@ -13,18 +13,18 @@ defineEmits(["confirm", "cancel"]);
         class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 dark:bg-black/60"
     >
         <div
-            class="bg-white dark:bg-slate-900 rounded-lg shadow-lg w-full max-w-sm p-4 border border-neutral-200 dark:border-slate-700"
+            class="bg-white dark:bg-slate-900 rounded-lg shadow-lg w-full max-w-sm p-4 border border-gray-300 dark:border-slate-700"
         >
-            <h2 class="font-bold text-lg mb-2 text-neutral-900 dark:text-white">
+            <h2 class="font-bold text-lg mb-2 text-gray-900 dark:text-gray-50">
                 {{ title }}
             </h2>
-            <p class="text-sm text-gray-700 dark:text-slate-300 mb-4">
+            <p class="text-sm text-gray-600 dark:text-gray-300 mb-4">
                 {{ message }}
             </p>
             <div class="flex justify-end gap-2">
                 <button
                     type="button"
-                    class="px-3 py-1 text-sm border border-neutral-300 dark:border-slate-600 rounded text-neutral-800 dark:text-slate-100 bg-white dark:bg-slate-800 hover:bg-neutral-100 dark:hover:bg-slate-700 disabled:opacity-60"
+                    class="px-3 py-1 text-sm border border-gray-400 dark:border-slate-600 rounded text-gray-700 dark:text-gray-200 bg-gray-50 dark:bg-slate-800 hover:bg-gray-100 dark:hover:bg-slate-700 disabled:opacity-60"
                     @click="$emit('cancel')"
                     :disabled="loading"
                 >
@@ -32,7 +32,7 @@ defineEmits(["confirm", "cancel"]);
                 </button>
                 <button
                     type="button"
-                    class="px-3 py-1 text-sm bg-blue-600 dark:bg-blue-700 text-white rounded flex items-center gap-2 hover:bg-blue-700 dark:hover:bg-blue-800 disabled:opacity-60"
+                    class="px-3 py-1 text-sm bg-blue-600 dark:bg-blue-600 text-white rounded flex items-center gap-2 hover:bg-blue-700 dark:hover:bg-blue-700 disabled:opacity-60"
                     @click="$emit('confirm')"
                     :disabled="loading"
                 >

@@ -191,6 +191,7 @@ function cancelSubmit() {
                             <input
                                 type="text"
                                 v-model="description"
+                                maxlength="150"
                                 class="w-full px-4 py-3 bg-gradient-to-r from-white to-purple-50/50 dark:from-gray-800 dark:to-purple-900/10 border-2 border-purple-200 dark:border-purple-800/50 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:border-purple-400 dark:focus:border-purple-500 focus:ring-2 focus:ring-purple-200 dark:focus:ring-purple-900/30 outline-none transition-all"
                                 placeholder='Ex: "Correction erreur de saisie"'
                             />

@@ -1,5 +1,5 @@
 <script setup>
-import { ref, defineEmits, onMounted } from "vue";
+import { ref, defineEmits, onMounted, computed } from "vue";
 import { router } from "@inertiajs/vue3";
 import ConfirmModalFinance from "@/Components/ConfirmModalFinance.vue";
 
@@ -13,6 +13,24 @@ const isAnimating = ref(false);
 const MIN_MONTANT = 100;
 const MAX_MONTANT = 10000;
 const ANIMATION_DURATION = 2500; //
+
+const rangeStyle = computed(() => {
+    const min = MIN_MONTANT;
+    const max = MAX_MONTANT;
+    const val = Math.min(Math.max(Number(montant.value || min), min), max);
+    const percent = Math.round(((val - min) / (max - min)) * 100);
+    // orange when below half, green otherwise
+    const mid = min + (max - min) / 2;
+    const fillColor = val < mid ? "#f97316" /* orange-500 */ : "#16a34a" /* emerald-600 */;
+    const emptyColor = "rgba(203,213,225,0.35)"; /* slate/neutral light */
+    const thumbGradient = val < mid ? `linear-gradient(180deg,#ffedd5,#fb923c)` : `linear-gradient(180deg,#bbf7d0,#16a34a)`;
+
+    return {
+        background: `linear-gradient(to right, ${fillColor} 0%, ${fillColor} ${percent}%, ${emptyColor} ${percent}%, ${emptyColor} 100%)`,
+        '--thumb-bg': thumbGradient,
+        '--track-empty': emptyColor,
+    };
+});
 
 function askConfirmation() {
     showConfirmModal.value = true;
@@ -92,7 +110,7 @@ onMounted(() => {
         <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-lime-400/10 to-emerald-600/10 rounded-full -translate-y-16 translate-x-16"></div>
         
         <h2 class="text-xl font-black text-gray-900 dark:text-white mb-2">
-            📥 FAIRE UN DÉPÔT
+             FAIRE UN DÉPÔT
         </h2>
         <p class="text-sm text-gray-600 dark:text-gray-400 mb-6">
             Investis dans l'avenir du club. Chaque franc compte !
@@ -116,7 +134,8 @@ onMounted(() => {
                     step="100"
                     v-model.number="montant"
                     @input="onUserInteract"
-                    class="w-full h-3 bg-gradient-to-r from-lime-200 to-emerald-200 dark:from-emerald-900/30 dark:to-lime-900/30 rounded-full appearance-none [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:h-6 [&::-webkit-slider-thumb]:w-6 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-gradient-to-r [&::-webkit-slider-thumb]:from-lime-500 [&::-webkit-slider-thumb]:to-emerald-600 [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-white [&::-webkit-slider-thumb]:dark:border-gray-900 [&::-webkit-slider-thumb]:shadow-lg"
+                    :style="rangeStyle"
+                    class="w-full h-3 rounded-full appearance-none range-custom-thumb"
                 />
                 <div class="flex justify-between text-xs text-gray-500 dark:text-gray-400">
                     <span>Min: 100 F</span>
@@ -130,7 +149,8 @@ onMounted(() => {
                 <input
                     v-model="description"
                     type="text"
-                    placeholder="Motivation de ton investissement (optionnel)"
+                        placeholder="Motivation de ton investissement (optionnel)"
+                        maxlength="150"
                     class="w-full px-4 py-3 bg-gradient-to-r from-white to-lime-50/50 dark:from-gray-800 dark:to-emerald-900/20 border-2 border-lime-200 dark:border-emerald-800/50 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:border-lime-400 dark:focus:border-emerald-500 focus:ring-2 focus:ring-lime-200 dark:focus:ring-emerald-900/30 outline-none transition-all"
                 />
             </div>
@@ -184,5 +204,57 @@ onMounted(() => {
         min-height: 44px;
     }
 }
-</style>
 
+/* Custom range thumb + track styles */
+.range-custom-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    background: transparent; /* background set inline via style binding */
+}
+.range-custom-thumb:focus {
+    outline: none;
+}
+.range-custom-thumb::-webkit-slider-runnable-track {
+    height: 12px;
+    border-radius: 9999px;
+}
+.range-custom-thumb::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 28px;
+    height: 28px;
+    border-radius: 9999px;
+    margin-top: -8px; /* center the thumb relative to track height */
+    background: var(--thumb-bg, linear-gradient(180deg,#bbf7d0,#16a34a));
+    border: 3px solid #fff;
+    box-shadow: 0 6px 18px rgba(16,24,40,0.18);
+}
+.range-custom-thumb::-moz-range-track {
+    height: 12px;
+    border-radius: 9999px;
+}
+.range-custom-thumb::-moz-range-thumb {
+    width: 28px;
+    height: 28px;
+    border-radius: 9999px;
+    background: var(--thumb-bg, linear-gradient(180deg,#bbf7d0,#16a34a));
+    border: 3px solid #fff;
+    box-shadow: 0 6px 18px rgba(16,24,40,0.18);
+}
+
+/* Mobile adjustments: slightly larger thumb and centered */
+@media (max-width: 640px) {
+    .range-custom-thumb::-webkit-slider-thumb {
+        width: 34px;
+        height: 34px;
+        margin-top: -11px;
+    }
+    .range-custom-thumb::-moz-range-thumb {
+        width: 34px;
+        height: 34px;
+    }
+    .range-custom-thumb::-webkit-slider-runnable-track {
+        height: 14px;
+    }
+}
+
+</style>

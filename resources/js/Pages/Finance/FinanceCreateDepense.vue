@@ -124,6 +124,7 @@ function cancelDepense() {
                             <input
                                 v-model="description"
                                 type="text"
+                                maxlength="150"
                                 class="w-full px-4 py-3 bg-gradient-to-r from-white to-red-50/50 dark:from-gray-800 dark:to-red-900/10 border-2 border-red-200 dark:border-red-800/50 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:border-red-400 dark:focus:border-red-500 focus:ring-2 focus:ring-red-200 dark:focus:ring-red-900/30 outline-none transition-all"
                                 placeholder="Pourquoi cette dépense ?"
                             />
