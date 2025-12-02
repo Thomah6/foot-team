@@ -162,14 +162,14 @@ onUnmounted(() => {
           <!-- Header -->
           <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
             <div>
-              <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-citron-50">📋 Liste des règlements</h1>
+              <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-citron-50"> Liste des règlements</h1>
               <p class="text-gray-600 dark:text-citron-300 text-sm mt-1">Consultez et gérez les règlements de l'organisation</p>
             </div>
 
             <div class="flex flex-wrap gap-2">
               <button
                 v-if="props.can.create"
-                class="bg-citron-600 hover:bg-citron-700 dark:bg-citron-500 dark:hover:bg-citron-600 text-white px-4 py-2 rounded-lg cursor-pointer transition font-semibold flex items-center gap-2"
+                class="flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-emerald-600 to-lime-600 rounded-lg text-white font-bold text-sm shadow-lg hover:shadow-emerald-500/30 transform hover:scale-105 transition-all"
                 @click="$inertia.visit('/regulations/create')"
               >
                 <i class="fas fa-plus"></i>
@@ -178,7 +178,10 @@ onUnmounted(() => {
 
               <button
                 v-if="$page.props.auth.user.role === 'admin' && filteredTitles.length > 0"
-                class="bg-red-600 hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600 text-white px-4 py-2 rounded-lg cursor-pointer transition font-semibold flex items-center gap-2"
+                class="flex items-center gap-2 px-4 py-2.5 
+bg-gradient-to-r from-red-600 to-pink-600 
+rounded-lg text-white font-bold text-sm shadow-lg 
+hover:shadow-red-500/30 transform hover:scale-105 transition-all"
                 @click="openDeleteModal"
               >
                 <i class="fas fa-trash"></i>
@@ -263,7 +266,11 @@ onUnmounted(() => {
 
                         <!-- now opens modal -->
                         <button v-if="$page.props.auth.user.role === 'admin'"
-                                class="bg-red-600 hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600 text-white px-3 py-2 rounded-lg transition font-semibold text-sm flex items-center gap-2"
+                                class="flex items-center gap-2 px-4 py-2.5 
+bg-gradient-to-r from-red-600 to-pink-600 
+rounded-lg text-white font-bold text-sm shadow-lg 
+hover:shadow-red-500/30 transform hover:scale-105 transition-all
+"
                                 @click="$inertia.delete(`/regulations/content/${c.id}`)">
                           <i class="fas fa-trash"></i>
                           Supprimer
