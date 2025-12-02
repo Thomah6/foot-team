@@ -53,7 +53,7 @@ const identity = page.props.identity;
                                             ⚽
                                         </span>
                                     </div>
-
+ 
                                     <!-- Nom -->
                                     <div>
                                         <h1
@@ -65,7 +65,7 @@ const identity = page.props.identity;
                                         </p>
                                     </div>
                                 </div>
-
+ 
                             </div>
                             <Link href="/joueur-du-mois"
                                 class="flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-emerald-600 to-lime-600 rounded-lg text-white font-bold text-sm shadow-lg hover:shadow-emerald-500/30 transform hover:scale-105 transition-all">
@@ -74,7 +74,7 @@ const identity = page.props.identity;
                             </Link>
                         </div>
                     </div>
-
+ 
                     <!-- Hero Card -->
                     <div
                         class="relative overflow-hidden rounded-2xl bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm border border-lime-200/50 dark:border-emerald-800/50 shadow-xl">
@@ -85,7 +85,7 @@ const identity = page.props.identity;
                         <div
                             class="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-br from-emerald-400/10 to-lime-500/10 rounded-full translate-y-12 -translate-x-12">
                         </div>
-
+ 
                         <div class="relative p-6 md:p-8">
                             <div class="flex flex-col md:flex-row items-center md:items-start justify-between gap-6">
                                 <div class="flex-1 max-w-2xl text-center md:text-left">
@@ -97,14 +97,14 @@ const identity = page.props.identity;
                                         <span class="text-xs font-bold text-lime-700 dark:text-emerald-400">NOUVELLE
                                             SAISON</span>
                                     </div>
-
+ 
                                     <h2 class="text-2xl md:text-3xl font-extrabold leading-tight mb-4">
                                         <span
                                             class="bg-gradient-to-r from-gray-900 to-emerald-800 dark:from-lime-300 dark:to-emerald-400 bg-clip-text text-transparent">
                                             Bienvenue au FC <span>{{ identity?.name ?? 'Nom du Club' }}</span> !
                                         </span>
                                     </h2>
-
+ 
                                     <p
                                         class="text-gray-700 dark:text-gray-300 text-base md:text-lg mb-6 leading-relaxed">
                                         Zone de haute intensité du FC <span>{{ identity?.name ?? 'Nom du Club' }}</span>. Suivez les stats en temps réel, analysez
@@ -112,10 +112,10 @@ const identity = page.props.identity;
                                             class="font-bold text-emerald-700 dark:text-lime-400">EGO de
                                             champion</span>. Votre destin commence ici.
                                     </p>
-
-
+ 
+ 
                                 </div>
-
+ 
                                 <!-- CTA Button -->
                                 <div class="flex-shrink-0">
                                     <Link href="/joueur-du-mois"
@@ -138,6 +138,7 @@ const identity = page.props.identity;
                         </div>
                     </div>
                 </div>
+ 
             </div>
 
             <!-- Main Content Grid -->
@@ -245,55 +246,7 @@ const identity = page.props.identity;
                                 STATS ÉCLAIR
                             </h3>
 
-                            <div class="space-y-4">
-                                <div
-                                    class="flex items-center justify-between pb-3 border-b border-lime-100 dark:border-emerald-900/30">
-                                    <div class="flex items-center gap-3">
-                                        <div
-                                            class="w-10 h-10 rounded-lg bg-gradient-to-br from-lime-100 to-emerald-100 dark:from-emerald-900/30 dark:to-lime-900/30 flex items-center justify-center">
-                                            <i class="fas fa-fire text-lime-600 dark:text-emerald-400"></i>
-                                        </div>
-                                        <div>
-                                            <div class="text-sm font-medium text-gray-700 dark:text-gray-300">Forme
-                                                actuelle</div>
-                                            <div class="text-xs text-gray-500 dark:text-gray-400">8 victoires
-                                                consécutives</div>
-                                        </div>
-                                    </div>
-                                    <div class="text-xl font-black text-emerald-700 dark:text-lime-400">🔥</div>
-                                </div>
-
-                                <div
-                                    class="flex items-center justify-between pb-3 border-b border-lime-100 dark:border-emerald-900/30">
-                                    <div class="flex items-center gap-3">
-                                        <div
-                                            class="w-10 h-10 rounded-lg bg-gradient-to-br from-lime-100 to-emerald-100 dark:from-emerald-900/30 dark:to-lime-900/30 flex items-center justify-center">
-                                            <i class="fas fa-shoe-prints text-lime-600 dark:text-emerald-400"></i>
-                                        </div>
-                                        <div>
-                                            <div class="text-sm font-medium text-gray-700 dark:text-gray-300">Distance
-                                                parcourue</div>
-                                            <div class="text-xs text-gray-500 dark:text-gray-400">Cette semaine</div>
-                                        </div>
-                                    </div>
-                                    <div class="text-xl font-black text-emerald-700 dark:text-lime-400">42km</div>
-                                </div>
-
-                                <div class="flex items-center justify-between">
-                                    <div class="flex items-center gap-3">
-                                        <div
-                                            class="w-10 h-10 rounded-lg bg-gradient-to-br from-lime-100 to-emerald-100 dark:from-emerald-900/30 dark:to-lime-900/30 flex items-center justify-center">
-                                            <i class="fas fa-futbol text-lime-600 dark:text-emerald-400"></i>
-                                        </div>
-                                        <div>
-                                            <div class="text-sm font-medium text-gray-700 dark:text-gray-300">Buts
-                                                marqués</div>
-                                            <div class="text-xs text-gray-500 dark:text-gray-400">Dernier match</div>
-                                        </div>
-                                    </div>
-                                    <div class="text-xl font-black text-emerald-700 dark:text-lime-400">5⚽</div>
-                                </div>
-                            </div>
+                       
 
                             <div class="mt-6 pt-4 border-t border-lime-100 dark:border-emerald-900/30">
                                 <Link href="/stats"

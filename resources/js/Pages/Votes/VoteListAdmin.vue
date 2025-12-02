@@ -150,12 +150,4 @@ defineProps({
     background: #4b5563;
 }
 </style>
-<script setup>
-import { defineProps } from "vue";
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-
-defineProps({
-    reflections: Array,
-});
-</script>
 
