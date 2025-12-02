@@ -14,7 +14,7 @@
                             option.option === 'CONTRE',
                         'bg-gray-100 dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600': selectedOption !== option.id,
                     }"
-                    class="block border-2 rounded-lg p-4 mb-4 cursor-pointer transition-all duration-200 font-semibold"
+                    class="block border-2 rounded-lg p-4 mb-4 cursor-pointer transition-all duration-200 font-semibold mt-[-15px]"
                 >
                     <input
                         type="radio"

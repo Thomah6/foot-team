@@ -141,19 +141,6 @@ Route::prefix('admin')->name('admin.')->middleware('role:admin')->group(function
     Route::middleware('role:admin')->group(function () {
 
 
-
-          // Statistiques du bureau
-        // Route::prefix('stats')->group(function () {
-            
-        //     Route::get('/', [BureauStatController::class, 'index'])->name('bureau.stats.index');
-        //     Route::get('/leaderboards', [BureauStatController::class, 'leaderboards'])->name('bureau.stats.leaderboards');
-        //     Route::get('/leaderboards/goals', [BureauStatController::class, 'goalLeaders'])->name('bureau.stats.leaderboards.goals');
-        //     Route::get('/leaderboards/assists', [BureauStatController::class, 'assistLeaders'])->name('bureau.stats.leaderboards.assists');
-        //     Route::get('/leaderboards/goalkeepers', [BureauStatController::class, 'goalkeeperLeaders'])->name('bureau.stats.leaderboards.goalkeepers');
-        //     Route::get('/members/{user}/stats', [BureauStatController::class, 'memberStats'])->name('bureau.stats.member');
-        // });
-
-
         // Identity management
         Route::get('/identity', [IdentityController::class, 'index'])->name('identity');
 
@@ -170,21 +157,33 @@ Route::prefix('admin')->name('admin.')->middleware('role:admin')->group(function
         });
 
         // Espace bureau - Gestion des membres
-        // Route::prefix('bureau')->middleware('role:bureau')->group(function () {
-        //     Route::get('/members', [BureauMemberController::class, 'index'])->name('bureau.members.index');
+        Route::prefix('bureau')->middleware('role:bureau')->group(function () {
+            Route::get('/members', [BureauMemberController::class, 'index'])->name('bureau.members.index');
 
-        //     // Statistiques du bureau
-        //     Route::prefix('stats')->group(function () {
-        //         Route::get('/', [BureauStatController::class, 'index'])->name('bureau.stats.index');
-        //         Route::get('/leaderboards', [BureauStatController::class, 'leaderboards'])->name('bureau.stats.leaderboards');
-        //         Route::get('/leaderboards/goals', [BureauStatController::class, 'goalLeaders'])->name('bureau.stats.leaderboards.goals');
-        //         Route::get('/leaderboards/assists', [BureauStatController::class, 'assistLeaders'])->name('bureau.stats.leaderboards.assists');
-        //         Route::get('/leaderboards/goalkeepers', [BureauStatController::class, 'goalkeeperLeaders'])->name('bureau.stats.leaderboards.goalkeepers');
-        //         Route::get('/members/{user}/stats', [BureauStatController::class, 'memberStats'])->name('bureau.stats.member');
-        //     });
-        // });
+            // Statistiques du bureau
+            Route::prefix('stats')->group(function () {
+                Route::get('/', [BureauStatController::class, 'index'])->name('bureau.stats.index');
+                Route::get('/leaderboards', [BureauStatController::class, 'leaderboards'])->name('bureau.stats.leaderboards');
+                Route::get('/leaderboards/goals', [BureauStatController::class, 'goalLeaders'])->name('bureau.stats.leaderboards.goals');
+                Route::get('/leaderboards/assists', [BureauStatController::class, 'assistLeaders'])->name('bureau.stats.leaderboards.assists');
+                Route::get('/leaderboards/goalkeepers', [BureauStatController::class, 'goalkeeperLeaders'])->name('bureau.stats.leaderboards.goalkeepers');
+                Route::get('/members/{user}/stats', [BureauStatController::class, 'memberStats'])->name('bureau.stats.member');
+            });
+        });
 
+        Route::prefix('bureau')->middleware('role:admin')->group(function () {
+        Route::get('/members', [BureauMemberController::class, 'index'])->name('bureau.members.index');
 
+        // Statistiques du bureau
+        Route::prefix('stats')->group(function () {
+            Route::get('/', [BureauStatController::class, 'index'])->name('bureau.stats.index');
+            Route::get('/leaderboards', [BureauStatController::class, 'leaderboards'])->name('bureau.stats.leaderboards');
+            Route::get('/leaderboards/goals', [BureauStatController::class, 'goalLeaders'])->name('bureau.stats.leaderboards.goals');
+            Route::get('/leaderboards/assists', [BureauStatController::class, 'assistLeaders'])->name('bureau.stats.leaderboards.assists');
+            Route::get('/leaderboards/goalkeepers', [BureauStatController::class, 'goalkeeperLeaders'])->name('bureau.stats.leaderboards.goalkeepers');
+            Route::get('/members/{user}/stats', [BureauStatController::class, 'memberStats'])->name('bureau.stats.member');
+        });
+    });
 
 
     });
@@ -260,20 +259,6 @@ Route::prefix('admin')->name('admin.')->middleware('role:admin')->group(function
 
 
 Route::prefix('bureau')->middleware('role:bureau')->group(function () {
-        Route::get('/members', [BureauMemberController::class, 'index'])->name('bureau.members.index');
-
-        // Statistiques du bureau
-        Route::prefix('stats')->group(function () {
-            Route::get('/', [BureauStatController::class, 'index'])->name('bureau.stats.index');
-            Route::get('/leaderboards', [BureauStatController::class, 'leaderboards'])->name('bureau.stats.leaderboards');
-            Route::get('/leaderboards/goals', [BureauStatController::class, 'goalLeaders'])->name('bureau.stats.leaderboards.goals');
-            Route::get('/leaderboards/assists', [BureauStatController::class, 'assistLeaders'])->name('bureau.stats.leaderboards.assists');
-            Route::get('/leaderboards/goalkeepers', [BureauStatController::class, 'goalkeeperLeaders'])->name('bureau.stats.leaderboards.goalkeepers');
-            Route::get('/members/{user}/stats', [BureauStatController::class, 'memberStats'])->name('bureau.stats.member');
-        });
-    });
-
-            Route::prefix('bureau')->middleware('role:admin')->group(function () {
         Route::get('/members', [BureauMemberController::class, 'index'])->name('bureau.members.index');
 
         // Statistiques du bureau
@@ -454,7 +439,19 @@ Route::middleware(['auth', 'is.active', 'role:admin'])->group(function () {
 
 
 
- 
+ Route::prefix('bureau')->middleware('role:bureau')->group(function () {
+        Route::get('/members', [BureauMemberController::class, 'index'])->name('bureau.members.index');
+
+        // Statistiques du bureau
+        Route::prefix('stats')->group(function () {
+            Route::get('/', [BureauStatController::class, 'index'])->name('bureau.stats.index');
+            Route::get('/leaderboards', [BureauStatController::class, 'leaderboards'])->name('bureau.stats.leaderboards');
+            Route::get('/leaderboards/goals', [BureauStatController::class, 'goalLeaders'])->name('bureau.stats.leaderboards.goals');
+            Route::get('/leaderboards/assists', [BureauStatController::class, 'assistLeaders'])->name('bureau.stats.leaderboards.assists');
+            Route::get('/leaderboards/goalkeepers', [BureauStatController::class, 'goalkeeperLeaders'])->name('bureau.stats.leaderboards.goalkeepers');
+            Route::get('/members/{user}/stats', [BureauStatController::class, 'memberStats'])->name('bureau.stats.member');
+        });
+    });
 
 
 // Routes pour les réflexions
