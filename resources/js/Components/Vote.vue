@@ -40,7 +40,7 @@
 </template>
 
 <script setup>
-import { ref, defineProps, onMounted } from "vue";
+import { ref, defineProps, onMounted, watch } from "vue";
 import { router } from "@inertiajs/vue3";
 
 const props = defineProps({
@@ -62,8 +62,23 @@ const props = defineProps({
     },
     reflection: Object,
 });
+// Lors du montage, si l'utilisateur a déjà voté, sélectionner l'option correspondante
 onMounted(() => {
-  console.log(props.existingVote);
+    const ev = props.existingVote;
+    if (ev === 1) {
+        // POUR -> option id 1
+        selectedOption.value = 1;
+    } else if (ev === -1) {
+        // CONTRE -> option id 2
+        selectedOption.value = 2;
+    }
+});
+
+// Si la prop existingVote change (Inertia remplace les props), mettre à jour la sélection
+watch(() => props.existingVote, (ev) => {
+    if (ev === 1) selectedOption.value = 1;
+    else if (ev === -1) selectedOption.value = 2;
+    else selectedOption.value = null;
 });
 
 const selectedOption = ref(null);

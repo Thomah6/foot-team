@@ -87,53 +87,72 @@ onMounted(() => {
 </script>
 
 <template>
-    <div
-        class="deposit-animate flex flex-col gap-4 p-6 bg-white dark:bg-slate-900 border border-neutral-200 dark:border-slate-700 rounded-lg"
-    >
-        <h2 class="text-xl font-bold text-neutral-900 dark:text-white">
-            Déclarer un dépôt
+    <div class="deposit-animate relative overflow-hidden rounded-2xl p-6 border-2 border-lime-200 dark:border-emerald-800/50 bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm shadow-xl">
+        <!-- Decorative elements -->
+        <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-lime-400/10 to-emerald-600/10 rounded-full -translate-y-16 translate-x-16"></div>
+        
+        <h2 class="text-xl font-black text-gray-900 dark:text-white mb-2">
+            📥 FAIRE UN DÉPÔT
         </h2>
-        <p class="text-neutral-600 dark:text-slate-400 text-sm">
-            Faites glisser pour sélectionner le montant de votre dépôt.
+        <p class="text-sm text-gray-600 dark:text-gray-400 mb-6">
+            Investis dans l'avenir du club. Chaque franc compte !
         </p>
-        <div class="flex flex-col items-center gap-4">
-            <span class="text-5xl font-bold text-primary dark:text-blue-400"
-                >{{ montant }} F CFA</span
-            >
-            <input
-                type="range"
-                min="100"
-                max="10000"
-                step="100"
-                v-model.number="montant"
-                @input="onUserInteract"
-                class="w-full h-2 bg-neutral-200 dark:bg-slate-700 rounded-lg accent-primary dark:accent-blue-500"
-            />
-            <div
-                class="w-full flex justify-between text-xs text-neutral-600 dark:text-slate-400"
-            >
-                <span>100 F CFA</span>
-                <span>10 000 F CFA</span>
+        
+        <div class="space-y-6">
+            <!-- Amount Display -->
+            <div class="text-center">
+                <div class="text-5xl md:text-6xl font-black bg-gradient-to-r from-emerald-700 to-lime-600 dark:from-lime-400 dark:to-emerald-500 bg-clip-text text-transparent">
+                    {{ montant }} F
+                </div>
+                <div class="text-sm text-gray-500 dark:text-gray-400 mt-1">FCFA</div>
             </div>
-            <input
-                v-model="description"
-                type="text"
-                placeholder="Description (optionnel)"
-                class="w-full px-4 py-2 border border-neutral-200 dark:border-slate-700 rounded-lg text-sm bg-white dark:bg-slate-800 text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-slate-400"
-            />
+
+            <!-- Range Slider -->
+            <div class="space-y-3">
+                <input
+                    type="range"
+                    min="100"
+                    max="10000"
+                    step="100"
+                    v-model.number="montant"
+                    @input="onUserInteract"
+                    class="w-full h-3 bg-gradient-to-r from-lime-200 to-emerald-200 dark:from-emerald-900/30 dark:to-lime-900/30 rounded-full appearance-none [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:h-6 [&::-webkit-slider-thumb]:w-6 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-gradient-to-r [&::-webkit-slider-thumb]:from-lime-500 [&::-webkit-slider-thumb]:to-emerald-600 [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-white [&::-webkit-slider-thumb]:dark:border-gray-900 [&::-webkit-slider-thumb]:shadow-lg"
+                />
+                <div class="flex justify-between text-xs text-gray-500 dark:text-gray-400">
+                    <span>Min: 100 F</span>
+                    <span class="font-bold text-lime-600 dark:text-emerald-400">ÉCHELLE</span>
+                    <span>Max: 10 000 F</span>
+                </div>
+            </div>
+
+            <!-- Description -->
+            <div>
+                <input
+                    v-model="description"
+                    type="text"
+                    placeholder="Motivation de ton investissement (optionnel)"
+                    class="w-full px-4 py-3 bg-gradient-to-r from-white to-lime-50/50 dark:from-gray-800 dark:to-emerald-900/20 border-2 border-lime-200 dark:border-emerald-800/50 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:border-lime-400 dark:focus:border-emerald-500 focus:ring-2 focus:ring-lime-200 dark:focus:ring-emerald-900/30 outline-none transition-all"
+                />
+            </div>
+
+            <!-- Submit Button -->
             <button
                 @click="askConfirmation"
-                class="w-full h-12 px-4 bg-blue-600 dark:bg-blue-700 text-white rounded-lg font-bold mt-4 hover:bg-blue-700 dark:hover:bg-blue-800"
+                class="group relative w-full py-4 px-6 bg-gradient-to-r from-emerald-600 to-lime-600 dark:from-emerald-500 dark:to-lime-500 text-white font-black rounded-xl shadow-lg hover:shadow-emerald-500/30 transform hover:scale-[1.02] active:scale-95 transition-all duration-300 overflow-hidden"
             >
-                Envoyer
+                <span class="relative z-10 flex items-center justify-center gap-3">
+                    <i class="fas fa-paper-plane text-lg group-hover:rotate-12 transition-transform"></i>
+                    VALIDER LE DÉPÔT
+                </span>
+                <div class="absolute inset-0 bg-gradient-to-r from-emerald-700 to-lime-700 dark:from-emerald-600 dark:to-lime-600 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
             </button>
         </div>
 
         <ConfirmModalFinance
             :show="showConfirmModal"
             :loading="showConfirmModalLoading"
-            title="Confirmer le dépôt"
-            :message="`Voulez-vous déclarer un dépôt de ${montant} F CFA ?`"
+            title="🏦 CONFIRMER L'INVESTISSEMENT"
+            :message="`Tu investis ${montant} FCFA pour faire avancer le club ?`"
             @confirm="confirmDepot"
             @cancel="cancelDepot"
         />
@@ -155,10 +174,15 @@ onMounted(() => {
     animation: floatDown 420ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
-.deposit-animate .text-5xl {
-    transition: transform 220ms ease, color 220ms ease;
-}
-.deposit-animate button:active {
-    transform: translateY(1px) scale(0.998);
+/* Touch optimization */
+@media (max-width: 640px) {
+    button {
+        min-height: 52px;
+    }
+    
+    input[type="range"] {
+        min-height: 44px;
+    }
 }
 </style>
+

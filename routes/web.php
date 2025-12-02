@@ -47,13 +47,31 @@ Route::get('/auth/google/callback', [GoogleAuthController::class, 'callback']);
 //     ]);
 // });
 
-// Page d'accueil
-
-// Redirection racine si authentifié
+// Page d'accueil publique
 Route::get('/', function () {
-    return auth()->check()
-        ? redirect()->route('dashboard')
-        : redirect()->route('login');
+    if (auth()->check()) {
+        return redirect()->route('dashboard');
+    }
+    
+    // Récupérer l'identité du club depuis la BDD
+    $identity = \App\Models\Identity::first();
+    
+    // Si aucune identité n'existe, utiliser des valeurs par défaut sans créer en BDD
+    if (!$identity) {
+        $clubData = [
+            'name' => 'FC Dynamo',
+            'logo' => null
+        ];
+    } else {
+        $clubData = [
+            'name' => $identity->name,
+            'logo' => $identity->logo,
+        ];
+    }
+    
+    return Inertia::render('Welcome', [
+        'clubIdentity' => $clubData
+    ]);
 })->name('home');
 
 // Routes de vote

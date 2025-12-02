@@ -38,8 +38,8 @@ const togglePublish = (id) => {
   <!-- Header -->
   <div class="flex items-center justify-between mb-6">
     <Link 
-      :href="route('news.create')" 
-      class="px-5 py-2.5 rounded-lg bg-citron-500 hover:bg-citron-600 text-white font-semibold shadow-sm transition-all duration-200 flex items-center gap-2"
+      :href="route('admin.news.create')" 
+      class="px-5 py-2 rounded-lg bg-green-600 hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600 transition text-white font-semibold shadow"
     >
       <i class="fas fa-plus"></i>
       Nouvelle actualité
