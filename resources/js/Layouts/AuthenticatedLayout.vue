@@ -52,19 +52,6 @@ defineProps({
                         <div
                             class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex"
                         >
-                            <NavLink
-                                v-if="isAdmin()"
-                                :href="route('reflections.index')"
-                                :active="route().current('reflections.*')"
-                            >
-                                Reflexions
-                                <span
-                                    v-if="notifications > 0"
-                                    class="ms-2 inline-flex items-center justify-center h-5 min-w-[20px] px-1.5 rounded-full text-xs font-bold text-white bg-red-500"
-                                >
-                                    {{ notifications }}
-                                </span>
-                            </NavLink>
                         </div>
                     </div>
 
