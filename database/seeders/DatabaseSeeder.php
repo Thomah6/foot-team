@@ -122,7 +122,7 @@ class DatabaseSeeder extends Seeder
 
         // echo "\n Database seeded successfully !\n";
         Reflection::factory(10)->create();
-        Vote::factory(10)->create();
+        // Vote::factory(10)->create();
         echo "\n Database seeded successfully !\n";
         // Reflection::factory(40)->create();
         // Comment::factory(200)->create();
