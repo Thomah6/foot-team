@@ -13,17 +13,17 @@ const form = useForm({
   image: null,
 });
 
-const submit = () => {
-  form
-    .transform((data) => ({
-      ...data, // obligatoire pour que Inertia garde les champs
-    }))
-    .put(`/admin/news/${props.news.id}`, {
-      forceFormData: true,
-    });
-};
-</script>
 
+const submit = () => {
+  form.transform((data) => ({
+    ...data,
+  })).put(`/admin/news/${props.news.id}`, {
+    forceFormData: true,
+  });
+};
+
+
+</script>
 
 <template>
   <div class="min-h-screen flex flex-col bg-gray-50 dark:bg-gray-900 p-4">

@@ -41,7 +41,7 @@ const togglePublish = (id) => {
     <div class="flex justify-between items-center mb-4">
       <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">Actualités</h1>
       <Link 
-        :href="route('news.create')" 
+        :href="route('admin.news.create')" 
         class="px-4 py-2 sm:px-5 sm:py-2.5 rounded-lg bg-green-600 hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600 transition text-white font-semibold shadow"
       >
         Nouvelle actualité
@@ -75,7 +75,7 @@ const togglePublish = (id) => {
         <div class="w-full h-56 sm:h-72 md:h-72 rounded-2xl overflow-hidden shadow-lg mb-4 md:mb-6 flex-shrink-0">
           <img
             :src="selected?.image ? `/storage/${selected.image}` : '/images/default.jpg'"
-            class="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+            class="w-full h-full object-contain transition-transform duration-300 hover:scale-105"
             alt="news image"
           />
         </div>

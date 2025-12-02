@@ -57,7 +57,7 @@ const menu = computed(() => {
             active: route().current("galleries.index"),
         },
         {
-            label: "Regulations",
+            label: "Règlements",
             icon: "fas fa-book",
             link: route('regulations.index'),
             active: route().current('regulations.index'),
