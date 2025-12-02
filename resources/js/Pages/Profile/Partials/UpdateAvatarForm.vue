@@ -77,21 +77,20 @@ const updatePoster = () => {
     });
 };
 </script>
-
 <template>
     <section>
         <!-- Message de succès -->
         <div v-if="$page.props.flash && $page.props.flash.success"
-             class="mb-4 p-4 bg-green-50 border border-green-200 rounded-lg">
-            <p class="text-sm text-green-800">{{ $page.props.flash.success }}</p>
+             class="mb-4 p-4 bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-800 rounded-lg">
+            <p class="text-sm text-green-800 dark:text-green-300">{{ $page.props.flash.success }}</p>
         </div>
 
         <header>
-            <h2 class="text-lg font-medium text-gray-900">
+            <h2 class="text-lg font-medium text-gray-900 dark:text-citron-50">
                 Avatar et Poster
             </h2>
 
-            <p class="mt-1 text-sm text-gray-600">
+            <p class="mt-1 text-sm text-gray-600 dark:text-citron-200">
                 Mettez à jour votre avatar et votre poster de profil.
             </p>
         </header>
@@ -99,7 +98,7 @@ const updatePoster = () => {
         <div class="mt-6 space-y-8">
             <!-- Avatar Section -->
             <div class="space-y-4">
-                <h3 class="text-md font-medium text-gray-800">Avatar</h3>
+                <h3 class="text-md font-medium text-gray-800 dark:text-citron-100">Avatar</h3>
 
                 <div class="flex items-center space-x-6">
                     <!-- Avatar Preview -->
@@ -107,23 +106,23 @@ const updatePoster = () => {
                         <img
                             :src="avatarPreview || 'https://ui-avatars.com/api/?name=' + user.name + '&color=7F9CF5&background=EBF4FF'"
                             :alt="user.name"
-                            class="h-20 w-20 rounded-full object-cover border-4 border-gray-200"
+                            class="h-20 w-20 rounded-full object-cover border-4 border-gray-200 dark:border-gray-700"
                         >
                     </div>
 
                     <!-- Avatar Upload -->
                     <div class="flex-1">
-                        <InputLabel for="avatar" value="Avatar" />
+                        <InputLabel for="avatar" value="Avatar" class="text-gray-700 dark:text-citron-100" />
                         <input
                             id="avatar"
                             type="file"
-                            class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100"
+                            class="mt-1 block w-full text-sm text-gray-500 dark:text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-citron-50 dark:file:bg-citron-900/50 file:text-citron-700 dark:file:text-citron-300 hover:file:bg-citron-100 dark:hover:file:bg-citron-800 transition-colors"
                             @change="handleAvatarChange"
                             accept="image/*"
                         />
                         <InputError class="mt-2" :message="avatarForm.errors.avatar" />
 
-                        <p class="mt-1 text-xs text-gray-500">
+                        <p class="mt-1 text-xs text-gray-500 dark:text-citron-300">
                             Formats acceptés: JPG, PNG, GIF. Taille max: 2MB.
                         </p>
                     </div>
@@ -133,6 +132,7 @@ const updatePoster = () => {
                     <PrimaryButton
                         @click="updateAvatar"
                         :disabled="!avatarForm.avatar || avatarForm.processing"
+                        class="bg-citron-600 hover:bg-citron-700 dark:bg-citron-500 dark:hover:bg-citron-600 text-white"
                     >
                         Mettre à jour l'avatar
                     </PrimaryButton>
@@ -145,7 +145,7 @@ const updatePoster = () => {
                     >
                         <p
                             v-if="avatarForm.recentlySuccessful"
-                            class="text-sm text-gray-600"
+                            class="text-sm text-citron-600 dark:text-citron-400"
                         >
                             Avatar mis à jour.
                         </p>
@@ -155,11 +155,11 @@ const updatePoster = () => {
 
             <!-- Poster Section -->
             <div class="space-y-4">
-                <h3 class="text-md font-medium text-gray-800">Poster de profil</h3>
+                <h3 class="text-md font-medium text-gray-800 dark:text-citron-100">Poster de profil</h3>
 
                 <div class="space-y-4">
                     <!-- Poster Preview -->
-                    <div class="rounded-lg overflow-hidden border-2 border-gray-200">
+                    <div class="rounded-lg overflow-hidden border-2 border-gray-200 dark:border-gray-700">
                         <img
                             v-if="posterPreview"
                             :src="posterPreview"
@@ -168,7 +168,7 @@ const updatePoster = () => {
                         >
                         <div
                             v-else
-                            class="w-full h-48 bg-gradient-to-br from-green-400 to-blue-500 flex items-center justify-center"
+                            class="w-full h-48 bg-gradient-to-br from-citron-400 to-citron-600 dark:from-citron-500 dark:to-citron-700 flex items-center justify-center"
                         >
                             <span class="text-white text-lg font-medium">Aucun poster</span>
                         </div>
@@ -176,17 +176,17 @@ const updatePoster = () => {
 
                     <!-- Poster Upload -->
                     <div>
-                        <InputLabel for="poster" value="Poster" />
+                        <InputLabel for="poster" value="Poster" class="text-gray-700 dark:text-citron-100" />
                         <input
                             id="poster"
                             type="file"
-                            class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                            class="mt-1 block w-full text-sm text-gray-500 dark:text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-citron-50 dark:file:bg-citron-900/50 file:text-citron-700 dark:file:text-citron-300 hover:file:bg-citron-100 dark:hover:file:bg-citron-800 transition-colors"
                             @change="handlePosterChange"
                             accept="image/*"
                         />
                         <InputError class="mt-2" :message="posterForm.errors.poster" />
 
-                        <p class="mt-1 text-xs text-gray-500">
+                        <p class="mt-1 text-xs text-gray-500 dark:text-citron-300">
                             Formats acceptés: JPG, PNG. Recommandé: 1200x400px. Taille max: 5MB.
                         </p>
                     </div>
@@ -196,12 +196,14 @@ const updatePoster = () => {
                     <PrimaryButton
                         @click="updatePoster"
                         :disabled="!posterForm.poster || posterForm.processing"
+                        class="bg-citron-600 hover:bg-citron-700 dark:bg-citron-500 dark:hover:bg-citron-600 text-white"
                     >
                         Mettre à jour le poster
                     </PrimaryButton>
                     <PrimaryButton
                         v-if="!create"
                         @click="create=true"
+                        class="bg-gray-700 hover:bg-gray-800 dark:bg-gray-600 dark:hover:bg-gray-700 text-white"
                     >
                         Créer une Réflexion
                     </PrimaryButton>
@@ -214,7 +216,7 @@ const updatePoster = () => {
                     >
                         <p
                             v-if="posterForm.recentlySuccessful"
-                            class="text-sm text-gray-600"
+                            class="text-sm text-citron-600 dark:text-citron-400"
                         >
                             Poster mis à jour.
                         </p>

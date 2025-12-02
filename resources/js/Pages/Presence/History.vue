@@ -13,7 +13,6 @@ const props = defineProps({
 const selectedMonth = ref(props.month ? props.month.slice(0, 7) : new Date().toISOString().slice(0, 7));
 const selectedUserId = ref('');
 
-// Fonction pour formater le mois en format lisible (ex: "novembre 2025")
 const formatMonthDisplay = (monthStr) => {
     if (!monthStr) return '';
     try {
@@ -28,7 +27,6 @@ const formatMonthDisplay = (monthStr) => {
     }
 };
 
-// Synchroniser selectedUserId au chargement de la page si un user_id est dans l'URL
 onMounted(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const userId = urlParams.get('user_id');
@@ -37,10 +35,8 @@ onMounted(() => {
     }
 });
 
-// Détecter si presenceHistory est un tableau (utilisateur filtré) ou un objet (tous)
 const isFilteredByUser = computed(() => {
     const isArray = Array.isArray(props.presenceHistory)
-    console.log('presenceHistory type:', isArray ? 'Array' : 'Object', props.presenceHistory)
     return isArray
 });
 
@@ -86,7 +82,6 @@ const calculateTotalPresences = () => {
     if (!props.isAdmin || !props.presenceHistory) return 0
     let count = 0
     if (Array.isArray(props.presenceHistory)) {
-        // Quand filtré par utilisateur : compter TOUTES les déclarations (présences + absences)
         count = props.presenceHistory.length
     } else {
         Object.values(props.presenceHistory).forEach((items) => {
@@ -137,223 +132,223 @@ const calculateValidated = () => {
     <AuthenticatedLayout>
         <main class="flex-1 p-8">
             <div class="w-full max-w-7xl mx-auto flex flex-col gap-6">
-                <!-- PageHeading -->
+                <!-- Header -->
                 <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
-                    <div class="flex flex-col gap-3">
-                        <div class="flex items-center gap-3">
-                            <span class="material-symbols-outlined text-4xl text-amber-600 dark:text-amber-400">history</span>
-                            <h1 class="text-3xl md:text-4xl font-black leading-tight tracking-tight text-[#111318] dark:text-white">
-                                Historique
-                            </h1>
+                    <div class="flex flex-col gap-2">
+                        <div class="flex items-center gap-3 mb-1">
+                            <div class="w-16 h-16 bg-gradient-to-br from-lime-100 to-emerald-100 rounded-2xl flex items-center justify-center border-2 border-lime-300">
+                                <i class="fas fa-history text-lime-600 text-2xl"></i>
+                            </div>
+                            <div>
+                                <h1 class="text-4xl font-bold text-gray-900 tracking-tight bg-gradient-to-r from-lime-600 to-emerald-600 bg-clip-text text-transparent">
+                                    Historique des Présences
+                                </h1>
+                                <p class="text-gray-600 text-lg font-medium tracking-wide mt-2">
+                                    {{ isAdmin ? 'Suivi de tous les combattants de l\'arène' : 'Votre parcours de combattant' }}
+                                </p>
+                            </div>
                         </div>
-                        <p class="text-[#636f88] dark:text-slate-400 text-sm md:text-base font-normal leading-normal">
-                            {{ isAdmin ? 'Consultez l\'historique de tous les membres' : 'Votre historique de présences' }}
-                        </p>
                     </div>
                     <Link :href="route('presence.index')"
-                        class="flex w-full md:w-auto min-w-[160px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-11 px-4 bg-gradient-to-r from-blue-600 to-blue-700 dark:from-blue-700 dark:to-blue-800 text-white text-sm font-bold leading-normal tracking-[0.015em] border border-blue-600 dark:border-blue-700 shadow-md hover:shadow-lg hover:from-blue-700 hover:to-blue-800 dark:hover:from-blue-600 dark:hover:to-blue-700 transition-all gap-2">
-                        <span class="material-symbols-outlined text-base">arrow_back</span>
-                        <span class="truncate">Retour</span>
+                        class="inline-flex items-center gap-3 bg-gradient-to-r from-lime-500 to-emerald-500 text-white px-8 py-4 rounded-2xl font-bold hover:from-lime-600 hover:to-emerald-600 transition-all duration-300 tracking-wider text-lg shadow-lg hover:shadow-xl hover:shadow-emerald-500/30">
+                        <i class="fas fa-arrow-left"></i>
+                        Retour au Calendrier
                     </Link>
                 </div>
 
                 <!-- Filters -->
-                <div
-                    class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 p-4 md:p-5 bg-gradient-to-br from-white to-gray-50 dark:from-background-dark dark:to-slate-800 border border-slate-200 dark:border-white/10 rounded-xl shadow-sm">
-                    <!-- Month Selector -->
-                    <div class="flex w-full md:w-auto items-center gap-3">
-                        
-                        <input v-model="selectedMonth" @change="loadMonth" type="month"
-                            class="px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-[#111318] dark:text-white focus:outline-0 focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 font-medium" />
-                        
-                    </div>
+                <div class="bg-gradient-to-br from-white to-lime-50 backdrop-blur-sm rounded-2xl border-2 border-lime-200/50 p-6 shadow-lg">
+                    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                        <!-- Month Selector -->
+                        <div class="flex flex-col">
+                            <label class="text-sm font-semibold text-gray-700 mb-2">Mois</label>
+                            <input v-model="selectedMonth" @change="loadMonth" type="month"
+                                class="px-4 py-3 border-2 border-lime-300 rounded-xl bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-lime-500/30 focus:border-lime-500 font-medium" />
+                        </div>
 
-                    <!-- User Selector (Admin only) -->
-                    <select v-if="isAdmin" v-model="selectedUserId" @change="loadHistory"
-                        class="w-full md:w-auto px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-[#111318] dark:text-white focus:outline-0 focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 font-medium">
-                        <option value="">👥 Tous les membres</option>
-                        <option v-for="user in users" :key="user.id" :value="user.id">
-                            ⚽ {{ user.name }}
-                        </option>
-                    </select>
+                        <!-- User Selector (Admin only) -->
+                        <div v-if="isAdmin" class="flex flex-col">
+                            <label class="text-sm font-semibold text-gray-700 mb-2">Filtrer par combattant</label>
+                            <select v-model="selectedUserId" @change="loadHistory"
+                                class="px-4 py-3 border-2 border-lime-300 rounded-xl bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-lime-500/30 focus:border-lime-500 font-medium">
+                                <option value="">👥 Tous les combattants</option>
+                                <option v-for="user in users" :key="user.id" :value="user.id">
+                                    ⚽ {{ user.name }}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- History Table -->
                 <div class="w-full @container">
-                    <div
-                        class="flex overflow-hidden rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-background-dark shadow-md">
+                    <div class="bg-white backdrop-blur-sm rounded-2xl border-2 border-lime-200/50 shadow-xl overflow-hidden">
                         <table class="w-full border-collapse">
-                            <thead class="border-b-2 border-slate-300 dark:border-slate-600 bg-gradient-to-r from-slate-50 to-slate-100 dark:from-slate-800 dark:to-slate-700">
+                            <thead class="border-b-2 border-lime-200 bg-gradient-to-r from-lime-50 to-emerald-50">
                                 <tr>
-                                    <th
-                                        class="px-4 py-4 text-left text-[#111318] dark:text-white font-black text-sm">
-                                        {{ isAdmin ? '⚽ Membre' : '📅 Date' }}
+                                    <th class="px-6 py-4 text-left text-gray-900 font-bold text-sm">
+                                        {{ isAdmin ? ' COMBATTANT' : ' DATE DE BATAILLE' }}
                                     </th>
-                                    <th
-                                        class="px-4 py-4 text-center text-[#636f88] dark:text-slate-300 font-semibold text-sm">
-                                        {{ isAdmin ? '📅 Date' : '✓ Statut' }}
+                                    <th class="px-4 py-4 text-center text-gray-700 font-semibold text-sm">
+                                        {{ isAdmin ? ' DATE' : ' STATUT' }}
                                     </th>
-                                    <th
-                                        class="px-4 py-4 text-center text-[#636f88] dark:text-slate-300 font-semibold text-sm">
-                                        Présence
+                                    <th class="px-4 py-4 text-center text-gray-700 font-semibold text-sm">
+                                        PRÉSENCE
                                     </th>
-                                    <th
-                                        class="px-4 py-4 text-center text-[#636f88] dark:text-slate-300 font-semibold text-sm">
-                                        Validation
+                                    <th class="px-4 py-4 text-center text-gray-700 font-semibold text-sm">
+                                        VALIDATION
                                     </th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <!-- Si admin ET utilisateur filtré : afficher comme tableau simple -->
+                                <!-- Admin avec utilisateur filtré -->
                                 <template v-if="isAdmin && isFilteredByUser">
                                     <tr v-for="(presence, index) in presenceHistory" :key="presence.id" :class="[
-                                        'border-t border-slate-200/80 dark:border-white/10 transition hover:bg-amber-50/50 dark:hover:bg-amber-900/20',
-                                        index % 2 === 1 ? 'bg-slate-50/50 dark:bg-white/2.5' : '',
+                                        'border-t border-lime-100 transition hover:bg-lime-50/50',
+                                        index % 2 === 0 ? 'bg-lime-50/30' : '',
                                     ]">
-                                        <td class="px-4 py-3 text-[#111318] dark:text-white text-sm font-semibold">
-                                            <div class="flex items-center gap-2">
-                                                <div class="w-8 h-8 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white text-xs font-bold">
+                                        <td class="px-6 py-4 text-gray-900 text-sm font-bold">
+                                            <div class="flex items-center gap-3">
+                                                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-lime-400 to-emerald-500 flex items-center justify-center text-white text-sm font-bold">
                                                     {{ presence.user.name.charAt(0).toUpperCase() }}
                                                 </div>
                                                 {{ presence.user.name }}
                                             </div>
                                         </td>
-                                        <td class="px-4 py-3 text-center text-sm text-slate-600 dark:text-slate-400">
+                                        <td class="px-4 py-4 text-center text-sm text-gray-600">
                                             {{ formatDate(presence.date) }}
                                         </td>
-                                        <td class="px-4 py-3 text-center">
+                                        <td class="px-4 py-4 text-center">
                                             <span v-if="presence.present && presence.validated_by_admin"
-                                                class="material-symbols-outlined fill text-green-500 text-lg">
-                                                check_circle
+                                                class="text-emerald-500 text-xl">
+                                                <i class="fas fa-circle-check"></i>
                                             </span>
                                             <span v-else-if="presence.present && !presence.validated_by_admin"
-                                                class="material-symbols-outlined fill text-amber-500 text-lg">
-                                                schedule
+                                                class="text-amber-500 text-xl">
+                                                <i class="fas fa-clock"></i>
                                             </span>
                                             <span v-else
-                                                class="material-symbols-outlined fill text-red-500 text-lg">
-                                                cancel
+                                                class="text-red-500 text-xl">
+                                                <i class="fas fa-circle-xmark"></i>
                                             </span>
                                         </td>
-                                        <td class="px-4 py-3 text-center">
+                                        <td class="px-4 py-4 text-center">
                                             <span v-if="!presence.present"
-                                                class="inline-flex px-3 py-1 bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300 rounded-full text-xs font-semibold">
+                                                class="inline-flex px-3 py-2 bg-red-100 text-red-700 rounded-lg text-xs font-bold">
                                                 Absent
                                             </span>
                                             <span v-else-if="presence.validated_by_admin"
-                                                class="inline-flex px-3 py-1 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 rounded-full text-xs font-semibold">
+                                                class="inline-flex px-3 py-2 bg-emerald-100 text-emerald-700 rounded-lg text-xs font-bold">
                                                 ✓ Validée
                                             </span>
                                             <span v-else
-                                                class="inline-flex px-3 py-1 bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300 rounded-full text-xs font-semibold">
-                                                ⏳ Attente
+                                                class="inline-flex px-3 py-2 bg-amber-100 text-amber-700 rounded-lg text-xs font-bold">
+                                                ⏳ En attente
                                             </span>
                                         </td>
                                     </tr>
                                 </template>
-                                <!-- Si admin ET tous les utilisateurs : afficher groupé par membre -->
+                                <!-- Admin avec tous les utilisateurs -->
                                 <template v-else-if="isAdmin && !isFilteredByUser">
                                     <template v-for="(items, memberName) in presenceHistory" :key="memberName">
-                                        <tr
-                                            class="border-t-2 border-slate-300 dark:border-slate-600 bg-gradient-to-r from-slate-100 to-slate-50 dark:from-slate-700 dark:to-slate-800 hover:from-blue-50 hover:to-slate-50 dark:hover:from-blue-900/30 dark:hover:to-slate-800 transition">
-                                            <td class="px-4 py-3 text-[#111318] dark:text-white font-black text-sm">
-                                                <div class="flex items-center gap-2">
-                                                    <span>⚽</span>
+                                        <tr class="border-t-2 border-lime-300 bg-gradient-to-r from-lime-100 to-emerald-100/50">
+                                            <td class="px-6 py-4 text-gray-900 font-bold text-sm">
+                                                <div class="flex items-center gap-3">
+                                                    <i class="fas fa-user text-lime-600"></i>
                                                     {{ memberName }}
                                                 </div>
                                             </td>
-                                            <td colspan="3" class="px-4 py-3 text-right text-sm">
-                                                <span class="inline-flex px-3 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-full text-xs font-semibold">
+                                            <td colspan="3" class="px-4 py-4 text-right">
+                                                <span class="inline-flex px-3 py-2 bg-lime-100 text-lime-700 rounded-lg text-xs font-bold">
                                                     {{ items.length }} déclaration{{ items.length > 1 ? 's' : '' }}
                                                 </span>
                                             </td>
                                         </tr>
                                         <tr v-for="(presence, index) in items" :key="`${memberName}-${index}`"
-                                            :class="['border-t border-slate-200/80 dark:border-white/10 transition hover:bg-slate-50/50 dark:hover:bg-white/2.5',
-                                            index % 2 === 1 ? 'bg-slate-50/50 dark:bg-white/2.5' : '']">
-                                            <td class="px-4 py-3 text-[#111318] dark:text-white text-sm"></td>
-                                            <td class="px-4 py-3 text-center text-sm text-slate-600 dark:text-slate-400">
+                                            :class="['border-t border-lime-100 transition hover:bg-lime-50/50',
+                                            index % 2 === 0 ? 'bg-lime-50/30' : '']">
+                                            <td class="px-6 py-4 text-gray-900 text-sm"></td>
+                                            <td class="px-4 py-4 text-center text-sm text-gray-600">
                                                 {{ formatDate(presence.date) }}
                                             </td>
-                                            <td class="px-4 py-3 text-center">
+                                            <td class="px-4 py-4 text-center">
                                                 <span v-if="presence.present && presence.validated_by_admin"
-                                                    class="material-symbols-outlined fill text-green-500 text-lg">
-                                                    check_circle
+                                                    class="text-emerald-500 text-xl">
+                                                    <i class="fas fa-circle-check"></i>
                                                 </span>
                                                 <span v-else-if="presence.present && !presence.validated_by_admin"
-                                                    class="material-symbols-outlined fill text-amber-500 text-lg">
-                                                    schedule
+                                                    class="text-amber-500 text-xl">
+                                                    <i class="fas fa-clock"></i>
                                                 </span>
                                                 <span v-else
-                                                    class="material-symbols-outlined fill text-red-500 text-lg">
-                                                    cancel
+                                                    class="text-red-500 text-xl">
+                                                    <i class="fas fa-circle-xmark"></i>
                                                 </span>
                                             </td>
-                                            <td class="px-4 py-3 text-center">
+                                            <td class="px-4 py-4 text-center">
                                                 <span v-if="!presence.present"
-                                                    class="inline-flex px-3 py-1 bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300 rounded-full text-xs font-semibold">
+                                                    class="inline-flex px-3 py-2 bg-red-100 text-red-700 rounded-lg text-xs font-bold">
                                                     Absent
                                                 </span>
                                                 <span v-else-if="presence.validated_by_admin"
-                                                    class="inline-flex px-3 py-1 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 rounded-full text-xs font-semibold">
+                                                    class="inline-flex px-3 py-2 bg-emerald-100 text-emerald-700 rounded-lg text-xs font-bold">
                                                     ✓ Validée
                                                 </span>
                                                 <span v-else
-                                                    class="inline-flex px-3 py-1 bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300 rounded-full text-xs font-semibold">
-                                                    ⏳ Attente
+                                                    class="inline-flex px-3 py-2 bg-amber-100 text-amber-700 rounded-lg text-xs font-bold">
+                                                    ⏳ En attente
                                                 </span>
                                             </td>
                                         </tr>
                                     </template>
                                 </template>
-                                <!-- Si non-admin : afficher le tableau personnel -->
+                                <!-- Non-admin -->
                                 <template v-else>
                                     <tr v-for="(presence, index) in presenceHistory" :key="presence.id" :class="[
-                                        'border-t border-slate-200/80 dark:border-white/10 transition hover:bg-green-50/50 dark:hover:bg-green-900/20',
-                                        index % 2 === 1 ? 'bg-slate-50/50 dark:bg-white/2.5' : '',
+                                        'border-t border-lime-100 transition hover:bg-lime-50/50',
+                                        index % 2 === 0 ? 'bg-lime-50/30' : '',
                                     ]">
-                                        <td class="px-4 py-3 text-[#111318] dark:text-white text-sm font-semibold">
+                                        <td class="px-6 py-4 text-gray-900 text-sm font-bold">
                                             {{ formatDate(presence.date) }}
                                         </td>
-                                        <td class="px-4 py-3 text-center">
+                                        <td class="px-4 py-4 text-center">
                                             <span v-if="presence.present && presence.validated_by_admin"
-                                                class="material-symbols-outlined fill text-green-500 text-lg">
-                                                check_circle
+                                                class="text-emerald-500 text-xl">
+                                                <i class="fas fa-circle-check"></i>
                                             </span>
                                             <span v-else-if="presence.present && !presence.validated_by_admin"
-                                                class="material-symbols-outlined fill text-amber-500 text-lg">
-                                                schedule
+                                                class="text-amber-500 text-xl">
+                                                <i class="fas fa-clock"></i>
                                             </span>
-                                            <span v-else class="material-symbols-outlined fill text-red-500 text-lg">
-                                                cancel
+                                            <span v-else class="text-red-500 text-xl">
+                                                <i class="fas fa-circle-xmark"></i>
                                             </span>
                                         </td>
-                                        <td class="px-4 py-3 text-center text-sm text-slate-600 dark:text-slate-400">
+                                        <td class="px-4 py-4 text-center text-sm text-gray-600">
                                             {{ presence.present ? '✓ Présent' : '✗ Absent' }}
                                         </td>
-                                        <td class="px-4 py-3 text-center">
+                                        <td class="px-4 py-4 text-center">
                                             <span v-if="!presence.present"
-                                                class="inline-flex px-3 py-1 bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300 rounded-full text-xs font-semibold">
+                                                class="inline-flex px-3 py-2 bg-red-100 text-red-700 rounded-lg text-xs font-bold">
                                                 Absent
                                             </span>
                                             <span v-else-if="presence.validated_by_admin"
-                                                class="inline-flex px-3 py-1 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 rounded-full text-xs font-semibold">
+                                                class="inline-flex px-3 py-2 bg-emerald-100 text-emerald-700 rounded-lg text-xs font-bold">
                                                 ✓ Validée
                                             </span>
                                             <span v-else
-                                                class="inline-flex px-3 py-1 bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300 rounded-full text-xs font-semibold">
-                                                ⏳ Attente
+                                                class="inline-flex px-3 py-2 bg-amber-100 text-amber-700 rounded-lg text-xs font-bold">
+                                                ⏳ En attente
                                             </span>
                                         </td>
                                     </tr>
                                 </template>
 
-                                <tr
-                                    v-if="!presenceHistory || (Array.isArray(presenceHistory) && presenceHistory.length === 0) || (!Array.isArray(presenceHistory) && Object.keys(presenceHistory).length === 0)">
-                                    <td colspan="4" class="px-4 py-12 text-center">
+                                <tr v-if="!presenceHistory || (Array.isArray(presenceHistory) && presenceHistory.length === 0) || (!Array.isArray(presenceHistory) && Object.keys(presenceHistory).length === 0)">
+                                    <td colspan="4" class="px-6 py-12 text-center">
                                         <div class="flex flex-col items-center gap-3">
-                                            <span class="material-symbols-outlined text-4xl text-slate-400 dark:text-slate-500">event_note</span>
-                                            <p class="text-[#636f88] dark:text-slate-400 font-medium">
+                                            <i class="fas fa-calendar-times text-lime-200 text-4xl"></i>
+                                            <p class="text-gray-600 font-medium">
                                                 Aucune présence enregistrée
                                             </p>
                                         </div>
@@ -364,39 +359,35 @@ const calculateValidated = () => {
                     </div>
                 </div>
 
-                <!-- Monthly Statistics (Admin only) -->
+                <!-- Statistics (Admin only) -->
                 <div v-if="isAdmin" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                    <div
-                        class="bg-gradient-to-br from-red-50 to-red-100 dark:from-red-900/20 dark:to-red-800/20 border border-red-200 dark:border-red-800 rounded-xl p-5 hover:shadow-lg transition">
-                        <div class="flex items-center justify-between mb-3">
-                            <p class="text-sm font-semibold text-red-700 dark:text-red-300">Total absences</p>
-                            <span class="material-symbols-outlined text-2xl text-red-500">cancel</span>
+                    <div class="bg-gradient-to-br from-white to-red-50 backdrop-blur-sm rounded-2xl border-2 border-red-200/50 p-6 shadow-lg hover:shadow-xl transition">
+                        <div class="flex items-center justify-between mb-4">
+                            <p class="text-sm font-semibold text-gray-700">Absences totales</p>
+                            <i class="fas fa-circle-xmark text-red-500 text-2xl"></i>
                         </div>
-                        <p class="text-4xl font-black text-red-600 dark:text-red-300">{{ calculateTotalAbsences() }}</p>
+                        <p class="text-4xl font-bold text-red-600">{{ calculateTotalAbsences() }}</p>
                     </div>
-                    <div
-                        class="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 border border-green-200 dark:border-green-800 rounded-xl p-5 hover:shadow-lg transition">
-                        <div class="flex items-center justify-between mb-3">
-                            <p class="text-sm font-semibold text-green-700 dark:text-green-300">Présences déclarées</p>
-                            <span class="material-symbols-outlined text-2xl text-green-500">check_circle</span>
+                    <div class="bg-gradient-to-br from-white to-emerald-50 backdrop-blur-sm rounded-2xl border-2 border-emerald-200/50 p-6 shadow-lg hover:shadow-xl transition">
+                        <div class="flex items-center justify-between mb-4">
+                            <p class="text-sm font-semibold text-gray-700">Présences déclarées</p>
+                            <i class="fas fa-circle-check text-emerald-500 text-2xl"></i>
                         </div>
-                        <p class="text-4xl font-black text-green-600 dark:text-green-300">{{ calculateTotalPresences() }}</p>
+                        <p class="text-4xl font-bold text-emerald-600">{{ calculateTotalPresences() }}</p>
                     </div>
-                    <div
-                        class="bg-gradient-to-br from-amber-50 to-amber-100 dark:from-amber-900/20 dark:to-amber-800/20 border border-amber-200 dark:border-amber-800 rounded-xl p-5 hover:shadow-lg transition">
-                        <div class="flex items-center justify-between mb-3">
-                            <p class="text-sm font-semibold text-amber-700 dark:text-amber-300">Attente validation</p>
-                            <span class="material-symbols-outlined text-2xl text-amber-500">schedule</span>
+                    <div class="bg-gradient-to-br from-white to-amber-50 backdrop-blur-sm rounded-2xl border-2 border-amber-200/50 p-6 shadow-lg hover:shadow-xl transition">
+                        <div class="flex items-center justify-between mb-4">
+                            <p class="text-sm font-semibold text-gray-700">En attente</p>
+                            <i class="fas fa-clock text-amber-500 text-2xl"></i>
                         </div>
-                        <p class="text-4xl font-black text-amber-600 dark:text-amber-300">{{ calculatePendingValidations() }}</p>
+                        <p class="text-4xl font-bold text-amber-600">{{ calculatePendingValidations() }}</p>
                     </div>
-                    <div
-                        class="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 border border-blue-200 dark:border-blue-800 rounded-xl p-5 hover:shadow-lg transition">
-                        <div class="flex items-center justify-between mb-3">
-                            <p class="text-sm font-semibold text-blue-700 dark:text-blue-300">Validées</p>
-                            <span class="material-symbols-outlined text-2xl text-blue-500">verified</span>
+                    <div class="bg-gradient-to-br from-white to-lime-50 backdrop-blur-sm rounded-2xl border-2 border-lime-200/50 p-6 shadow-lg hover:shadow-xl transition">
+                        <div class="flex items-center justify-between mb-4">
+                            <p class="text-sm font-semibold text-gray-700">Validées</p>
+                            <i class="fas fa-shield-check text-lime-500 text-2xl"></i>
                         </div>
-                        <p class="text-4xl font-black text-blue-600 dark:text-blue-300">{{ calculateValidated() }}</p>
+                        <p class="text-4xl font-bold text-lime-600">{{ calculateValidated() }}</p>
                     </div>
                 </div>
             </div>

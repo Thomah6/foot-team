@@ -12,6 +12,9 @@ class DashboardController extends Controller
 {
     public function index()
     {
+
+        $identity = \App\Models\Identity::first();
+
         // Joueur du mois actif
         $player = PlayerOfTheMonth::with('user')
             ->where('is_active', true)
@@ -44,6 +47,7 @@ class DashboardController extends Controller
             // dd($featured);
 
         return Inertia::render('Dashboard', [
+            'identity' => $identity,
             'player' => $player,
             'stats' => $stats,
             'previousPlayers' => $previousPlayers,

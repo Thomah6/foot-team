@@ -113,16 +113,18 @@ const submit = () => {
 
             <!-- Buttons -->
             <div class="flex gap-3 pt-6 border-t">
-              <a href="/admin/members" class="flex-1 border rounded-lg py-2 text-center hover:bg-gray-50">
+             <Link
+                :href="route('admin.members.index')"
+                class="flex-1 rounded-lg border border-gray-300 px-4 py-2 text-center font-medium text-gray-700 hover:bg-gray-50 transition"
+              >
                 Annuler
-              </a>
+            </Link>
 
               <button type="submit" :disabled="form.processing"
                 class="flex-1 bg-blue-600 text-white rounded-lg py-2 hover:bg-blue-700">
                 {{ form.processing ? 'Création...' : 'Créer' }}
               </button>
             </div>
-
           </form>
         </div>
       </div>
