@@ -41,85 +41,116 @@ function submit() {
 
       <!-- Bloc avec effet glassmorphism -->
       <div class="relative w-full max-w-3xl 
-                  bg-white/80 dark:bg-gray-900/80 
-                  border border-white/40 dark:border-gray-700 
-                  rounded-xl shadow-lg p-6 sm:p-8">
-        <h1 class="text-2xl font-bold mb-6 text-black dark:text-white text-center">
-          Ajouter un règlement
-        </h1>
+                  bg-white/90 dark:bg-gray-900/90 
+                  border border-gray-200 dark:border-gray-700 
+                  rounded-2xl shadow-2xl p-6 sm:p-8">
+        <div class="mb-8 text-center">
+          <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-citron-50 mb-2">
+            📝 Ajouter un règlement
+          </h1>
+          <p class="text-gray-600 dark:text-citron-300 text-sm">Créez un nouveau règlement avec ses sous-points</p>
+        </div>
 
-        <form @submit.prevent="submit" class="space-y-4">
+        <form @submit.prevent="submit" class="space-y-6">
           <!-- Titre -->
           <div>
-            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Titre</label>
-            <input v-model="form.title" type="text"
+            <label class="block text-sm font-medium text-gray-700 dark:text-citron-200 mb-2 flex items-center gap-2">
+              <i class="fas fa-heading text-citron-500"></i>
+              Titre du règlement
+            </label>
+            <input v-model="form.title" type="text" placeholder="Ex: Règlement intérieur"
               class="w-full rounded-lg border border-gray-300 dark:border-gray-600 
-                     p-2 focus:ring-2 focus:ring-cyan-500 
+                     p-3 focus:ring-2 focus:ring-citron-500 focus:border-transparent
                      bg-white dark:bg-gray-800 
-                     text-black dark:text-white" />
-            <p v-if="form.errors.title" class="text-red-500 dark:text-red-400 text-sm mt-1">{{ form.errors.title }}</p>
+                     text-gray-900 dark:text-white transition" />
+            <p v-if="form.errors.title" class="text-red-500 dark:text-red-400 text-sm mt-2">{{ form.errors.title }}</p>
           </div>
 
           <!-- Sous-points dynamiques -->
-          <div v-for="(content, index) in form.contents" :key="index" 
-               class="border p-4 rounded space-y-2 
-                      bg-white/50 dark:bg-gray-800/50 
-                      backdrop-blur-sm">
+          <div class="space-y-4">
             <div class="flex justify-between items-center">
-              <span class="font-semibold dark:text-gray-200">Sous-point {{ index + 1 }}</span>
-              <button type="button" class="text-red-500 dark:text-red-400 hover:underline" @click="removeContent(index)">
-                Supprimer
-              </button>
+              <label class="block text-sm font-medium text-gray-700 dark:text-citron-200 flex items-center gap-2">
+                <i class="fas fa-list-ol text-citron-500"></i>
+                Sous-points
+              </label>
+              <span class="text-xs text-gray-500 dark:text-citron-400">{{ form.contents.length }} sous-point(s)</span>
             </div>
+            
+            <div v-for="(content, index) in form.contents" :key="index" 
+                 class="border border-gray-300 dark:border-gray-700 p-4 sm:p-5 rounded-xl space-y-4 
+                        bg-white/50 dark:bg-gray-800/50 
+                        backdrop-blur-sm hover:border-citron-300 dark:hover:border-citron-600 transition-all">
+              <div class="flex justify-between items-center">
+                <span class="font-semibold text-gray-800 dark:text-citron-100">📌 Sous-point {{ index + 1 }}</span>
+                <button type="button" 
+                        class="text-red-500 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 hover:underline text-sm flex items-center gap-1 transition"
+                        @click="removeContent(index)"
+                        v-if="form.contents.length > 1">
+                  <i class="fas fa-times"></i>
+                  Supprimer
+                </button>
+              </div>
 
-            <!-- Sous-numéro -->
-            <div>
-              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Sous-numéro</label>
-              <input v-model="content.sub_number" type="text"
-                class="w-full rounded-lg border border-gray-300 dark:border-gray-600 
-                       p-2 focus:ring-2 focus:ring-cyan-500 
-                       bg-white dark:bg-gray-800 
-                       text-black dark:text-white" />
-            </div>
+              <!-- Sous-numéro -->
+              <div>
+                <label class="block text-sm font-medium text-gray-700 dark:text-citron-200 mb-1">Numéro</label>
+                <input v-model="content.sub_number" type="text" placeholder="Ex: 1.1, 2.3, etc."
+                  class="w-full rounded-lg border border-gray-300 dark:border-gray-600 
+                         p-2 focus:ring-2 focus:ring-citron-500 focus:border-transparent
+                         bg-white dark:bg-gray-800 
+                         text-gray-900 dark:text-white transition" />
+              </div>
 
-            <!-- Contenu -->
-            <div>
-              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Contenu</label>
-              <textarea v-model="content.content" rows="4"
-                class="w-full rounded-lg border border-gray-300 dark:border-gray-600 
-                       p-2 focus:ring-2 focus:ring-cyan-500 resize-none 
-                       bg-white dark:bg-gray-800 
-                       text-black dark:text-white"></textarea>
-            </div>
+              <!-- Contenu -->
+              <div>
+                <label class="block text-sm font-medium text-gray-700 dark:text-citron-200 mb-1">Contenu</label>
+                <textarea v-model="content.content" rows="3" placeholder="Contenu du sous-point..."
+                  class="w-full rounded-lg border border-gray-300 dark:border-gray-600 
+                         p-2 focus:ring-2 focus:ring-citron-500 focus:border-transparent resize-none
+                         bg-white dark:bg-gray-800 
+                         text-gray-900 dark:text-white transition"></textarea>
+              </div>
 
-            <!-- Ordre -->
-            <div>
-              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Ordre (optionnel)</label>
-              <input v-model="content.order" type="number"
-                class="w-full rounded-lg border border-gray-300 dark:border-gray-600 
-                       p-2 focus:ring-2 focus:ring-cyan-500 
-                       bg-white dark:bg-gray-800 
-                       text-black dark:text-white" />
+              <!-- Ordre -->
+              <div>
+                <label class="block text-sm font-medium text-gray-700 dark:text-citron-200 mb-1">Ordre d'affichage (optionnel)</label>
+                <input v-model="content.order" type="number" placeholder="Position dans la liste"
+                  class="w-full rounded-lg border border-gray-300 dark:border-gray-600 
+                         p-2 focus:ring-2 focus:ring-citron-500 focus:border-transparent
+                         bg-white dark:bg-gray-800 
+                         text-gray-900 dark:text-white transition" />
+              </div>
             </div>
           </div>
 
           <!-- Ajouter un sous-point -->
           <div>
             <button type="button" 
-                    class="w-full bg-cyan-600 dark:bg-cyan-500 text-white px-4 py-2 rounded hover:bg-cyan-700 dark:hover:bg-cyan-600"
+                    class="w-full bg-citron-50 hover:bg-citron-100 dark:bg-citron-900/50 dark:hover:bg-citron-900/70 
+                           text-citron-700 dark:text-citron-300 px-4 py-3 rounded-lg border-2 border-dashed border-citron-300 dark:border-citron-700
+                           transition font-semibold flex items-center justify-center gap-2"
                     @click="addContent">
+              <i class="fas fa-plus"></i>
               Ajouter un sous-point
             </button>
           </div>
 
-          <div class="flex justify-between gap-5 w-full">
+          <!-- Boutons d'action -->
+          <div class="flex flex-col sm:flex-row justify-between gap-4 pt-4 border-t border-gray-200 dark:border-gray-700">
             <button type="submit" 
-                    class="bg-cyan-600 dark:bg-cyan-500 text-white py-2 px-5 rounded-lg shadow-md hover:bg-cyan-700 dark:hover:bg-cyan-600">
-              Ajouter le règlement
+                    class="bg-citron-600 hover:bg-citron-700 dark:bg-citron-500 dark:hover:bg-citron-600 
+                           text-white py-3 px-6 rounded-lg shadow-lg transition font-semibold flex items-center justify-center gap-2"
+                    :disabled="form.processing">
+              <i class="fas fa-save"></i>
+              <span v-if="form.processing">Création en cours...</span>
+              <span v-else>Créer le règlement</span>
             </button>
+
             <button type="button" 
-                    class="bg-gray-700 dark:bg-gray-600 text-white py-2 px-5 rounded-lg shadow-md hover:bg-gray-800 dark:hover:bg-gray-700"
+                    class="bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-800 
+                           text-gray-800 dark:text-gray-300 py-3 px-6 rounded-lg shadow transition font-semibold flex items-center justify-center gap-2"
                     @click="$inertia.visit('/regulations')">
+              <i class="fas fa-times"></i>
               Annuler
             </button>
           </div>

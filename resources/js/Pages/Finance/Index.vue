@@ -208,27 +208,36 @@ const isBureau = role === "bureau";
 
 <template>
     <AuthenticatedLayout>
-        <div class="w-full px-4 py-6 sm:px-6 lg:px-8">
-            <div class="max-w-7xl mx-auto space-y-6 sm:space-y-8">
-                <h1
-                    class="text-3xl sm:text-4xl font-black text-neutral-900 dark:text-white"
-                >
-                    Caisse / Finances
-                </h1>
+        <div class="min-h-screen bg-gradient-to-br from-slate-50 via-lime-50 to-emerald-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+            <div class="relative px-4 py-6 sm:px-6 lg:px-8">
+                <!-- Background Pattern -->
+                <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTMwIDBWMzAiIHN0cm9rZT0iIzExMTExMSIgc3Ryb2tlLW9wYWNpdHk9IjAuMDMiIHN0cm9rZS13aWR0aD0iMSIvPgo8cGF0aCBkPSJNMCAzMEgzMCIgc3Ryb2tlPSIjMTExMTExIiBzdHJva2Utb3BhY2l0eT0iMC4wMyIgc3Ryb2tlLXdpZHRoPSIxIi8+Cjwvc3ZnPgo=')] opacity-20 dark:bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTMwIDBWMzAiIHN0cm9rZT0iI0ZGRkZGRiIgc3Ryb2tlLW9wYWNpdHk9IjAuMDMiIHN0cm9rZS13aWR0aD0iMSIvPgo8cGF0aCBkPSJNMCAzMEgzMCIgc3Ryb2tlPSIjRkZGRkZGIiBzdHJva2Utb3BhY2l0eT0iMC4wMyIgc3Ryb2tlLXdpZHRoPSIxIi8+Cjwvc3ZnPgo=')]"></div>
+                
+                <!-- Header -->
+                <div class="relative mb-8">
+                    <h1 class="text-3xl sm:text-4xl font-black text-gray-900 dark:text-white mb-2">
+                        💰 TRÉSORERIE FC DYNAMO
+                    </h1>
+                    <p class="text-lg text-gray-600 dark:text-gray-400">
+                        Gestion financière - <span class="text-lime-600 dark:text-emerald-400 font-bold">La force du collectif</span>
+                    </p>
+                </div>
 
-                <FinanceStats
-                    :solde-total="Number(props.soldeTotal)"
-                    :total-attente="Number(props.totalAttente)"
-                    :nb-attente="Number(props.nbAttente)"
-                    :solde-cotisations="Number(props.soldeCotisations)"
-                    :solde-depenses="Number(props.soldeDepenses)"
-                    :pending-depenses-total="Number(props.pendingDepensesTotal)"
-                    :pending-depenses-count="Number(props.pendingDepensesCount)"
-                />
+                <!-- Stats Section -->
+                <div class="mb-8">
+                    <FinanceStats
+                        :solde-total="Number(props.soldeTotal)"
+                        :total-attente="Number(props.totalAttente)"
+                        :nb-attente="Number(props.nbAttente)"
+                        :solde-cotisations="Number(props.soldeCotisations)"
+                        :solde-depenses="Number(props.soldeDepenses)"
+                        :pending-depenses-total="Number(props.pendingDepensesTotal)"
+                        :pending-depenses-count="Number(props.pendingDepensesCount)"
+                    />
+                </div>
 
-                <div
-                    class="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 lg:gap-8"
-                >
+                <!-- Action Cards Grid -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
                     <FinanceCreateDepot @refresh-table="refreshTable" />
                     <FinanceAdminActions
                         v-if="isAdmin || isBureau"
@@ -238,36 +247,25 @@ const isBureau = role === "bureau";
                     />
                 </div>
 
+                <!-- Modal for Bulk Validation -->
                 <ConfirmModalFinance
                     :show="showConfirmAll"
                     :loading="showConfirmAllLoading"
-                    :title="
-                        showConfirmAllType === 'dépense'
-                            ? 'Valider toutes les dépenses'
-                            : 'Valider tous les dépôts'
-                    "
-                    :message="
-                        showConfirmAllType === 'dépense'
-                            ? 'Voulez-vous valider toutes les dépenses en attente ?'
-                            : 'Voulez-vous valider tous les dépôts en attente ?'
-                    "
+                    :title="showConfirmAllType === 'dépense' ? '💸 VALIDER TOUTES LES DÉPENSES' : '📥 VALIDER TOUS LES DÉPÔTS'"
+                    :message="showConfirmAllType === 'dépense' ? 'Valider toutes les dépenses en attente simultanément ?' : 'Valider tous les dépôts en attente simultanément ?'"
                     @confirm="confirmValiderTous"
                     @cancel="cancelValiderTous"
                 />
 
-                <div
-                    class="p-4 sm:p-6 rounded-lg bg-white dark:bg-slate-900 border border-neutral-200 dark:border-slate-700 space-y-4"
-                >
-                    <h2
-                        class="text-lg sm:text-xl font-bold text-neutral-900 dark:text-white"
-                    >
-                        Historique des transactions
-                    </h2>
+                <!-- Transactions History -->
+                <div class="mb-8">
                     <FinanceFilter
                         :users="props.users"
                         @filter="handleFiltre"
                     />
+                </div>
 
+                <div class="mb-12">
                     <FinanceHistoriqueTable
                         :finances="financesData"
                         :links="links"
@@ -277,12 +275,46 @@ const isBureau = role === "bureau";
                         @refresh-table="refreshTable"
                     />
                 </div>
+
+                <!-- Quote -->
+                <div class="max-w-2xl mx-auto">
+                    <div class="p-6 rounded-2xl bg-gradient-to-r from-lime-50/50 to-emerald-50/50 dark:from-emerald-900/10 dark:to-lime-900/10 border-2 border-lime-200/50 dark:border-emerald-800/30">
+                        <p class="text-center text-gray-700 dark:text-gray-300 italic">
+                            "La force financière d'un club se mesure à la rigueur de sa gestion, 
+                            pas à la taille de son trésor."
+                        </p>
+                        <p class="text-center text-sm font-bold text-lime-700 dark:text-emerald-400 mt-2">
+                            — Philosophie Dynamo Finance
+                        </p>
+                    </div>
+                </div>
             </div>
+
+            <!-- Toast Notification -->
+            <Toast
+                v-model="toastVisible"
+                :message="toastMessage"
+                :type="toastType"
+            />
         </div>
-        <Toast
-            v-model="toastVisible"
-            :message="toastMessage"
-            :type="toastType"
-        />
     </AuthenticatedLayout>
 </template>
+
+<style scoped>
+/* Mobile optimizations */
+@media (max-width: 640px) {
+    .px-4 {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+    
+    .py-6 {
+        padding-top: 1.5rem;
+        padding-bottom: 1.5rem;
+    }
+    
+    .text-3xl {
+        font-size: 2rem;
+    }
+}
+</style>
