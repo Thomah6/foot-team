@@ -83,17 +83,17 @@ const containerClass = computed(() => {
                 <div class="flex-1">
                     <div class="flex items-start gap-3">
                         <span
-                            v-if="type === 'success'"
+                            v-if="props.type === 'success'"
                             class="text-green-100 material-symbols-outlined"
                             >check_circle</span
                         >
                         <span
-                            v-else-if="type === 'error'"
+                            v-else-if="props.type === 'error'"
                             class="text-red-100 material-symbols-outlined"
                             >error</span
                         >
                         <div class="text-sm text-white break-words">
-                            {{ message }}
+                            {{ props.message }}
                         </div>
                     </div>
                     <div
