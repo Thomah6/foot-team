@@ -5,24 +5,21 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 
 <template>
     <AuthenticatedLayout>
-        <div class="min-h-screen bg-gradient-to-b from-slate-50 via-slate-100 to-white text-slate-900 font-sans">
+        <div class="min-h-screen bg-gradient-to-br from-slate-50 via-slate-100 to-white text-gray-900 font-sans">
             
             <!-- Header Premium Style -->
-            <div class="relative bg-gradient-to-b from-white to-slate-50 py-16 px-4 border-b border-slate-200">
+            <div class="relative bg-gradient-to-b from-white to-slate-50 py-16 px-4 border-b border-gray-200">
                 <!-- Logo et titre -->
                 <div class="flex items-center justify-between max-w-6xl mx-auto mb-12">
                     <!-- Logo à gauche -->
                     <div class="flex items-center gap-4">
-                        <div class="w-16 h-16 bg-gradient-to-br from-slate-200 to-slate-300 rounded-xl flex items-center justify-center border border-slate-300">
-                            <i class="fas fa-trophy text-slate-700 text-2xl"></i>
-                        </div>
-                        <div class="text-slate-700 font-light text-xl tracking-wider">FOOT TEAM</div>
+                     
                     </div>
                     
                     <!-- Titre central -->
                     <div class="text-center">
-                        <div class="text-slate-600 text-xl font-light tracking-widest mb-2">CLASSEMENT OFFICIEL</div>
-                        <div class="text-slate-500 text-sm tracking-widest">SAISON 2024</div>
+                        <div class="text-emerald-600 text-lg font-semibold tracking-wider mb-2">CLASSEMENT OFFICIEL</div>
+                        <div class="text-gray-600 text-sm font-medium tracking-wider">SAISON 2025</div>
                     </div>
                     
                     <!-- Logo à droite -->
@@ -31,8 +28,10 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
                 
                 <!-- Titre principal -->
                 <div class="text-center mb-8">
-                    <h1 class="text-6xl font-thin text-slate-900 tracking-wider mb-3">TOUS LES CLASSEMENTS</h1>
-                    <div class="text-slate-600 text-lg tracking-widest font-light">STATISTIQUES ET PERFORMANCES</div>
+                    <h1 class="text-5xl font-bold text-gray-900 tracking-tight mb-4 bg-gradient-to-r from-lime-600 to-emerald-600 bg-clip-text text-transparent">
+                        TOUS LES CLASSEMENTS
+                    </h1>
+                    <div class="text-gray-600 text-lg font-medium tracking-wide">STATISTIQUES ET PERFORMANCES</div>
                 </div>
             </div>
 
@@ -42,53 +41,57 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
                     
                     <!-- Classement Général -->
                     <Link :href="route('stats.classement.general')" 
-                          class="group bg-white/80 backdrop-blur-sm rounded-2xl p-8 text-center border border-slate-200 shadow-lg hover:bg-slate-50 transition-all duration-300 hover:scale-105">
-                        <div class="bg-gradient-to-br from-yellow-100 to-yellow-200 w-24 h-24 rounded-2xl flex items-center justify-center mx-auto mb-6 border border-yellow-300 group-hover:border-yellow-400 transition-colors">
-                            <i class="fas fa-medal text-yellow-600 text-4xl"></i>
+                          class="group bg-white backdrop-blur-sm rounded-2xl p-8 text-center border-2 border-lime-200/50 shadow-lg hover:shadow-xl hover:shadow-lime-500/20 transition-all duration-300 hover:-translate-y-2 hover:border-lime-300">
+                        <div class="bg-gradient-to-br from-lime-100 to-emerald-100 w-24 h-24 rounded-2xl flex items-center justify-center mx-auto mb-6 border-2 border-lime-300 group-hover:border-lime-400 transition-colors">
+                            <i class="fas fa-medal text-lime-600 text-4xl"></i>
                         </div>
-                        <h3 class="text-2xl font-thin text-slate-900 mb-3 tracking-wide">GÉNÉRAL</h3>
-                        <p class="text-slate-600 mb-6 font-light">Points = Buts + Passes/2</p>
-                        <div class="text-yellow-600 font-light tracking-wider group-hover:text-yellow-700 transition">
-                            VOIR LE CLASSEMENT →
+                        <h3 class="text-2xl font-bold text-gray-900 mb-3">CLASSEMENT GÉNÉRAL</h3>
+                        <p class="text-gray-600 mb-6 font-medium">Points = Buts + Passes/2</p>
+                        <div class="text-lime-600 font-semibold tracking-wide group-hover:text-emerald-600 transition inline-flex items-center gap-2">
+                            Voir le classement 
+                            <i class="fas fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
                         </div>
                     </Link>
 
                     <!-- Classement Buteurs -->
                     <Link :href="route('stats.classement.buteurs')" 
-                          class="group bg-white/80 backdrop-blur-sm rounded-2xl p-8 text-center border border-slate-200 shadow-lg hover:bg-slate-50 transition-all duration-300 hover:scale-105">
-                        <div class="bg-gradient-to-br from-slate-100 to-slate-200 w-24 h-24 rounded-2xl flex items-center justify-center mx-auto mb-6 border border-slate-300 group-hover:border-slate-400 transition-colors">
-                            <i class="fas fa-futbol text-slate-600 text-4xl"></i>
+                          class="group bg-white backdrop-blur-sm rounded-2xl p-8 text-center border-2 border-lime-200/50 shadow-lg hover:shadow-xl hover:shadow-lime-500/20 transition-all duration-300 hover:-translate-y-2 hover:border-lime-300">
+                        <div class="bg-gradient-to-br from-lime-100 to-emerald-100 w-24 h-24 rounded-2xl flex items-center justify-center mx-auto mb-6 border-2 border-lime-300 group-hover:border-lime-400 transition-colors">
+                            <i class="fas fa-futbol text-lime-600 text-4xl"></i>
                         </div>
-                        <h3 class="text-2xl font-thin text-slate-900 mb-3 tracking-wide">BUTEURS</h3>
-                        <p class="text-slate-600 mb-6 font-light">Les meilleurs buteurs du club</p>
-                        <div class="text-slate-700 font-light tracking-wider group-hover:text-slate-800 transition">
-                            VOIR LES BUTEURS →
+                        <h3 class="text-2xl font-bold text-gray-900 mb-3">CLASSEMENT BUTEURS</h3>
+                        <p class="text-gray-600 mb-6 font-medium">Les meilleurs prédateurs de surface</p>
+                        <div class="text-lime-600 font-semibold tracking-wide group-hover:text-emerald-600 transition inline-flex items-center gap-2">
+                            Voir les buteurs 
+                            <i class="fas fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
                         </div>
                     </Link>
 
                     <!-- Classement Passeurs -->
                     <Link :href="route('stats.classement.passeurs')" 
-                          class="group bg-white/80 backdrop-blur-sm rounded-2xl p-8 text-center border border-slate-200 shadow-lg hover:bg-slate-50 transition-all duration-300 hover:scale-105">
-                        <div class="bg-gradient-to-br from-slate-100 to-slate-200 w-24 h-24 rounded-2xl flex items-center justify-center mx-auto mb-6 border border-slate-300 group-hover:border-slate-400 transition-colors">
-                            <i class="fas fa-exchange-alt text-slate-600 text-4xl"></i>
+                          class="group bg-white backdrop-blur-sm rounded-2xl p-8 text-center border-2 border-lime-200/50 shadow-lg hover:shadow-xl hover:shadow-lime-500/20 transition-all duration-300 hover:-translate-y-2 hover:border-lime-300">
+                        <div class="bg-gradient-to-br from-lime-100 to-emerald-100 w-24 h-24 rounded-2xl flex items-center justify-center mx-auto mb-6 border-2 border-lime-300 group-hover:border-lime-400 transition-colors">
+                            <i class="fas fa-exchange-alt text-lime-600 text-4xl"></i>
                         </div>
-                        <h3 class="text-2xl font-thin text-slate-900 mb-3 tracking-wide">PASSEURS</h3>
-                        <p class="text-slate-600 mb-6 font-light">Générosité et vision de jeu</p>
-                        <div class="text-slate-700 font-light tracking-wider group-hover:text-slate-800 transition">
-                            VOIR LES PASSEURS →
+                        <h3 class="text-2xl font-bold text-gray-900 mb-3">CLASSEMENT PASSEURS</h3>
+                        <p class="text-gray-600 mb-6 font-medium">Vision de jeu et générosité</p>
+                        <div class="text-lime-600 font-semibold tracking-wide group-hover:text-emerald-600 transition inline-flex items-center gap-2">
+                            Voir les passeurs 
+                            <i class="fas fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
                         </div>
                     </Link>
 
                     <!-- Classement Gardiens -->
                     <Link :href="route('stats.classement.gardiens')" 
-                          class="group bg-white/80 backdrop-blur-sm rounded-2xl p-8 text-center border border-slate-200 shadow-lg hover:bg-slate-50 transition-all duration-300 hover:scale-105">
-                        <div class="bg-gradient-to-br from-slate-100 to-slate-200 w-24 h-24 rounded-2xl flex items-center justify-center mx-auto mb-6 border border-slate-300 group-hover:border-slate-400 transition-colors">
-                            <i class="fas fa-hand-paper text-slate-600 text-4xl"></i>
+                          class="group bg-white backdrop-blur-sm rounded-2xl p-8 text-center border-2 border-lime-200/50 shadow-lg hover:shadow-xl hover:shadow-lime-500/20 transition-all duration-300 hover:-translate-y-2 hover:border-lime-300">
+                        <div class="bg-gradient-to-br from-lime-100 to-emerald-100 w-24 h-24 rounded-2xl flex items-center justify-center mx-auto mb-6 border-2 border-lime-300 group-hover:border-lime-400 transition-colors">
+                            <i class="fas fa-hand-paper text-lime-600 text-4xl"></i>
                         </div>
-                        <h3 class="text-2xl font-thin text-slate-900 mb-3 tracking-wide">GARDIENS</h3>
-                        <p class="text-slate-600 mb-6 font-light">Solidité défensive</p>
-                        <div class="text-slate-700 font-light tracking-wider group-hover:text-slate-800 transition">
-                            VOIR LES GARDIENS →
+                        <h3 class="text-2xl font-bold text-gray-900 mb-3">CLASSEMENT GARDIENS</h3>
+                        <p class="text-gray-600 mb-6 font-medium">Solidité défensive ultime</p>
+                        <div class="text-lime-600 font-semibold tracking-wide group-hover:text-emerald-600 transition inline-flex items-center gap-2">
+                            Voir les gardiens 
+                            <i class="fas fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
                         </div>
                     </Link>
 
@@ -96,18 +99,20 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 
                 <!-- Section Joueur du Mois -->
                 <div class="mt-20 text-center">
-                    <div class="bg-gradient-to-r from-white to-slate-50 backdrop-blur-sm rounded-3xl p-12 text-slate-900 border border-slate-200 shadow-lg">
-                        <div class="bg-gradient-to-br from-slate-100 to-slate-200 w-24 h-24 rounded-2xl flex items-center justify-center mx-auto mb-8 border border-slate-300">
-                            <i class="fas fa-star text-slate-600 text-5xl"></i>
+                    <div class="bg-gradient-to-r from-white to-slate-50 backdrop-blur-sm rounded-3xl p-12 text-gray-900 border-2 border-lime-200/50 shadow-xl">
+                        <div class="bg-gradient-to-br from-lime-100 to-emerald-100 w-24 h-24 rounded-2xl flex items-center justify-center mx-auto mb-8 border-2 border-lime-300">
+                            <i class="fas fa-crown text-lime-600 text-5xl"></i>
                         </div>
-                        <h2 class="text-4xl font-thin mb-6 tracking-wider text-slate-900">JOUEUR DU MOIS</h2>
-                        <p class="text-xl mb-8 text-slate-600 font-light max-w-2xl mx-auto">
-                            Découvrez le joueur élu ce mois-ci pour ses performances exceptionnelles
+                        <h2 class="text-4xl font-bold mb-6 bg-gradient-to-r from-lime-600 to-emerald-600 bg-clip-text text-transparent">
+                            PRÉDATEUR DU MOIS
+                        </h2>
+                        <p class="text-xl mb-8 text-gray-600 font-medium max-w-2xl mx-auto">
+                            Découvrez le joueur élu cette semaine pour ses performances exceptionnelles dans l'arène
                         </p>
                         <Link :href="route('player.month.current')" 
-                              class="inline-flex items-center gap-3 bg-slate-100 text-slate-700 px-8 py-4 rounded-2xl font-light hover:bg-slate-200 transition-all duration-300 tracking-wider text-lg border border-slate-300">
+                              class="inline-flex items-center gap-3 bg-gradient-to-r from-lime-500 to-emerald-500 text-white px-10 py-5 rounded-2xl font-bold hover:from-lime-600 hover:to-emerald-600 transition-all duration-300 tracking-wider text-lg shadow-lg hover:shadow-xl hover:shadow-emerald-500/30 hover:-translate-y-1">
                             <i class="fas fa-trophy"></i>
-                            VOIR LE JOUEUR DU MOIS
+                            DÉCOUVRIR LE PRÉDATEUR
                         </Link>
                     </div>
                 </div>

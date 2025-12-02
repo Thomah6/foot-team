@@ -27,7 +27,6 @@ function submit() {
   })
 }
 </script>
-
 <template>
   <AuthenticatedLayout>
     <div 
@@ -36,22 +35,23 @@ function submit() {
     >
       <!-- Bloc translucide avec blur -->
       <div class="w-full max-w-xl 
-                  bg-blue-600/40 dark:bg-gray-900/70 
+                  bg-citron-600/40 dark:bg-gray-900/70 
                   backdrop-blur-md 
-                  border border-blue-300/40 dark:border-gray-700 
+                  border border-citron-300/40 dark:border-gray-700 
                   rounded-xl shadow-lg p-6 sm:p-8 
                   text-white dark:text-gray-100">
-        <h1 class="text-2xl font-bold mb-6 text-center">Modifier un sous-point</h1>
+        <h1 class="text-2xl font-bold mb-6 text-center text-citron-100 dark:text-citron-50">Modifier un sous-point</h1>
 
         <form @submit.prevent="submit" class="space-y-4">
           <!-- Numéro du sous-point -->
           <div>
-            <label class="block text-sm font-medium mb-1 text-white dark:text-gray-300">Numéro du sous-point</label>
+            <label class="block text-sm font-medium mb-1 text-citron-100 dark:text-citron-200">Numéro du sous-point</label>
             <input type="text" v-model="form.sub_number" placeholder="Ex: 1.1"
                    class="w-full border rounded-lg p-2 
                           text-black dark:text-white 
                           bg-white dark:bg-gray-800 
-                          border-gray-300 dark:border-gray-600" />
+                          border-gray-300 dark:border-gray-600 
+                          focus:ring-2 focus:ring-citron-500 focus:border-transparent" />
             <div v-if="form.errors.sub_number" class="text-red-300 dark:text-red-400 text-sm mt-1">
               {{ form.errors.sub_number }}
             </div>
@@ -59,12 +59,13 @@ function submit() {
 
           <!-- Contenu -->
           <div>
-            <label class="block text-sm font-medium mb-1 text-white dark:text-gray-300">Contenu</label>
+            <label class="block text-sm font-medium mb-1 text-citron-100 dark:text-citron-200">Contenu</label>
             <textarea v-model="form.content" rows="5"
                       class="w-full border rounded-lg p-2 resize-none 
                              text-black dark:text-white 
                              bg-white dark:bg-gray-800 
-                             border-gray-300 dark:border-gray-600"></textarea>
+                             border-gray-300 dark:border-gray-600
+                             focus:ring-2 focus:ring-citron-500 focus:border-transparent"></textarea>
             <div v-if="form.errors.content" class="text-red-300 dark:text-red-400 text-sm mt-1">
               {{ form.errors.content }}
             </div>
@@ -73,15 +74,15 @@ function submit() {
           <!-- Boutons -->
           <div class="flex gap-4">
             <button type="submit" 
-                    class="flex-1 bg-blue-600 dark:bg-cyan-500 hover:bg-blue-700 dark:hover:bg-cyan-600 
-                           text-white py-2 rounded-lg"
+                    class="flex-1 bg-citron-600 hover:bg-citron-700 dark:bg-citron-500 dark:hover:bg-citron-600 
+                           text-white py-2 rounded-lg transition font-semibold"
                     :disabled="form.processing">
               <span v-if="form.processing">Sauvegarde...</span>
               <span v-else>Mettre à jour</span>
             </button>
 
             <button type="button" 
-                    class="flex-1 bg-gray-700 dark:bg-gray-600 text-white py-2 rounded-lg hover:bg-gray-800 dark:hover:bg-gray-700"
+                    class="flex-1 bg-gray-700 hover:bg-gray-800 dark:bg-gray-600 dark:hover:bg-gray-700 text-white py-2 rounded-lg transition font-semibold"
                     @click="$inertia.visit('/regulations')">
               Annuler
             </button>

@@ -51,10 +51,10 @@
                                     Sélectionner un match...
                                 </option>
                                 <option value="1">
-                                    PSG vs Marseille - 2024-09-15
+                                    PSG vs Marseille - 2025-09-15
                                 </option>
                                 <option value="2">
-                                    Lyon vs Monaco - 2024-09-22
+                                    Lyon vs Monaco - 2025-09-22
                                 </option>
                             </select>
                         </div>
