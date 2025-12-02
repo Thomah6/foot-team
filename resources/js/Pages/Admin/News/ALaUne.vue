@@ -7,7 +7,7 @@ const props = defineProps({
 </script>
 
 <template>
-    <Link :href="route('news.index')">
+    <Link :href="route('admin.news.index')">
         <section
             class="p-4 bg-white dark:bg-gray-800 shadow rounded cursor-pointer 
                    hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
