@@ -66,7 +66,7 @@ const form = useForm({ month: '', year: '', from: '', to: '' })
                 </select>
                 <select v-model="form.year" name="year" class="px-3 py-2 border rounded-lg flex-1 min-w-[120px]">
                   <option value="">Année</option>
-                  <option v-for="y in [2023,2024,2025,2026]" :value="y">{{ y }}</option>
+                  <option v-for="y in [2023,2025,2025,2026]" :value="y">{{ y }}</option>
                 </select>
               </div>
               <div class="flex flex-wrap gap-2 w-full">
