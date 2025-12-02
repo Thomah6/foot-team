@@ -111,8 +111,8 @@ const menu = computed(() => {
         {
             label: 'Stats des membres',
             icon: 'fas fa-chart-bar',
-            link: route('admin.bureau.stats.index', [], false),
-            active: route().current('admin.bureau.stats.index.*')
+            link: route('bureau.stats.index', [], false),
+            active: route().current('bureau.stats.index')
         },
             {
                 label: "Statistiques équipes",
