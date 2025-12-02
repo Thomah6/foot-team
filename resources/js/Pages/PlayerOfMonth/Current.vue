@@ -55,10 +55,18 @@ const totalStats = computed(() => {
                     <!-- Logo à gauche -->
                     <div class="flex items-center gap-4">
                     </div>
-                    
+
+                    <div class="flex items-center absolute top-0 right-0 mr-4 mb-10 mt-2  gap-4">
+                            <Link href="/dashboard"
+                                  class="flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-emerald-600 to-lime-600 rounded-lg text-white font-bold text-sm shadow-lg hover:shadow-emerald-500/30 transform hover:scale-105 transition-all">
+                                <span>Retour</span>
+                                <i class="fas fa-chevron-right text-xs"></i>
+                            </Link>
+                    </div>
                     <!-- Titre central -->
                     <div class="text-center">
                         <div class="text-citron-500 dark:text-citron-300 text-xl font-light tracking-widest mb-2">CLASSEMENT OFFICIEL</div>
+                        
                         <div class="text-citron-400 dark:text-citron-500 text-sm tracking-widest">SAISON 2025</div>
                     </div>
                     
