@@ -261,9 +261,9 @@ const handleLogout = () => {
 
     <!-- Mobile Hamburger Button -->
     <button v-if="!isOpen" @click="toggleMenu"
-        class="lg:hidden fixed top-4 left-4 z-50 p-3 bg-gradient-to-br from-lime-400 to-emerald-600 rounded-xl shadow-lg hover:shadow-emerald-500/30 transform hover:scale-105 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500">
-        <i class="fas fa-bars text-white text-lg"></i>
-        <span class="sr-only">Ouvrir le menu</span>
+        class="md:hidden fixed top-4 left-4 z-[9999] p-3 bg-gradient-to-br from-lime-500 to-emerald-600 rounded-xl shadow-lg hover:shadow-emerald-500/30 transform hover:scale-105 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500"
+        aria-label="Ouvrir le menu">
+        <i class="fas fa-bars text-white text-xl"></i>
     </button>
 
     <!-- Sidebar -->

@@ -327,7 +327,7 @@ Route::middleware(['auth'])->group(function () {
  */
 Route::get('/stats', [StatController::class, 'publicIndex'])->name('stats.public.index');
 // Finances
-Route::prefix('finances')->group(function () {
+Route::prefix('finances')->middleware(['auth', 'is.active'])->group(function () {
     Route::get('/', [FinanceController::class, 'index'])->name('finances.index');
     Route::get('/depot/create', [FinanceController::class, 'createDepot'])->name('finances.createDepot');
     Route::post('/', [FinanceController::class, 'storeDepot'])->name('finances.storeDepot');
@@ -335,6 +335,8 @@ Route::prefix('finances')->group(function () {
     Route::post('/depense', [FinanceController::class, 'storeDepense'])->name('finances.storeDepense');
     Route::post('/valider/{id}', [FinanceController::class, 'valider'])->name('finances.valider');
     Route::post('/valider-tous', [FinanceController::class, 'validerTous'])->name('finances.validerTous');
+     Route::get('/ajustement', [FinanceController::class, 'createAjustement'])->name('finances.createAjustement');
+    Route::post('/ajustement', [FinanceController::class, 'storeAjustement'])->name('finances.storeAjustement');
 });
 
 
@@ -361,8 +363,7 @@ Route::middleware(['auth', 'is.active'])->group(function () {
 
 // Routes pour les ajustements financiers
 Route::prefix('finances')->group(function () {
-    Route::get('/ajustement', [FinanceController::class, 'createAjustement'])->name('finances.createAjustement');
-    Route::post('/ajustement', [FinanceController::class, 'storeAjustement'])->name('finances.storeAjustement');
+   
 });
 
 // Routes pour les suggestions

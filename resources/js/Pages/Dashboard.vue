@@ -36,16 +36,12 @@ function handleImageError() {
                     <div class="lg:hidden mb-6">
                         <div class="flex items-center justify-between">
                             <div class="flex items-center gap-3">
-                                <div class="w-12 h-12 bg-gradient-to-br from-lime-400 to-emerald-600 rounded-xl flex items-center justify-center shadow-lg">
-                                    <span class="text-2xl font-black text-white">⚽</span>
-                                </div>
+                                
                                 <div>
                                     <h1 class="text-xl font-black bg-gradient-to-r from-gray-900 to-emerald-800 dark:from-lime-300 dark:to-emerald-400 bg-clip-text text-transparent">
                                         FC Dynamo
                                     </h1>
-                                    <p class="text-xs font-medium text-lime-600 dark:text-emerald-400">
-                                        Arène Égoïste
-                                    </p>
+                                    
                                 </div>
                             </div>
                             <Link href="/joueur-du-mois"
@@ -203,44 +199,11 @@ function handleImageError() {
                             </h3>
                             
                             <div class="space-y-4">
-                                <div class="flex items-center justify-between pb-3 border-b border-lime-100 dark:border-emerald-900/30">
-                                    <div class="flex items-center gap-3">
-                                        <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-lime-100 to-emerald-100 dark:from-emerald-900/30 dark:to-lime-900/30 flex items-center justify-center">
-                                            <i class="fas fa-fire text-lime-600 dark:text-emerald-400"></i>
-                                        </div>
-                                        <div>
-                                            <div class="text-sm font-medium text-gray-700 dark:text-gray-300">Forme actuelle</div>
-                                            <div class="text-xs text-gray-500 dark:text-gray-400">8 victoires consécutives</div>
-                                        </div>
-                                    </div>
-                                    <div class="text-xl font-black text-emerald-700 dark:text-lime-400">🔥</div>
-                                </div>
+                          
                                 
-                                <div class="flex items-center justify-between pb-3 border-b border-lime-100 dark:border-emerald-900/30">
-                                    <div class="flex items-center gap-3">
-                                        <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-lime-100 to-emerald-100 dark:from-emerald-900/30 dark:to-lime-900/30 flex items-center justify-center">
-                                            <i class="fas fa-shoe-prints text-lime-600 dark:text-emerald-400"></i>
-                                        </div>
-                                        <div>
-                                            <div class="text-sm font-medium text-gray-700 dark:text-gray-300">Distance parcourue</div>
-                                            <div class="text-xs text-gray-500 dark:text-gray-400">Cette semaine</div>
-                                        </div>
-                                    </div>
-                                    <div class="text-xl font-black text-emerald-700 dark:text-lime-400">42km</div>
-                                </div>
                                 
-                                <div class="flex items-center justify-between">
-                                    <div class="flex items-center gap-3">
-                                        <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-lime-100 to-emerald-100 dark:from-emerald-900/30 dark:to-lime-900/30 flex items-center justify-center">
-                                            <i class="fas fa-futbol text-lime-600 dark:text-emerald-400"></i>
-                                        </div>
-                                        <div>
-                                            <div class="text-sm font-medium text-gray-700 dark:text-gray-300">Buts marqués</div>
-                                            <div class="text-xs text-gray-500 dark:text-gray-400">Dernier match</div>
-                                        </div>
-                                    </div>
-                                    <div class="text-xl font-black text-emerald-700 dark:text-lime-400">5⚽</div>
-                                </div>
+                                
+                               
                             </div>
                             
                             <div class="mt-6 pt-4 border-t border-lime-100 dark:border-emerald-900/30">
