@@ -1,6 +1,5 @@
 <script setup>
 import { computed } from 'vue';
-import { useAttrs } from 'vue';
 
 const props = defineProps({
   variant: {
@@ -13,37 +12,27 @@ const props = defineProps({
   },
 });
 
-const attrs = useAttrs();
-
-const isLink = computed(() => typeof attrs.href !== 'undefined' && attrs.href !== false && attrs.href !== null);
-
 const buttonClass = computed(() => {
-  const baseClasses = 'inline-flex items-center justify-center font-semibold transition-all duration-200 transform focus:outline-none focus:ring-2 focus:ring-offset-0 rounded-lg cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed';
-
+  const baseClasses = 'inline-flex items-center justify-center font-semibold transition-all duration-200 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg cursor-pointer';
+  
   const sizeClasses = {
-    sm: 'px-3 py-2 text-xs gap-2',
-    md: 'px-4 py-2 text-sm gap-2',
-    lg: 'px-6 py-3 text-base gap-3',
+    sm: 'px-3 py-2 text-xs',
+    md: 'px-4 py-2 text-sm',
+    lg: 'px-6 py-3 text-base',
   };
-
+  
   const variantClasses = {
     primary: 'bg-gradient-to-r from-emerald-600 to-lime-600 text-white hover:from-emerald-700 hover:to-lime-700 focus:ring-emerald-500 shadow-md hover:shadow-lg',
-    secondary: 'bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 border border-gray-200 dark:border-gray-700 hover:bg-gray-200 dark:hover:bg-gray-700 focus:ring-gray-400',
+    secondary: 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-100 hover:bg-gray-300 dark:hover:bg-gray-600 focus:ring-gray-400',
     danger: 'bg-red-600 text-white hover:bg-red-700 focus:ring-red-500 shadow-md hover:shadow-lg',
   };
-
-  const size = sizeClasses[props.size] || sizeClasses.md;
-  const variant = variantClasses[props.variant] || variantClasses.primary;
-
-  return `${baseClasses} ${size} ${variant}`;
+  
+  return `${baseClasses} ${sizeClasses[props.size]} ${variantClasses[props.variant]}`;
 });
 </script>
 
 <template>
-  <component :is="isLink ? 'a' : 'button'" :class="buttonClass" v-bind="$attrs" :aria-disabled="$attrs.disabled">
-    <span class="flex items-center">
-      <slot name="icon" />
-      <span><slot /></span>
-    </span>
-  </component>
+  <button :class="buttonClass">
+    <slot />
+  </button>
 </template>

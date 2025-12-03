@@ -1,7 +1,6 @@
 <script setup>
 import { useForm } from "@inertiajs/vue3";
 import NewsForm from "./NewsForm.vue";
-import Button from '@/Components/Button.vue';
 
 const props = defineProps({
   news: Object,
@@ -32,13 +31,9 @@ const submit = () => {
       <div class="w-full max-w-3xl bg-gray-50 dark:bg-gray-900 p-6 rounded-xl shadow-md flex flex-col flex-1">
 
         <!-- Header -->
-        <div class="mb-6 sm:mb-8">
-          <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
-            <i class="fas fa-edit text-emerald-600"></i>
-            Modifier l'actualité
-          </h1>
-          <p class="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mt-2">Mettez à jour les informations de l'actualité</p>
-        </div>
+        <h1 class="text-2xl sm:text-3xl font-bold mb-6 text-gray-800 dark:text-gray-100">
+          Modifier l’actualité
+        </h1>
 
         <!-- Formulaire -->
         <form @submit.prevent="submit" class="space-y-6 flex flex-col flex-1 overflow-auto">
@@ -50,16 +45,14 @@ const submit = () => {
           />
 
           <!-- Submit -->
-          <div class="flex flex-col sm:flex-row justify-end gap-2 sm:gap-3 mt-auto pt-6 border-t border-gray-200 dark:border-gray-700">
-            <Button :href="route('admin.news.index')" variant="secondary" size="md">
-              Annuler
-            </Button>
-            <Button type="submit" :disabled="form.processing" variant="primary" size="md">
-              <template #icon>
-                <i class="fas fa-check"></i>
-              </template>
-              {{ form.processing ? 'Mise à jour...' : 'Mettre à jour' }}
-            </Button>
+          <div class="flex justify-end mt-auto">
+            <button
+              type="submit"
+              class="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white font-medium rounded-lg shadow transition disabled:opacity-60"
+              :disabled="form.processing"
+            >
+              Mettre à jour
+            </button>
           </div>
         </form>
       </div>
