@@ -74,9 +74,6 @@ class ReflectionController extends Controller
 
     public function show(Reflection $reflection){
 
-
-
-
         $comments=CommentController::ravel($reflection);
 
         $reflection->load('user', 'comments');
