@@ -7,8 +7,8 @@
 
                     <div class="w-full mx-auto md:mx-0 flex flex-col">
                         <CreateForm/>
-                        <h1 class="mt-6 text-lg sm:text-xl font-bold text-gray-900 dark:text-citron-50">Mes réflexions</h1>
-                        <div v-for="reflection in reflections.filter(reflection => reflection.user_id === $page.props.auth.user?.id)" class="scroller mt-6 max-h-48 sm:max-h-72 md:max-h-96 overflow-y-auto w-full" :key="reflection.id">
+                        <h1 class="mt-6 text-xl font-bold text-gray-900 dark:text-lime-500">Mes réflexions</h1>
+                        <div v-for="reflection in reflections.filter(reflection => reflection.user_id === $page.props.auth.user?.id)" class="scroller mt-6 max-h-90 overflow-y-auto w-full" :key="reflection.id">
                             <UserReflection 
                             :reflection="reflection" 
                             @edit="openEditModal"

@@ -5,12 +5,45 @@ defineProps({
 </script>
 
 <template>
-  <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-lg transition-all duration-200 hover:-translate-y-1 p-4 sm:p-6">
-    <h3 v-if="title" class="text-base sm:text-lg font-semibold text-gray-800 dark:text-gray-100 border-b-2 border-lime-200 dark:border-lime-700 pb-3 mb-4">
-      {{ title }}
-    </h3>
-    <div class="text-gray-700 dark:text-gray-300">
+  <div class="card bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+    <h3 v-if="title" class="card-title text-gray-800 dark:text-gray-100 border-gray-200 dark:border-gray-700">{{ title }}</h3>
+    <div class="card-body">
       <slot />
     </div>
   </div>
 </template>
+
+<style scoped>
+.card {
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+  border: 1px solid #e5e7eb;
+}
+.dark .card {
+  background-color: #1f2937;
+  border-color: #374151;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 16px rgba(163, 230, 53, 0.1);
+}
+.dark .card:hover {
+  box-shadow: 0 8px 16px rgba(163, 230, 53, 0.15);
+}
+.card-title {
+  margin: 0 0 1rem 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #374151;
+  border-bottom: 2px solid #f3f4f6;
+  padding-bottom: 0.75rem;
+}
+.dark .card-title {
+  color: #f9fafb;
+  border-bottom-color: #374151;
+}
+</style>

@@ -5,16 +5,35 @@ const user = usePage().props.auth.user;
 </script>
 
 <template>
-  <header class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-0 px-4 sm:px-6 py-4 sm:py-6 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 sticky top-16 sm:top-0 z-40">
-    <div>
-      <h1 class="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">
-        Dashboard
+  <header class="admin-header bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
+    <div class="flex items-center">
+      <button @click="$emit('toggleSidebar')" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 mr-4 transition-colors lg:hidden">
+        <i class="fas fa-bars text-gray-700 dark:text-gray-300"></i>
+      </button>
+      <h1 class="page-title text-gray-800 dark:text-gray-100 text-xl font-bold">
+        {{ $slots.title ? $slots.title() : 'Dashboard' }}
       </h1>
     </div>
-    <div class="text-sm sm:text-base font-medium text-gray-700 dark:text-gray-300">
-      <span class="inline-block px-3 py-1 rounded-full bg-emerald-100 dark:bg-emerald-900 text-emerald-800 dark:text-emerald-200">
-        Bienvenue, {{ user.name }}
-      </span>
+    <div class="user-info">
+      <div class="flex items-center gap-3 px-4 py-2 rounded-lg bg-gray-50 dark:bg-gray-700">
+        <div class="w-8 h-8 rounded-full bg-citron-500 flex items-center justify-center">
+          <i class="fas fa-user text-white text-sm"></i>
+        </div>
+        <span class="text-gray-700 dark:text-gray-300 font-medium">{{ user.name }}</span>
+      </div>
     </div>
   </header>
 </template>
+
+<style scoped>
+.admin-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  background-color: #ffffff;
+}
+.dark .admin-header {
+  background-color: #1f2937;
+}
+</style>
