@@ -18,7 +18,7 @@ class TeamController extends Controller
         $isAdmin = ($user->role === 'admin') || (method_exists($user, 'hasRole') && $user->hasRole('admin'));
 
         return Inertia::render("Teams/Index", [
-            'teams' => Team::with('users')->get(),
+            'teams' => Team::with('users')->orderBy('created_at', 'desc')->get(),
             'isAdmin' => $isAdmin,
         ]);
     }

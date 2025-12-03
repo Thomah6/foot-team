@@ -114,6 +114,7 @@ function viewTeam(teamId) {
   router.get(`/teams/${teamId}`)
 }
 </script>
+
 <template>
 <AuthenticatedLayout>
 <!-- MODAL SUCCESS -->
@@ -155,19 +156,19 @@ function viewTeam(teamId) {
         <main class="flex-1 w-full p-4 md:p-10">
             <!-- Header -->
             <div class="mb-8">
-                <h1 class="text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-citron-50 mb-2 flex items-center gap-2">
-                    <i class="fas fa-users text-citron-600 dark:text-citron-400"></i>
+                <h1 class="text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-gray-400 mb-2 flex items-center gap-2">
+                    <i class="fas fa-users dark:text-gray-400"></i>
                     {{ isAdmin ? 'Gestion des équipes' : 'Équipes' }}
                 </h1>
-                <p class="text-gray-600 dark:text-citron-300 text-sm md:text-base">
+                <p class="text-gray-600 dark:text-gray-300 text-sm md:text-base">
                     {{ isAdmin ? 'Créez, modifiez et gérez les équipes' : 'Consultez les équipes disponibles' }}
                 </p>
             </div>
 
             <!-- Create team form (Admin only) -->
-            <div v-if="isAdmin" class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-4 md:p-6 mb-8 border border-gray-200 dark:border-gray-700">
-                <h2 class="text-lg font-semibold text-gray-800 dark:text-citron-100 mb-4 flex items-center gap-2">
-                    <i class="fas fa-plus-circle text-citron-600 dark:text-citron-400"></i>
+            <div v-if="isAdmin" class="bg-gradient-to-r from-lime-400/20 to-emerald-500/20 dark:bg-gray-800 rounded-xl shadow-md p-4 md:p-6 mb-8 border border-gray-200 dark:border-gray-700">
+                <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-4 flex items-center gap-2">
+                    <i class="fas fa-plus-circle text-gray-600 dark:text-gray-400"></i>
                     Créer une nouvelle équipe
                 </h2>
                 <form @submit.prevent="createTeam" class="space-y-3 md:space-y-4">
@@ -186,7 +187,7 @@ function viewTeam(teamId) {
                     </div>
                     <button
                         type="submit"
-                        class="w-full md:w-auto bg-blue-600 hover:bg-citron-700 dark:bg-citron-500 dark:hover:bg-citron-600 text-white px-6 py-3 rounded-lg shadow transition disabled:opacity-50 font-semibold text-sm md:text-base"
+                        class="w-full md:w-auto bg-blue-600 hover:bg-blue-700 dark:bg-black dark:hover:bg-emerald-600 text-white px-6 py-3 rounded-lg shadow transition disabled:opacity-50 font-semibold text-sm md:text-base"
                         :disabled="createForm.processing"
                     >
                         <i class="fas fa-plus mr-2"></i>
@@ -213,31 +214,31 @@ function viewTeam(teamId) {
                 <div
                     v-for="team in filteredTeams"
                     :key="team.id"
-                    class="bg-white dark:bg-gray-800 p-5 md:p-6 rounded-xl shadow hover:shadow-lg border border-gray-200 dark:border-gray-700 transition"
+                    class="bg-white bg-gradient-to-r from-lime-400/20 to-emerald-500/20 p-5 md:p-6 rounded-xl shadow hover:shadow-lg border border-gray-200 dark:border-gray-700 dark:bg-gray-900 dark:border-gray-700 dark:shadow-lg transition"
                 >
                     <!-- Edit mode -->
-                    <div v-if="editingTeam === team.id" class="space-y-3">
+                    <div v-if="editingTeam === team.id" class="space-y-3 ">
                         <input
                             v-model="editForm.name"
-                            class="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-citron-400 dark:focus:ring-citron-500 bg-white dark:bg-gray-700 text-gray-800 dark:text-white"
+                            class="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2  bg-white text-gray-800 dark:bg-gray-800 dark:text-gray-100 dark:border-gray-600 dark:focus:ring-lime-400"
                             placeholder="Nom"
                         />
                         <input
                             v-model="editForm.description"
-                            class="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-citron-400 dark:focus:ring-citron-500 bg-white dark:bg-gray-700 text-gray-800 dark:text-white"
+                            class="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2  bg-white text-gray-800 dark:bg-gray-800 dark:text-gray-100 dark:border-gray-600 dark:focus:ring-lime-400"
                             placeholder="Description"
                         />
                         <div class="flex gap-2 flex-col sm:flex-row">
                             <button
                                 @click="submitEdit"
-                                class="flex-1 bg-citron-600 hover:bg-citron-700 dark:bg-citron-500 dark:hover:bg-citron-600 text-gray-800 px-4 py-2 rounded-lg transition text-sm font-semibold"
+                                class="flex-1 bg-green-600 hover:bg-green-700 text-gray-800 px-4 py-2 rounded-lg transition text-sm font-semibold dark:bg-lime-500 dark:hover:bg-lime-600 dark:text-gray-900"
                                 :disabled="editForm.processing"
                             >
                                 <i class="fas fa-check mr-1"></i>Sauvegarder
                             </button>
                             <button
                                 @click="cancelEdit"
-                                class="flex-1 bg-gray-400 hover:bg-gray-500 dark:bg-gray-700 dark:hover:bg-gray-800 text-gray-800 px-4 py-2 rounded-lg transition text-sm font-semibold"
+                                class="flex-1 bg-gray-400 hover:bg-gray-500 dark:bg-gray-700 text-gray-800 px-4 py-2 rounded-lg transition text-sm font-semibold dark:bg-gray-700 dark:hover:bg-gray-800 dark:text-gray-200"
                             >
                                 <i class="fas fa-times mr-1"></i>Annuler
                             </button>
@@ -246,18 +247,18 @@ function viewTeam(teamId) {
 
                     <!-- View mode -->
                     <div v-else>
-                        <h2 class="font-bold text-lg md:text-xl text-gray-900 dark:text-citron-50 mb-2">{{ team.name }}</h2>
-                        <p class="text-gray-600 dark:text-citron-300 text-sm mb-4">{{ team.description || 'Aucune description' }}</p>
+                        <h2 class="font-bold text-lg md:text-xl text-gray-900 dark:text-white dark:text-gray-300 mb-2">{{ team.name }}</h2>
+                        <p class="text-gray-600 dark:text-white dark:text-gray-300  text-sm mb-4">{{ team.description || 'Aucune description' }}</p>
 
-                        <div class="mb-4 p-3 bg-blue-50 dark:bg-citron-900/30 rounded-lg border border-citron-200 dark:border-citron-800">
-                            <p class="text-sm font-semibold text-gray-700 dark:text-citron-200">
+                        <div class="mb-4 p-3 bg-blue-50 rounded-lg border dark:bg-gray-800 dark:border-gray-700 dark:text-gray-200 ">
+                            <p class="text-sm font-semibold text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-200 ">
                                 <i class="fas fa-users text-citron-600 dark:text-citron-400 mr-2"></i>
                                 {{ team.users.length }} Joueur{{ team.users.length !== 1 ? 's' : '' }}
                             </p>
                         </div>
 
                         <!-- Action buttons (Admin only) -->
-                        <div v-if="isAdmin" class="flex flex-col gap-2">
+                        <div v-if="isAdmin" class="flex flex-col gap-2 dark:bg-gray-800 dark:hover:bg-gray-700     dark:text-gray-100 ">
                             <button
                                 @click="() => {
                                     editForm.id = team.id
@@ -265,25 +266,25 @@ function viewTeam(teamId) {
                                     editForm.description = team.description
                                     startEdit(team)
                                 }"
-                                class="w-full bg-black hover:bg-citron-600 dark:bg-citron-600 dark:hover:bg-citron-700 text-white px-4 py-2 rounded-lg transition text-sm font-semibold"
-                            >
+                                class="w-full bg-gradient-to-r from-lime-400/20 to-emerald-500/20 hover:bg-gray-500 text-black px-4 py-2 rounded-lg transition text-sm font-semibold dark:bg-blue-600 dark:hover:bg-blue-700 dark:text-white "
+                                >
                                 <i class="fas fa-edit mr-2"></i>Modifier
                             </button>
                             <button
                                 @click="viewTeam(team.id)"
-                                class="w-full bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-gray-800 px-4 py-2 rounded-lg transition text-sm font-semibold"
+                                class="w-full bg-gradient-to-r from-lime-400/20 to-emerald-500/20 hover:bg-blue-700 text-gray-800 px-4 py-2 rounded-lg transition text-sm font-semibold dark:bg-blue-600 dark:hover:bg-blue-700 dark:text-white "
                             >
                                 <i class="fas fa-eye mr-2"></i>Voir détails
                             </button>
                             <button
                                 @click="affectPlayers(team.id)"
-                                class="w-full bg-green-600 hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600 text-gray-800 px-4 py-2 rounded-lg transition text-sm font-semibold"
+                                class="w-full bg-gradient-to-r from-lime-400/20 to-emerald-500/20 hover:bg-green-600 dark:bg-green-500 dark:hover:bg-green-600 dark:text-white text-gray-800 px-4 py-2 rounded-lg transition text-sm font-semibold"
                             >
                                 <i class="fas fa-users-cog mr-2"></i>Affecter joueurs
                             </button>
                             <button
                                 @click="deleteTeam(team.id)"
-                                class="w-full bg-red-600 hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600 text-gray-800 px-4 py-2 rounded-lg transition text-sm font-semibold"
+                                class="w-full bg-gradient-to-r from-lime-400/20 to-emerald-500/20 hover:bg--700 dark:bg-red-500 dark:hover:bg-red-600 text-gray-800 px-4 py-2 rounded-lg transition text-sm font-semibold"
                             >
                                 <i class="fas fa-trash mr-2"></i>Supprimer
                             </button>
