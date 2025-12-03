@@ -38,7 +38,19 @@ const isAdmin = () => page.props.auth.user.role === "admin";
 </script>
 
 <template>
+<<<<<<< HEAD
   <div class="flex flex-col h-screen bg-gray-100 dark:bg-gray-900 p-4 gap-4">
+=======
+  <!-- Header -->
+  <div class="flex items-center justify-between mb-6">
+    <Link 
+      :href="route('admin.news.create')" 
+      class="px-5 py-2 rounded-lg bg-green-600 hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600 transition text-white font-semibold shadow"
+    >
+      Nouvelle actualité
+    </Link>
+  </div>
+>>>>>>> 7f64f44381728ae05f9aa638134289b1b590f77b
 
     <!-- Header -->
     <div class="flex justify-between items-center mb-4">

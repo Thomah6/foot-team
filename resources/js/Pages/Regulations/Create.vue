@@ -120,7 +120,9 @@ function submit() {
             <button type="button" 
                     class="w-full bg-citron-50 hover:bg-citron-100 dark:bg-citron-900/50 dark:hover:bg-citron-900/70 
                            text-citron-700 dark:text-citron-300 px-4 py-3 rounded-lg border-2 border-dashed border-citron-300 dark:border-citron-700
-                           transition font-semibold flex items-center justify-center gap-2 duration-300"
+                            font-semibold flex items-center justify-center gap-2 duration-300
+                           
+                           transform hover:scale-[1.01] hover:shadow-md transition-all "
                     @click="addContent">
               <i class="fas fa-plus"></i>
               Ajouter un sous-point
