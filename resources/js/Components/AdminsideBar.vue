@@ -41,7 +41,7 @@ const menu = computed(() => {
             { label: "Membres", icon: "fas fa-user-friends", link: route("admin.members.index"), active: route().current("admin.members.index") },
             { label: "Statistiques équipes", icon: "fas fa-chart-line", link: route("admin.team-stats.index"), active: route().current("admin.team-stats.*") },
             { label: "Identité visuelle", icon: "fas fa-chart-pie", link: route("admin.identity"), active: route().current("admin.identity*") },
-            { label: "Stats des membres", icon: "fas fa-chart-bar", link: route("bureau.stats.index"), active: route().current("bureau.stats.index.*")}
+           
         );
     }
 
