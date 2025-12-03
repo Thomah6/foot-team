@@ -2,32 +2,31 @@
     <div 
             @click="reflection.statut !== 'valide' && show(reflection.id)"
             :class="[
-                'p-6 rounded-lg shadow-md transition duration-300 border-l-4 border-indigo-500',
+                'p-6 rounded-lg shadow-md transition-all duration-300 border-l-4',
                 reflection.votes.find(vote => vote.user_id === $page.props.auth.user?.id)
-                    ? '' 
-                    : 'bg-white',
+                    ? 'bg-citron-50 dark:bg-citron-900/20 border-citron-500' 
+                    : 'bg-white dark:bg-gray-800 border-gray-300 dark:border-lime-500',
                 reflection.statut === 'valide' 
-                    ? 'pointer-events-none opacity-60 cursor-not-allowed hover:shadow-md' 
-                    : 'hover:shadow-lg cursor-pointer'
+                    ? 'pointer-events-none opacity-70 cursor-not-allowed' 
+                    : 'hover:shadow-lg hover:border-citron-400 dark:hover:border-citron-500 cursor-pointer hover:scale-[1.02]'
             ]"
+            class="dark:border-lime-500"
         >
-
-
-        <p class="text-gray-700 italic mb-4 h-10">
+        <p class="text-gray-700 dark:text-gray-300 italic mb-4 h-10">
         "{{ truncatedContent }}"
         </p>
-        <div class="flex items-center justify-between text-sm text-gray-500 border-t pt-3">
-        <span class="font-semibold text-indigo-600">
+        <div class="flex items-center justify-between text-sm border-t pt-3">
+        <span class="font-semibold text-citron-600 dark:text-blue-400 ">
             — {{ reflection.user.name }}
         </span>
-        <span>
+        <span class="text-gray-500 dark:text-gray-400">
             {{ formattedDate }}... 
         </span>
         <span :class="{
-            'text-yellow-400':reflection.statut=='ferme',
-            'text-blue-700':reflection.statut=='ouvert',
-            'text-green-600':reflection.statut=='valide'
-        }">
+            'text-yellow-500 dark:text-yellow-400':reflection.statut=='ferme',
+            'text-blue-500 dark:text-blue-400':reflection.statut=='ouvert',
+            'text-green-500 dark:text-green-400':reflection.statut=='valide'
+        }" class="font-medium">
             {{ reflection.statut }} 
         </span>
         </div>

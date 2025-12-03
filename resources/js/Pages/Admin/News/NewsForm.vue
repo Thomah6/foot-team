@@ -5,10 +5,9 @@ const props = defineProps({
   form: Object,
   errors: Object,
   processing: Boolean,
-  news: Object, // On passe la news actuelle pour l'aperçu
+  news: Object,
 });
 
-// Pour la prévisualisation de l'image uploadée
 const imagePreview = ref(props.news?.image ? `/storage/${props.news.image}` : null);
 
 const handleFileChange = (event) => {
@@ -26,7 +25,6 @@ const handleFileChange = (event) => {
   }
 };
 
-// Si la news change dynamiquement, on met à jour l'aperçu
 watch(() => props.news, (newVal) => {
   imagePreview.value = newVal?.image ? `/storage/${newVal.image}` : null;
 });
@@ -36,6 +34,22 @@ watch(() => props.news, (newVal) => {
   <div class="space-y-6">
 
     <!-- IMAGE UPLOAD -->
+<<<<<<< HEAD
+    <div class="space-y-3">
+      <label class="block font-medium text-gray-700 dark:text-gray-300">Image</label>
+
+      <!-- Preview -->
+      <div v-if="imagePreview" class="mb-2">
+        <img :src="imagePreview" class="h-48 w-full object-cover rounded-lg border-2 border-gray-200 dark:border-gray-700 shadow-sm" alt="Aperçu">
+      </div>
+
+      <input type="file" accept="image/*" @change="handleFileChange" 
+        class="block w-full text-sm text-gray-600 dark:text-gray-300
+               file:mr-4 file:py-2 file:px-4 file:rounded-lg
+               file:border-0 file:text-sm file:font-medium
+               file:bg-citron-500 file:text-white
+               hover:file:bg-citron-600 transition-all" />
+=======
     <div class="space-y-2">
       <label class="font-semibold text-gray-700 dark:text-gray-300">Image</label>
 
@@ -48,30 +62,55 @@ watch(() => props.news, (newVal) => {
                      border border-gray-300 dark:border-gray-600 rounded-lg cursor-pointer
                      file:bg-green-600 file:text-white file:border-none file:px-4 file:py-2 file:rounded-lg 
                      hover:file:bg-green-700 transition">
+>>>>>>> bc0c59620896928c4b8142a64de53d68a350f302
 
-      <div v-if="errors.image" class="text-red-500 text-sm">
+      <div v-if="errors.image" class="text-red-500 dark:text-red-400 text-sm">
         {{ errors.image }}
       </div>
+      
+      <p class="text-xs text-gray-500 dark:text-gray-400">
+        Taille maximale : 5MB. Formats : JPG, PNG, GIF.
+      </p>
     </div>
 
     <!-- Title -->
-    <div class="space-y-1">
+    <div class="space-y-2">
       <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-        Titre
+        Titre *
       </label>
+<<<<<<< HEAD
+      <input v-model="form.title" type="text" required
+        class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600
+               bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100
+               focus:ring-2 focus:ring-citron-500 focus:border-citron-500 dark:focus:ring-citron-600 
+               transition-all duration-200" 
+        placeholder="Titre de l'actualité" />
+      <p v-if="errors.title" class="text-sm text-red-500 dark:text-red-400">{{ errors.title }}</p>
+=======
       <input v-model="form.title" type="text" name="title"
         class="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-700
                bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100
                focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" />
 
       <p v-if="errors.title" class="text-sm text-red-500">{{ errors.title }}</p>
+>>>>>>> bc0c59620896928c4b8142a64de53d68a350f302
     </div>
 
     <!-- Content -->
-    <div class="space-y-1">
+    <div class="space-y-2">
       <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-        Contenu
+        Contenu *
       </label>
+<<<<<<< HEAD
+      <textarea v-model="form.content" required
+        class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600
+               bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100
+               min-h-[200px]
+               focus:ring-2 focus:ring-citron-500 focus:border-citron-500 dark:focus:ring-citron-600
+               transition-all duration-200"
+        placeholder="Contenu de l'actualité..."></textarea>
+      <p v-if="errors.content" class="text-sm text-red-500 dark:text-red-400">{{ errors.content }}</p>
+=======
       <textarea v-model="form.content" name="content"
         class="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-700
                bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100
@@ -79,14 +118,16 @@ watch(() => props.news, (newVal) => {
                focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
       </textarea>
       <p v-if="errors.content" class="text-sm text-red-500">{{ errors.content }}</p>
+>>>>>>> bc0c59620896928c4b8142a64de53d68a350f302
     </div>
 
     <!-- Published toggle -->
-    <div class="flex items-center gap-3">
+    <div class="flex items-center gap-3 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
       <input id="published" type="checkbox" v-model="form.is_published"
-        class="h-4 w-4 rounded border-gray-300 dark:border-gray-600
-               text-blue-600 focus:ring-blue-500" />
-      <label for="published" class="text-gray-700 dark:text-gray-300">
+        class="h-5 w-5 rounded border-gray-300 dark:border-gray-600
+               text-citron-500 focus:ring-citron-500 dark:focus:ring-citron-600
+               transition-colors duration-200" />
+      <label for="published" class="text-gray-700 dark:text-gray-300 font-medium">
         Publier cette actualité
       </label>
     </div>

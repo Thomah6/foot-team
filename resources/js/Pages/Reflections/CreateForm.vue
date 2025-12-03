@@ -24,7 +24,7 @@
         name="contenu"
         v-model="form.contenu"
         rows="5"
-        class="cursor-custom-icon w-full p-4 border-2 border-gray-300 dark:border-gray-600 rounded-xl focus:ring-citron-500 focus:border-citron-500 transition duration-200 resize-none text-gray-700 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 font-medium bg-gray-50 dark:bg-gray-700"
+        class="cursor-custom-icon w-full p-4 border-2 border-gray-300 dark:border-gray-600 rounded-xl focus:border-lime-500 focus:border-citron-500 transition duration-200 resize-none text-gray-700 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 font-medium bg-gray-50 dark:bg-gray-700"
         placeholder="Écrivez ce qui vous vient à l'esprit... (500 caractères max)"
         maxlength="500"
       ></textarea>

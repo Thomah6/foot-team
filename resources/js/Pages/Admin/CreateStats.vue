@@ -1,15 +1,14 @@
 <script setup>
-import { useForm } from '@inertiajs/vue3';
+import { useForm,router } from '@inertiajs/vue3';
 import { ref } from 'vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
- 
+
 const props = defineProps({
   users: Array,
 });
- 
+
 // 🔥 Message affiché après enregistrement
 const pendingMessage = ref('');
- 
 // 🔥 Formulaire Inertia
 const form = useForm({
   user_id: '',
@@ -19,7 +18,6 @@ const form = useForm({
   matches_played: '',
   date: '',
 });
- 
 // 🔥 Soumission + reset + message
 const submit = () => {
   form.post(route('admin.stats.store'), {
@@ -28,15 +26,15 @@ const submit = () => {
     onSuccess: () => {
       pendingMessage.value =
         "Statistique envoyée, en attente de validation par l'administrateur.";
- 
-      // Réinitialise proprement tous les champs
-      form.reset();
-    },
-  });
+        
+            // Réinitialise proprement tous les champs
+            form.reset();
+            router.visit('/dashboard');
+    }
+});
 };
 </script>
- 
- 
+
 <template>
 <AuthenticatedLayout>
  
@@ -47,7 +45,7 @@ const submit = () => {
  
  
          <div class=" flex-1">
-  <h1 class="text-center text-3xl font-bold mb-8 text-gray-800">
+  <h1 class="text-center text-3xl font-bold mb-8 text-gray-800 text-white">
     Statistique des joueurs
   </h1>
  
@@ -56,18 +54,11 @@ const submit = () => {
     <h2 class="text-xl font-semibold mb-6 text-gray-700">
       Ajouter une Statistique
     </h2>
- 
-    <!-- Flash success -->
-    <div v-if="$page.props.flash?.success" class="mb-4 p-3 rounded-md bg-green-50 text-green-700 border border-green-200">
-      {{ $page.props.flash.success }}
-    </div>
+    
  
   <div v-if="pendingMessage" class="p-4 mb-4 bg-yellow-100 text-yellow-700 rounded-md">
   {{ pendingMessage }}
 </div>
- 
- 
- 
     <form @submit.prevent="submit" class="space-y-5">
  
       <!-- FIELD TEMPLATE -->

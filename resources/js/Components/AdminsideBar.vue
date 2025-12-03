@@ -39,25 +39,6 @@ const menu = computed(() => {
     if (isAdmin()) {
         items.push(
             {
-                label: "Membres",
-                icon: "fas fa-user-friends",
-                link: route("admin.members.index"),
-                active: route().current("admin.members.index"),
-            },
-
-        {
-            label: 'Stats des membres',
-            icon: 'fas fa-chart-bar',
-            link: route('bureau.stats.index', [], false),
-            active: route().current('bureau.stats.index')
-        },
-            {
-                label: "Statistiques équipes",
-                icon: "fas fa-chart-line",
-                link: route("admin.team-stats.index"),
-                active: route().current("admin.team-stats.*"),
-            },
-            {
                 label: "Identité visuelle",
                 icon: "fas fa-chart-pie",
                 link: route("admin.identity"),
@@ -65,7 +46,8 @@ const menu = computed(() => {
             },
             { label: "Membres", icon: "fas fa-user-friends", link: route("admin.members.index"), active: route().current("admin.members.index") },
             { label: "Statistiques équipes", icon: "fas fa-chart-line", link: route("admin.team-stats.index"), active: route().current("admin.team-stats.*") },
-            { label: "Identité visuelle", icon: "fas fa-chart-pie", link: route("admin.identity"), active: route().current("admin.identity*") }
+            { label: "Identité visuelle", icon: "fas fa-chart-pie", link: route("admin.identity"), active: route().current("admin.identity*") },
+           
         );
     }
 
@@ -96,12 +78,13 @@ const handleImageError = (event) => {
 </script>
 
 <template>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     <!-- Font Awesome CDN -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 
     <!-- Overlay mobile -->
     <div v-if="isOpen" @click="closeMenu" class="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-40"></div>
-
     <aside class="flex flex-col p-4 lg:p-6 font-inter bg-white dark:bg-gray-900 h-full overflow-y-auto border-r border-gray-200 dark:border-gray-800">
         <!-- User Card -->
         <div class="mb-6 lg:mb-8">

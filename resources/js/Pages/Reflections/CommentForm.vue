@@ -1,11 +1,11 @@
 <template>
     <div class="mt-10">
-        <h3 class="text-2xl font-bold text-gray-800 dark:text-citron-50 mb-6 border-b pb-3 border-gray-200 dark:border-gray-700">
+        <h3 class="text-2xl font-bold text-gray-800 dark:text-lime-500 mb-6 border-b pb-3 border-gray-200 dark:border-gray-700">
           Commentaires ({{ reflection.comments.length }})
         </h3>
 
         <div v-if="$page.props.auth.user" class="mb-8 p-6 bg-gray-50 dark:bg-gray-800 rounded-xl shadow-inner">
-            <h4 class="font-semibold mb-3 text-gray-700 dark:text-citron-200">Ajouter un commentaire</h4>
+            <h4 class="font-semibold mb-3 text-gray-700 dark:text-lime-500">Ajouter un commentaire</h4>
             <textarea
                 name="content"
                 v-model="form.content"

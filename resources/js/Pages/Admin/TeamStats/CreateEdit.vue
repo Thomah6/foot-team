@@ -51,7 +51,7 @@ const submit = () => {
             <!-- Header -->
             <div class="mb-6 bg-white rounded-lg shadow p-4 flex items-center justify-between">
                 <div>
-                    <h1 class="text-2xl font-extrabold text-sky-900">{{ isEditing ? 'Modifier les stats' : 'Ajouter des stats' }}</h1>
+                    <h1 class="text-2xl font-extrabold text-emerald-900">{{ isEditing ? 'Modifier les stats' : 'Ajouter des stats' }}</h1>
                     <p class="text-sm text-gray-600 mt-1">{{ isEditing ? 'Mettez à jour les résultats de l\'équipe' : 'Enregistrer les nouveaux résultats de l\'équipe' }}</p>
                 </div>
                 <Link :href="route('admin.team-stats.index')" class="inline-flex items-center gap-2 px-3 py-2 bg-sky-50 text-sky-800 rounded">
@@ -66,7 +66,7 @@ const submit = () => {
                     <h2 class="text-md font-semibold text-gray-700 mb-3">Équipe</h2>
                     <div>
                         <label class="block text-sm font-medium text-gray-600 mb-2">Sélectionner l'équipe</label>
-                        <select v-model="form.team_id" :disabled="isEditing" class="w-full px-3 py-2 border rounded-lg bg-white focus:ring-2 focus:ring-sky-300">
+                        <select v-model="form.team_id" :disabled="isEditing" class="w-full px-3 py-2 border rounded-lg bg-white focus:ring-2 focus:ring-emerald-300">
                             <option value="">-- Choisir une équipe --</option>
                             <option v-for="team in teams" :key="team.id" :value="team.id">{{ team.name }}</option>
                         </select>
@@ -84,7 +84,7 @@ const submit = () => {
                         </label>
                         <input v-model="form.month" type="date" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg
                    bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white
-                   focus:ring-2 focus:ring-blue-500 focus:border-transparent transition" />
+                   focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition" />
                         <InputError :message="form.errors.month" class="mt-2" />
                         <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
                             Les données statistiques couvriront tout le mois sélectionné
@@ -96,8 +96,8 @@ const submit = () => {
                 <TeamStatsForm v-model="statsData" />
 
                 <!-- Section Résumé -->
-                <div class="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900 dark:to-indigo-900 
-                  rounded-lg shadow p-4 md:p-6 border border-blue-200 dark:border-blue-700">
+                <div class="bg-gradient-to-r from-lime-50 to-emerald-50 dark:from-lime-900 dark:to-emerald-900
+                  rounded-lg shadow p-4 md:p-6 border border-lime-200 dark:border-lime-700">
                     <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
                         <span class="text-xl mr-2">📊</span>
                         Résumé des données
@@ -124,7 +124,7 @@ const submit = () => {
                         </div>
                         <div>
                             <p class="text-xs text-gray-600 dark:text-gray-400">Total</p>
-                            <p class="text-2xl font-bold text-blue-600 dark:text-blue-400">
+                            <p class="text-2xl font-bold text-emerald-600 dark:text-emerald-400">
                                 {{ totalMatches }}
                             </p>
                         </div>
@@ -145,8 +145,8 @@ const submit = () => {
 
                 <!-- Boutons d'action -->
                 <div class="flex flex-col sm:flex-row gap-3 sm:justify-end">
-                    <Link :href="route('admin.team-stats.index')" class="px-4 py-2 text-sm font-medium text-sky-800 bg-white rounded border">Annuler</Link>
-                    <button type="submit" :disabled="form.processing" class="px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-sky-900 to-yellow-500 rounded shadow">
+                    <Link :href="route('admin.team-stats.index')" class="px-4 py-2 text-sm font-medium text-emerald-800 bg-white rounded border">Annuler</Link>
+                    <button type="submit" :disabled="form.processing" class="px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-lime-500 to-emerald-500 rounded shadow">
                         <span v-if="form.processing" class="flex items-center justify-center"><span class="animate-spin mr-2">⏳</span>Traitement...</span>
                         <span v-else>{{ isEditing ? '✏️ Mettre à jour' : '✅ Ajouter les stats' }}</span>
                     </button>

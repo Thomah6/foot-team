@@ -6,14 +6,14 @@
             <div class="max-w-4xl w-full lg:w-1/2 mx-auto py-10 px-4 sm:px-6 lg:px-8">
 
                 <!-- CARD REFLECTION STYLE FOOT -->
-                <div class="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-2xl border-l-8 border-lime-500 dark:border-lime-500 mb-10 relative">
+                <div class="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-2xl border-l-8 border-lime-500 dark:border-white mb-10 relative">
 
                     <!-- Étiquette style match -->
                     <div class="absolute top-4 right-4 bg-citron-500 dark:bg-citron-600 text-lime-500 text-xs px-3 py-1 rounded-full shadow">
                         RÉFLEXION
                     </div>
 
-                    <blockquote class="text-xl lg:text-3xl font-serif text-gray-900 dark:text-lime-500 italic mb-6 border-l-4 border-lime-500 dark:border-lime-500 pl-4">
+                    <blockquote class="text-xl lg:text-3xl font-serif text-gray-900 dark:text-white italic mb-6 border-l-4 border-lime-500 dark:border-white pl-4">
                         "{{ reflection.contenu }}"
                     </blockquote>
 
@@ -70,22 +70,22 @@
                             <p class="text-sm font-semibold text-gray-700 dark:text-citron-200 mb-3">⏱️ Temps restant pour voter:</p>
                             <div class="flex gap-4 justify-center">
                                 <div class="flex flex-col items-center">
-                                    <span class="text-2xl font-bold text-citron-600 dark:text-citron-300">{{ String(timeRemaining.days).padStart(2, '0') }}</span>
+                                    <span class="text-2xl font-bold text-citron-600 dark:text-lime-500">{{ String(timeRemaining.days).padStart(2, '0') }}</span>
                                     <span class="text-xs text-gray-600 dark:text-citron-300">jour(s)</span>
                                 </div>
                                 <div class="text-2xl text-gray-400 dark:text-gray-500">:</div>
                                 <div class="flex flex-col items-center">
-                                    <span class="text-2xl font-bold text-citron-600 dark:text-citron-300">{{ String(timeRemaining.hours).padStart(2, '0') }}</span>
+                                    <span class="text-2xl font-bold text-citron-600 dark:text-white">{{ String(timeRemaining.hours).padStart(2, '0') }}</span>
                                     <span class="text-xs text-gray-600 dark:text-citron-300">h</span>
                                 </div>
                                 <div class="text-2xl text-gray-400 dark:text-gray-500">:</div>
                                 <div class="flex flex-col items-center">
-                                    <span class="text-2xl font-bold text-citron-600 dark:text-citron-300">{{ String(timeRemaining.minutes).padStart(2, '0') }}</span>
+                                    <span class="text-2xl font-bold text-citron-600 dark:text-lime-500">{{ String(timeRemaining.minutes).padStart(2, '0') }}</span>
                                     <span class="text-xs text-gray-600 dark:text-citron-300">min</span>
                                 </div>
                                 <div class="text-2xl text-gray-400 dark:text-gray-500">:</div>
                                 <div class="flex flex-col items-center">
-                                    <span class="text-2xl font-bold text-citron-600 dark:text-citron-300">{{ String(timeRemaining.seconds).padStart(2, '0') }}</span>
+                                    <span class="text-2xl font-bold text-citron-600 dark:text-white">{{ String(timeRemaining.seconds).padStart(2, '0') }}</span>
                                     <span class="text-xs text-gray-600 dark:text-citron-300">sec</span>
                                 </div>
                             </div>
@@ -110,7 +110,7 @@
             <!-- ==================== RIGHT SIDE — COMMENTS ==================== -->
             <div class="scroller mx-auto w-full lg:w-1/2 py-10 px-4 sm:px-6 lg:px-8 overflow-y-scroll h-screen">
 
-                <h2 class="text-3xl font-bold text-gray-900 dark:text-citron-50 mb-6 flex items-center gap-3">
+                <h2 class="text-3xl font-bold text-gray-900 dark:text-green-400 mb-6 flex items-center gap-3">
                     <span class="w-2 h-8 bg-citron-500 dark:bg-citron-400 rounded"></span>
                     Commentaires
                 </h2>
@@ -154,7 +154,7 @@
                                                 @error="handleImageError"
                                             />
                                 <div>
-                                    <p class="font-bold text-gray-800 dark:text-citron-50 text-lg">
+                                    <p class="font-bold text-gray-800 dark:text-green-400 text-lg">
                                         {{ comment.user.name }}
                                     </p>
                                     <p class="text-sm text-gray-500 dark:text-citron-300">

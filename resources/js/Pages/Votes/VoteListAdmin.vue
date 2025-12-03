@@ -80,7 +80,7 @@
                                 </div>
                                 <span
                                     :class="{
-                                        'text-green-600 dark:text-green-400 font-semibold': vote.value === 1,
+                                        'text-green-600  dark:text-green-400 font-semibold': vote.value === 1,
                                         'text-red-600 dark:text-red-400 font-semibold': vote.value === -1,
                                     }"
                                 >

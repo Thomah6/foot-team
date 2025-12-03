@@ -23,13 +23,13 @@ const getMedal = (index) => {
 </script>
 
 <template>
-  <div class="bg-white dark:bg-gray-900 rounded-lg shadow-lg overflow-hidden">
+  <div class="bg-white dark:bg-gray-900 rounded-xl shadow-lg overflow-hidden border border-gray-200 dark:border-gray-700">
     <!-- Header -->
-    <div class="bg-gradient-to-r from-blue-600 to-blue-800 p-6">
+    <div class="bg-gradient-to-r from-citron-600 to-citron-800 p-6">
       <h2 class="text-2xl md:text-3xl font-bold text-white">
         🏆 Classement des Équipes
       </h2>
-      <p class="text-blue-100 mt-1">
+      <p class="text-citron-100 mt-1">
         {{ monthLabel }}
       </p>
     </div>
@@ -65,7 +65,7 @@ const getMedal = (index) => {
             v-for="(stat, index) in stats"
             :key="stat.team.id"
             class="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition"
-            :class="{ 'bg-yellow-50 dark:bg-yellow-900': index === 0 }"
+            :class="{ 'bg-citron-50 dark:bg-citron-900/20': index === 0 }"
           >
             <td class="px-6 py-4">
               <div class="text-lg font-bold text-gray-900 dark:text-white">
@@ -77,7 +77,7 @@ const getMedal = (index) => {
             </td>
             <td class="px-6 py-4">
               <div class="flex justify-center gap-2 text-sm font-medium">
-                <span class="px-2 py-1 bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 rounded">
+                <span class="px-2 py-1 bg-citron-100 dark:bg-citron-900 text-citron-800 dark:text-citron-200 rounded">
                   {{ stat.wins }}V
                 </span>
                 <span class="px-2 py-1 bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200 rounded">
@@ -91,7 +91,7 @@ const getMedal = (index) => {
             <td class="px-6 py-4 text-center font-semibold text-gray-900 dark:text-white">
               {{ stat.total_matches }}
             </td>
-            <td class="px-6 py-4 text-center font-bold text-blue-600 dark:text-blue-400">
+            <td class="px-6 py-4 text-center font-bold text-citron-600 dark:text-citron-400">
               {{ stat.points }}
             </td>
             <td class="px-6 py-4 text-center">
@@ -109,7 +109,7 @@ const getMedal = (index) => {
           v-for="(stat, index) in stats"
           :key="stat.team.id"
           class="p-4"
-          :class="{ 'bg-yellow-50 dark:bg-yellow-900': index === 0 }"
+          :class="{ 'bg-citron-50 dark:bg-citron-900/20': index === 0 }"
         >
           <div class="flex items-start justify-between mb-3">
             <div>
@@ -121,7 +121,7 @@ const getMedal = (index) => {
               </p>
             </div>
             <div class="text-right">
-              <p class="text-xl font-bold text-blue-600 dark:text-blue-400">
+              <p class="text-xl font-bold text-citron-600 dark:text-citron-400">
                 {{ stat.points }} pts
               </p>
               <p class="text-sm text-gray-600 dark:text-gray-400">
@@ -135,9 +135,9 @@ const getMedal = (index) => {
           </p>
 
           <div class="grid grid-cols-3 gap-2 mb-3">
-            <div class="bg-green-100 dark:bg-green-900 p-2 rounded text-center">
-              <p class="text-xs text-green-700 dark:text-green-300">Victoires</p>
-              <p class="text-lg font-bold text-green-900 dark:text-green-100">
+            <div class="bg-citron-100 dark:bg-citron-900 p-2 rounded text-center">
+              <p class="text-xs text-citron-700 dark:text-citron-300">Victoires</p>
+              <p class="text-lg font-bold text-citron-900 dark:text-citron-100">
                 {{ stat.wins }}
               </p>
             </div>

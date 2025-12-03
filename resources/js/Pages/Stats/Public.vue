@@ -17,16 +17,18 @@ const format = (date) => {
 </script>
 
 <template>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
     <div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-8">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             
             <!-- Header -->
-            <div class="text-center mb-12">
-                <h1 class="text-5xl font-bold text-gray-900 mb-4">
-                    <i class="fas fa-chart-line text-blue-600 mr-3"></i>
+            <div class="text-center mb-8 sm:mb-12">
+                <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-2 sm:mb-4">
+                    <i class="fas fa-chart-line text-blue-600 mr-2 sm:mr-3"></i>
                     Stats du Club
                 </h1>
-                <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                <p class="text-sm sm:text-base md:text-xl text-gray-600 max-w-3xl mx-auto">
                     Suivez les performances des joueurs et les statistiques du club
                 </p>
             </div>
@@ -92,13 +94,13 @@ const format = (date) => {
                              class="w-12 h-12 rounded-full object-cover" />
                         
                         <div class="flex-1">
-                            <p class="font-semibold text-lg">{{ buuteur.name }}</p>
-                            <p class="text-sm text-gray-600">{{ buuteur.pseudo }}</p>
+                            <p class="font-semibold text-lg">{{ buteur.name }}</p>
+                            <p class="text-sm text-gray-600">{{ buteur.pseudo }}</p>
                         </div>
                         
                         <!-- Stats -->
                         <div class="text-right">
-                            <p class="text-2xl font-bold text-blue-600">{{ buuteur.total_goals }}</p>
+                            <p class="text-2xl font-bold text-blue-600">{{ buteur.total_goals }}</p>
                             <p class="text-sm text-gray-600">buts</p>
                         </div>
                     </div>

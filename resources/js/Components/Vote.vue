@@ -1,20 +1,20 @@
 <template>
-    <div class="vote-component p-4">
-        <h2 class="text-lg font-bold mb-4 text-center">Cast Your Vote</h2>
+    <div class="vote-component p-4 bg-white dark:bg-gray-800 rounded-xl shadow-lg  dark:border-gray-700">
+        <h2 class="text-lg font-bold mb-4 text-center text-gray-800 dark:text-gray-100">Cast Your Vote</h2>
         <div v-if="!isVoteEnded" class="grid grid-cols-2 gap-4 w-full">
             <div v-for="option in options" :key="option.id" class="vote-option">
                 <label
                     @click="submitVote(option)"
                     :class="{
-                        'bg-green-400 border-green-500':
+                        'bg-citron-100 dark:bg-citron-900 border-citron-500 text-citron-800 dark:text-citron-200':
                             selectedOption === option.id &&
                             option.option === 'POUR',
-                        'bg-red-400 border-red-500':
+                        'bg-red-100 dark:bg-red-900 border-red-500 text-red-800 dark:text-red-200':
                             selectedOption === option.id &&
                             option.option === 'CONTRE',
-                        'bg-gray-100 border-gray-500': selectedOption !== option.id,
+                        'bg-gray-100 dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600': selectedOption !== option.id,
                     }"
-                    class="block border rounded-lg p-4 mb-4 cursor-pointer transition-all"
+                    class="block border-2 rounded-lg p-4 mb-4 cursor-pointer transition-all duration-200 font-semibold mt-[-15px]"
                 >
                     <input
                         type="radio"
@@ -32,7 +32,7 @@
         <button
             v-if="isAdmin && isVoteEnded"
             @click="validateVote"
-            class="w-full bg-blue-500 text-white px-4 py-2 rounded-lg mt-4 text-sm md:text-base"
+            class="w-full bg-citron-500 hover:bg-citron-600 text-white px-4 py-2 rounded-lg mt-4 text-sm md:text-base font-medium transition-colors shadow-sm"
         >
             Validation du vote
         </button>
@@ -96,7 +96,7 @@ const submitVote = (option) => {
 
 const validateVote = () => {
     router.post(route("vote.validate"), {
-        reflection_id: props.reflection.id, // Exemple d'ID de réflexion (à remplacer par une valeur dynamique si nécessaire)
+        reflection_id: props.reflection.id,
     })
 };
 </script>
@@ -106,11 +106,11 @@ const validateVote = () => {
     max-width: 600px;
 }
 .vote-option {
-    transition: background-color 0.3s, border-color 0.3s;
+    transition: all 0.3s ease;
     max-height: 40px;
 }
 .vote-option:hover {
-    background-color: #f0f0f0;
+    transform: translateY(-2px);
 }
 @media (min-width: 768px) {
     .vote-component {
