@@ -145,7 +145,7 @@ class MemberController extends Controller
     {
         $member->update(['is_active' => !$member->is_active]);
 
-        return redirect()->route('members.index')
+        return redirect()->route('admin.members.index')
             ->with('success', 'Statut du membre modifie');
     }
 
