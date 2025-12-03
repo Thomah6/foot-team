@@ -1,18 +1,27 @@
 <script setup>
-import { ref } from 'vue'
-
+import { ref, watch } from 'vue'
 
 const props = defineProps({
-  users: Array
+    users: Array,
+    filters: Object,
 })
-const emit = defineEmits(['filter'])
-const selectedUser = ref('')
-const dateFrom = ref('')
-const dateTo = ref('')
-const selectedType = ref('')
-function applyFilter() {
-  emit('filter', { selectedUser: selectedUser.value, dateFrom: dateFrom.value, dateTo: dateTo.value, selectedType: selectedType.value })
-}
+
+const emit = defineEmits(['filter-change'])
+
+const selectedUser = ref(props.filters.member_id || '')
+const dateFrom = ref(props.filters.date_from || '')
+const dateTo = ref(props.filters.date_to || '')
+const selectedType = ref(props.filters.type || '')
+
+watch([selectedUser, dateFrom, dateTo, selectedType], () => {
+    emit('filter-change', { 
+        selectedUser: selectedUser.value, 
+        dateFrom: dateFrom.value, 
+        dateTo: dateTo.value, 
+        selectedType: selectedType.value 
+    })
+})
+
 </script>
 <template>
     <div class="relative overflow-hidden rounded-2xl bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm border-2 border-lime-200 dark:border-emerald-800/50 p-6 shadow-lg">
@@ -95,18 +104,6 @@ function applyFilter() {
                     </div>
                 </div>
             </div>
-        </div>
-
-        <!-- Apply Filter Button -->
-        <div class="mt-6 pt-4 border-t border-lime-100 dark:border-emerald-900/30">
-            <button @click="applyFilter" 
-                    class="group relative w-full py-3 px-6 bg-gradient-to-r from-lime-500 to-emerald-500 hover:from-lime-600 hover:to-emerald-600 text-white font-bold rounded-xl shadow-lg hover:shadow-emerald-500/30 transform hover:scale-[1.02] active:scale-95 transition-all duration-300 overflow-hidden">
-                <span class="relative z-10 flex items-center justify-center gap-3">
-                    <i class="fas fa-search"></i>
-                    APPLIQUER LES FILTRES
-                </span>
-                <div class="absolute inset-0 bg-gradient-to-r from-lime-600 to-emerald-600 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
-            </button>
         </div>
     </div>
 </template>

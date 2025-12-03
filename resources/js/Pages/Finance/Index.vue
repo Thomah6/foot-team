@@ -8,22 +8,15 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import Toast from "@/Shared/Toast.vue";
 import ConfirmModalFinance from "@/Components/ConfirmModalFinance.vue";
 
-import { ref, watch, onMounted } from "vue";
+import { ref, watch, onMounted, reactive } from "vue";
 import { router, usePage } from "@inertiajs/vue3";
+import { debounce } from 'lodash';
 
 // Props reçues du backend Laravel
 const props = defineProps({
     finances: Object,
     users: Array,
-    filters: {
-        type: Object,
-        default: () => ({
-            member_id: "",
-            date_from: "",
-            date_to: "",
-            type: "",
-        }),
-    },
+    filters: Object,
     soldeCotisations: [Number, String],
     soldeDepenses: [Number, String],
     soldeTotal: [Number, String],
@@ -33,7 +26,26 @@ const props = defineProps({
     pendingDepensesCount: [Number, String],
 });
 
-const filteredfinances = ref(props.finances);
+// Reactive filters object for live filtering
+const filters = reactive({
+    member_id: props.filters.member_id || "",
+    date_from: props.filters.date_from || "",
+    date_to: props.filters.date_to || "",
+    type: props.filters.type || "",
+});
+
+// Debounced function to fetch data from the server
+const debouncedSearch = debounce(() => {
+    router.get(route("finances.index"), filters, {
+        preserveState: true,
+        preserveScroll: true,
+        replace: true,
+    });
+}, 300);
+
+// Watch for changes in filters and trigger the debounced search
+watch(filters, debouncedSearch);
+
 
 // Toast notification (Inertia flash)
 const page = usePage();
@@ -66,33 +78,6 @@ onMounted(() => {
     if (p.flash && p.flash.error) showToast(p.flash.error, "error");
 });
 
-const financesData = ref(props.finances.data || []);
-const links = ref(props.finances.links || []);
-const currentPage = ref(props.finances.current_page || 1);
-const lastPage = ref(props.finances.last_page || 1);
-
-function handleFiltre({ selectedUser, dateFrom, dateTo, selectedType }) {
-    router.get(
-        route("finances.index"),
-        {
-            member_id: selectedUser || "",
-            date_from: dateFrom || "",
-            date_to: dateTo || "",
-            type: selectedType || "",
-            page: 1,
-        },
-        {
-            preserveState: false,
-            preserveScroll: true,
-            onSuccess: (page) => {
-                financesData.value = page.props.finances.data || [];
-                links.value = page.props.finances.links || [];
-                currentPage.value = page.props.finances.current_page || 1;
-                lastPage.value = page.props.finances.last_page || 1;
-            },
-        }
-    );
-}
 
 const showConfirmAll = ref(false);
 const showConfirmAllType = ref("cotisation");
@@ -111,7 +96,6 @@ function confirmValiderTous() {
         {
             onSuccess: (page) => {
                 showConfirmAll.value = false;
-                filteredfinances.value = page.props.finances;
                 if (
                     page.props &&
                     page.props.flash &&
@@ -139,44 +123,30 @@ function cancelValiderTous() {
 }
 
 function onChangePage(pageNumber) {
-    const currentFilters = page.props.filters || props.filters || {};
-
     router.get(
         route("finances.index"),
         {
-            ...currentFilters,
+            ...filters,
             page: pageNumber,
         },
         {
-            preserveState: false,
+            preserveState: true,
             preserveScroll: true,
-            onSuccess: (page) => {
-                financesData.value = page.props.finances.data || [];
-                links.value = page.props.finances.links || [];
-                currentPage.value = page.props.finances.current_page || 1;
-                lastPage.value = page.props.finances.last_page || 1;
-            },
         }
     );
 }
 
 function refreshTable() {
-    const currentFilters = page.props.filters || props.filters || {};
-
     router.get(
         route("finances.index"),
         {
-            ...currentFilters,
-            page: currentPage.value,
+            ...filters,
+            page: props.finances.current_page,
         },
         {
-            preserveState: false,
+            preserveState: true,
             preserveScroll: true,
             onSuccess: (page) => {
-                financesData.value = page.props.finances.data || [];
-                links.value = page.props.finances.links || [];
-                currentPage.value = page.props.finances.current_page || 1;
-                lastPage.value = page.props.finances.last_page || 1;
                 // Display flash messages if present
                 if (
                     page.props &&
@@ -199,6 +169,14 @@ function handleDepense() {
 
 function handleAjustement() {
     router.get(route("finances.createAjustement"));
+}
+
+// Handle filter changes from the child component
+function onFilterChange(payload) {
+    filters.member_id = payload.selectedUser;
+    filters.date_from = payload.dateFrom;
+    filters.date_to = payload.dateTo;
+    filters.type = payload.selectedType;
 }
 
 const role = page.props.auth.user.role;
@@ -261,16 +239,17 @@ const isBureau = role === "bureau";
                 <div class="mb-8">
                     <FinanceFilter
                         :users="props.users"
-                        @filter="handleFiltre"
+                        :filters="filters"
+                        @filter-change="onFilterChange"
                     />
                 </div>
 
                 <div class="mb-12">
                     <FinanceHistoriqueTable
-                        :finances="financesData"
-                        :links="links"
-                        :current-page="currentPage"
-                        :last-page="lastPage"
+                        :finances="props.finances.data"
+                        :links="props.finances.links"
+                        :current-page="props.finances.current_page"
+                        :last-page="props.finances.last_page"
                         @change-page="onChangePage"
                         @refresh-table="refreshTable"
                     />

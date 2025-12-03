@@ -165,7 +165,7 @@ function cancelValider() {
                             <td :class="['px-6 py-4 whitespace-nowrap text-lg font-black', montantClass(finance)]">
                                 <div class="flex items-center gap-2">
                                     <i :class="finance.type === 'dépense' ? 'fas fa-arrow-down' : 'fas fa-arrow-up'"></i>
-                                    {{ finance.montant > 0 ? "+" : "" }}{{ finance.montant }} F
+                                    {{ finance.montant > 0 && finance.type === 'dépense' ? '-' : '+' }} {{ finance.montant }} F
                                 </div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
