@@ -18,7 +18,7 @@ class TeamController extends Controller
         $isAdmin = ($user->role === 'admin') || (method_exists($user, 'hasRole') && $user->hasRole('admin'));
 
         return Inertia::render("Teams/Index", [
-            'teams' => Team::with('users')->get(),
+            'teams' => Team::with('users')->orderBy('created_at', 'desc')->get(),
             'isAdmin' => $isAdmin,
         ]);
     }
@@ -57,14 +57,17 @@ class TeamController extends Controller
     public function destroy(Team $id)
     {
         $id->delete();
-        return back();
+        return redirect()->back()->with('success', 'Equipe supprimé !');
     }
 
     public function affectPage(Team $team)
     {
+        $assignedUserIds = \DB::table('team_user')->pluck('user_id')->toArray();
+        // dd($assignedUserIds);
         $all = User::all();
+        $availlable = $all->whereNotIn('id', $assignedUserIds)->values()->all();
+
         $assigned = $team->users;
-        $availlable = $all->whereNotIn('id', $assigned->pluck('id'))->values()->all();
 
         return inertia('Teams/AffectPage', [
             'team' => $team,

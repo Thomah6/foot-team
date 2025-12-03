@@ -52,10 +52,10 @@ Route::get('/', function () {
     if (auth()->check()) {
         return redirect()->route('dashboard');
     }
-    
+
     // Récupérer l'identité du club depuis la BDD
     $identity = \App\Models\Identity::first();
-    
+
     // Si aucune identité n'existe, utiliser des valeurs par défaut sans créer en BDD
     if (!$identity) {
         $clubData = [
@@ -68,7 +68,7 @@ Route::get('/', function () {
             'logo' => $identity->logo,
         ];
     }
-    
+
     return Inertia::render('Welcome', [
         'clubIdentity' => $clubData
     ]);
@@ -158,7 +158,7 @@ Route::prefix('admin')->name('admin.')->middleware('role:admin')->group(function
             Route::patch('/members/{member}/role', [MemberController::class, 'updateRole'])->name('members.update-role');
         });
 
-  
+
 
 
 
@@ -354,7 +354,7 @@ Route::middleware(['auth', 'is.active'])->group(function () {
 
 // Routes pour les ajustements financiers
 Route::prefix('finances')->group(function () {
-   
+
 });
 
 // Routes pour les suggestions
@@ -428,8 +428,6 @@ Route::middleware(['auth', 'is.active', 'role:admin'])->group(function () {
     Route::patch('/admin/presence/{presence}', [PresenceController::class, 'update'])->name('presence.update');
     Route::get('/admin/presence/monthly-report', [PresenceController::class, 'monthlyReport'])->name('presence.monthlyReport');
 });
-
-
 
 
 // Routes pour les réflexions
