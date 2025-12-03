@@ -3,6 +3,7 @@ import { ref } from 'vue';
 import { useForm, Link } from '@inertiajs/vue3';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 
+
 const props = defineProps({
   member: Object,
 });
@@ -215,40 +216,6 @@ const submit = () => {
             </div>
           </form>
         </div>
-
-        <!-- Status -->
-        <div class="flex items-center gap-3 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
-          <input
-            id="is_active"
-            :checked="form.is_active"
-            @change="form.is_active = $event.target.checked"
-            type="checkbox"
-            class="h-5 w-5 rounded border-gray-300 dark:border-gray-600 text-citron-500 focus:ring-2 focus:ring-citron-500 transition-colors"
-          />
-          <label for="is_active" class="text-sm font-medium text-gray-700 dark:text-gray-300">
-            Compte Actif
-          </label>
-        </div>
-        <p v-if="form.errors.is_active" class="text-sm text-red-500 dark:text-red-400">{{ form.errors.is_active }}</p>
-
-        <!-- Buttons -->
-        <div class="flex gap-3 pt-6 border-t border-gray-200 dark:border-gray-700">
-          <a
-            href="admin/members"
-            class="flex-1 rounded-lg border border-gray-300 dark:border-gray-600 px-4 py-3 text-center font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
-          >
-            Annuler
-          </a>
-          <button
-            type="submit"
-            :disabled="form.processing"
-            class="flex-1 rounded-lg bg-citron-500 hover:bg-citron-600 px-4 py-3 font-medium text-white transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
-          >
-            <span v-if="form.processing" class="h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
-            {{ form.processing ? 'Traitement...' : 'Modifier' }}
-          </button>
-        </div>
-      </form>
     </div>
   </div>
   </AuthenticatedLayout>

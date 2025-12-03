@@ -4,6 +4,7 @@ import { ref, watch, onMounted } from 'vue'
 import { Link, useForm } from '@inertiajs/vue3'
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue'
 
+
 const props = defineProps({
   members: Object,
   filters: Object,
