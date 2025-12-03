@@ -7,25 +7,25 @@
 <template>
 
 <section
-                    class="bg-white dark:bg-[#111a22] rounded-xl shadow-sm border border-gray-200 dark:border-gray-800 p-6 mb-8"
+                    class="bg-white dark:bg-gray-900 rounded-lg sm:rounded-xl shadow-sm border border-gray-200 dark:border-gray-800 p-4 sm:p-6 mb-6 sm:mb-8"
                 >
                     <h2
-                        class="text-gray-900 dark:text-white text-[22px] font-bold leading-tight tracking-[-0.015em] mb-6"
+                        class="text-lg sm:text-xl md:text-2xl text-gray-900 dark:text-white font-bold leading-tight tracking-[-0.015em] mb-6"
                     >
                         Ajouter / Modifier une statistique
                     </h2>
                     <form
-                        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+                        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6"
                     >
                         <!-- Select Player -->
                         <div class="flex flex-col">
                             <label
-                                class="text-gray-800 dark:text-white text-base font-medium leading-normal pb-2"
+                                class="text-xs sm:text-sm md:text-base text-gray-800 dark:text-white font-medium leading-normal pb-2"
                                 for="player"
                                 >Joueur</label
                             >
                             <select
-                                class="form-select w-full rounded-lg text-gray-800 dark:text-white border-gray-300 dark:border-[#324d67] bg-gray-50 dark:bg-[#192633] focus:border-primary focus:ring-primary h-14 p-[15px] text-base font-normal leading-normal"
+                                class="form-select w-full rounded-lg text-gray-800 dark:text-white border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 focus:border-emerald-500 focus:ring-emerald-500 h-10 sm:h-12 px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm font-normal leading-normal"
                                 id="player"
                             >
                                 <option value="">
@@ -39,12 +39,12 @@
                         <!-- Select Match -->
                         <div class="flex flex-col">
                             <label
-                                class="text-gray-800 dark:text-white text-base font-medium leading-normal pb-2"
+                                class="text-xs sm:text-sm md:text-base text-gray-800 dark:text-white font-medium leading-normal pb-2"
                                 for="match"
                                 >Match</label
                             >
                             <select
-                                class="form-select w-full rounded-lg text-gray-800 dark:text-white border-gray-300 dark:border-[#324d67] bg-gray-50 dark:bg-[#192633] focus:border-primary focus:ring-primary h-14 p-[15px] text-base font-normal leading-normal"
+                                class="form-select w-full rounded-lg text-gray-800 dark:text-white border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 focus:border-emerald-500 focus:ring-emerald-500 h-10 sm:h-12 px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm font-normal leading-normal"
                                 id="match"
                             >
                                 <option value="">

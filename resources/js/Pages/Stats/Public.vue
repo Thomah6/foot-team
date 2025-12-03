@@ -23,12 +23,12 @@ const format = (date) => {
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             
             <!-- Header -->
-            <div class="text-center mb-12">
-                <h1 class="text-5xl font-bold text-gray-900 mb-4">
-                    <i class="fas fa-chart-line text-blue-600 mr-3"></i>
+            <div class="text-center mb-8 sm:mb-12">
+                <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-2 sm:mb-4">
+                    <i class="fas fa-chart-line text-blue-600 mr-2 sm:mr-3"></i>
                     Stats du Club
                 </h1>
-                <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                <p class="text-sm sm:text-base md:text-xl text-gray-600 max-w-3xl mx-auto">
                     Suivez les performances des joueurs et les statistiques du club
                 </p>
             </div>

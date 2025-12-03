@@ -275,19 +275,20 @@ handleSearch()
           <table class="w-full border-collapse">
             <thead class="border-b-2 border-lime-200 bg-gradient-to-r from-lime-50 to-emerald-50">
               <tr>
-                <th class="px-6 py-4 text-left text-gray-900 font-bold text-sm sticky left-0 bg-gradient-to-r from-lime-50 to-emerald-50 z-10">
-                  <div class="flex items-center gap-2">
-                    <i class="fas fa-users text-lime-600"></i>
-                    <span>COMBATTANT</span>
+                <th class="px-4 sm:px-6 py-3 sm:py-4 text-left text-gray-900 font-bold text-xs sm:text-sm sticky left-0 bg-gradient-to-r from-lime-50 to-emerald-50 z-10">
+                  <div class="flex items-center gap-1 sm:gap-2">
+                    <i class="fas fa-users text-lime-600 text-xs sm:text-sm"></i>
+                    <span class="hidden sm:inline">COMBATTANT</span>
+                    <span class="sm:hidden">NOM</span>
                   </div>
                 </th>
                 <th
                   v-for="date in monthDates"
                   :key="date"
-                  class="px-4 py-4 text-center text-gray-700 text-xs md:text-sm font-semibold whitespace-nowrap hover:bg-lime-100/50 transition min-w-[80px]"
+                  class="px-2 sm:px-4 py-3 sm:py-4 text-center text-gray-700 text-xs font-semibold whitespace-nowrap hover:bg-lime-100/50 transition min-w-fit sm:min-w-[80px]"
                 >
-                  <div class="flex flex-col items-center gap-1">
-                    <span class="font-bold">{{ formatDateHeader(date).split(' ')[0] }}</span>
+                  <div class="flex flex-col items-center gap-0.5">
+                    <span class="font-bold text-xs">{{ formatDateHeader(date).split(' ')[0] }}</span>
                     <span class="text-xs opacity-75 font-medium">{{ formatDateHeader(date).split(' ')[1] }}</span>
                   </div>
                 </th>
@@ -302,18 +303,19 @@ handleSearch()
                   index % 2 === 0 ? 'bg-lime-50/30' : '',
                 ]"
               >
-                <td class="px-6 py-4 w-[250px] text-gray-900 font-bold text-sm sticky left-0 z-10" :class="[index % 2 === 0 ? 'bg-lime-50/30' : 'bg-white']">
-                  <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-full bg-gradient-to-br from-lime-400 to-emerald-500 flex items-center justify-center text-white text-sm font-bold flex-shrink-0">
+                <td class="px-4 sm:px-6 py-4 w-20 sm:w-[250px] text-gray-900 font-bold text-xs sm:text-sm sticky left-0 z-10" :class="[index % 2 === 0 ? 'bg-lime-50/30' : 'bg-white']">
+                  <div class="flex items-center gap-2 sm:gap-3">
+                    <div class="w-8 sm:w-10 h-8 sm:h-10 rounded-full bg-gradient-to-br from-lime-400 to-emerald-500 flex items-center justify-center text-white text-xs sm:text-sm font-bold flex-shrink-0">
                       {{ row.name.charAt(0).toUpperCase() }}
                     </div>
-                    <span class="truncate">{{ row.name }}</span>
+                    <span class="truncate hidden sm:inline">{{ row.name }}</span>
+                    <span class="truncate sm:hidden text-xs">{{ row.name.substring(0, 8) }}</span>
                   </div>
                 </td>
                 <td
                   v-for="date in monthDates"
                   :key="`${row.id}-${date}`"
-                  class="px-3 py-4 text-center min-w-[80px]"
+                  class="px-2 sm:px-3 py-3 sm:py-4 text-center min-w-fit sm:min-w-[80px] text-xs sm:text-sm"
                 >
                   <PresenceStatusCell
                     :presence="row.presences[date]"
