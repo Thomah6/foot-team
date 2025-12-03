@@ -21,14 +21,18 @@ const rangeStyle = computed(() => {
     const percent = Math.round(((val - min) / (max - min)) * 100);
     // orange when below half, green otherwise
     const mid = min + (max - min) / 2;
-    const fillColor = val < mid ? "#f97316" /* orange-500 */ : "#16a34a" /* emerald-600 */;
+    const fillColor =
+        val < mid ? "#f97316" /* orange-500 */ : "#16a34a"; /* emerald-600 */
     const emptyColor = "rgba(203,213,225,0.35)"; /* slate/neutral light */
-    const thumbGradient = val < mid ? `linear-gradient(180deg,#ffedd5,#fb923c)` : `linear-gradient(180deg,#bbf7d0,#16a34a)`;
+    const thumbGradient =
+        val < mid
+            ? `linear-gradient(180deg,#ffedd5,#fb923c)`
+            : `linear-gradient(180deg,#bbf7d0,#16a34a)`;
 
     return {
         background: `linear-gradient(to right, ${fillColor} 0%, ${fillColor} ${percent}%, ${emptyColor} ${percent}%, ${emptyColor} 100%)`,
-        '--thumb-bg': thumbGradient,
-        '--track-empty': emptyColor,
+        "--thumb-bg": thumbGradient,
+        "--track-empty": emptyColor,
     };
 });
 
@@ -105,24 +109,24 @@ onMounted(() => {
 </script>
 
 <template>
-    <div class="deposit-animate relative overflow-hidden rounded-2xl p-6 border-2 border-lime-200 dark:border-emerald-800/50 bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm shadow-xl">
+    <div class="deposit-animate relative overflow-hidden rounded-2xl p-6 border-2 border-lime-300 dark:border-emerald-800/60 bg-slate-50 dark:bg-gray-900/95 backdrop-blur-sm shadow-xl">
         <!-- Decorative elements -->
         <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-lime-400/10 to-emerald-600/10 rounded-full -translate-y-16 translate-x-16"></div>
         
-        <h2 class="text-xl font-black text-gray-900 dark:text-white mb-2">
+        <h2 class="text-xl font-black text-slate-900 dark:text-white mb-2">
              FAIRE UN DÉPÔT
         </h2>
-        <p class="text-sm text-gray-600 dark:text-gray-400 mb-6">
+        <p class="text-sm text-slate-700 dark:text-gray-400 mb-6">
             Investis dans l'avenir du club. Chaque franc compte !
         </p>
         
         <div class="space-y-6">
             <!-- Amount Display -->
             <div class="text-center">
-                <div class="text-5xl md:text-6xl font-black bg-gradient-to-r from-emerald-700 to-lime-600 dark:from-lime-400 dark:to-emerald-500 bg-clip-text text-transparent">
+                <div class="text-5xl md:text-6xl font-black bg-gradient-to-r from-emerald-800 to-lime-700 dark:from-lime-400 dark:to-emerald-500 bg-clip-text text-transparent">
                     {{ montant }} F
                 </div>
-                <div class="text-sm text-gray-500 dark:text-gray-400 mt-1">FCFA</div>
+                <div class="text-sm text-slate-700 dark:text-gray-400 mt-1">FCFA</div>
             </div>
 
             <!-- Range Slider -->
@@ -137,9 +141,9 @@ onMounted(() => {
                     :style="rangeStyle"
                     class="w-full h-3 rounded-full appearance-none range-custom-thumb"
                 />
-                <div class="flex justify-between text-xs text-gray-500 dark:text-gray-400">
+                <div class="flex justify-between text-xs text-slate-700 dark:text-gray-400">
                     <span>Min: 100 F</span>
-                    <span class="font-bold text-lime-600 dark:text-emerald-400">ÉCHELLE</span>
+                    <span class="font-bold text-emerald-700 dark:text-emerald-400">ÉCHELLE</span>
                     <span>Max: 10 000 F</span>
                 </div>
             </div>
@@ -151,7 +155,7 @@ onMounted(() => {
                     type="text"
                         placeholder="Motivation de ton investissement (optionnel)"
                         maxlength="150"
-                    class="w-full px-4 py-3 bg-gradient-to-r from-white to-lime-50/50 dark:from-gray-800 dark:to-emerald-900/20 border-2 border-lime-200 dark:border-emerald-800/50 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:border-lime-400 dark:focus:border-emerald-500 focus:ring-2 focus:ring-lime-200 dark:focus:ring-emerald-900/30 outline-none transition-all"
+                    class="w-full px-4 py-3 bg-white dark:from-gray-800 dark:to-emerald-900/20 border-2 border-lime-300 dark:border-emerald-800/60 rounded-xl text-slate-900 dark:text-white placeholder-slate-500 dark:placeholder-gray-500 focus:border-emerald-500 dark:focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 dark:focus:ring-emerald-900/30 outline-none transition-all"
                 />
             </div>
 
@@ -179,6 +183,7 @@ onMounted(() => {
     </div>
 </template>
 
+
 <style scoped>
 @keyframes floatDown {
     from {
@@ -199,7 +204,7 @@ onMounted(() => {
     button {
         min-height: 52px;
     }
-    
+
     input[type="range"] {
         min-height: 44px;
     }
@@ -224,9 +229,9 @@ onMounted(() => {
     height: 28px;
     border-radius: 9999px;
     margin-top: -8px; /* center the thumb relative to track height */
-    background: var(--thumb-bg, linear-gradient(180deg,#bbf7d0,#16a34a));
+    background: var(--thumb-bg, linear-gradient(180deg, #bbf7d0, #16a34a));
     border: 3px solid #fff;
-    box-shadow: 0 6px 18px rgba(16,24,40,0.18);
+    box-shadow: 0 6px 18px rgba(16, 24, 40, 0.18);
 }
 .range-custom-thumb::-moz-range-track {
     height: 12px;
@@ -236,9 +241,9 @@ onMounted(() => {
     width: 28px;
     height: 28px;
     border-radius: 9999px;
-    background: var(--thumb-bg, linear-gradient(180deg,#bbf7d0,#16a34a));
+    background: var(--thumb-bg, linear-gradient(180deg, #bbf7d0, #16a34a));
     border: 3px solid #fff;
-    box-shadow: 0 6px 18px rgba(16,24,40,0.18);
+    box-shadow: 0 6px 18px rgba(16, 24, 40, 0.18);
 }
 
 /* Mobile adjustments: slightly larger thumb and centered */
@@ -256,5 +261,4 @@ onMounted(() => {
         height: 14px;
     }
 }
-
 </style>

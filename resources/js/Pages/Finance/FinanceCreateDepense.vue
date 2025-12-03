@@ -1,16 +1,23 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { router, usePage, Link } from '@inertiajs/vue3'
 import Toast from '@/Shared/Toast.vue'
 import ConfirmModalFinance from '@/Components/ConfirmModalFinance.vue'
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue'
 
+const props = defineProps({
+    soldeTotal: {
+        type: Number,
+        required: true
+    }
+})
 
 const montant = ref(0)
 const description = ref('')
 const showConfirm = ref(false)
 const showConfirmLoading = ref(false)
 
+const isSoldeInsuffisant = computed(() => props.soldeTotal <= 0)
 
 // Toast
 const toastVisible = ref(false)
@@ -19,6 +26,12 @@ const toastType = ref('success')
 
 
 function openConfirm() {
+  if (isSoldeInsuffisant.value) {
+    toastMessage.value = 'Le solde est insuffisant pour enregistrer une nouvelle dépense.'
+    toastType.value = 'error'
+    toastVisible.value = true
+    return
+  }
   if (!montant.value || !description.value) {
     toastMessage.value = 'Veuillez renseigner le montant et la description.'
     toastType.value = 'error'
@@ -53,9 +66,14 @@ function sendDepense() {
     onFinish: () => {
       showConfirmLoading.value = false
     },
-    onError: () => {
+    onError: (errors) => {
       showConfirm.value = false
-      toastMessage.value = 'Une erreur est survenue lors de l\enregistrement.'
+      // Display backend validation error first if it exists
+      if(page.props.flash && page.props.flash.error) {
+        toastMessage.value = page.props.flash.error;
+      } else {
+        toastMessage.value = 'Une erreur est survenue lors de l\enregistrement.'
+      }
       toastType.value = 'error'
       toastVisible.value = true
       showConfirmLoading.value = false
@@ -129,6 +147,15 @@ function cancelDepense() {
                                 placeholder="Pourquoi cette dépense ?"
                             />
                         </div>
+                        
+                        <!-- Warning Message -->
+                        <div v-if="isSoldeInsuffisant" class="!mt-8 p-4 rounded-xl bg-red-100 dark:bg-red-900/30 border border-red-300 dark:border-red-800">
+                            <p class="text-center text-red-800 dark:text-red-200 font-bold">
+                                <i class="fas fa-exclamation-triangle mr-2"></i>
+                                Le solde total est insuffisant pour enregistrer une nouvelle dépense.
+                            </p>
+                        </div>
+
 
                         <!-- Action Buttons -->
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
@@ -142,7 +169,9 @@ function cancelDepense() {
 
                             <button
                                 @click="openConfirm"
+                                :disabled="isSoldeInsuffisant"
                                 class="flex items-center justify-center gap-2 py-3 px-4 bg-gradient-to-r from-red-600 to-red-700 dark:from-red-500 dark:to-red-600 text-white rounded-xl font-bold shadow-lg hover:shadow-red-500/30 transform hover:scale-[1.02] active:scale-95 transition-all"
+                                :class="{ 'opacity-50 cursor-not-allowed': isSoldeInsuffisant }"
                             >
                                 <i class="fas fa-check-circle"></i>
                                 ENREGISTRER

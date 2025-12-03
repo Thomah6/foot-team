@@ -1,19 +1,27 @@
 <script setup>
-import { ref, watch, onMounted } from "vue";
+import { ref, watch, onMounted, computed } from "vue";
 import { router, usePage, Link } from "@inertiajs/vue3";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import Toast from "@/Shared/Toast.vue";
 import ConfirmModalFinance from "@/Components/ConfirmModalFinance.vue";
 
+const props = defineProps({
+    soldeTotal: {
+        type: Number,
+        required: true,
+    },
+});
 
 const montant = ref(0);
 const sens = ref("credit");
 const description = ref("");
 
-
 const showConfirm = ref(false);
 const showConfirmLoading = ref(false);
 
+const isDebitInterdit = computed(() => {
+    return props.soldeTotal <= 0 && sens.value === 'debit';
+});
 
 // Toast
 const page = usePage();
@@ -50,13 +58,19 @@ onMounted(() => {
 });
 
 
-// 1er clic: ouvrir le modal
 function openConfirm() {
+    if (isDebitInterdit.value) {
+        showToast("Le solde est insuffisant pour un ajustement en débit.", "error");
+        return;
+    }
+     if (!montant.value || !description.value) {
+        showToast('Veuillez renseigner tous les champs.', 'error')
+        return
+    }
     showConfirm.value = true;
 }
 
 
-// ConfirmModal: confirmer => envoyer la requête
 function confirmSubmit() {
     showConfirmLoading.value = true;
     router.post(
@@ -72,7 +86,6 @@ function confirmSubmit() {
                 montant.value = 0;
                 sens.value = "credit";
                 description.value = "";
-                // Show toast if flash is provided by the server
                 if (
                     page &&
                     page.props &&
@@ -81,7 +94,6 @@ function confirmSubmit() {
                 ) {
                     showToast(page.props.flash.success, "success");
                 }
-                // Delay navigation briefly so the toast is visible to the user
                 setTimeout(() => {
                     router.visit(route("finances.index"));
                 }, 1500);
@@ -92,6 +104,9 @@ function confirmSubmit() {
             onError: () => {
                 showConfirm.value = false;
                 showConfirmLoading.value = false;
+                 if (page.props.flash && page.props.flash.error) {
+                    showToast(page.props.flash.error, "error");
+                }
             },
         }
     );
@@ -197,8 +212,16 @@ function cancelSubmit() {
                             />
                         </div>
 
-                        <!-- Warning -->
-                        <div class="p-4 rounded-xl bg-gradient-to-r from-yellow-50 to-amber-50/50 dark:from-yellow-900/10 dark:to-amber-900/10 border-2 border-yellow-200 dark:border-yellow-800/50">
+                        <!-- Debit Forbidden Warning -->
+                        <div v-if="isDebitInterdit" class="!mt-8 p-4 rounded-xl bg-red-100 dark:bg-red-900/30 border border-red-300 dark:border-red-800">
+                            <p class="text-center text-red-800 dark:text-red-200 font-bold">
+                                <i class="fas fa-exclamation-triangle mr-2"></i>
+                                Le solde est insuffisant pour un ajustement en débit.
+                            </p>
+                        </div>
+
+                        <!-- General Warning -->
+                        <div v-else class="p-4 rounded-xl bg-gradient-to-r from-yellow-50 to-amber-50/50 dark:from-yellow-900/10 dark:to-amber-900/10 border-2 border-yellow-200 dark:border-yellow-800/50">
                             <div class="flex items-start gap-3">
                                 <i class="fas fa-exclamation-triangle text-yellow-600 dark:text-yellow-400 text-lg mt-0.5"></i>
                                 <div>
@@ -224,6 +247,8 @@ function cancelSubmit() {
 
                             <button
                                 @click="openConfirm"
+                                :disabled="isDebitInterdit"
+                                :class="{ 'opacity-50 cursor-not-allowed': isDebitInterdit }"
                                 class="flex items-center justify-center gap-2 py-3 px-4 bg-gradient-to-r from-purple-600 to-blue-700 dark:from-purple-500 dark:to-blue-600 text-white rounded-xl font-bold shadow-lg hover:shadow-purple-500/30 transform hover:scale-[1.02] active:scale-95 transition-all"
                             >
                                 <i class="fas fa-bolt"></i>
