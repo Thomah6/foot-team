@@ -202,7 +202,8 @@ class ReflectionController extends Controller
     public function openVote($reflection){
          $reflection->update([
             'statut' => 'ouvert',
-        ]);
+            'date_fin_vote'=>now()->addDays(14),
+         ]);
 
         return redirect()->back()
             ->with('success', 'La réflexion a été validée avec succès.');

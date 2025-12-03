@@ -38,20 +38,15 @@ const isAdmin = () => page.props.auth.user.role === "admin";
 </script>
 
 <template>
-  <div class="flex flex-col h-screen bg-gray-100 dark:bg-gray-900 p-4 gap-4">
-
-    <!-- Header -->
-    <div class="flex justify-between items-center mb-4">
-      <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">Actualités</h1>
-      <div></div>
-      <Link 
-        v-if="isAdmin()"
-        :href="route('admin.news.create')" 
-        class="px-4 py-2 sm:px-5 sm:py-2.5 rounded-lg bg-green-600 hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600 transition text-white font-semibold shadow"
-      >
-        Nouvelle actualité
-      </Link>
-    </div>
+  <!-- Header -->
+  <div class="flex items-center justify-between mb-6">
+    <Link 
+      :href="route('admin.news.create')" 
+      class="px-5 py-2 rounded-lg bg-green-600 hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600 transition text-white font-semibold shadow"
+    >
+      Nouvelle actualité
+    </Link>
+  </div>
 
     <!-- Main Content -->
     <div class="flex flex-col md:flex-row flex-1 gap-4 overflow-hidden">
@@ -100,16 +95,14 @@ const isAdmin = () => page.props.auth.user.role === "admin";
           Rédigé par : {{ selected?.user?.name }} • {{ formatDate(selected?.created_at) }}
         </div>
 
-        <!-- ACTIONS -->
-        <div 
-        v-if="isAdmin()"
-        class="flex flex-col sm:flex-row gap-2 sm:gap-4 mt-auto">
-          <Link
-            :href="`/admin/news/${selected?.id}/edit`"
-            class="flex-1 px-4 py-2 sm:px-5 sm:py-2.5 bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 rounded-lg shadow text-white font-semibold transition text-center"
-          >
-            Modifier
-          </Link>
+      <!-- ACTIONS -->
+      <div class="flex gap-4 mt-auto">
+        <Link
+          :href="`/admin/news/${selected?.id}/edit`"
+          class="px-5 py-2 bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 rounded-lg shadow text-white font-semibold transition"
+        >
+          Modifier
+        </Link>
 
           <button
             @click="togglePublish(selected?.id)"
