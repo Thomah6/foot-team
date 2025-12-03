@@ -45,8 +45,8 @@ const submit = () => {
 
 <div class="flex flex-col gap-4">
   <a href="/dashboard"
-     class="self-end px-4 py-2 bg-blue-600 text-white rounded-lg shadow 
-            hover:bg-blue-700 transition font-medium">
+     class="self-end px-4 py-2 bg-green-600 text-white rounded-lg shadow 
+            hover:bg-green-700 transition font-medium">
     Sortir
   </a>
 </div>
@@ -74,7 +74,7 @@ const submit = () => {
       type="text"
       placeholder="Entrez le nom du club"
       class="w-full border border-gray-300 rounded-lg px-4 py-2 
-             focus:outline-none focus:ring-2 focus:ring-blue-500 
+             focus:outline-none focus:ring-2 focus:ring-green-500 
              focus:border-transparent"
       autofocus
     />
@@ -103,8 +103,8 @@ const submit = () => {
              file:mr-4 file:py-2 file:px-4
              file:rounded-full file:border-0
              file:text-sm file:font-semibold
-             file:bg-blue-50 file:text-blue-700
-             hover:file:bg-blue-100"
+             file:bg-green-50 file:text-green-700
+             hover:file:bg-green-100"
     />
 
     <span v-if="form.errors.logo" class="text-red-500 text-sm">
@@ -116,9 +116,7 @@ const submit = () => {
   <button
     type="submit"
     :disabled="form.processing"
-    class="w-full py-2 px-4 bg-blue-600 text-white font-semibold 
-           rounded-lg shadow hover:bg-blue-700 
-           disabled:opacity-50 transition-colors"
+      class="w-full bg-green-500 text-white py-3 rounded-xl hover:bg-green-600 transition font-semibold shadow-md"
   >
     Enregistrer
   </button>

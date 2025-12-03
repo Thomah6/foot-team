@@ -51,7 +51,7 @@ router.visit('/dashboard');
 
 
          <div class=" flex-1">
-  <h1 class="text-center text-3xl font-bold mb-8 text-gray-800">
+  <h1 class="text-center text-3xl font-bold mb-8 text-gray-800 text-white">
     Statistique des joueurs
   </h1>
 
