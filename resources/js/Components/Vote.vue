@@ -1,5 +1,5 @@
 <template>
-    <div class="vote-component p-4 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700">
+    <div class="vote-component p-4 bg-white dark:bg-gray-800 rounded-xl shadow-lg  dark:border-gray-700">
         <h2 class="text-lg font-bold mb-4 text-center text-gray-800 dark:text-gray-100">Cast Your Vote</h2>
         <div v-if="!isVoteEnded" class="grid grid-cols-2 gap-4 w-full">
             <div v-for="option in options" :key="option.id" class="vote-option">
