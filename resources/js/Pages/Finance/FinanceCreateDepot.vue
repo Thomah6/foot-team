@@ -113,11 +113,11 @@ onMounted(() => {
         <!-- Decorative elements -->
         <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-lime-400/10 to-emerald-600/10 rounded-full -translate-y-16 translate-x-16"></div>
         
-        <h2 class="text-xl font-black text-slate-900 dark:text-white mb-2">
+        <h2 class="text-xl font-black text-slate-950 dark:text-white mb-2">
              FAIRE UN DÉPÔT
         </h2>
         <p class="text-sm text-slate-700 dark:text-gray-400 mb-6">
-            Investis dans l'avenir du club. Chaque franc compte !
+            Déclarez un dépôt, un versement, ou une cotisation. Chaque franc compte !
         </p>
         
         <div class="space-y-6">
@@ -150,12 +150,15 @@ onMounted(() => {
 
             <!-- Description -->
             <div>
+                <label class="block text-xs font-bold uppercase tracking-wider text-lime-800 dark:text-emerald-400 mb-2">
+                    Motivation (optionnel)
+                </label>
                 <input
                     v-model="description"
                     type="text"
-                        placeholder="Motivation de ton investissement (optionnel)"
-                        maxlength="150"
-                    class="w-full px-4 py-3 bg-white dark:from-gray-800 dark:to-emerald-900/20 border-2 border-lime-300 dark:border-emerald-800/60 rounded-xl text-slate-900 dark:text-white placeholder-slate-500 dark:placeholder-gray-500 focus:border-emerald-500 dark:focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 dark:focus:ring-emerald-900/30 outline-none transition-all"
+                    placeholder="Motivation de ton investissement"
+                    maxlength="150"
+                    class="w-full px-4 py-3 bg-white dark:bg-gray-800 border-2 border-lime-300 dark:border-emerald-800/60 rounded-xl text-slate-950 dark:text-white placeholder-slate-500 dark:placeholder-gray-400 focus:border-lime-500 dark:focus:border-emerald-500 focus:ring-2 focus:ring-lime-200 dark:focus:ring-emerald-900/40 outline-none transition-all"
                 />
             </div>
 
@@ -182,7 +185,6 @@ onMounted(() => {
         />
     </div>
 </template>
-
 
 <style scoped>
 @keyframes floatDown {

@@ -19,14 +19,8 @@ const showConfirm = ref(false);
 const showConfirmLoading = ref(false);
 
 const isDebitInterdit = computed(() => {
-    return props.soldeTotal <= 0 && sens.value === 'debit';
+    return sens.value === 'debit' && props.soldeTotal < montant.value;
 });
-
-
-
-
-
-
 
 function openConfirm() {
     if (isDebitInterdit.value) {
@@ -37,7 +31,6 @@ function openConfirm() {
     }
     showConfirm.value = true;
 }
-
 
 function confirmSubmit() {
     showConfirmLoading.value = true;
@@ -69,12 +62,10 @@ function confirmSubmit() {
     );
 }
 
-
 function cancelSubmit() {
     showConfirm.value = false;
 }
 </script>
-
 
 <template>
     <AuthenticatedLayout>
@@ -85,28 +76,28 @@ function cancelSubmit() {
                 <!-- Header -->
                 <div class="mb-8">
                     <Link :href="route('finances.index')"
-                          class="inline-flex items-center gap-2 text-lime-600 dark:text-emerald-400 hover:text-lime-700 dark:hover:text-emerald-300 mb-6 transition-colors">
+                          class="inline-flex items-center gap-2 text-lime-700 dark:text-emerald-400 hover:text-lime-800 dark:hover:text-emerald-300 mb-6 transition-colors font-semibold">
                         <i class="fas fa-arrow-left"></i>
                         Retour à la caisse
                     </Link>
                     
-                    <h1 class="text-3xl font-black text-gray-900 dark:text-white mb-2">
+                    <h1 class="text-3xl font-black text-slate-950 dark:text-white mb-2">
                         ⚡ AJUSTEMENT MANUEL
                     </h1>
-                    <p class="text-gray-600 dark:text-gray-400">
+                    <p class="text-slate-700 dark:text-gray-400">
                         Correction directe de la trésorerie - Action réservée
                     </p>
                 </div>
 
                 <!-- Form Card -->
-                <div class="relative overflow-hidden rounded-2xl bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm border-2 border-purple-200 dark:border-purple-800/50 p-6 shadow-xl">
+                <div class="relative overflow-hidden rounded-2xl bg-slate-50 dark:bg-gray-900/95 backdrop-blur-sm border-2 border-purple-300 dark:border-purple-800/60 p-6 shadow-xl">
                     <div class="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-purple-400/10 to-blue-600/10 rounded-full -translate-y-12 translate-x-12"></div>
                     
                     <div class="space-y-6 relative z-10">
                         <!-- Type Selection -->
                         <div>
-                            <label class="block text-sm font-bold text-gray-900 dark:text-white mb-3">
-                                TYPE D'AJUSTEMENT
+                            <label class="block text-sm font-bold text-slate-950 dark:text-white mb-3 uppercase tracking-wider">
+                                Type d'ajustement
                             </label>
                             <div class="grid grid-cols-2 gap-4">
                                 <button
@@ -115,7 +106,7 @@ function cancelSubmit() {
                                         'flex items-center justify-center gap-3 py-3 rounded-xl border-2 font-bold transition-all',
                                         sens === 'credit'
                                             ? 'bg-gradient-to-r from-emerald-500 to-lime-500 border-emerald-400 dark:border-emerald-500 text-white shadow-lg'
-                                            : 'bg-gradient-to-r from-white to-emerald-50/50 dark:from-gray-800 dark:to-emerald-900/20 border-emerald-200 dark:border-emerald-800/50 text-gray-900 dark:text-gray-300 hover:border-emerald-400 dark:hover:border-emerald-500'
+                                            : 'bg-white dark:bg-gray-800 border-emerald-300 dark:border-emerald-800/60 text-slate-950 dark:text-slate-300 hover:border-emerald-400 dark:hover:border-emerald-500'
                                     ]"
                                 >
                                     <i class="fas fa-plus-circle"></i>
@@ -128,7 +119,7 @@ function cancelSubmit() {
                                         'flex items-center justify-center gap-3 py-3 rounded-xl border-2 font-bold transition-all',
                                         sens === 'debit'
                                             ? 'bg-gradient-to-r from-red-500 to-pink-600 border-red-400 dark:border-red-500 text-white shadow-lg'
-                                            : 'bg-gradient-to-r from-white to-red-50/50 dark:from-gray-800 dark:to-red-900/20 border-red-200 dark:border-red-800/50 text-gray-900 dark:text-gray-300 hover:border-red-400 dark:hover:border-red-500'
+                                            : 'bg-white dark:bg-gray-800 border-red-300 dark:border-red-800/60 text-slate-950 dark:text-slate-300 hover:border-red-400 dark:hover:border-red-500'
                                     ]"
                                 >
                                     <i class="fas fa-minus-circle"></i>
@@ -139,17 +130,18 @@ function cancelSubmit() {
 
                         <!-- Amount -->
                         <div>
-                            <label class="block text-sm font-bold text-gray-900 dark:text-white mb-2">
-                                MONTANT DE L'AJUSTEMENT
+                            <label class="block text-sm font-bold text-slate-950 dark:text-white mb-2 uppercase tracking-wider">
+                                <i class="fas fa-coins mr-1 text-purple-600 dark:text-purple-400"></i>
+                                Montant de l'ajustement
                             </label>
                             <div class="relative">
                                 <input
                                     type="number"
                                     v-model.number="montant"
-                                    class="w-full px-4 py-3 pl-12 bg-gradient-to-r from-white to-purple-50/50 dark:from-gray-800 dark:to-purple-900/10 border-2 border-purple-200 dark:border-purple-800/50 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:border-purple-400 dark:focus:border-purple-500 focus:ring-2 focus:ring-purple-200 dark:focus:ring-purple-900/30 outline-none transition-all"
+                                    class="w-full px-4 py-3 pl-12 bg-white dark:bg-gray-800 border-2 border-purple-300 dark:border-purple-800/60 rounded-xl text-slate-950 dark:text-white placeholder-slate-500 dark:placeholder-gray-400 focus:border-purple-500 dark:focus:border-purple-500 focus:ring-2 focus:ring-purple-200 dark:focus:ring-purple-900/40 outline-none transition-all"
                                     placeholder="Ex: 20000"
                                 />
-                                <div class="absolute left-4 top-1/2 -translate-y-1/2 text-purple-500 dark:text-purple-400">
+                                <div class="absolute left-4 top-1/2 -translate-y-1/2 text-purple-600 dark:text-purple-400 pointer-events-none">
                                     <i class="fas fa-coins"></i>
                                 </div>
                             </div>
@@ -157,35 +149,36 @@ function cancelSubmit() {
 
                         <!-- Description -->
                         <div>
-                            <label class="block text-sm font-bold text-gray-900 dark:text-white mb-2">
-                                RAISON DE L'AJUSTEMENT
+                            <label class="block text-sm font-bold text-slate-950 dark:text-white mb-2 uppercase tracking-wider">
+                                <i class="fas fa-pen mr-1 text-purple-600 dark:text-purple-400"></i>
+                                Raison de l'ajustement
                             </label>
                             <input
                                 type="text"
                                 v-model="description"
                                 maxlength="150"
-                                class="w-full px-4 py-3 bg-gradient-to-r from-white to-purple-50/50 dark:from-gray-800 dark:to-purple-900/10 border-2 border-purple-200 dark:border-purple-800/50 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:border-purple-400 dark:focus:border-purple-500 focus:ring-2 focus:ring-purple-200 dark:focus:ring-purple-900/30 outline-none transition-all"
+                                class="w-full px-4 py-3 bg-white dark:bg-gray-800 border-2 border-purple-300 dark:border-purple-800/60 rounded-xl text-slate-950 dark:text-white placeholder-slate-500 dark:placeholder-gray-400 focus:border-purple-500 dark:focus:border-purple-500 focus:ring-2 focus:ring-purple-200 dark:focus:ring-purple-900/40 outline-none transition-all"
                                 placeholder='Ex: "Correction erreur de saisie"'
                             />
                         </div>
 
                         <!-- Debit Forbidden Warning -->
-                        <div v-if="isDebitInterdit" class="!mt-8 p-4 rounded-xl bg-red-100 dark:bg-red-900/30 border border-red-300 dark:border-red-800">
-                            <p class="text-center text-red-800 dark:text-red-200 font-bold">
+                        <div v-if="isDebitInterdit" class="!mt-8 p-4 rounded-xl bg-red-100 dark:bg-red-900/40 border-2 border-red-300 dark:border-red-800">
+                            <p class="text-center text-red-900 dark:text-red-200 font-bold">
                                 <i class="fas fa-exclamation-triangle mr-2"></i>
-                                Le solde est insuffisant pour un ajustement en débit.
+                                Le montant du débit ne peut pas dépasser le solde total disponible.
                             </p>
                         </div>
 
                         <!-- General Warning -->
-                        <div v-else class="p-4 rounded-xl bg-gradient-to-r from-yellow-50 to-amber-50/50 dark:from-yellow-900/10 dark:to-amber-900/10 border-2 border-yellow-200 dark:border-yellow-800/50">
+                        <div v-else class="p-4 rounded-xl bg-amber-100 dark:bg-amber-900/30 border-2 border-amber-300 dark:border-amber-800">
                             <div class="flex items-start gap-3">
-                                <i class="fas fa-exclamation-triangle text-yellow-600 dark:text-yellow-400 text-lg mt-0.5"></i>
+                                <i class="fas fa-exclamation-triangle text-amber-700 dark:text-amber-400 text-lg mt-0.5 flex-shrink-0"></i>
                                 <div>
-                                    <p class="text-sm font-bold text-yellow-800 dark:text-yellow-300">
+                                    <p class="text-sm font-bold text-amber-900 dark:text-amber-300">
                                         ATTENTION : ACTION IRRÉVERSIBLE
                                     </p>
-                                    <p class="text-xs text-yellow-700/80 dark:text-yellow-400/80 mt-1">
+                                    <p class="text-xs text-amber-800 dark:text-amber-400 mt-1">
                                         Cette opération modifie directement la trésorerie sans validation.
                                     </p>
                                 </div>
@@ -196,7 +189,7 @@ function cancelSubmit() {
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
                             <Link
                                 :href="route('finances.index')"
-                                class="flex items-center justify-center gap-2 py-3 px-4 bg-gradient-to-r from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-900 border-2 border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-300 rounded-xl font-bold hover:bg-gray-200 dark:hover:bg-gray-800 transition-all"
+                                class="flex items-center justify-center gap-2 py-3 px-4 bg-white dark:bg-gray-800 border-2 border-slate-300 dark:border-slate-700 text-slate-950 dark:text-slate-300 rounded-xl font-bold hover:bg-slate-100 dark:hover:bg-gray-700 transition-all"
                             >
                                 <i class="fas fa-times"></i>
                                 ANNULER
@@ -224,8 +217,6 @@ function cancelSubmit() {
                 @confirm="confirmSubmit"
                 @cancel="cancelSubmit"
             />
-
-
         </div>
     </AuthenticatedLayout>
 </template>

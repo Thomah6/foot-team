@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch, onMounted, onBeforeUnmount, computed } from "vue";
+import { ref, watch, onBeforeUnmount, computed } from "vue";
 
 const props = defineProps({
     message: { type: String, default: "" },
@@ -19,7 +19,7 @@ function startTimer() {
     clearInterval(progressInterval);
     progress.value = 0;
 
-    if (props.message || props.modelValue) {
+    if (props.modelValue) {
         visible.value = true;
         const duration = Math.max(100, Number(props.duration) || 4000);
         const step = 100 / Math.max(1, Math.floor(duration / 100));
@@ -36,23 +36,14 @@ function startTimer() {
 }
 
 watch(
-    () => props.message,
-    (newVal) => {
-        if (newVal) startTimer();
-    }
-);
-
-watch(
     () => props.modelValue,
     (newVal) => {
         visible.value = newVal;
-        if (newVal) startTimer();
+        if (newVal) {
+            startTimer();
+        }
     }
 );
-
-onMounted(() => {
-    if (props.message) startTimer();
-});
 
 onBeforeUnmount(() => {
     clearTimeout(timer);

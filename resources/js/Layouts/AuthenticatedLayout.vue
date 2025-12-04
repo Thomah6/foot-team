@@ -35,35 +35,33 @@ const toastMessage = ref("");
 const toastType = ref("success");
 
 function showToast(message, type = "success") {
-    toastMessage.value = message;
-    toastType.value = type;
-    toastVisible.value = true;
+    if (message && message.trim() !== "") {
+        toastMessage.value = message;
+        toastType.value = type;
+        toastVisible.value = true;
+    }
 }
 
+// Watch for flash changes to show toast
 watch(
     () => page.props.flash,
-    (flash) => {
-        if (flash) {
-            if (flash.success) {
-                showToast(flash.success, "success");
-            } else if (flash.error) {
-                showToast(flash.error, "error");
+    (newFlash, oldFlash) => {
+        if (newFlash) {
+            if (
+                newFlash.success &&
+                (!oldFlash || oldFlash.success !== newFlash.success)
+            ) {
+                showToast(newFlash.success, "success");
+            } else if (
+                newFlash.error &&
+                (!oldFlash || oldFlash.error !== newFlash.error)
+            ) {
+                showToast(newFlash.error, "error");
             }
         }
     },
     { deep: true }
 );
-
-onMounted(() => {
-    const flash = page.props.flash;
-    if (flash) {
-        if (flash.success) {
-            showToast(flash.success, "success");
-        } else if (flash.error) {
-            showToast(flash.error, "error");
-        }
-    }
-});
 // --- End Toast Logic ---
 
 defineProps({
@@ -175,11 +173,11 @@ defineProps({
                     </div>
 
                     <!-- MOBILE AVATAR -->
-                    <div class="sm:hidden flex items-center">
-                    <ThemeToggle />
+                    <div class="sm:hidden flex items-center space-x-2">
+                        <ThemeToggle />
                         <img
-                            v-if="$page.props.auth.user.avatar"
-                            :src="'/storage/' + $page.props.auth.user.avatar"
+                            v-if="page.props.auth.user.avatar"
+                            :src="'/storage/' + page.props.auth.user.avatar"
                             class="w-8 h-8 rounded-full object-cover"
                             @error="handleImageError"
                         />

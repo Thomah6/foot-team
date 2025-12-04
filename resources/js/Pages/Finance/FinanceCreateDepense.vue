@@ -16,7 +16,7 @@ const description = ref('')
 const showConfirm = ref(false)
 const showConfirmLoading = ref(false)
 
-const isSoldeInsuffisant = computed(() => props.soldeTotal <= 0)
+const isSoldeInsuffisant = computed(() => props.soldeTotal < montant.value)
 
 
 
@@ -135,7 +135,7 @@ function cancelDepense() {
                         <div v-if="isSoldeInsuffisant" class="!mt-8 p-4 rounded-xl bg-red-100 dark:bg-red-900/30 border border-red-300 dark:border-red-800">
                             <p class="text-center text-red-800 dark:text-red-200 font-bold">
                                 <i class="fas fa-exclamation-triangle mr-2"></i>
-                                Le solde total est insuffisant pour enregistrer une nouvelle dépense.
+                                Le montant de la dépense dépasse le solde total disponible.
                             </p>
                         </div>
 
