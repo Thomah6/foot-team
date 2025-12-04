@@ -85,7 +85,7 @@
                     <div class="w-10 h-10 rounded-full bg-citron-500 dark:bg-citron-600 flex items-center justify-center text-white shadow-md hover:bg-citron-600 dark:hover:bg-citron-700 transition mb-1 border border-citron-600 dark:border-citron-500">
                       <i class="fas fa-futbol text-sm"></i>
                     </div>
-                    
+
                     <!-- Nom du joueur -->
                     <p class="text-xs font-semibold text-gray-700 dark:text-citron-200 text-center max-w-[50px] line-clamp-2">
                       {{ player.name }}
@@ -116,7 +116,7 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <!-- Save button -->
               <button
-                class="w-full bg-citron-600 hover:bg-citron-700 dark:bg-citron-500 dark:hover:bg-citron-600 text-white px-6 py-3 rounded-lg transition font-semibold text-sm md:text-base disabled:opacity-50 flex items-center justify-center gap-2"
+                class="w-full bg-blue-500 hover:bg-citron-700 dark:bg-citron-500 dark:hover:bg-citron-600 text-white px-6 py-3 rounded-lg transition font-semibold text-sm md:text-base disabled:opacity-50 flex items-center justify-center gap-2"
                 :disabled="saving"
                 @click="saveAffectation"
               >
@@ -154,7 +154,7 @@
                   class="flex-1 border border-gray-300 dark:border-gray-600 p-3 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-citron-400 dark:focus:ring-citron-500 bg-white dark:bg-gray-700 text-gray-800 dark:text-white transition"
                 />
                 <button
-                  class="bg-citron-600 hover:bg-citron-700 dark:bg-citron-500 dark:hover:bg-citron-600 text-white px-4 py-3 rounded-lg transition font-semibold text-sm whitespace-nowrap disabled:opacity-50"
+                  class="bg-green-500 hover:bg-citron-700 dark:bg-citron-500 dark:hover:bg-citron-600 text-white px-4 py-3 rounded-lg transition font-semibold text-sm whitespace-nowrap disabled:opacity-50"
                   @click="doMercato"
                   :disabled="availablePlayers.length === 0 || !mercatoCount"
                 >
@@ -173,6 +173,7 @@
 import { ref, computed } from 'vue'
 import { router } from '@inertiajs/vue3'
 import AdminsideBar from "@/Components/AdminsideBar.vue";
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 
 const props = defineProps({
   team: Object,
@@ -211,6 +212,7 @@ function dropToAssigned() {
 
 const filteredAvailable = computed(() =>
   availablePlayers.value.filter(p =>
+    !assignedPlayers.value.some(a => a.id === p.id) &&
     p.name.toLowerCase().includes(searchQuery.value.toLowerCase())
   )
 )

@@ -1,11 +1,13 @@
 <script setup>
 import { useForm } from '@inertiajs/vue3';
-import { Link } from '@inertiajs/vue3';
 import { ref, watch } from 'vue';
 
 const props = defineProps({
     identity: Object
 });
+
+// ⚡ Notification success
+const pendingMessage = ref(null);
 
 // ⚡ Formulaire Inertia
 const form = useForm({
@@ -27,16 +29,27 @@ const submit = () => {
     form.post('/admin/identity/update', {
         forceFormData: true,
         onSuccess: () => {
-            console.log('Identité mise à jour');
+
+            // Message succès visible
+            pendingMessage.value = "Identité mise à jour avec succès ✔️";
+
+            // Reset du formulaire
+            form.reset();
         }
     });
 };
-
-
 </script>
+
 
 <template>
 
+<div class="flex flex-col gap-4">
+  <a href="/dashboard"
+     class="self-end px-4 py-2 bg-green-600 text-white rounded-lg shadow 
+            hover:bg-green-700 transition font-medium">
+    Sortir
+  </a>
+</div>
 
   <div class="min-h-screen flex items-center justify-center bg-gray-50 p-6">
     <div class="w-full max-w-md bg-white rounded-xl shadow-md p-8 space-y-6">
@@ -45,62 +58,71 @@ const submit = () => {
       <h1 class="text-2xl font-bold text-gray-800 text-center">
         Identité du Club
       </h1>
+<div v-if="pendingMessage" class="p-4 mb-4 bg-green-100 text-green-700 rounded-md">
+  {{ pendingMessage }}
+</div>
 
       <!-- Nom du club -->
-      <div class="space-y-1">
-        <label class="block font-medium text-gray-700"></label>
-        <input
-          v-model="form.name"
-          type="text"
-          placeholder="Entrez le nom du club"
-          class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent border-0  " 
-          autofocus
+   <form @submit.prevent="submit" class="space-y-6">
 
-        />
-        <div v-if="form.errors.name" class="text-red-500 text-sm">
-          {{ form.errors.name }}
-        </div>
-      </div>
+  <!-- Nom du club -->
+  <label class="block space-y-1">
+    <span class="font-medium text-gray-700">Slogan</span>
 
-      <!-- Logo -->
-      <div class="space-y-2">
-        <label class="block font-medium text-gray-700"></label>
+    <input
+      v-model="form.name"
+      type="text"
+      placeholder="Entrez le nom du club"
+      class="w-full border border-gray-300 rounded-lg px-4 py-2 
+             focus:outline-none focus:ring-2 focus:ring-green-500 
+             focus:border-transparent"
+      autofocus
+    />
 
-        <!-- Aperçu -->
-        <div v-if="preview" class="flex justify-center mb-2">
-          <img 
-            :src="preview" 
-            alt="Logo" 
-            class="w-32 h-32 rounded-full object-cover border border-gray-300 shadow-sm"
-          />
-        </div>
+    <span v-if="form.errors.name" class="text-red-500 text-sm">
+      {{ form.errors.name }}
+    </span>
+  </label>
 
-        <input
-          type="file"
-          @change="e => form.logo = e.target.files[0]"
-          class="block w-full text-sm text-gray-600
-                 file:mr-4 file:py-2 file:px-4
-                 file:rounded-full file:border-0
-                 file:text-sm file:font-semibold
-                 file:bg-blue-50 file:text-blue-700
-                 hover:file:bg-blue-100"
-        />
+  <!-- Logo -->
+  <label class="block space-y-2">
+    <span class="font-medium text-gray-700">Logo du club</span>
 
-        <div v-if="form.errors.logo" class="text-red-500 text-sm">
-          {{ form.errors.logo }}
-        </div>
-      </div>
+    <!-- Aperçu -->
+    <img
+      v-if="preview"
+      :src="preview"
+      alt="Logo"
+      class="w-32 h-32 rounded-full object-cover border border-gray-300 shadow-sm mx-auto"
+    />
 
-      <!-- Bouton -->
-    
-      <button
-        @click="submit"
-        :disabled="form.processing"
-        class="w-full py-2 px-4 bg-blue-600 text-white font-semibold rounded-lg shadow hover:bg-blue-700 disabled:opacity-50 transition-colors"
-      >
-        Enregistrer
-      </button>
-      </div>
+    <input
+      type="file"
+      @change="e => form.logo = e.target.files[0]"
+      class="block w-full text-sm text-gray-600
+             file:mr-4 file:py-2 file:px-4
+             file:rounded-full file:border-0
+             file:text-sm file:font-semibold
+             file:bg-green-50 file:text-green-700
+             hover:file:bg-green-100"
+    />
+
+    <span v-if="form.errors.logo" class="text-red-500 text-sm">
+      {{ form.errors.logo }}
+    </span>
+  </label>
+
+  <!-- Bouton -->
+  <button
+    type="submit"
+    :disabled="form.processing"
+      class="w-full bg-green-500 text-white py-3 rounded-xl hover:bg-green-600 transition font-semibold shadow-md"
+  >
+    Enregistrer
+  </button>
+
+</form>
+    </div>
       </div>
 
 

@@ -44,6 +44,12 @@ public function share(Request $request): array
                 ? $user->getPermissionNames()
                 : [],
         ],
+
+        'flash' => [
+            'success' => $request->session()->get('success'),
+            'error'   => $request->session()->get('error'),
+        ],
+
     ]);
 }
 }

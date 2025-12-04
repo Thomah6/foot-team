@@ -5,7 +5,7 @@
             '': reflection.votes.find(v => v.user_id === $page.props.auth.user?.id),
             'bg-white dark:bg-gray-800': reflection.votes.find(v => v.user_id === $page.props.auth.user?.id) === undefined 
         }"
-        class="p-6 rounded-lg shadow-md hover:shadow-lg transition duration-300 border-l-4 border-citron-500 dark:border-citron-400 relative hover:bg-citron-50 dark:hover:bg-citron-900/20 cursor-pointer"
+        class="p-6 rounded-lg shadow-md hover:shadow-lg transition duration-300 border-l-4 border-citron-500 dark:border-lime-500 relative hover:bg-citron-50 dark:hover:bg-citron-900/20 cursor-pointer"
     >
 
         <!-- Boutons modifier/supprimer si l'utilisateur est le propriétaire -->
@@ -28,12 +28,12 @@
             </button>
         </div>
 
-        <p class="text-gray-700 dark:text-citron-200 italic mb-4 h-10">
+        <p class="text-gray-700 dark:text-white italic mb-4 h-10">
             "{{ truncatedContent }}"
         </p>
 
         <div class="flex items-center justify-between text-sm text-gray-500 dark:text-citron-300 border-t dark:border-gray-700 pt-3">
-            <span class="font-semibold text-citron-600 dark:text-citron-400">— {{ reflection.user.name }}</span>
+            <span class="font-semibold text-citron-600 dark:text-blue-400">— {{ reflection.user.name }}</span>
 
             <span>{{ formattedDate }}...</span>
 

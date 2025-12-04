@@ -9,10 +9,10 @@
               <i class="fas fa-chart-bar text-lime-600 text-2xl"></i>
             </div>
             <div>
-              <h1 class="text-4xl font-bold text-gray-900 tracking-tight bg-gradient-to-r from-lime-600 to-emerald-600 bg-clip-text text-transparent">
+              <h1 class="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 tracking-tight bg-gradient-to-r from-lime-600 to-emerald-600 bg-clip-text text-transparent">
                 Rapport Mensuel
               </h1>
-              <p class="text-gray-600 text-lg font-medium tracking-wide mt-2">
+              <p class="text-xs sm:text-sm md:text-base text-gray-600 font-medium tracking-wide mt-2">
                 Statistiques d'assiduité • Analyse des combattants
               </p>
             </div>
@@ -20,10 +20,11 @@
         </div>
         <Link
           :href="route('presence.index')"
-          class="inline-flex items-center gap-3 bg-gradient-to-r from-lime-500 to-emerald-500 text-white px-8 py-4 rounded-2xl font-bold hover:from-lime-600 hover:to-emerald-600 transition-all duration-300 tracking-wider text-lg shadow-lg hover:shadow-xl hover:shadow-emerald-500/30"
+          class="inline-flex items-center gap-2 sm:gap-3 bg-gradient-to-r from-lime-500 to-emerald-500 text-white px-4 sm:px-8 py-2 sm:py-4 rounded-lg sm:rounded-2xl font-bold hover:from-lime-600 hover:to-emerald-600 transition-all duration-300 tracking-wider text-xs sm:text-base md:text-lg shadow-lg hover:shadow-xl hover:shadow-emerald-500/30"
         >
-          <i class="fas fa-calendar"></i>
-          Retour au Calendrier
+          <i class="fas fa-calendar text-xs sm:text-base"></i>
+          <span class="hidden sm:inline">Retour au Calendrier</span>
+          <span class="sm:hidden">Retour</span>
         </Link>
       </div>
 
@@ -47,7 +48,7 @@
             <p class="text-sm font-semibold text-gray-700">Présences totales</p>
             <i class="fas fa-circle-check text-emerald-500 text-2xl"></i>
           </div>
-          <p class="text-4xl font-bold text-emerald-600">
+          <p class="text-2xl sm:text-3xl md:text-4xl font-bold text-emerald-600">
             {{ calculateTotalPresent() }}
           </p>
         </div>
@@ -56,7 +57,7 @@
             <p class="text-sm font-semibold text-gray-700">Absences totales</p>
             <i class="fas fa-circle-xmark text-red-500 text-2xl"></i>
           </div>
-          <p class="text-4xl font-bold text-red-600">
+          <p class="text-2xl sm:text-3xl md:text-4xl font-bold text-red-600">
             {{ calculateTotalAbsent() }}
           </p>
         </div>
@@ -65,7 +66,7 @@
             <p class="text-sm font-semibold text-gray-700">En attente</p>
             <i class="fas fa-clock text-amber-500 text-2xl"></i>
           </div>
-          <p class="text-4xl font-bold text-amber-600">
+          <p class="text-2xl sm:text-3xl md:text-4xl font-bold text-amber-600">
             {{ calculateTotalPending() }}
           </p>
         </div>
@@ -74,7 +75,7 @@
             <p class="text-sm font-semibold text-gray-700">Taux moyen</p>
             <i class="fas fa-chart-line text-blue-500 text-2xl"></i>
           </div>
-          <p class="text-4xl font-bold text-blue-600">
+          <p class="text-2xl sm:text-3xl md:text-4xl font-bold text-blue-600">
             {{ calculateAveragePercentage() }}<span class="text-lg">%</span>
           </p>
         </div>
