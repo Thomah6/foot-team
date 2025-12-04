@@ -143,7 +143,7 @@ const isBureau = role === "bureau";
                 <!-- Header -->
                 <div class="relative mb-8">
                     <h1 class="text-3xl sm:text-4xl font-black text-gray-900 dark:text-white mb-2">
-                        💰 TRÉSORERIE FC DYNAMO
+                         TRÉSORERIE
                     </h1>
                     <p class="text-lg text-gray-600 dark:text-gray-400">
                         Gestion financière - <span class="text-lime-600 dark:text-emerald-400 font-bold">La force du collectif</span>

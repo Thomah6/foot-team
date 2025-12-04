@@ -10,29 +10,24 @@ class CommentsSuggestionController extends Controller
 {
     public function update(Request $request, SuggestionComment $comment)
     {
-      
-        
+
         $validated = $request->validate([
             'content' => 'required|string|max:1000',
         ]);
 
         $comment->update($validated);
 
-        return response()->json([
-            'success' => true,
-            'comment' => $comment->fresh()
+        $comment->update([
+            'comment' => $request->comment,
         ]);
+
+        return redirect()->back()->with('success', 'Commentaire modifié !');
     }
 
     public function destroy(SuggestionComment $comment)
     {
-        $this->authorize('delete', $comment);
-        
-        $comment->delete();
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Commentaire supprimé avec succès.'
-        ]);
+        $comment->delete();
+        return redirect()->back()->with('success', 'Commentaire supprimé !');
     }
 }

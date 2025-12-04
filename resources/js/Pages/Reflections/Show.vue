@@ -6,21 +6,21 @@
             <div class="max-w-4xl w-full lg:w-1/2 mx-auto py-10 px-4 sm:px-6 lg:px-8">
 
                 <!-- CARD REFLECTION STYLE FOOT -->
-                <div class="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-2xl border-l-8 border-citron-500 dark:border-citron-400 mb-10 relative">
+                <div class="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-2xl border-l-8 border-lime-500 dark:border-white mb-10 relative">
 
                     <!-- Étiquette style match -->
-                    <div class="absolute top-4 right-4 bg-citron-500 dark:bg-citron-600 text-white text-xs px-3 py-1 rounded-full shadow">
+                    <div class="absolute top-4 right-4 bg-citron-500 dark:bg-citron-600 text-lime-500 text-xs px-3 py-1 rounded-full shadow">
                         RÉFLEXION
                     </div>
 
-                    <blockquote class="text-xl lg:text-3xl font-serif text-gray-900 dark:text-citron-50 italic mb-6 border-l-4 border-citron-500 dark:border-citron-400 pl-4">
+                    <blockquote class="text-xl lg:text-3xl font-serif text-gray-900 dark:text-white italic mb-6 border-l-4 border-lime-500 dark:border-white pl-4">
                         "{{ reflection.contenu }}"
                     </blockquote>
 
                     <div class="flex justify-between items-center text-gray-600 dark:text-citron-200 text-sm">
 
                         <!-- Auteur -->
-                        <p class="font-semibold text-citron-600 dark:text-citron-300 flex items-center gap-2">
+                        <p class="font-semibold text-lime-700 dark:text-citron-300 flex items-center gap-2">
                             <span class="inline-block w-2 h-2 bg-citron-400 rounded-full"></span>
                             {{ reflection.user.name }}
                         </p>
@@ -60,31 +60,32 @@
                             :isAdmin="isAdmin"
                             :isVoteEnded="isVoteEnded"
                             :reflection="reflection"
+                            :existingVote="existingVote"
                         />
                     </div>
 
                     <!-- COMPTEUR DE TEMPS RESTANT -->
                     <div v-if="reflection.date_fin_vote" class="mt-6 pt-6 border-t dark:border-gray-700">
-                        <div v-if="!timeRemaining.isEnded" class="bg-gradient-to-r from-citron-50 dark:from-citron-900/30 to-blue-50 dark:to-blue-900/30 p-4 rounded-lg border-l-4 border-citron-500 dark:border-citron-400">
+                        <div v-if="!timeRemaining.isEnded" class="bg-gradient-to-r from-lime-500 dark:from-citron-900/30 to-blue-50 dark:from-lime-500/30 p-4 rounded-lg border-l-4 border-citron-500 dark:border-citron-400">
                             <p class="text-sm font-semibold text-gray-700 dark:text-citron-200 mb-3">⏱️ Temps restant pour voter:</p>
                             <div class="flex gap-4 justify-center">
                                 <div class="flex flex-col items-center">
-                                    <span class="text-2xl font-bold text-citron-600 dark:text-citron-300">{{ String(timeRemaining.days).padStart(2, '0') }}</span>
+                                    <span class="text-2xl font-bold text-citron-600 dark:text-lime-500">{{ String(timeRemaining.days).padStart(2, '0') }}</span>
                                     <span class="text-xs text-gray-600 dark:text-citron-300">jour(s)</span>
                                 </div>
                                 <div class="text-2xl text-gray-400 dark:text-gray-500">:</div>
                                 <div class="flex flex-col items-center">
-                                    <span class="text-2xl font-bold text-citron-600 dark:text-citron-300">{{ String(timeRemaining.hours).padStart(2, '0') }}</span>
+                                    <span class="text-2xl font-bold text-citron-600 dark:text-white">{{ String(timeRemaining.hours).padStart(2, '0') }}</span>
                                     <span class="text-xs text-gray-600 dark:text-citron-300">h</span>
                                 </div>
                                 <div class="text-2xl text-gray-400 dark:text-gray-500">:</div>
                                 <div class="flex flex-col items-center">
-                                    <span class="text-2xl font-bold text-citron-600 dark:text-citron-300">{{ String(timeRemaining.minutes).padStart(2, '0') }}</span>
+                                    <span class="text-2xl font-bold text-citron-600 dark:text-lime-500">{{ String(timeRemaining.minutes).padStart(2, '0') }}</span>
                                     <span class="text-xs text-gray-600 dark:text-citron-300">min</span>
                                 </div>
                                 <div class="text-2xl text-gray-400 dark:text-gray-500">:</div>
                                 <div class="flex flex-col items-center">
-                                    <span class="text-2xl font-bold text-citron-600 dark:text-citron-300">{{ String(timeRemaining.seconds).padStart(2, '0') }}</span>
+                                    <span class="text-2xl font-bold text-citron-600 dark:text-white">{{ String(timeRemaining.seconds).padStart(2, '0') }}</span>
                                     <span class="text-xs text-gray-600 dark:text-citron-300">sec</span>
                                 </div>
                             </div>
@@ -109,7 +110,7 @@
             <!-- ==================== RIGHT SIDE — COMMENTS ==================== -->
             <div class="scroller mx-auto w-full lg:w-1/2 py-10 px-4 sm:px-6 lg:px-8 overflow-y-scroll h-screen">
 
-                <h2 class="text-3xl font-bold text-gray-900 dark:text-citron-50 mb-6 flex items-center gap-3">
+                <h2 class="text-3xl font-bold text-gray-900 dark:text-green-400 mb-6 flex items-center gap-3">
                     <span class="w-2 h-8 bg-citron-500 dark:bg-citron-400 rounded"></span>
                     Commentaires
                 </h2>
@@ -134,11 +135,26 @@
 
                             <div class="flex items-center gap-4">
                                 <img
-                                    :src="comment.user.avatar"
-                                    class="w-12 h-12 rounded-full border-2 border-citron-500 dark:border-citron-400"
-                                />
+                                                v-if="
+                                                    comment.user.
+                                                        avatar &&
+                                                    comment.user
+                                                        .avatar !== ''
+                                                "
+                                                :src="
+                                                    '/storage/' +
+                                                    comment.user
+                                                        .avatar
+                                                "
+                                                :alt="
+                                                    comment.user
+                                                        .name
+                                                "
+                                                class="w-12 h-12 rounded-full object-cover mr-2"
+                                                @error="handleImageError"
+                                            />
                                 <div>
-                                    <p class="font-bold text-gray-800 dark:text-citron-50 text-lg">
+                                    <p class="font-bold text-gray-800 dark:text-green-400 text-lg">
                                         {{ comment.user.name }}
                                     </p>
                                     <p class="text-sm text-gray-500 dark:text-citron-300">
@@ -162,7 +178,7 @@
                                 class="cursor-pointer hover:scale-125 transition"
                                 :class="{'text-green-600 dark:text-green-400': comment.likes.find(l => l.user_id === $page.props.auth.user?.id)}"
                             >
-                                👍
+                                👍: {{ comment.likes.filter(l => l.like === 1).length }}
                             </span>
 
                             <span
@@ -170,7 +186,7 @@
                                 class="cursor-pointer hover:scale-125 transition"
                                 :class="{'text-red-600 dark:text-red-400': comment.likes.find(l => l.user_id === $page.props.auth.user?.id && l.like === -1)}"
                             >
-                                👎
+                                👎: {{ comment.likes.filter(l => l.like === -1).length }}
                             </span>
 
                         </div>

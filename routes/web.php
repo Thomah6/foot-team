@@ -52,10 +52,10 @@ Route::get('/', function () {
     if (auth()->check()) {
         return redirect()->route('dashboard');
     }
-    
+
     // Récupérer l'identité du club depuis la BDD
     $identity = \App\Models\Identity::first();
-    
+
     // Si aucune identité n'existe, utiliser des valeurs par défaut sans créer en BDD
     if (!$identity) {
         $clubData = [
@@ -68,7 +68,7 @@ Route::get('/', function () {
             'logo' => $identity->logo,
         ];
     }
-    
+
     return Inertia::render('Welcome', [
         'clubIdentity' => $clubData
     ]);
@@ -158,7 +158,7 @@ Route::prefix('admin')->name('admin.')->middleware('role:admin')->group(function
             Route::patch('/members/{member}/role', [MemberController::class, 'updateRole'])->name('members.update-role');
         });
 
-  
+
 
 
 
@@ -234,7 +234,7 @@ Route::prefix('admin')->name('admin.')->middleware('role:admin')->group(function
         // Les routes d'administration des actualités sont déjà définies plus haut
     });
 
-
+//stats des membres bureau
 Route::prefix('bureau')->middleware('role:bureau')->group(function () {
     Route::get('/members', [BureauMemberController::class, 'index'])->name('bureau.members.index');
 
@@ -248,20 +248,20 @@ Route::prefix('bureau')->middleware('role:bureau')->group(function () {
         Route::get('/members/{user}/stats', [BureauStatController::class, 'memberStats'])->name('bureau.stats.member');
     });
 });
+//stats des membres admin
+    //         Route::prefix('bureau')->middleware('role:admin')->group(function () {
+    //     Route::get('/members', [BureauMemberController::class, 'index'])->name('bureau.members.index');
 
-            Route::prefix('bureau')->middleware('role:admin')->group(function () {
-        Route::get('/members', [BureauMemberController::class, 'index'])->name('bureau.members.index');
-
-        // Statistiques du bureau
-        Route::prefix('stats')->group(function () {
-            Route::get('/', [BureauStatController::class, 'index'])->name('bureau.stats.index');
-            Route::get('/leaderboards', [BureauStatController::class, 'leaderboards'])->name('bureau.stats.leaderboards');
-            Route::get('/leaderboards/goals', [BureauStatController::class, 'goalLeaders'])->name('bureau.stats.leaderboards.goals');
-            Route::get('/leaderboards/assists', [BureauStatController::class, 'assistLeaders'])->name('bureau.stats.leaderboards.assists');
-            Route::get('/leaderboards/goalkeepers', [BureauStatController::class, 'goalkeeperLeaders'])->name('bureau.stats.leaderboards.goalkeepers');
-            Route::get('/members/{user}/stats', [BureauStatController::class, 'memberStats'])->name('bureau.stats.member');
-        });
-    });
+    //     // Statistiques du bureau
+    //     Route::prefix('stats')->group(function () {
+    //         Route::get('/', [BureauStatController::class, 'index'])->name('bureau.stats.index');
+    //         Route::get('/leaderboards', [BureauStatController::class, 'leaderboards'])->name('bureau.stats.leaderboards');
+    //         Route::get('/leaderboards/goals', [BureauStatController::class, 'goalLeaders'])->name('bureau.stats.leaderboards.goals');
+    //         Route::get('/leaderboards/assists', [BureauStatController::class, 'assistLeaders'])->name('bureau.stats.leaderboards.assists');
+    //         Route::get('/leaderboards/goalkeepers', [BureauStatController::class, 'goalkeeperLeaders'])->name('bureau.stats.leaderboards.goalkeepers');
+    //         Route::get('/members/{user}/stats', [BureauStatController::class, 'memberStats'])->name('bureau.stats.member');
+    //     });
+    // });
 
 Route::prefix('reflections')->group(function () {
     Route::get('/', [ReflectionController::class, 'index'])->name('reflections.index');
@@ -417,6 +417,103 @@ Route::get('/identity', [IdentityController::class, 'index'])->name('admin.ident
 Route::post('/admin/identity/update', [IdentityController::class, 'update'])
     ->name('admin.identity.update');
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+
 Route::post('/admin/identity/delete-identity', [IdentityController::class, 'deleteIdentity'])
     ->name('admin.identity.delete-identity');
 
@@ -426,10 +523,6 @@ Route::middleware(['auth', 'is.active', 'role:admin'])->group(function () {
     Route::patch('/admin/presence/{presence}', [PresenceController::class, 'update'])->name('presence.update');
     Route::get('/admin/presence/monthly-report', [PresenceController::class, 'monthlyReport'])->name('presence.monthlyReport');
 });
-
-
-
- 
 
 
 // Routes pour les réflexions

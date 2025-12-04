@@ -54,6 +54,7 @@ class BureauStatController extends Controller
 		->orderBy('total_goals_against') // fewer goals against = better
 		->take(10)
 		->get();
+        // dd($goalLeaders->toArray());
 		
 
 		return Inertia::render('Bureau/Leaderboards', [

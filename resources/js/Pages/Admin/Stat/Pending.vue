@@ -121,8 +121,8 @@ const toggleSidebarMenu = () => {
                 <!-- Titre central avec bouton hamburger -->
                 <div class="text-center order-first sm:order-none flex items-center gap-6 sm:pb-4">
                     <div>
-                        <div class="text-slate-600 text-lg sm:text-xl font-light tracking-widest mb-1 sm:mb-2">VALIDATION DES STATS</div>
-                        <div class="text-slate-500 text-xs sm:text-sm tracking-widest">PANEL DE CONTRÔLE</div>
+                        <div class="text-slate-600 text-lg sm:text-xl font-light tracking-widest mb-1 sm:mb-2 dark:text-white">VALIDATION DES STATS</div>
+                        <div class="text-slate-500 text-xs sm:text-sm tracking-widest dark:text-white">PANEL DE CONTRÔLE</div>
                     </div>
                 </div>
                 
@@ -132,8 +132,8 @@ const toggleSidebarMenu = () => {
             
             <!-- Titre principal -->
             <div class="text-center mb-8 sm:mb-12">
-                <h1 class="text-3xl sm:text-4xl lg:text-6xl font-thin text-slate-900 tracking-wider mb-3 sm:mb-4">STATS EN ATTENTE</h1>
-                <div class="text-slate-600 text-sm sm:text-lg tracking-widest font-light">Validation des performances des joueurs</div>
+                <h1 class="text-3xl sm:text-4xl lg:text-6xl font-thin text-slate-900 tracking-wider mb-3 sm:mb-4 dark:text-white">STATS EN ATTENTE</h1>
+                <div class="text-slate-600 text-sm sm:text-lg tracking-widest font-light dark:text-white">Validation des performances des joueurs</div>
             </div>
             
             <!-- Bouton retour -->
@@ -141,8 +141,8 @@ const toggleSidebarMenu = () => {
                 <Link href="/admin/stats"
                       class="inline-flex items-center gap-2 sm:gap-3 bg-slate-100 text-slate-700 px-4 sm:px-6 py-2 sm:py-3 rounded-xl sm:rounded-2xl font-light hover:bg-slate-200 transition-all duration-300 tracking-wider border border-slate-300 text-sm sm:text-base">
                     <i class="fas fa-arrow-left text-sm sm:text-base"></i>
-                    <span class="hidden sm:inline">RETOUR TABLEAU DE BORD</span>
-                    <span class="sm:hidden">RETOUR</span>
+                    <span class="hidden sm:inline dark:text-white">RETOUR TABLEAU DE BORD</span>
+                    <span class="sm:hidden dark:text-white">RETOUR</span>
                 </Link>
             </div>
         </div>
@@ -174,7 +174,7 @@ const toggleSidebarMenu = () => {
                             <img :src="stat.user.avatar || 'https://via.placeholder.com/100x100.png/00ee99?text=J'"
                                  class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl object-cover border-2 border-slate-300" />
                             <div>
-                                <h3 class="text-lg sm:text-2xl font-light text-slate-900 mb-1">{{ stat.user.name }}</h3>
+                                <h3 class="text-lg sm:text-2xl font-light text-slate-900 mb-1 ">{{ stat.user.name }}</h3>
                                 <p class="text-slate-600 font-light mb-1 sm:mb-2 text-sm sm:text-base">@{{ stat.user.pseudo }}</p>
                                 <div class="flex items-center gap-2 text-slate-500 text-xs sm:text-sm group relative">
                                     <i class="fas fa-calendar text-xs sm:text-sm"></i>

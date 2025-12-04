@@ -3,11 +3,11 @@
         <Layout>
             <div class="max-w-full mx-auto py-10 px-4 sm:px-6 lg:px-8">
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-h-[95vh]">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-8 auto-rows-min md:auto-rows-max">
 
-                    <div class="max-w-2xs max-h-[95vh] mx-auto md:mx-0 flex flex-col">
+                    <div class="w-full mx-auto md:mx-0 flex flex-col">
                         <CreateForm/>
-                        <h1 class="mt-6 text-xl font-bold text-gray-900 dark:text-citron-50">Mes réflexions</h1>
+                        <h1 class="mt-6 text-xl font-bold text-gray-900 dark:text-lime-500">Mes réflexions</h1>
                         <div v-for="reflection in reflections.filter(reflection => reflection.user_id === $page.props.auth.user?.id)" class="scroller mt-6 max-h-90 overflow-y-auto w-full" :key="reflection.id">
                             <UserReflection 
                             :reflection="reflection" 
@@ -17,12 +17,12 @@
                         </div>
                         
                     </div>
-                    <div class="scroller overflow-y-scroll bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg">
+                    <div class="scroller overflow-y-auto bg-white dark:bg-gray-800 rounded-lg sm:rounded-2xl p-4 sm:p-6 shadow-lg max-h-96 sm:max-h-full md:max-h-[75vh]">
 
-                        <div class="scroller space-y-6 max-h-[900px] overflow-y-auto">
+                        <div class="scroller space-y-4 sm:space-y-6">
                             <div v-if="reflections.length === 0"
-                                class="text-center p-8 bg-gray-50 dark:bg-gray-700 rounded-xl border border-gray-200 dark:border-gray-600">
-                                <p class="text-gray-500 dark:text-citron-300 italic text-lg">
+                                class="text-center p-6 sm:p-8 bg-gray-50 dark:bg-gray-700 rounded-lg sm:rounded-xl border border-gray-200 dark:border-gray-600">
+                                <p class="text-sm sm:text-base text-gray-500 dark:text-citron-300 italic">
                                     Aucune réflexion active n'a été trouvée pour les derniers 7 jours.
                                 </p>
                             </div>
@@ -40,29 +40,25 @@
 
 
 
-        <!-- ================== MODAL D'ÉDITION ================== -->
-<div 
-    v-if="editModalOpen" 
-    class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50"
->
-    <div class="bg-white dark:bg-gray-800 rounded-lg p-6 w-[400px] shadow-xl border border-gray-200 dark:border-gray-700">
+    <div v-if="editModalOpen" class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 p-4">
+    <div class="bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6 w-full max-w-sm sm:max-w-md shadow-xl border border-gray-200 dark:border-gray-700 max-h-[90vh] overflow-y-auto">
 
-        <h2 class="text-xl font-semibold text-gray-900 dark:text-citron-50 mb-4">Modifier la réflexion</h2>
+        <h2 class="text-lg sm:text-xl font-semibold text-gray-900 dark:text-citron-50 mb-4">Modifier la réflexion</h2>
         
-        <label class="block text-sm mb-1 text-gray-700 dark:text-citron-200">Titre</label>
+        <label class="block text-xs sm:text-sm mb-1 text-gray-700 dark:text-citron-200">Titre</label>
         <input type="text"
             name="titre"
             v-model="form.titre"
 
-            class="cursor-custom-icon w-full my-6 p-4 border-2 border-gray-300 dark:border-gray-600 rounded-xl focus:ring-citron-500 focus:border-citron-500 transition duration-200 resize-none text-gray-700 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 font-medium bg-gray-50 dark:bg-gray-700"
+            class="cursor-custom-icon w-full my-4 p-3 border-2 border-gray-300 dark:border-gray-600 rounded-lg sm:rounded-xl focus:ring-citron-500 focus:border-citron-500 transition duration-200 resize-none text-sm sm:text-base text-gray-700 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 font-medium bg-gray-50 dark:bg-gray-700"
             placeholder="Choisissez un titre percutant"
         />
 
-        <label class="block text-sm mb-1 text-gray-700 dark:text-citron-200">Contenu :</label>
+        <label class="block text-xs sm:text-sm mb-1 text-gray-700 dark:text-citron-200">Contenu :</label>
         <textarea 
             name="contenu"
             v-model="form.contenu"
-            class="w-full border border-gray-300 dark:border-gray-600 rounded p-2 mb-4 bg-gray-50 dark:bg-gray-700 text-gray-700 dark:text-white"
+            class="w-full border border-gray-300 dark:border-gray-600 rounded p-3 mb-4 bg-gray-50 dark:bg-gray-700 text-sm sm:text-base text-gray-700 dark:text-white"
             rows="4"
         ></textarea>
 
@@ -70,14 +66,14 @@
         <div class="flex justify-end gap-2">
             <button 
                 @click="editModalOpen = false"
-                class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 transition"
+                class="px-4 py-2 text-sm sm:text-base bg-gray-500 text-white rounded hover:bg-gray-600 transition"
             >
                 Annuler
             </button>
 
             <button 
                 @click="saveReflection"
-                class="px-4 py-2 bg-citron-600 hover:bg-citron-700 dark:bg-citron-500 dark:hover:bg-citron-600 text-white rounded transition"
+                class="px-4 py-2 text-sm sm:text-base bg-citron-600 hover:bg-citron-700 dark:bg-citron-500 dark:hover:bg-citron-600 text-white rounded transition"
             >
                 Enregistrer
             </button>

@@ -21,7 +21,7 @@ class MemberController extends Controller
             $search = $request->input('search');
             $query->where(function ($q) use ($search) {
                 $q->where('pseudo', 'like', "%{$search}%")
-                  ->orWhere('email', 'like', "%{$search}%");
+                    ->orWhere('email', 'like', "%{$search}%");
             });
         }
 
@@ -38,8 +38,10 @@ class MemberController extends Controller
 
         // Paginate results
         $perPage = $request->input('perPage', 10);
-        $members = $query->paginate($perPage)
-                         ->appends($request->query());
+
+        $members = $query->orderBy('created_at', 'desc')
+            ->paginate($perPage)
+            ->appends($request->query());
 
         // Compter les utilisateurs inactifs pour la notification
         $inactiveUsersCount = User::where('is_active', false)->count();
@@ -69,23 +71,29 @@ class MemberController extends Controller
      */
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'pseudo' => 'required|string|max:255|unique:users',
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users',
-            'password' => 'required|string|min:8|confirmed',
-            'role' => 'required|in:admin,bureau,simple',
-            'position' => 'nullable|string|max:255',
-            'is_active' => 'boolean',
-        ]);
+        try {
+            $validated = $request->validate([
+                'pseudo' => 'required|string|max:255|unique:users',
+                'name' => 'required|string|max:255',
+                'email' => 'required|email|unique:users',
+                'password' => 'required|string|min:8|confirmed',
+                'role' => 'required|in:admin,bureau,simple',
+                'position' => 'nullable|string|max:255',
+                'is_active' => 'boolean',
+            ]);
 
-        $validated['password'] = bcrypt($validated['password']);
-        $validated['is_active'] = $validated['is_active'] ?? true;
+            $validated['password'] = bcrypt($validated['password']);
+            $validated['is_active'] = $validated['is_active'] ?? true;
 
-        User::create($validated);
+            User::create($validated);
 
-        return redirect()->route('members.index')
-                        ->with('success', 'Membre cree avec succes');
+            return redirect()->route('admin.members.index')
+                ->with('success', 'Membre créé avec succès');
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Erreur lors de la création du membre: ' . $e->getMessage());
+        }
     }
 
     /**
@@ -103,26 +111,32 @@ class MemberController extends Controller
      */
     public function update(Request $request, User $member)
     {
-        $validated = $request->validate([
-            'pseudo' => 'required|string|max:255|unique:users,pseudo,' . $member->id,
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . $member->id,
-            'password' => 'nullable|string|min:8|confirmed',
-            'role' => 'required|in:admin,bureau,simple',
-            'position' => 'nullable|string|max:255',
-            'is_active' => 'boolean',
-        ]);
+        try {
+            $validated = $request->validate([
+                'pseudo' => 'required|string|max:255|unique:users,pseudo,' . $member->id,
+                'name' => 'required|string|max:255',
+                'email' => 'required|email|unique:users,email,' . $member->id,
+                'password' => 'nullable|string|min:8|confirmed',
+                'role' => 'required|in:admin,bureau,simple',
+                'position' => 'nullable|string|max:255',
+                'is_active' => 'boolean',
+            ]);
 
-        if (!empty($validated['password'])) {
-            $validated['password'] = bcrypt($validated['password']);
-        } else {
-            unset($validated['password']);
+            if (!empty($validated['password'])) {
+                $validated['password'] = bcrypt($validated['password']);
+            } else {
+                unset($validated['password']);
+            }
+
+            $member->update($validated);
+
+            return redirect()->route('admin.members.index')
+                ->with('success', 'Membre modifié avec succès');
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Erreur lors de la modification du membre: ' . $e->getMessage());
         }
-
-        $member->update($validated);
-
-        return redirect()->route('members.index')
-                        ->with('success', 'Membre modifie avec succes');
     }
 
     /**
@@ -130,10 +144,15 @@ class MemberController extends Controller
      */
     public function destroy(User $member)
     {
-        $member->delete();
+        try {
+            $member->delete();
 
-        return redirect()->route('members.index')
-                        ->with('success', 'Membre supprime avec succes');
+            return redirect()->route('admin.members.index')
+                ->with('success', 'Membre supprimé avec succès');
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->with('error', 'Erreur lors de la suppression du membre: ' . $e->getMessage());
+        }
     }
 
     /**
@@ -143,8 +162,8 @@ class MemberController extends Controller
     {
         $member->update(['is_active' => !$member->is_active]);
 
-        return redirect()->route('members.index')
-                        ->with('success', 'Statut du membre modifie');
+        return redirect()->route('admin.members.index')
+            ->with('success', 'Statut du membre modifie');
     }
 
     /**
@@ -152,12 +171,17 @@ class MemberController extends Controller
      */
     public function updateRole(Request $request, User $member)
     {
-        $validated = $request->validate([
-            'role' => 'required|in:admin,bureau,simple',
-        ]);
+        try {
+            $validated = $request->validate([
+                'role' => 'required|in:admin,bureau,simple',
+            ]);
 
-        $member->update($validated);
+            $member->update($validated);
 
-        return back()->with('success', 'Role modifie avec succes');
+            return back()->with('success', 'Rôle modifié avec succès');
+        } catch (\Exception $e) {
+            return back()
+                ->with('error', 'Erreur lors de la modification du rôle: ' . $e->getMessage());
+        }
     }
 }

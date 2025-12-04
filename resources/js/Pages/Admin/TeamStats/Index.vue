@@ -54,7 +54,7 @@ const confirmDelete = () => {
         <div class="max-w-7xl mx-auto p-4">
             <!-- Hero header -->
             <div
-                class="mb-6 bg-gradient-to-r from-sky-900 to-yellow-500 text-white rounded-lg shadow-md p-6 flex flex-col sm:flex-row items-center sm:justify-between gap-4"
+                class="mb-6 bg-gradient-to-r from-lime-600 to-emerald-600 text-white rounded-lg shadow-md p-6 flex flex-col sm:flex-row items-center sm:justify-between gap-4"
             >
                 <div class="flex items-center gap-4">
                     <div
@@ -120,7 +120,7 @@ const confirmDelete = () => {
                     <p class="text-xs text-gray-500 uppercase">
                         Stats enregistrées
                     </p>
-                    <p class="text-2xl font-bold text-sky-700">
+                    <p class="text-2xl font-bold text-emerald-600">
                         {{ stats.data.length }}
                     </p>
                 </div>
@@ -132,7 +132,7 @@ const confirmDelete = () => {
                 </div>
                 <div class="bg-white rounded-lg shadow p-4">
                     <p class="text-xs text-gray-500 uppercase">Points totaux</p>
-                    <p class="text-2xl font-bold text-sky-700">
+                    <p class="text-2xl font-bold text-emerald-600">
                         {{ calculateTotalPoints() }}
                     </p>
                 </div>
@@ -148,7 +148,7 @@ const confirmDelete = () => {
                 >
                     <table class="w-full table-auto">
                         <thead>
-                            <tr class="bg-sky-900 text-white">
+                            <tr class="bg-gradient-to-r from-lime-600 to-emerald-600 text-white">
                                 <th
                                     class="px-6 py-3 text-left text-sm font-semibold"
                                 >
@@ -443,20 +443,20 @@ const confirmDelete = () => {
                     {{ stats.total }} stats
                 </p>
                 <div class="flex gap-2">
-                    <Link
-                        v-for="link in stats.links"
-                        :key="link.label"
-                        :href="link.url || '#'"
-                        :class="[
-                            'px-3 py-1 text-sm rounded transition',
-                            link.active
-                                ? 'bg-blue-600 text-white'
-                                : link.url
-                                ? 'text-blue-600 hover:bg-gray-100 dark:hover:bg-gray-800'
-                                : 'text-gray-400 cursor-not-allowed',
-                        ]"
-                        v-html="link.label"
-                    />
+                        <Link
+                            v-for="link in stats.links"
+                            :key="link.label"
+                            :href="link.url || '#'"
+                            :class="[
+                                'px-3 py-1 text-sm rounded transition',
+                                link.active
+                                    ? 'bg-gradient-to-r from-lime-500 to-emerald-500 text-white'
+                                    : link.url
+                                    ? 'text-emerald-600 hover:bg-lime-50'
+                                    : 'text-gray-400 cursor-not-allowed',
+                            ]"
+                            v-html="link.label"
+                        />
                 </div>
             </div>
         </div>

@@ -45,7 +45,7 @@ const isAdmin = () => page.props.auth.user.role === "admin";
       <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">Actualités</h1>
       <div></div>
       <Link 
-        v-if="isAdmin()"
+        
         :href="route('admin.news.create')" 
         class="px-4 py-2 sm:px-5 sm:py-2.5 rounded-lg bg-green-600 hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600 transition text-white font-semibold shadow"
       >
@@ -102,7 +102,6 @@ const isAdmin = () => page.props.auth.user.role === "admin";
 
         <!-- ACTIONS -->
         <div 
-        v-if="isAdmin()"
         class="flex flex-col sm:flex-row gap-2 sm:gap-4 mt-auto">
           <Link
             :href="`/admin/news/${selected?.id}/edit`"
