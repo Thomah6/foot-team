@@ -6,8 +6,8 @@
 </template>
 
 <script>
-import AdminsideBar from '@/Components/AdminsideBar.vue';
-import FileUpload from '../Components/FileUpload.vue'
+// import AdminsideBar from '@/Components/AdminsideBar.vue';
+// import FileUpload from '../Components/FileUpload.vue'
 
 export default {
   components: {
