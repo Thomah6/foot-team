@@ -5,12 +5,13 @@ import FinanceAdminActions from "@/Pages/Finance/FinanceAdminActions.vue";
 import FinanceFilter from "@/Pages/Finance/FinanceFilter.vue";
 import FinanceHistoriqueTable from "@/Pages/Finance/FinanceHistoriqueTable.vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import Toast from "@/Shared/Toast.vue";
 import ConfirmModalFinance from "@/Components/ConfirmModalFinance.vue";
 
 import { ref, watch, onMounted, reactive } from "vue";
 import { router, usePage } from "@inertiajs/vue3";
 import { debounce } from 'lodash';
+
+const page = usePage();
 
 // Props reçues du backend Laravel
 const props = defineProps({
@@ -47,36 +48,7 @@ const debouncedSearch = debounce(() => {
 watch(filters, debouncedSearch);
 
 
-// Toast notification (Inertia flash)
-const page = usePage();
-const toastVisible = ref(false);
-const toastMessage = ref("");
-const toastType = ref("success");
 
-function showToast(message, type = "success") {
-    toastMessage.value = message;
-    toastType.value = type;
-    toastVisible.value = true;
-}
-
-watch(
-    () => page.props.flash && page.props.flash.success,
-    (val) => {
-        if (val) showToast(val, "success");
-    }
-);
-watch(
-    () => page.props.flash && page.props.flash.error,
-    (val) => {
-        if (val) showToast(val, "error");
-    }
-);
-
-onMounted(() => {
-    const p = page.props;
-    if (p.flash && p.flash.success) showToast(p.flash.success, "success");
-    if (p.flash && p.flash.error) showToast(p.flash.error, "error");
-});
 
 
 const showConfirmAll = ref(false);
@@ -96,16 +68,6 @@ function confirmValiderTous() {
         {
             onSuccess: (page) => {
                 showConfirmAll.value = false;
-                if (
-                    page.props &&
-                    page.props.flash &&
-                    page.props.flash.success
-                ) {
-                    showToast(page.props.flash.success, "success");
-                }
-                if (page.props && page.props.flash && page.props.flash.error) {
-                    showToast(page.props.flash.error, "error");
-                }
                 refreshTable();
             },
             onFinish: () => {
@@ -146,19 +108,6 @@ function refreshTable() {
         {
             preserveState: true,
             preserveScroll: true,
-            onSuccess: (page) => {
-                // Display flash messages if present
-                if (
-                    page.props &&
-                    page.props.flash &&
-                    page.props.flash.success
-                ) {
-                    showToast(page.props.flash.success, "success");
-                }
-                if (page.props && page.props.flash && page.props.flash.error) {
-                    showToast(page.props.flash.error, "error");
-                }
-            },
         }
     );
 }
@@ -269,12 +218,7 @@ const isBureau = role === "bureau";
                 </div>
             </div>
 
-            <!-- Toast Notification -->
-            <Toast
-                v-model="toastVisible"
-                :message="toastMessage"
-                :type="toastType"
-            />
+
         </div>
     </AuthenticatedLayout>
 </template>

@@ -1,7 +1,6 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { router, usePage, Link } from '@inertiajs/vue3'
-import Toast from '@/Shared/Toast.vue'
 import ConfirmModalFinance from '@/Components/ConfirmModalFinance.vue'
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue'
 
@@ -19,23 +18,14 @@ const showConfirmLoading = ref(false)
 
 const isSoldeInsuffisant = computed(() => props.soldeTotal <= 0)
 
-// Toast
-const toastVisible = ref(false)
-const toastMessage = ref('')
-const toastType = ref('success')
+
 
 
 function openConfirm() {
   if (isSoldeInsuffisant.value) {
-    toastMessage.value = 'Le solde est insuffisant pour enregistrer une nouvelle dépense.'
-    toastType.value = 'error'
-    toastVisible.value = true
     return
   }
   if (!montant.value || !description.value) {
-    toastMessage.value = 'Veuillez renseigner le montant et la description.'
-    toastType.value = 'error'
-    toastVisible.value = true
     return
   }
   showConfirm.value = true
@@ -52,16 +42,9 @@ function sendDepense() {
       showConfirm.value = false
       montant.value = 0
       description.value = ''
-
-
-      if (page.props.flash && page.props.flash.success) {
-        toastMessage.value = page.props.flash.success
-        toastType.value = 'success'
-        toastVisible.value = true
-        setTimeout(() => {
-          router.visit(route('finances.index'))
-        }, 1500)
-      }
+      setTimeout(() => {
+        router.visit(route('finances.index'))
+      }, 1500)
     },
     onFinish: () => {
       showConfirmLoading.value = false
@@ -190,7 +173,7 @@ function cancelDepense() {
                 @cancel="cancelDepense"
             />
 
-            <Toast v-model="toastVisible" :message="toastMessage" :type="toastType" />
+
         </div>
     </AuthenticatedLayout>
 </template>

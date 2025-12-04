@@ -1,7 +1,18 @@
-# TODO: Implémenter notification pour nouveaux utilisateurs inactifs
+# TODO: Fix Toast Notification System
 
-- [ ] Modifier MemberController pour compter utilisateurs inactifs
-- [ ] Ajouter bannière de notification dans Index.vue
-- [ ] Surligner utilisateurs inactifs dans la liste
-- [ ] Ajouter indicateur dans la sidebar pour le lien membres
-- [ ] Tester toutes les notifications
+## Current Status
+- Identified duplicate toast logic across multiple finance pages
+- Global toast in AuthenticatedLayout.vue is working correctly
+- Need to remove local toast implementations from individual pages
+
+## Tasks
+- [ ] Remove local toast logic from Index.vue
+- [ ] Remove local toast logic from FinanceCreateDepense.vue
+- [ ] Remove local toast logic from FinanceCreateAjustement.vue
+- [ ] Test finance actions to ensure toasts display correctly
+- [ ] Verify no duplicate toasts appear
+
+## Files to Modify
+- foot-team/resources/js/Pages/Finance/Index.vue
+- foot-team/resources/js/Pages/Finance/FinanceCreateDepense.vue
+- foot-team/resources/js/Pages/Finance/FinanceCreateAjustement.vue

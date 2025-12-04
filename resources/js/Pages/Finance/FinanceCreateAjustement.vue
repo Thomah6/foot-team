@@ -2,7 +2,6 @@
 import { ref, watch, onMounted, computed } from "vue";
 import { router, usePage, Link } from "@inertiajs/vue3";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import Toast from "@/Shared/Toast.vue";
 import ConfirmModalFinance from "@/Components/ConfirmModalFinance.vue";
 
 const props = defineProps({
@@ -23,48 +22,17 @@ const isDebitInterdit = computed(() => {
     return props.soldeTotal <= 0 && sens.value === 'debit';
 });
 
-// Toast
-const page = usePage();
-const toastVisible = ref(false);
-const toastMessage = ref("");
-const toastType = ref("success");
 
 
-function showToast(message, type = "success") {
-    toastMessage.value = message;
-    toastType.value = type;
-    toastVisible.value = true;
-}
 
 
-watch(
-    () => page.props.flash && page.props.flash.success,
-    (val) => {
-        if (val) showToast(val, "success");
-    }
-);
-watch(
-    () => page.props.flash && page.props.flash.error,
-    (val) => {
-        if (val) showToast(val, "error");
-    }
-);
-
-
-onMounted(() => {
-    const p = page.props;
-    if (p.flash && p.flash.success) showToast(p.flash.success, "success");
-    if (p.flash && p.flash.error) showToast(p.flash.error, "error");
-});
 
 
 function openConfirm() {
     if (isDebitInterdit.value) {
-        showToast("Le solde est insuffisant pour un ajustement en débit.", "error");
         return;
     }
      if (!montant.value || !description.value) {
-        showToast('Veuillez renseigner tous les champs.', 'error')
         return
     }
     showConfirm.value = true;
@@ -86,14 +54,6 @@ function confirmSubmit() {
                 montant.value = 0;
                 sens.value = "credit";
                 description.value = "";
-                if (
-                    page &&
-                    page.props &&
-                    page.props.flash &&
-                    page.props.flash.success
-                ) {
-                    showToast(page.props.flash.success, "success");
-                }
                 setTimeout(() => {
                     router.visit(route("finances.index"));
                 }, 1500);
@@ -104,9 +64,6 @@ function confirmSubmit() {
             onError: () => {
                 showConfirm.value = false;
                 showConfirmLoading.value = false;
-                 if (page.props.flash && page.props.flash.error) {
-                    showToast(page.props.flash.error, "error");
-                }
             },
         }
     );
@@ -268,11 +225,7 @@ function cancelSubmit() {
                 @cancel="cancelSubmit"
             />
 
-            <Toast
-                v-model="toastVisible"
-                :message="toastMessage"
-                :type="toastType"
-            />
+
         </div>
     </AuthenticatedLayout>
 </template>
