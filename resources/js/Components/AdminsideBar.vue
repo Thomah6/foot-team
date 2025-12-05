@@ -1,6 +1,6 @@
 <!-- [file name]: AdminsideBar.vue -->
 <script setup>
-import { computed, defineProps, useAttrs } from "vue";
+import { computed, defineProps, useAttrs, ref, onMounted, onUnmounted } from "vue";
 import { Link, usePage, router } from "@inertiajs/vue3";
 
 defineProps({
@@ -14,6 +14,35 @@ defineProps({
 
 const page = usePage();
 const user = page.props.auth.user;
+
+// État du menu mobile
+const isOpen = ref(false);
+
+// Fonctions pour gérer le menu
+const openMenu = () => {
+    isOpen.value = true;
+    document.body.style.overflow = 'hidden';
+};
+
+const closeMenu = () => {
+    isOpen.value = false;
+    document.body.style.overflow = '';
+};
+
+// Écouter l'événement personnalisé
+onMounted(() => {
+    window.addEventListener('toggle-sidebar', () => {
+        if (isOpen.value) {
+            closeMenu();
+        } else {
+            openMenu();
+        }
+    });
+});
+
+onUnmounted(() => {
+    document.body.style.overflow = '';
+});
 
 // Roles
 const isAdmin = () => user.role === "admin";

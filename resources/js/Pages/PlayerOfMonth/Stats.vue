@@ -1,16 +1,16 @@
 <template>
     <AuthenticatedLayout>
-        <div class="min-h-screen bg-gray-50 dark:bg-gray-900">
+        <div class="min-h-screen bg-gradient-to-b from-slate-50 via-slate-100 to-white dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
             <!-- Header -->
-            <div class="bg-gradient-to-r from-citron-500 to-citron-700 dark:from-gray-800 dark:to-gray-900 text-white">
+            <div class="bg-gradient-to-r from-lime-500 to-emerald-500 dark:from-lime-600 dark:to-emerald-600 text-white">
                 <div class="container mx-auto px-4 py-12">
                     <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
                         <div>
                             <h1 class="text-3xl md:text-4xl font-black mb-2 flex items-center gap-3">
-                                <i class="fas fa-chart-line text-citron-200"></i>
+                                <i class="fas fa-chart-line text-lime-200"></i>
                                 Stats du Mois
                             </h1>
-                            <p class="text-citron-100 dark:text-citron-300">
+                            <p class="text-lime-100 dark:text-lime-300">
                                 Performances détaillées de {{ props.player.user.name }} pour {{ formatMonth(props.month) }}
                             </p>
                         </div>
@@ -28,44 +28,44 @@
                     <!-- Carte du joueur -->
                     <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-lg p-6 mb-8">
                         <div class="flex flex-col md:flex-row items-center gap-6 mb-6">
-                            <img :src="props.player.user.avatar || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(props.player.user.name) + '&background=citron-500&color=white'"
-                                 class="w-24 h-24 rounded-full object-cover border-4 border-citron-200 dark:border-citron-700" />
+                            <img :src="props.player.user.avatar || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(props.player.user.name) + '&background=lime-500&color=white'"
+                                 class="w-24 h-24 rounded-full object-cover border-4 border-lime-200 dark:border-lime-700" />
                             <div class="text-center md:text-left">
-                                <h2 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-citron-100">
+                                <h2 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">
                                     {{ props.player.user.name }}
                                 </h2>
-                                <p class="text-gray-600 dark:text-citron-300 text-lg">
+                                <p class="text-gray-600 dark:text-gray-400 text-lg">
                                     {{ props.player.user.pseudo || 'Pas de pseudo' }}
                                 </p>
-                                <div class="bg-citron-100 dark:bg-citron-900/50 text-citron-700 dark:text-citron-300 px-3 py-1 rounded-full text-sm font-medium mt-2 inline-flex items-center gap-2 border border-citron-200 dark:border-citron-800">
+                                <div class="bg-lime-100 dark:bg-lime-900/50 text-lime-700 dark:text-lime-300 px-3 py-1 rounded-full text-sm font-medium mt-2 inline-flex items-center gap-2 border border-lime-200 dark:border-lime-800">
                                     🏆 Joueur du mois - {{ formatMonth(props.month) }}
                                 </div>
                             </div>
                         </div>
 
                         <!-- Motivation -->
-                        <div v-if="props.player.reason" class="bg-citron-50 dark:bg-citron-900/20 rounded-lg p-4 mb-6 border border-citron-200 dark:border-citron-800">
-                            <p class="text-gray-700 dark:text-citron-200 italic">
-                                <i class="fas fa-quote-left text-citron-400 mr-2"></i>
+                        <div v-if="props.player.reason" class="bg-lime-50 dark:bg-lime-900/20 rounded-lg p-4 mb-6 border border-lime-200 dark:border-lime-800">
+                            <p class="text-gray-700 dark:text-gray-300 italic">
+                                <i class="fas fa-quote-left text-lime-400 mr-2"></i>
                                 {{ props.player.reason }}
-                                <i class="fas fa-quote-right text-citron-400 ml-2"></i>
+                                <i class="fas fa-quote-right text-lime-400 ml-2"></i>
                             </p>
                         </div>
                     </div>
 
                     <!-- Statistiques détaillées -->
                     <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-lg p-6">
-                        <h3 class="text-2xl font-bold text-gray-900 dark:text-citron-100 mb-6 flex items-center gap-3">
-                            <i class="fas fa-chart-bar text-citron-500"></i>
+                        <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-3">
+                            <i class="fas fa-chart-bar text-lime-500"></i>
                             Statistiques du mois
                         </h3>
 
                         <!-- Message si aucune stat -->
                         <div v-if="props.stats.length === 0" class="text-center py-8">
-                            <div class="bg-citron-50 dark:bg-citron-900/20 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-4">
-                                <i class="fas fa-chart-line text-citron-500 text-3xl"></i>
+                            <div class="bg-lime-50 dark:bg-lime-900/20 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-4">
+                                <i class="fas fa-chart-line text-lime-500 text-3xl"></i>
                             </div>
-                            <p class="text-gray-600 dark:text-citron-300">
+                            <p class="text-gray-600 dark:text-gray-400">
                                 Aucune statistique détaillée disponible pour ce mois
                             </p>
                         </div>
@@ -75,39 +75,39 @@
                             <table class="w-full">
                                 <thead class="bg-gray-50 dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
                                     <tr>
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-citron-300 uppercase tracking-wider">
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                                             Date
                                         </th>
-                                        <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-citron-300 uppercase tracking-wider">
+                                        <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                                             Buts
                                         </th>
-                                        <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-citron-300 uppercase tracking-wider">
+                                        <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                                             Passes
                                         </th>
-                                        <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-citron-300 uppercase tracking-wider">
+                                        <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                                             Matchs
                                         </th>
-                                        <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-citron-300 uppercase tracking-wider">
+                                        <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                                             Points
                                         </th>
                                     </tr>
                                 </thead>
                                 <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                                     <tr v-for="stat in props.stats" :key="stat.id" class="hover:bg-gray-50 dark:hover:bg-gray-900/50">
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-citron-100">
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
                                             {{ formatDate(stat.date) }}
                                         </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium text-gray-900 dark:text-citron-100">
+                                        <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium text-gray-900 dark:text-white">
                                             {{ stat.goals }}
                                         </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-900 dark:text-citron-100">
+                                        <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-900 dark:text-white">
                                             {{ stat.assists }}
                                         </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-900 dark:text-citron-100">
+                                        <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-900 dark:text-white">
                                             {{ stat.matches_played }}
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-center">
-                                            <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-citron-100 dark:bg-citron-900/50 text-citron-700 dark:text-citron-300 border border-citron-200 dark:border-citron-800">
+                                            <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-lime-100 dark:bg-lime-900/50 text-lime-700 dark:text-lime-300 border border-lime-200 dark:border-lime-800">
                                                 {{ calculatePoints(stat) }}
                                             </span>
                                         </td>
@@ -120,7 +120,7 @@
                         <div v-if="props.stats.length > 0" class="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
                             <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                                 <div class="text-center">
-                                    <div class="bg-citron-50 dark:bg-citron-900/30 text-citron-600 dark:text-citron-300 rounded-lg px-4 py-3 border border-citron-200 dark:border-citron-800">
+                                    <div class="bg-lime-50 dark:bg-lime-900/30 text-lime-600 dark:text-lime-300 rounded-lg px-4 py-3 border border-lime-200 dark:border-lime-800">
                                         <p class="text-2xl font-bold">{{ totalStats.goals }}</p>
                                         <p class="text-sm">Buts totaux</p>
                                     </div>

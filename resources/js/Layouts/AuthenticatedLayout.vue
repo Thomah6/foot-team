@@ -58,6 +58,11 @@ defineProps({
                         <Link :href="route('dashboard')">
                         <!-- ton logo ici -->
                         </Link>
+                        <!-- Navigation Links -->
+                        <div
+                            class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex"
+                        >
+                        </div>
                     </div>
 
                     <!-- DESKTOP HEADER RIGHT -->

@@ -5,12 +5,12 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 
 <template>
     <AuthenticatedLayout>
-        <div class="min-h-screen bg-gradient-to-br from-slate-50 via-slate-100 to-white text-gray-900 font-sans">
+        <div class="min-h-screen bg-gradient-to-br from-slate-50 via-slate-100 to-white dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 text-gray-900 dark:text-white font-sans">
             
             <!-- Header Premium Style -->
-            <div class="relative bg-gradient-to-b from-white to-slate-50 py-16 px-4 border-b border-gray-200">
+            <div class="relative bg-gradient-to-b from-white to-slate-50 dark:from-gray-900 dark:to-gray-800 py-8 sm:py-12 lg:py-16 px-4 border-b border-gray-200 dark:border-gray-700">
                 <!-- Logo et titre -->
-                <div class="flex items-center justify-between max-w-6xl mx-auto mb-12">
+                <div class="flex items-center justify-between max-w-6xl mx-auto mb-8 sm:mb-12">
                     <!-- Logo à gauche -->
                     <div class="flex items-center gap-4">
                      
@@ -18,8 +18,8 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
                     
                     <!-- Titre central -->
                     <div class="text-center">
-                        <div class="text-emerald-600 text-lg font-semibold tracking-wider mb-2">CLASSEMENT OFFICIEL</div>
-                        <div class="text-gray-600 text-sm font-medium tracking-wider">SAISON 2025</div>
+                        <div class="text-emerald-600 dark:text-emerald-400 text-lg sm:text-xl font-semibold tracking-wider mb-2">CLASSEMENT OFFICIEL</div>
+                        <div class="text-gray-600 dark:text-gray-400 text-sm sm:text-base font-medium tracking-wider">SAISON 2025</div>
                     </div>
                     
                     <!-- Logo à droite -->
@@ -27,27 +27,27 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
                 </div>
                 
                 <!-- Titre principal -->
-                <div class="text-center mb-8">
-                    <h1 class="text-5xl font-bold text-gray-900 tracking-tight mb-4 bg-gradient-to-r from-lime-600 to-emerald-600 bg-clip-text text-transparent">
+                <div class="text-center mb-6 sm:mb-8">
+                    <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white tracking-tight mb-4 bg-gradient-to-r from-lime-600 to-emerald-600 bg-clip-text text-transparent">
                         TOUS LES CLASSEMENTS
                     </h1>
-                    <div class="text-gray-600 text-lg font-medium tracking-wide">STATISTIQUES ET PERFORMANCES</div>
+                    <div class="text-gray-600 dark:text-gray-400 text-base sm:text-lg font-medium tracking-wide">STATISTIQUES ET PERFORMANCES</div>
                 </div>
             </div>
 
             <!-- Grid des classements -->
-            <div class="max-w-6xl mx-auto px-4 py-16">
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div class="max-w-6xl mx-auto px-4 py-8 sm:py-12 lg:py-16">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
                     
                     <!-- Classement Général -->
                     <Link :href="route('stats.classement.general')" 
-                          class="group bg-white backdrop-blur-sm rounded-2xl p-8 text-center border-2 border-lime-200/50 shadow-lg hover:shadow-xl hover:shadow-lime-500/20 transition-all duration-300 hover:-translate-y-2 hover:border-lime-300">
-                        <div class="bg-gradient-to-br from-lime-100 to-emerald-100 w-24 h-24 rounded-2xl flex items-center justify-center mx-auto mb-6 border-2 border-lime-300 group-hover:border-lime-400 transition-colors">
-                            <i class="fas fa-medal text-lime-600 text-4xl"></i>
+                          class="group bg-white dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl p-4 sm:p-6 lg:p-8 text-center border-2 border-lime-200/50 dark:border-lime-800/30 shadow-lg hover:shadow-xl hover:shadow-lime-500/20 transition-all duration-300 hover:-translate-y-2 hover:border-lime-300 dark:hover:border-lime-600">
+                        <div class="bg-gradient-to-br from-lime-100 to-emerald-100 dark:from-lime-900/30 dark:to-emerald-900/30 w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 rounded-2xl flex items-center justify-center mx-auto mb-4 sm:mb-6 border-2 border-lime-300 dark:border-lime-600 group-hover:border-lime-400 dark:group-hover:border-lime-500 transition-colors">
+                            <i class="fas fa-medal text-lime-600 dark:text-lime-400 text-2xl sm:text-3xl lg:text-4xl"></i>
                         </div>
-                        <h3 class="text-2xl font-bold text-gray-900 mb-3">CLASSEMENT GÉNÉRAL</h3>
-                        <p class="text-gray-600 mb-6 font-medium">Points = Buts + Passes/2</p>
-                        <div class="text-lime-600 font-semibold tracking-wide group-hover:text-emerald-600 transition inline-flex items-center gap-2">
+                        <h3 class="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 dark:text-white mb-3">CLASSEMENT GÉNÉRAL</h3>
+                        <p class="text-gray-600 dark:text-gray-400 mb-4 sm:mb-6 font-medium text-sm sm:text-base">Points = Buts + Passes/2</p>
+                        <div class="text-lime-600 dark:text-lime-400 font-semibold tracking-wide group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition inline-flex items-center gap-2 text-sm sm:text-base">
                             Voir le classement 
                             <i class="fas fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
                         </div>
@@ -55,13 +55,13 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 
                     <!-- Classement Buteurs -->
                     <Link :href="route('stats.classement.buteurs')" 
-                          class="group bg-white backdrop-blur-sm rounded-2xl p-8 text-center border-2 border-lime-200/50 shadow-lg hover:shadow-xl hover:shadow-lime-500/20 transition-all duration-300 hover:-translate-y-2 hover:border-lime-300">
-                        <div class="bg-gradient-to-br from-lime-100 to-emerald-100 w-24 h-24 rounded-2xl flex items-center justify-center mx-auto mb-6 border-2 border-lime-300 group-hover:border-lime-400 transition-colors">
-                            <i class="fas fa-futbol text-lime-600 text-4xl"></i>
+                          class="group bg-white dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl p-4 sm:p-6 lg:p-8 text-center border-2 border-lime-200/50 dark:border-lime-800/30 shadow-lg hover:shadow-xl hover:shadow-lime-500/20 transition-all duration-300 hover:-translate-y-2 hover:border-lime-300 dark:hover:border-lime-600">
+                        <div class="bg-gradient-to-br from-lime-100 to-emerald-100 dark:from-lime-900/30 dark:to-emerald-900/30 w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 rounded-2xl flex items-center justify-center mx-auto mb-4 sm:mb-6 border-2 border-lime-300 dark:border-lime-600 group-hover:border-lime-400 dark:group-hover:border-lime-500 transition-colors">
+                            <i class="fas fa-futbol text-lime-600 dark:text-lime-400 text-2xl sm:text-3xl lg:text-4xl"></i>
                         </div>
-                        <h3 class="text-2xl font-bold text-gray-900 mb-3">CLASSEMENT BUTEURS</h3>
-                        <p class="text-gray-600 mb-6 font-medium">Les meilleurs prédateurs de surface</p>
-                        <div class="text-lime-600 font-semibold tracking-wide group-hover:text-emerald-600 transition inline-flex items-center gap-2">
+                        <h3 class="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 dark:text-white mb-3">CLASSEMENT BUTEURS</h3>
+                        <p class="text-gray-600 dark:text-gray-400 mb-4 sm:mb-6 font-medium text-sm sm:text-base">Les meilleurs prédateurs de surface</p>
+                        <div class="text-lime-600 dark:text-lime-400 font-semibold tracking-wide group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition inline-flex items-center gap-2 text-sm sm:text-base">
                             Voir les buteurs 
                             <i class="fas fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
                         </div>
@@ -69,13 +69,13 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 
                     <!-- Classement Passeurs -->
                     <Link :href="route('stats.classement.passeurs')" 
-                          class="group bg-white backdrop-blur-sm rounded-2xl p-8 text-center border-2 border-lime-200/50 shadow-lg hover:shadow-xl hover:shadow-lime-500/20 transition-all duration-300 hover:-translate-y-2 hover:border-lime-300">
-                        <div class="bg-gradient-to-br from-lime-100 to-emerald-100 w-24 h-24 rounded-2xl flex items-center justify-center mx-auto mb-6 border-2 border-lime-300 group-hover:border-lime-400 transition-colors">
-                            <i class="fas fa-exchange-alt text-lime-600 text-4xl"></i>
+                          class="group bg-white dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl p-4 sm:p-6 lg:p-8 text-center border-2 border-lime-200/50 dark:border-lime-800/30 shadow-lg hover:shadow-xl hover:shadow-lime-500/20 transition-all duration-300 hover:-translate-y-2 hover:border-lime-300 dark:hover:border-lime-600">
+                        <div class="bg-gradient-to-br from-lime-100 to-emerald-100 dark:from-lime-900/30 dark:to-emerald-900/30 w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 rounded-2xl flex items-center justify-center mx-auto mb-4 sm:mb-6 border-2 border-lime-300 dark:border-lime-600 group-hover:border-lime-400 dark:group-hover:border-lime-500 transition-colors">
+                            <i class="fas fa-exchange-alt text-lime-600 dark:text-lime-400 text-2xl sm:text-3xl lg:text-4xl"></i>
                         </div>
-                        <h3 class="text-2xl font-bold text-gray-900 mb-3">CLASSEMENT PASSEURS</h3>
-                        <p class="text-gray-600 mb-6 font-medium">Vision de jeu et générosité</p>
-                        <div class="text-lime-600 font-semibold tracking-wide group-hover:text-emerald-600 transition inline-flex items-center gap-2">
+                        <h3 class="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 dark:text-white mb-3">CLASSEMENT PASSEURS</h3>
+                        <p class="text-gray-600 dark:text-gray-400 mb-4 sm:mb-6 font-medium text-sm sm:text-base">Vision de jeu et générosité</p>
+                        <div class="text-lime-600 dark:text-lime-400 font-semibold tracking-wide group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition inline-flex items-center gap-2 text-sm sm:text-base">
                             Voir les passeurs 
                             <i class="fas fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
                         </div>
@@ -83,13 +83,13 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 
                     <!-- Classement Gardiens -->
                     <Link :href="route('stats.classement.gardiens')" 
-                          class="group bg-white backdrop-blur-sm rounded-2xl p-8 text-center border-2 border-lime-200/50 shadow-lg hover:shadow-xl hover:shadow-lime-500/20 transition-all duration-300 hover:-translate-y-2 hover:border-lime-300">
-                        <div class="bg-gradient-to-br from-lime-100 to-emerald-100 w-24 h-24 rounded-2xl flex items-center justify-center mx-auto mb-6 border-2 border-lime-300 group-hover:border-lime-400 transition-colors">
-                            <i class="fas fa-hand-paper text-lime-600 text-4xl"></i>
+                          class="group bg-white dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl p-4 sm:p-6 lg:p-8 text-center border-2 border-lime-200/50 dark:border-lime-800/30 shadow-lg hover:shadow-xl hover:shadow-lime-500/20 transition-all duration-300 hover:-translate-y-2 hover:border-lime-300 dark:hover:border-lime-600">
+                        <div class="bg-gradient-to-br from-lime-100 to-emerald-100 dark:from-lime-900/30 dark:to-emerald-900/30 w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 rounded-2xl flex items-center justify-center mx-auto mb-4 sm:mb-6 border-2 border-lime-300 dark:border-lime-600 group-hover:border-lime-400 dark:group-hover:border-lime-500 transition-colors">
+                            <i class="fas fa-hand-paper text-lime-600 dark:text-lime-400 text-2xl sm:text-3xl lg:text-4xl"></i>
                         </div>
-                        <h3 class="text-2xl font-bold text-gray-900 mb-3">CLASSEMENT GARDIENS</h3>
-                        <p class="text-gray-600 mb-6 font-medium">Solidité défensive ultime</p>
-                        <div class="text-lime-600 font-semibold tracking-wide group-hover:text-emerald-600 transition inline-flex items-center gap-2">
+                        <h3 class="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 dark:text-white mb-3">CLASSEMENT GARDIENS</h3>
+                        <p class="text-gray-600 dark:text-gray-400 mb-4 sm:mb-6 font-medium text-sm sm:text-base">Solidité défensive ultime</p>
+                        <div class="text-lime-600 dark:text-lime-400 font-semibold tracking-wide group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition inline-flex items-center gap-2 text-sm sm:text-base">
                             Voir les gardiens 
                             <i class="fas fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
                         </div>
@@ -98,21 +98,22 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
                 </div>
 
                 <!-- Section Joueur du Mois -->
-                <div class="mt-20 text-center">
-                    <div class="bg-gradient-to-r from-white to-slate-50 backdrop-blur-sm rounded-3xl p-12 text-gray-900 border-2 border-lime-200/50 shadow-xl">
-                        <div class="bg-gradient-to-br from-lime-100 to-emerald-100 w-24 h-24 rounded-2xl flex items-center justify-center mx-auto mb-8 border-2 border-lime-300">
-                            <i class="fas fa-crown text-lime-600 text-5xl"></i>
+                <div class="mt-12 sm:mt-16 lg:mt-20 text-center">
+                    <div class="bg-gradient-to-r from-white to-slate-50 dark:from-gray-800/80 dark:to-gray-900/80 backdrop-blur-sm rounded-3xl p-6 sm:p-8 lg:p-12 text-gray-900 dark:text-white border-2 border-lime-200/50 dark:border-lime-800/30 shadow-xl">
+                        <div class="bg-gradient-to-br from-lime-100 to-emerald-100 dark:from-lime-900/30 dark:to-emerald-900/30 w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 rounded-2xl flex items-center justify-center mx-auto mb-6 sm:mb-8 border-2 border-lime-300 dark:border-lime-600">
+                            <i class="fas fa-crown text-lime-600 dark:text-lime-400 text-3xl sm:text-4xl lg:text-5xl"></i>
                         </div>
-                        <h2 class="text-4xl font-bold mb-6 bg-gradient-to-r from-lime-600 to-emerald-600 bg-clip-text text-transparent">
+                        <h2 class="text-2xl sm:text-3xl lg:text-4xl font-bold mb-4 sm:mb-6 bg-gradient-to-r from-lime-600 to-emerald-600 bg-clip-text text-transparent">
                             PRÉDATEUR DU MOIS
                         </h2>
-                        <p class="text-xl mb-8 text-gray-600 font-medium max-w-2xl mx-auto">
-                            Découvrez le joueur élu cette semaine pour ses performances exceptionnelles dans l'arène
+                        <p class="text-base sm:text-lg lg:text-xl mb-6 sm:mb-8 text-gray-600 dark:text-gray-400 font-medium max-w-2xl mx-auto">
+                            Découvrez le joueur élu ce mois pour ses performances exceptionnelles dans l'arène
                         </p>
                         <Link :href="route('player.month.current')" 
-                              class="inline-flex items-center gap-3 bg-gradient-to-r from-lime-500 to-emerald-500 text-white px-10 py-5 rounded-2xl font-bold hover:from-lime-600 hover:to-emerald-600 transition-all duration-300 tracking-wider text-lg shadow-lg hover:shadow-xl hover:shadow-emerald-500/30 hover:-translate-y-1">
+                              class="inline-flex items-center gap-2 sm:gap-3 bg-gradient-to-r from-lime-500 to-emerald-500 dark:from-lime-600 dark:to-emerald-600 text-white px-6 sm:px-8 lg:px-10 py-3 sm:py-4 lg:py-5 rounded-2xl font-bold hover:from-lime-600 hover:to-emerald-600 dark:hover:from-lime-700 dark:hover:to-emerald-700 transition-all duration-300 tracking-wider text-sm sm:text-base lg:text-lg shadow-lg hover:shadow-xl hover:shadow-emerald-500/30 hover:-translate-y-1">
                             <i class="fas fa-trophy"></i>
-                            DÉCOUVRIR LE PRÉDATEUR
+                            <span class="hidden sm:inline">DÉCOUVRIR LE PRÉDATEUR</span>
+                            <span class="sm:hidden">PRÉDATEUR</span>
                         </Link>
                     </div>
                 </div>

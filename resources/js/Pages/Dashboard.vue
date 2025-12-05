@@ -246,7 +246,40 @@ const identity = page.props.identity;
                                 STATS ÉCLAIR
                             </h3>
 
-                       
+                            <!-- Stats Grid -->
+                            <div class="grid grid-cols-2 gap-4">
+                                <div class="text-center p-3 rounded-xl bg-gradient-to-br from-lime-50 to-emerald-50 dark:from-lime-900/30 dark:to-emerald-900/30 border border-lime-200 dark:border-lime-700">
+                                    <div class="text-2xl font-bold text-lime-600 dark:text-lime-400">12</div>
+                                    <div class="text-xs text-gray-600 dark:text-gray-400 mt-1">Buts</div>
+                                </div>
+                                <div class="text-center p-3 rounded-xl bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/30 dark:to-indigo-900/30 border border-blue-200 dark:border-blue-700">
+                                    <div class="text-2xl font-bold text-blue-600 dark:text-blue-400">8</div>
+                                    <div class="text-xs text-gray-600 dark:text-gray-400 mt-1">Passes</div>
+                                </div>
+                                <div class="text-center p-3 rounded-xl bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-900/30 dark:to-orange-900/30 border border-amber-200 dark:border-amber-700">
+                                    <div class="text-2xl font-bold text-amber-600 dark:text-amber-400">5</div>
+                                    <div class="text-xs text-gray-600 dark:text-gray-400 mt-1">Matchs</div>
+                                </div>
+                                <div class="text-center p-3 rounded-xl bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/30 dark:to-pink-900/30 border border-purple-200 dark:border-purple-700">
+                                    <div class="text-2xl font-bold text-purple-600 dark:text-purple-400">45</div>
+                                    <div class="text-xs text-gray-600 dark:text-gray-400 mt-1">Points</div>
+                                </div>
+                            </div>
+
+                            <!-- Mini Chart -->
+                            <div class="mt-4 p-3 rounded-lg bg-gray-50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700">
+                                <div class="flex items-center justify-between mb-2">
+                                    <span class="text-xs font-medium text-gray-600 dark:text-gray-400">Performance</span>
+                                    <span class="text-xs text-lime-600 dark:text-lime-400 font-bold">+85%</span>
+                                </div>
+                                <div class="flex items-end gap-1 h-12">
+                                    <div class="flex-1 bg-lime-200 dark:bg-lime-700 rounded-t" style="height: 40%"></div>
+                                    <div class="flex-1 bg-lime-300 dark:bg-lime-600 rounded-t" style="height: 60%"></div>
+                                    <div class="flex-1 bg-lime-400 dark:bg-lime-500 rounded-t" style="height: 45%"></div>
+                                    <div class="flex-1 bg-lime-500 dark:bg-lime-400 rounded-t" style="height: 80%"></div>
+                                    <div class="flex-1 bg-emerald-500 dark:bg-emerald-400 rounded-t" style="height: 100%"></div>
+                                </div>
+                            </div>
 
                             <div class="mt-6 pt-4 border-t border-lime-100 dark:border-emerald-900/30">
                                 <Link href="/admin/stats"
